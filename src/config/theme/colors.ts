@@ -1,0 +1,158 @@
+export const brand = {
+  yellow: {
+    lightest: "#fef8ea",
+    lighter: "#fff1d4",
+    light: "#ffdb91",
+    primary: "#fdbb30",
+    dark: "#b47f0f",
+    darker: "#866010",
+    darkest: "#684a0b",
+    aaa: "red",
+  },
+  blue: {
+    lightest: "#effbfc",
+    lighter: "#e4f6f8",
+    light: "#d3edf0",
+    primary: "#a6cccf",
+    dark: "#247f9d",
+    darker: "#085d7a",
+    darkest: "#054155",
+  },
+  green: {
+    lightest: "#effcf6",
+    lighter: "#d4ede1",
+    light: "#b6e2cf",
+    primary: "#2bb56e",
+    dark: "#249158",
+    darker: "#25754c",
+    darkest: "#134f30",
+  },
+  orange: {
+    lightest: "#fff3ee",
+    lighter: "#fee0d8",
+    light: "#fdbfa9",
+    primary: "#f75c30",
+    dark: "#b44829",
+    darker: "#763e2f",
+    darkest: "#532518",
+  },
+  pink: {
+    lightest: "#fdf7f8",
+    lighter: "#ffebf0",
+    light: "#fdc7d5",
+    primary: "#f059a1",
+    dark: "#a25479",
+    darker: "#763c58",
+    darkest: "#512238",
+  },
+  cream: {
+    primary: "#fff7eb",
+  },
+  "midnight-blue": {
+    primary: "#131626",
+  },
+};
+
+export const system = {
+  white: "#ffffff",
+  "grey-light": "#aeaeb2",
+  "grey-medium": "#636366",
+  "grey-dark": "#1d1d1d",
+  black: "#000000",
+  inherit: "inherit",
+};
+
+export const special = {
+  error: brand.orange.primary,
+  "error-text": brand.orange.dark,
+  success: brand.green.primary,
+  transluscent: system.black,
+};
+
+export const neutrals = {
+  "0": system.white,
+  "1": "#f9f9f9",
+  "2": "#f0f0f0",
+  "3": "#eeeeee",
+  "4": "#ede9e6",
+  "5": system["grey-light"],
+  "6": system["grey-light"],
+  "7": system["grey-medium"],
+  "8": system["grey-medium"],
+  "9": system["grey-dark"],
+  "10": system["grey-dark"],
+};
+
+export const colors = {
+  brand,
+  system,
+  special,
+  neutrals,
+};
+
+export const colorsMap = {
+  "brand-yellow-lightest": brand.yellow.lightest,
+  "brand-yellow-lighter": brand.yellow.lighter,
+  "brand-yellow-light": brand.yellow.light,
+  "brand-yellow-primary": brand.yellow.primary,
+  "brand-yellow-dark": brand.yellow.dark,
+  "brand-yellow-darker": brand.yellow.darker,
+  "brand-yellow-darkest": brand.yellow.darkest,
+  "brand-blue-lightest": brand.blue.lightest,
+  "brand-blue-lighter": brand.blue.lighter,
+  "brand-blue-light": brand.blue.light,
+  "brand-blue-primary": brand.blue.primary,
+  "brand-blue-dark": brand.blue.dark,
+  "brand-blue-darker": brand.blue.darker,
+  "brand-blue-darkest": brand.blue.darkest,
+  "brand-green-lightest": brand.green.lightest,
+  "brand-green-lighter": brand.green.lighter,
+  "brand-green-light": brand.green.light,
+  "brand-green-primary": brand.green.primary,
+  "brand-green-dark": brand.green.dark,
+  "brand-green-darker": brand.green.darker,
+  "brand-green-darkest": brand.green.darkest,
+  "brand-orange-lightest": brand.orange.lightest,
+  "brand-orange-lighter": brand.orange.lighter,
+  "brand-orange-light": brand.orange.light,
+  "brand-orange-primary": brand.orange.primary,
+  "brand-orange-dark": brand.orange.dark,
+  "brand-orange-darker": brand.orange.darker,
+  "brand-orange-darkest": brand.orange.darkest,
+  "brand-pink-lightest": brand.pink.lightest,
+  "brand-pink-lighter": brand.pink.lighter,
+  "brand-pink-light": brand.pink.light,
+  "brand-pink-primary": brand.pink.primary,
+  "brand-pink-dark": brand.pink.dark,
+  "brand-pink-darker": brand.pink.darker,
+  "brand-pink-darkest": brand.pink.darkest,
+  "brand-cream-primary": brand.cream.primary,
+  "brand-midnight-blue-primary": brand["midnight-blue"].primary,
+
+  // Neutrals
+  "neutrals-0": neutrals["0"],
+  "neutrals-1": neutrals["1"],
+  "neutrals-2": neutrals["2"],
+  "neutrals-3": neutrals["3"],
+  "neutrals-4": neutrals["4"],
+  "neutrals-5": neutrals["5"],
+  "neutrals-6": neutrals["6"],
+  "neutrals-7": neutrals["7"],
+  "neutrals-8": neutrals["8"],
+  "neutrals-9": neutrals["9"],
+  "neutrals-10": neutrals["10"],
+
+  // System
+  "system-white": system["white"],
+  "system-grey-light": system["grey-light"],
+  "system-grey-medium": system["grey-medium"],
+  "system-grey-dark": system["grey-dark"],
+  "system-black": system["black"],
+  "system-inherit": system["inherit"],
+
+  // Special
+  "special-error": special["error"],
+  "special-error-text": special["error-text"],
+  "special-success": special["success"],
+  "special-transluscent": special["transluscent"],
+};
