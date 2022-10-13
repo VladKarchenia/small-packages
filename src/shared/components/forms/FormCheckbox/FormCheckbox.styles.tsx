@@ -1,12 +1,12 @@
-import { styled } from "@/config";
-import { multipleSelectors, rgba } from "@/utils";
+import { styled } from "@/config"
+import { multipleSelectors, rgba } from "@/utils"
 
-import { IconTick } from "@/shared/icons";
+import { IconTick } from "@/shared/icons"
 
 export const SFormCheckboxLabel = styled("label", {
   display: "flex",
   alignItems: "flex-start",
-});
+})
 
 export const SFormCheckboxBox = styled(
   "span",
@@ -25,8 +25,8 @@ export const SFormCheckboxBox = styled(
   {
     borderRadius: 2,
     color: "$neutrals-9",
-  }
-);
+  },
+)
 
 export const SFormCheckboxTick = styled(IconTick, {
   opacity: 0,
@@ -36,7 +36,7 @@ export const SFormCheckboxTick = styled(IconTick, {
   svg: {
     display: "block",
   },
-});
+})
 
 export const SFormCheckboxInput = styled("input", {
   hiddenInput: true,
@@ -86,4 +86,4 @@ export const SFormCheckboxInput = styled("input", {
       },
     },
   },
-});
+})

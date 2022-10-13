@@ -1,6 +1,6 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-export const SPicture = styled("picture", {});
+export const SPicture = styled("picture", {})
 
 export const SPictureImg = styled("img", {
   height: "auto",
@@ -32,4 +32,4 @@ export const SPictureImg = styled("img", {
       },
     },
   },
-});
+})

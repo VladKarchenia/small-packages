@@ -1,14 +1,9 @@
-import React from "react";
-import {
-  Box,
-  HeaderNavItem,
-  HeaderNavWrapper,
-  Logo,
-} from "@/shared/components";
+import React from "react"
+import { Box, HeaderNavItem, HeaderNavWrapper, Logo } from "@/shared/components"
 
 interface IHeaderProps {
-  hasShadow?: boolean;
-  theme?: "default" | "cream" | "transparent";
+  hasShadow?: boolean
+  theme?: "default" | "cream" | "transparent"
 }
 
 export const Header: React.FC<React.PropsWithChildren<IHeaderProps>> = ({
@@ -30,5 +25,5 @@ export const Header: React.FC<React.PropsWithChildren<IHeaderProps>> = ({
         <Box>Поиск</Box>
       </HeaderNavItem>
     </HeaderNavWrapper>
-  );
-};
+  )
+}

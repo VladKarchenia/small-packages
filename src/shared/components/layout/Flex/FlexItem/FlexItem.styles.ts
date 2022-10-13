@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SFlexItem = styled("div", {
   variants: {
@@ -19,4 +19,4 @@ export const SFlexItem = styled("div", {
       last: { order: 1 },
     },
   },
-});
+})

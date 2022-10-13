@@ -1,1 +1,1 @@
-export * from "./IconChevron";
+export * from "./IconChevron"

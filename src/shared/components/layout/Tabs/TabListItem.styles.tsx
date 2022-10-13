@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const STabListItem = styled("button", {
   reset: true,
@@ -58,4 +58,4 @@ export const STabListItem = styled("button", {
       transform: "scaleX(1)",
     },
   },
-});
+})

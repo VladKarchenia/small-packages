@@ -1,7 +1,7 @@
-import { css } from "@/config";
-import { Spaces } from "@/config/theme/spacing";
+import { css } from "@/config"
+import { Spaces } from "@/config/theme/spacing"
 
-import { getStyleFromResponsiveProp, ResponsiveProp } from "@/utils";
+import { getStyleFromResponsiveProp, ResponsiveProp } from "@/utils"
 
 export const applyStackStyles = (space: Spaces | ResponsiveProp<Spaces>) => ({
   width: "100%",
@@ -14,11 +14,11 @@ export const applyStackStyles = (space: Spaces | ResponsiveProp<Spaces>) => ({
       marginBottom: `-$${value}`,
     })),
   },
-});
+})
 
 export const applyStackItemClassName = (space: Spaces | ResponsiveProp<Spaces>) =>
   css({
     "&:not(:empty)": getStyleFromResponsiveProp(space, (value) => ({
       paddingTop: `$${value}`,
     })),
-  })();
+  })()

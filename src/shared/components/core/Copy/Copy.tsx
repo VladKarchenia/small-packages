@@ -1,24 +1,23 @@
-import cx from "classnames";
-import deepmerge from "deepmerge";
+import cx from "classnames"
+import deepmerge from "deepmerge"
 
-import { ComponentProps, ResponsiveProp } from "@/utils/types";
-import { atomicClassNames } from "@/utils/styles";
+import { ComponentProps, ResponsiveProp } from "@/utils/types"
+import { atomicClassNames } from "@/utils/styles"
 
-import { Colors } from "@/config/theme/types";
+import { Colors } from "@/config/theme/types"
 
-import { SCopy } from "./Copy.styles";
+import { SCopy } from "./Copy.styles"
 
-export type CopyIntent = "cta" | "detail" | "copy";
+export type CopyIntent = "cta" | "detail" | "copy"
 
-export interface ICopyProps
-  extends Omit<ComponentProps<typeof SCopy>, "color"> {
-  color?: Colors | ResponsiveProp<Colors>;
+export interface ICopyProps extends Omit<ComponentProps<typeof SCopy>, "color"> {
+  color?: Colors | ResponsiveProp<Colors>
 
-  intent?: CopyIntent;
+  intent?: CopyIntent
 
-  uppercase?: boolean;
+  uppercase?: boolean
 
-  dataTestid?: string;
+  dataTestid?: string
 }
 
 function getCopyProps(intent?: CopyIntent) {
@@ -29,16 +28,16 @@ function getCopyProps(intent?: CopyIntent) {
         scale: 10,
         bold: true,
         uppercase: true,
-      };
+      }
     case "detail":
       return {
         tracking: "normal",
         scale: 8,
-      };
+      }
 
     case "copy":
     default:
-      return {};
+      return {}
   }
 }
 
@@ -55,7 +54,7 @@ export const Copy = ({
   dataTestid,
   ...props
 }: ICopyProps) => {
-  const copyProps = getCopyProps(intent);
+  const copyProps = getCopyProps(intent)
 
   return (
     <SCopy
@@ -64,7 +63,7 @@ export const Copy = ({
         atomicClassNames({
           color,
         }).toString(),
-        className
+        className,
       )}
       data-testid={dataTestid}
       {...deepmerge(
@@ -72,8 +71,8 @@ export const Copy = ({
           ...props,
           scale,
         },
-        copyProps
+        copyProps,
       )}
     />
-  );
-};
+  )
+}

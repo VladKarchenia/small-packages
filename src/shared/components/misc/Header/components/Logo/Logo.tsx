@@ -1,10 +1,10 @@
-import React from "react";
-import { IllustrationLogo } from "@/shared/illustrations";
-import { Flex, Spacer } from "@/shared/components/layout";
-import { Box, Copy } from "@/shared/components/core";
+import React from "react"
+import { IllustrationLogo } from "@/shared/illustrations"
+import { Flex, Spacer } from "@/shared/components/layout"
+import { Box, Copy } from "@/shared/components/core"
 
 interface ILogo {
-  href?: string;
+  href?: string
 }
 
 export const Logo: React.FC<ILogo> = ({ href = "/" }) => {
@@ -27,5 +27,5 @@ export const Logo: React.FC<ILogo> = ({ href = "/" }) => {
         </Copy>
       </Flex>
     </a>
-  );
-};
+  )
+}

@@ -1,38 +1,32 @@
-import React from "react";
+import React from "react"
 
-import { Spaces } from "@/config/theme/spacing";
+import { Spaces } from "@/config/theme/spacing"
 
-import { atomicClassNames, mergeCSSObjects, ResponsiveProp } from "@/utils";
+import { atomicClassNames, mergeCSSObjects, ResponsiveProp } from "@/utils"
 
-import { CSS } from "@/config";
+import { CSS } from "@/config"
 
-import {
-  Box,
-  Hidden,
-  IHiddenProps,
-  Spacer,
-  Divider,
-} from "@/shared/components";
+import { Box, Hidden, IHiddenProps, Spacer, Divider } from "@/shared/components"
 
-import { applyStackStyles, applyStackItemClassName } from "./Stack.styles";
+import { applyStackStyles, applyStackItemClassName } from "./Stack.styles"
 
 export interface IStackProps {
-  as?: keyof JSX.IntrinsicElements;
-  css?: CSS;
+  as?: keyof JSX.IntrinsicElements
+  css?: CSS
 
   /**
    * The spacing between child items. Can be passed a single value or a responsive object
    */
-  space: Spaces | ResponsiveProp<Spaces>;
+  space: Spaces | ResponsiveProp<Spaces>
 
   /**
    * Show a divider between each child item
    */
-  dividers?: boolean;
+  dividers?: boolean
   /**
    * Show divider(s) above and/or below the child items.
    */
-  outerDividers?: boolean | "top" | "bottom";
+  outerDividers?: boolean | "top" | "bottom"
 }
 
 export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
@@ -43,9 +37,9 @@ export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
   dividers = false,
   outerDividers,
 }) => {
-  const isList = as === "ul" || as === "ol";
+  const isList = as === "ul" || as === "ol"
 
-  const ChildrenTag = isList ? "li" : "div";
+  const ChildrenTag = isList ? "li" : "div"
 
   return (
     <>
@@ -59,17 +53,14 @@ export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
       <Box as={as} css={mergeCSSObjects(css, applyStackStyles(space))}>
         {React.Children.map(children, (child, index) => {
           if (!React.isValidElement(child)) {
-            return;
+            return
           }
 
-          const className = [applyStackItemClassName(space)];
+          const className = [applyStackItemClassName(space)]
 
           const isHidden =
-            child &&
-            typeof child === "object" &&
-            "type" in child &&
-            child.type === Hidden;
-          const hiddenProps = isHidden ? (child.props as IHiddenProps) : null;
+            child && typeof child === "object" && "type" in child && child.type === Hidden
+          const hiddenProps = isHidden ? (child.props as IHiddenProps) : null
 
           if (isHidden && hiddenProps) {
             className.push(
@@ -82,8 +73,8 @@ export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
                     [`@max-${hiddenProps.below}`]: "none",
                   }),
                 },
-              })
-            );
+              }),
+            )
           }
 
           return (
@@ -96,7 +87,7 @@ export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
               ) : null}
               {hiddenProps ? hiddenProps.children : child}
             </ChildrenTag>
-          );
+          )
         })}
       </Box>
 
@@ -107,5 +98,5 @@ export const Stack: React.FC<React.PropsWithChildren<IStackProps>> = ({
         </>
       )}
     </>
-  );
-};
+  )
+}

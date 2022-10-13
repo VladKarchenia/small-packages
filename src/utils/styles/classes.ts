@@ -1,6 +1,6 @@
-import { css, theme } from "@/config";
+import { css, theme } from "@/config"
 
-import { Colors } from "@/config/theme/types";
+import { Colors } from "@/config/theme/types"
 
 const generateColorVariant = (property: string) => {
   return Object.keys(theme.colors).reduce(
@@ -11,12 +11,12 @@ const generateColorVariant = (property: string) => {
       },
     }),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    {} as Record<Colors, any>
-  );
-};
+    {} as Record<Colors, any>,
+  )
+}
 
-const backgroundColorVariant = generateColorVariant("backgroundColor");
-const colorVariant = generateColorVariant("color");
+const backgroundColorVariant = generateColorVariant("backgroundColor")
+const colorVariant = generateColorVariant("color")
 
 /**
  * ### Examples of usage:
@@ -66,4 +66,4 @@ export const atomicClassNames = css({
     backgroundColor: backgroundColorVariant,
     color: colorVariant,
   },
-});
+})

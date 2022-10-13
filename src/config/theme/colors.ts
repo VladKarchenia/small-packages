@@ -51,7 +51,7 @@ export const brand = {
   "midnight-blue": {
     primary: "#131626",
   },
-};
+}
 
 export const system = {
   white: "#ffffff",
@@ -60,14 +60,14 @@ export const system = {
   "grey-dark": "#1d1d1d",
   black: "#000000",
   inherit: "inherit",
-};
+}
 
 export const special = {
   error: brand.orange.primary,
   "error-text": brand.orange.dark,
   success: brand.green.primary,
   transluscent: system.black,
-};
+}
 
 export const neutrals = {
   "0": system.white,
@@ -81,14 +81,14 @@ export const neutrals = {
   "8": system["grey-medium"],
   "9": system["grey-dark"],
   "10": system["grey-dark"],
-};
+}
 
 export const colors = {
   brand,
   system,
   special,
   neutrals,
-};
+}
 
 export const colorsMap = {
   "brand-yellow-lightest": brand.yellow.lightest,
@@ -155,4 +155,4 @@ export const colorsMap = {
   "special-error-text": special["error-text"],
   "special-success": special["success"],
   "special-transluscent": special["transluscent"],
-};
+}

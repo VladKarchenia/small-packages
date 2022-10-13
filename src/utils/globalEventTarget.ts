@@ -1,13 +1,13 @@
 export const getGlobalEventTarget = (): typeof globalThis | Window | null => {
   if (typeof globalThis !== "undefined") {
-    return globalThis;
+    return globalThis
   }
 
   if (typeof window !== "undefined") {
-    return window;
+    return window
   }
 
-  return null;
-};
+  return null
+}
 
-export const globalEventTarget = getGlobalEventTarget();
+export const globalEventTarget = getGlobalEventTarget()

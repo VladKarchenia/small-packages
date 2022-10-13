@@ -1,6 +1,6 @@
-import { styled } from "@/config";
-import { animations } from "@/utils";
-import { SIcon } from "../Icon/Icon.styles";
+import { styled } from "@/config"
+import { animations } from "@/utils"
+import { SIcon } from "../Icon/Icon.styles"
 
 export const SIconDots = styled(SIcon, {
   position: "relative",
@@ -43,4 +43,4 @@ export const SIconDots = styled(SIcon, {
   span: {
     animationDelay: "120ms",
   },
-});
+})

@@ -1,14 +1,14 @@
-import React, { useRef } from "react";
-import ReactDOM from "react-dom";
-import FocusLock from "react-focus-lock";
+import React, { useRef } from "react"
+import ReactDOM from "react-dom"
+import FocusLock from "react-focus-lock"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { useWaitForTransition } from "@/shared/hooks";
+import { useWaitForTransition } from "@/shared/hooks"
 
-import { IconCross } from "@/shared/icons";
+import { IconCross } from "@/shared/icons"
 
-import { Overlay } from "../Overlay";
+import { Overlay } from "../Overlay"
 
 import {
   SDrawer,
@@ -17,20 +17,20 @@ import {
   SDrawerContent,
   SDrawerTopBar,
   SDrawerCloseButton,
-} from "./Drawer.styles";
+} from "./Drawer.styles"
 
 export interface IDrawerProps extends ComponentProps<typeof SDrawerPanel> {
-  isVisible: boolean;
+  isVisible: boolean
 
-  direction?: "left" | "right";
+  direction?: "left" | "right"
 
-  isLocked?: boolean;
+  isLocked?: boolean
 
-  portalElement: HTMLElement | null;
+  portalElement: HTMLElement | null
 
-  topBarContent?: React.ReactNode;
+  topBarContent?: React.ReactNode
 
-  onClose: () => void;
+  onClose: () => void
 }
 
 export const Drawer = ({
@@ -42,12 +42,12 @@ export const Drawer = ({
   onClose,
   ...props
 }: IDrawerProps) => {
-  const drawerContent = useRef<HTMLDivElement>(null);
+  const drawerContent = useRef<HTMLDivElement>(null)
 
-  const isHidden = useWaitForTransition(drawerContent.current, isVisible);
+  const isHidden = useWaitForTransition(drawerContent.current, isVisible)
 
   if (!portalElement) {
-    return null;
+    return null
   }
 
   return ReactDOM.createPortal(
@@ -88,6 +88,6 @@ export const Drawer = ({
         </FocusLock>
       </SDrawerPanel>
     </SDrawer>,
-    portalElement
-  );
-};
+    portalElement,
+  )
+}

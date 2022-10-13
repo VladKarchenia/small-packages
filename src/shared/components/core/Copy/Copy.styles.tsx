@@ -1,6 +1,6 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-import { Text } from "../Text";
+import { Text } from "../Text"
 
 export const SCopy = styled("p", Text, {
   fontSmoothing: true,
@@ -29,4 +29,4 @@ export const SCopy = styled("p", Text, {
     bold: "false",
     uppercase: "false",
   },
-});
+})

@@ -1,4 +1,4 @@
-import { colorsMap } from "./colors";
+import { colorsMap } from "./colors"
 
 export const theme = {
   radii: {
@@ -72,4 +72,4 @@ export const theme = {
     "9": 9,
     max: 2147483647,
   },
-};
+}

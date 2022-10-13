@@ -1,3 +1,3 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-export const STabs = styled("div", {});
+export const STabs = styled("div", {})

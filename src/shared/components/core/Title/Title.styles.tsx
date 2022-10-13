@@ -1,6 +1,6 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-import { Text } from "../Text";
+import { Text } from "../Text"
 
 export const STitle = styled("h1", Text, {
   fontSmoothing: true,
@@ -15,4 +15,4 @@ export const STitle = styled("h1", Text, {
   defaultVariants: {
     thin: "false",
   },
-});
+})

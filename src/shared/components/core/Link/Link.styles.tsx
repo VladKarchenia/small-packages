@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { multipleSelectors } from "@/utils";
+import { styled } from "@/config"
+import { multipleSelectors } from "@/utils"
 
 export const SLink = styled("a", {
   reset: true,
@@ -39,10 +39,10 @@ export const SLink = styled("a", {
       },
     },
   },
-});
+})
 
 export const SLinkIcon = styled("div", {
   display: "flex",
   marginRight: "$4",
   marginTop: "$2",
-});
+})

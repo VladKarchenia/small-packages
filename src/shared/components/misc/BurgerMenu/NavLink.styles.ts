@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { multipleSelectors, easing } from "@/utils";
+import { styled } from "@/config"
+import { multipleSelectors, easing } from "@/utils"
 
 export const SNavLink = styled("a", {
   $$color: "$colors$neutrals-7",
@@ -49,4 +49,4 @@ export const SNavLink = styled("a", {
       },
     },
   },
-});
+})

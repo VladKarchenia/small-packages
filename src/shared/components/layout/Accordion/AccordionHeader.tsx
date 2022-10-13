@@ -1,13 +1,12 @@
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { Title, TypographyScale } from "@/shared/components";
+import { Title, TypographyScale } from "@/shared/components"
 
-import { SAccordionHeader } from "./AccordionHeader.styles";
+import { SAccordionHeader } from "./AccordionHeader.styles"
 
-export interface IAccordionHeaderProps
-  extends ComponentProps<typeof SAccordionHeader> {
-  scale?: TypographyScale;
-  thin?: boolean;
+export interface IAccordionHeaderProps extends ComponentProps<typeof SAccordionHeader> {
+  scale?: TypographyScale
+  thin?: boolean
 }
 
 export const AccordionHeader = ({
@@ -17,14 +16,10 @@ export const AccordionHeader = ({
   ...props
 }: IAccordionHeaderProps) => {
   return (
-    <SAccordionHeader
-      data-plum-ui="accordion-header"
-      data-testid="accordion-header"
-      {...props}
-    >
+    <SAccordionHeader data-plum-ui="accordion-header" data-testid="accordion-header" {...props}>
       <Title as="h4" scale={scale} thin={thin}>
         {children}
       </Title>
     </SAccordionHeader>
-  );
-};
+  )
+}

@@ -1,55 +1,54 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
-import { createContext } from "@/utils";
+import { createContext } from "@/utils"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { SAccordion } from "./Accordion.styles";
+import { SAccordion } from "./Accordion.styles"
 
 type AccordionTextToggle = {
-  hideLabel: string;
-  showLabel: string;
-};
+  hideLabel: string
+  showLabel: string
+}
 
 type AccordionContextValue = {
-  selected: string[];
+  selected: string[]
 
-  disabled: boolean;
-  divider?: boolean;
+  disabled: boolean
+  divider?: boolean
 
-  textToggle?: AccordionTextToggle;
+  textToggle?: AccordionTextToggle
 
-  onItemOpen: (value: string) => void;
-  onItemClose: (value: string) => void;
-};
+  onItemOpen: (value: string) => void
+  onItemClose: (value: string) => void
+}
 
-export const [AccordionProvider, useAccordionContext] = createContext<AccordionContextValue>(
-  "Accordion"
-);
+export const [AccordionProvider, useAccordionContext] =
+  createContext<AccordionContextValue>("Accordion")
 
 export interface IAccordionProps extends ComponentProps<typeof SAccordion> {
   /**
    * Array of Accordion Item value(s) to be open by default
    */
-  defaultSelected?: string[];
+  defaultSelected?: string[]
 
-  disabled?: boolean;
+  disabled?: boolean
   /**
    * To enable a divider between the Accordion Header and Accordion Panel
    */
-  divider?: boolean;
+  divider?: boolean
   /**
    * Enable multiple panels open
    */
-  multiple?: boolean;
+  multiple?: boolean
   /**
    * Callback with an array of string values of the Accordion Items
    */
-  onSelectedChange?: (selected: string[]) => void;
+  onSelectedChange?: (selected: string[]) => void
   /**
    * Add show and hide text labels to be shown instead of chevron icon
    */
-  textToggle?: AccordionTextToggle;
+  textToggle?: AccordionTextToggle
 }
 
 export const Accordion = ({
@@ -61,32 +60,32 @@ export const Accordion = ({
   textToggle,
   ...props
 }: IAccordionProps) => {
-  const [selected, setSelected] = useState(defaultSelected);
-  const selectedRef = useRef(selected);
+  const [selected, setSelected] = useState(defaultSelected)
+  const selectedRef = useRef(selected)
 
   const handleItemOpen = useCallback(
     (itemValue: string) =>
       !multiple
         ? setSelected([itemValue])
         : setSelected((prevValue = []) => [...prevValue, itemValue]),
-    [multiple, setSelected]
-  );
+    [multiple, setSelected],
+  )
 
   const handleItemClose = useCallback(
     (itemValue: string) =>
       !multiple
         ? setSelected([])
         : setSelected((prevValue = []) => prevValue.filter((value) => value !== itemValue)),
-    [multiple, setSelected]
-  );
+    [multiple, setSelected],
+  )
 
   useEffect(() => {
     if (selected !== selectedRef.current) {
-      selectedRef.current = selected;
+      selectedRef.current = selected
 
-      onSelectedChange && onSelectedChange(selected);
+      onSelectedChange && onSelectedChange(selected)
     }
-  }, [onSelectedChange, selected]);
+  }, [onSelectedChange, selected])
 
   return (
     <AccordionProvider
@@ -99,5 +98,5 @@ export const Accordion = ({
     >
       <SAccordion data-plum-ui="accordion" data-testid="accordion" {...props} />
     </AccordionProvider>
-  );
-};
+  )
+}

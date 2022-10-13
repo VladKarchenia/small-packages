@@ -1,43 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
-import { useDisableScroll } from "../useDisableScroll";
+import { useDisableScroll } from "../useDisableScroll"
 
-export const useWaitForTransition = (
-  node: Element | null,
-  isVisible: boolean
-) => {
-  const [hasAnimated, setAnimated] = useState(false);
+export const useWaitForTransition = (node: Element | null, isVisible: boolean) => {
+  const [hasAnimated, setAnimated] = useState(false)
 
-  const [, setScrollable] = useDisableScroll();
+  const [, setScrollable] = useDisableScroll()
 
   useEffect(() => {
     const toggleVisibility = () => {
-      setAnimated(isVisible);
-    };
+      setAnimated(isVisible)
+    }
 
     const waitForTransition = (e: Event) => {
       if (node && e.target === node) {
-        setScrollable(true);
-        toggleVisibility();
-        node.removeEventListener("transitionend", waitForTransition);
+        setScrollable(true)
+        toggleVisibility()
+        node.removeEventListener("transitionend", waitForTransition)
       }
-    };
+    }
 
     if (node) {
       if (isVisible) {
-        setScrollable(false);
-        toggleVisibility();
+        setScrollable(false)
+        toggleVisibility()
       } else {
-        node.addEventListener("transitionend", waitForTransition);
+        node.addEventListener("transitionend", waitForTransition)
       }
     }
 
     return () => {
       if (node) {
-        node.removeEventListener("transitionend", waitForTransition);
+        node.removeEventListener("transitionend", waitForTransition)
       }
-    };
-  }, [node, isVisible, setScrollable]);
+    }
+  }, [node, isVisible, setScrollable])
 
-  return !hasAnimated && !isVisible;
-};
+  return !hasAnimated && !isVisible
+}

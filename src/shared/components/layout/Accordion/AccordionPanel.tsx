@@ -1,23 +1,23 @@
-import { CSS } from "@stitches/react";
+import { CSS } from "@stitches/react"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { useAccordionItemContext } from "./AccordionItem";
+import { useAccordionItemContext } from "./AccordionItem"
 
-import { SAccordionPanel, SAccordionContent } from "./AccordionPanel.styles";
-import { useAccordionContext } from ".";
-import { Box } from "@/shared/components";
-import { Divider } from "..";
+import { SAccordionPanel, SAccordionContent } from "./AccordionPanel.styles"
+import { useAccordionContext } from "."
+import { Box } from "@/shared/components"
+import { Divider } from ".."
 
 export interface IAccordionPanelProps extends ComponentProps<typeof SAccordionPanel> {
-  contentCss?: CSS;
+  contentCss?: CSS
 }
 
 export const AccordionPanel = ({ children, contentCss, ...props }: IAccordionPanelProps) => {
-  const { divider } = useAccordionContext("AccordionPanel");
-  const { id, open } = useAccordionItemContext("AccordionPanel");
+  const { divider } = useAccordionContext("AccordionPanel")
+  const { id, open } = useAccordionItemContext("AccordionPanel")
 
-  const state = open ? "open" : "closed";
+  const state = open ? "open" : "closed"
 
   return (
     <SAccordionPanel
@@ -48,5 +48,5 @@ export const AccordionPanel = ({ children, contentCss, ...props }: IAccordionPan
       )}
       <SAccordionContent css={contentCss}>{children}</SAccordionContent>
     </SAccordionPanel>
-  );
-};
+  )
+}

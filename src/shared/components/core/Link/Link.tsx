@@ -1,23 +1,22 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from "react"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { Copy, ICopyProps } from "@/shared/components";
+import { Copy, ICopyProps } from "@/shared/components"
 
-import { SLink } from "./Link.styles";
+import { SLink } from "./Link.styles"
 
-export interface ILinkProps
-  extends Omit<ComponentProps<typeof SLink>, "onClick"> {
-  as?: "a" | "button";
-  intent?: ICopyProps["intent"];
-  scale?: ICopyProps["scale"];
+export interface ILinkProps extends Omit<ComponentProps<typeof SLink>, "onClick"> {
+  as?: "a" | "button"
+  intent?: ICopyProps["intent"]
+  scale?: ICopyProps["scale"]
 
-  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
 
-  dataTrackId?: string;
-  dataTrackValue?: string;
+  dataTrackId?: string
+  dataTrackValue?: string
 
-  shouldPreventDefault?: boolean;
+  shouldPreventDefault?: boolean
 }
 
 export const Link = ({
@@ -30,20 +29,18 @@ export const Link = ({
   ...props
 }: ILinkProps): React.ReactElement => {
   const handleOnClick = useCallback(
-    (
-      e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>
-    ) => {
+    (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => {
       if (shouldPreventDefault) {
-        e.preventDefault();
+        e.preventDefault()
       }
 
-      onClick && onClick(e);
+      onClick && onClick(e)
     },
-    [shouldPreventDefault, onClick]
-  );
+    [shouldPreventDefault, onClick],
+  )
 
   const linkProps = React.useMemo(() => {
-    const { dataTrackId, dataTrackValue, className, target, ...rest } = props;
+    const { dataTrackId, dataTrackValue, className, target, ...rest } = props
     const commonLinkProps = {
       ...rest,
       as,
@@ -52,17 +49,17 @@ export const Link = ({
       "data-track-id": dataTrackId,
       "data-track-value": dataTrackValue,
       className,
-    };
+    }
 
     if (target === "_blank") {
       return {
         ...commonLinkProps,
         rel: "noopener noreferrer",
-      };
+      }
     }
 
-    return commonLinkProps;
-  }, [props, as, intent]);
+    return commonLinkProps
+  }, [props, as, intent])
 
   return (
     <SLink
@@ -75,5 +72,5 @@ export const Link = ({
         {children}
       </Copy>
     </SLink>
-  );
-};
+  )
+}

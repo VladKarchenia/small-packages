@@ -1,3 +1,3 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-export const SGridItem = styled("div", {});
+export const SGridItem = styled("div", {})

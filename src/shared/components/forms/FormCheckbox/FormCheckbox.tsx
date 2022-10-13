@@ -1,38 +1,38 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes } from "react"
 
-import { FormComponentProps } from "@/utils/types";
+import { FormComponentProps } from "@/utils/types"
 
-import { Copy, Spacer, ErrorLabel } from "@/shared/components";
+import { Copy, Spacer, ErrorLabel } from "@/shared/components"
 
 import {
   SFormCheckboxBox,
   SFormCheckboxInput,
   SFormCheckboxLabel,
   SFormCheckboxTick,
-} from "./FormCheckbox.styles";
+} from "./FormCheckbox.styles"
 
 export interface IFormCheckboxProps
   extends FormComponentProps<typeof SFormCheckboxInput, InputHTMLAttributes<HTMLInputElement>> {
-  label: React.ReactNode;
+  label: React.ReactNode
 
-  error?: React.ReactNode;
+  error?: React.ReactNode
 
   /**
    * ! Every field should always contain a label, so whenever this prop is used, make sure to add a label for the field manually
    */
-  noLabel?: boolean;
+  noLabel?: boolean
 }
 
 export const FormCheckbox = React.forwardRef(
   ({ checked, noLabel, error, ...props }: IFormCheckboxProps, ref: React.Ref<HTMLInputElement>) => {
-    const { label, disabled, id, ...inputProps } = props;
+    const { label, disabled, id, ...inputProps } = props
 
     const labelProps = React.useMemo(() => {
       return {
         disabled: disabled,
         htmlFor: id,
-      };
-    }, [disabled, id]);
+      }
+    }, [disabled, id])
 
     const checkboxInputProps = React.useMemo(() => {
       return {
@@ -42,8 +42,8 @@ export const FormCheckbox = React.forwardRef(
         ref: ref,
         type: "checkbox",
         ...inputProps,
-      };
-    }, [id, disabled, checked, ref, inputProps]);
+      }
+    }, [id, disabled, checked, ref, inputProps])
 
     return (
       <>
@@ -70,8 +70,8 @@ export const FormCheckbox = React.forwardRef(
           </>
         )}
       </>
-    );
-  }
-);
+    )
+  },
+)
 
-FormCheckbox.displayName = "FormCheckbox";
+FormCheckbox.displayName = "FormCheckbox"

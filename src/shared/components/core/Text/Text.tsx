@@ -1,9 +1,9 @@
-import { styled, CSS } from "@/config";
+import { styled, CSS } from "@/config"
 
 const editorialVariant = {
   true: { fontFamily: "$serif" },
   false: { fontFamily: "$sans" },
-};
+}
 
 const fontSizeLineHeightMap: any = {
   6: "16px",
@@ -22,16 +22,16 @@ const fontSizeLineHeightMap: any = {
   72: "80px",
   80: "88px",
   104: "112px",
-};
+}
 
 const getScaleVariantStyles = (fontSize: number) => {
-  const lineHeight = fontSizeLineHeightMap[fontSize];
+  const lineHeight = fontSizeLineHeightMap[fontSize]
 
   return {
     fontSize,
     lineHeight,
-  };
-};
+  }
+}
 
 const scaleVariantMap: any = {
   0: {
@@ -88,14 +88,14 @@ const scaleVariantMap: any = {
   11: {
     ...getScaleVariantStyles(6),
   },
-};
+}
 
 const trackingVariant = {
   tight: { letterSpacing: 0 },
   normal: { letterSpacing: "0.5px" },
   wide: { letterSpacing: "1.5px" },
   wider: { letterSpacing: "2px" },
-};
+}
 
 export const commonVariants = {
   editorial: editorialVariant,
@@ -114,9 +114,9 @@ export const commonVariants = {
     11: {},
   },
   tracking: trackingVariant,
-};
+}
 
-export type TypographyScale = keyof typeof commonVariants.scale;
+export type TypographyScale = keyof typeof commonVariants.scale
 
 export const Text = styled("p", {
   fontFamily: "$sans",
@@ -138,15 +138,15 @@ export const Text = styled("p", {
   compoundVariants: [
     ...Object.keys(scaleVariantMap).reduce<
       {
-        scale: TypographyScale;
-        css: CSS;
+        scale: TypographyScale
+        css: CSS
       }[]
     >((acc, scale) => {
       acc.push({
         scale: Number(scale) as TypographyScale,
         css: scaleVariantMap[scale],
-      });
-      return acc;
+      })
+      return acc
     }, []),
   ],
-});
+})

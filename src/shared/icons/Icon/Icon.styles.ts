@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SIcon = styled("span", {
   verticalAlign: "middle",
@@ -28,7 +28,7 @@ export const SIcon = styled("span", {
     block: "false",
     size: "sm",
   },
-});
+})
 
 export const SIconSvg = styled("svg", {
   display: "block",
@@ -39,4 +39,4 @@ export const SIconSvg = styled("svg", {
       true: { height: "initial" },
     },
   },
-});
+})

@@ -1,2 +1,2 @@
-export * from "./FormCheckbox";
-export * from "./ErrorLabel";
+export * from "./FormCheckbox"
+export * from "./ErrorLabel"

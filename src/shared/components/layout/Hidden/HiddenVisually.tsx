@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const HiddenVisually = styled("div", {
   position: "absolute",
@@ -7,4 +7,4 @@ export const HiddenVisually = styled("div", {
   height: 1,
   clip: "rect(1px, 1px, 1px, 1px)",
   whiteSpace: "nowrap",
-});
+})

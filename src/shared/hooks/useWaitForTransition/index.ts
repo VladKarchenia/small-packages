@@ -1,1 +1,1 @@
-export * from "./useWaitForTransition";
+export * from "./useWaitForTransition"

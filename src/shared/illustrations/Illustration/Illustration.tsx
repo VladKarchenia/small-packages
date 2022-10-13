@@ -1,11 +1,11 @@
-import React from "react";
-import { ComponentProps } from "@/utils/types";
-import { SBaseIllustration } from "./Illustration.styles";
+import React from "react"
+import { ComponentProps } from "@/utils/types"
+import { SBaseIllustration } from "./Illustration.styles"
 
 export interface IIllustrationProps extends ComponentProps<typeof SBaseIllustration> {
-  dataTestId?: string;
+  dataTestId?: string
 
-  scribble?: boolean;
+  scribble?: boolean
 }
 
 export const BaseIllustration: React.FC<IIllustrationProps> = ({
@@ -16,4 +16,4 @@ export const BaseIllustration: React.FC<IIllustrationProps> = ({
   <SBaseIllustration {...props} data-testid={dataTestId}>
     {children}
   </SBaseIllustration>
-);
+)

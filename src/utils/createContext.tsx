@@ -1,27 +1,27 @@
-import * as React from "react";
+import * as React from "react"
 
 export function createContext<ContextValueType extends object>(rootComponentName: string) {
-  const Context = React.createContext<ContextValueType>({} as ContextValueType);
+  const Context = React.createContext<ContextValueType>({} as ContextValueType)
 
   function Provider(props: ContextValueType & { children: React.ReactNode }) {
-    const { children, ...providerProps } = props;
+    const { children, ...providerProps } = props
     // Only re-memoize when prop values change
     const value = React.useMemo(
       () => providerProps,
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      Object.values(providerProps)
-    ) as ContextValueType;
-    return <Context.Provider value={value}>{children}</Context.Provider>;
+      Object.values(providerProps),
+    ) as ContextValueType
+    return <Context.Provider value={value}>{children}</Context.Provider>
   }
 
   function useContext(consumerName: string) {
-    const context = React.useContext(Context);
+    const context = React.useContext(Context)
     if (context === null) {
-      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``)
     }
-    return context;
+    return context
   }
 
-  Provider.displayName = rootComponentName + "Provider";
-  return [Provider, useContext] as const;
+  Provider.displayName = rootComponentName + "Provider"
+  return [Provider, useContext] as const
 }

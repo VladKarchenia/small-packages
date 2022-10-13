@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SBaseIllustration = styled("span", {
   svg: {
@@ -6,4 +6,4 @@ export const SBaseIllustration = styled("span", {
     width: "100%",
     height: "100%",
   },
-});
+})

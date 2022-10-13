@@ -1,16 +1,16 @@
-import React from "react";
+import React from "react"
 
-import { breakpoints } from "@/config";
+import { breakpoints } from "@/config"
 
-import { ComponentProps } from "@/utils/types";
-import { atomicClassNames } from "@/utils";
+import { ComponentProps } from "@/utils/types"
+import { atomicClassNames } from "@/utils"
 
-import { SHidden } from "./Hidden.styles";
+import { SHidden } from "./Hidden.styles"
 
-type Breakpoint = keyof typeof breakpoints;
+type Breakpoint = keyof typeof breakpoints
 export interface IHiddenProps extends ComponentProps<typeof SHidden> {
-  above?: Breakpoint;
-  below?: Breakpoint;
+  above?: Breakpoint
+  below?: Breakpoint
 }
 
 export const Hidden = React.forwardRef<HTMLDivElement, IHiddenProps>(
@@ -26,8 +26,8 @@ export const Hidden = React.forwardRef<HTMLDivElement, IHiddenProps>(
         })}
         {...props}
       />
-    );
-  }
-);
+    )
+  },
+)
 
-Hidden.displayName = "Hidden";
+Hidden.displayName = "Hidden"

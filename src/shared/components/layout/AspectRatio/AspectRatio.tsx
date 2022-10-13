@@ -1,37 +1,37 @@
-import React from "react";
+import React from "react"
 
-import { CSS } from "@/config";
+import { CSS } from "@/config"
 
-import {
-  getStyleFromResponsiveProp,
-  mergeCSSObjects,
-  ResponsiveProp,
-} from "@/utils";
+import { getStyleFromResponsiveProp, mergeCSSObjects, ResponsiveProp } from "@/utils"
 
-import { SAspectRatio } from "./AspectRatio.styles";
+import { SAspectRatio } from "./AspectRatio.styles"
 
 export interface IAspectRatioProps {
-  className?: string;
-  ratio?: string | ResponsiveProp<string>;
-  css?: CSS;
+  className?: string
+  ratio?: string | ResponsiveProp<string>
+  css?: CSS
 }
 
-export const AspectRatio: React.FC<
-  React.PropsWithChildren<IAspectRatioProps>
-> = ({ children, className, ratio = "1:1", css = {}, ...props }) => {
+export const AspectRatio: React.FC<React.PropsWithChildren<IAspectRatioProps>> = ({
+  children,
+  className,
+  ratio = "1:1",
+  css = {},
+  ...props
+}) => {
   return (
     <SAspectRatio
       data-plum-ui="aspect-ratio"
       className={className}
       css={mergeCSSObjects(
         getStyleFromResponsiveProp(ratio, (value) => {
-          const [width, height] = value.split(":").map(Number);
+          const [width, height] = value.split(":").map(Number)
 
           return {
             paddingBottom: `${100 / (width / height)}%`,
-          };
+          }
         }),
-        css
+        css,
       )}
     >
       <div
@@ -47,5 +47,5 @@ export const AspectRatio: React.FC<
         {children}
       </div>
     </SAspectRatio>
-  );
-};
+  )
+}

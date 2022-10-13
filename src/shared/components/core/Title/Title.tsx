@@ -1,28 +1,20 @@
-import * as React from "react";
-import cx from "classnames";
+import * as React from "react"
+import cx from "classnames"
 
-import { ComponentProps, ResponsiveProp } from "@/utils/types";
-import { atomicClassNames } from "@/utils/styles";
+import { ComponentProps, ResponsiveProp } from "@/utils/types"
+import { atomicClassNames } from "@/utils/styles"
 
-import { Colors } from "@/config/theme/types";
+import { Colors } from "@/config/theme/types"
 
-import { STitle } from "./Title.styles";
+import { STitle } from "./Title.styles"
 
-export interface ITitleProps
-  extends Omit<ComponentProps<typeof STitle>, "color"> {
-  color?: Colors | ResponsiveProp<Colors>;
+export interface ITitleProps extends Omit<ComponentProps<typeof STitle>, "color"> {
+  color?: Colors | ResponsiveProp<Colors>
 
-  dataTestid?: string;
+  dataTestid?: string
 }
 
-export const Title = ({
-  as,
-  className,
-  color,
-  scale = 5,
-  dataTestid,
-  ...props
-}: ITitleProps) => {
+export const Title = ({ as, className, color, scale = 5, dataTestid, ...props }: ITitleProps) => {
   return (
     <STitle
       as={as}
@@ -30,11 +22,11 @@ export const Title = ({
         atomicClassNames({
           color,
         }).toString(),
-        className
+        className,
       )}
       scale={scale}
       data-testid={dataTestid}
       {...props}
     />
-  );
-};
+  )
+}

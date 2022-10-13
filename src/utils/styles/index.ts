@@ -1,15 +1,15 @@
-import { objectReduce } from "fast-loops";
-import deepmerge from "deepmerge";
+import { objectReduce } from "fast-loops"
+import deepmerge from "deepmerge"
 
-import { CSS } from "@/config";
+import { CSS } from "@/config"
 
-import { ResponsiveProp } from "../types";
+import { ResponsiveProp } from "../types"
 
-export * from "./animations";
+export * from "./animations"
 // export * from "./boxShadows";
-export * from "./classes";
-export * from "./colors";
-export * from "./easing";
+export * from "./classes"
+export * from "./colors"
+export * from "./easing"
 
 type CSSSelector =
   | "hover"
@@ -26,24 +26,24 @@ type CSSSelector =
   | "firstLetter"
   | "lastChild"
   | "lastOfType"
-  | "onlyChild";
+  | "onlyChild"
 
 export const multipleSelectors = (selectors: CSSSelector[], value: CSS) => {
-  const styles = {} as Record<CSSSelector, CSS>;
+  const styles = {} as Record<CSSSelector, CSS>
 
   selectors.forEach((selector) => {
-    styles[selector] = value;
-  });
+    styles[selector] = value
+  })
 
-  return styles;
-};
+  return styles
+}
 
 export const getStyleFromResponsiveProp = <T>(
   prop: T | ResponsiveProp<T> | undefined,
-  callbackFn: (value: T, key: keyof ResponsiveProp<T>) => {}
+  callbackFn: (value: T, key: keyof ResponsiveProp<T>) => {},
 ) => {
   if (!prop) {
-    return {};
+    return {}
   }
 
   if (
@@ -52,30 +52,28 @@ export const getStyleFromResponsiveProp = <T>(
     typeof prop === "boolean" ||
     Array.isArray(prop)
   ) {
-    return callbackFn(prop, "@initial");
+    return callbackFn(prop, "@initial")
   } else {
     return objectReduce(
       prop,
       (total: {}, value: T, key: keyof ResponsiveProp<T>) => ({
         ...total,
-        ...(key === "@initial"
-          ? callbackFn(value, key)
-          : { [key]: callbackFn(value, key) }),
+        ...(key === "@initial" ? callbackFn(value, key) : { [key]: callbackFn(value, key) }),
       }),
-      {}
-    );
+      {},
+    )
   }
-};
+}
 
 export const mergeCSSObjects = (x: CSS, y: CSS): CSS => {
-  const styles: CSS = deepmerge(x, y);
+  const styles: CSS = deepmerge(x, y)
 
   const sortedStyles = Object.keys(styles)
     .sort((a, b) => b.localeCompare(a))
     .reduce((acc: CSS, key) => {
-      acc[key] = styles[key];
-      return acc;
-    }, {});
+      acc[key] = styles[key]
+      return acc
+    }, {})
 
-  return sortedStyles;
-};
+  return sortedStyles
+}

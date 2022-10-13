@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SFlex = styled("div", {
   display: "flex",
@@ -43,4 +43,4 @@ export const SFlex = styled("div", {
     direction: "row",
     wrap: "false",
   },
-});
+})

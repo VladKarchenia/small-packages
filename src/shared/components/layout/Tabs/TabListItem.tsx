@@ -1,31 +1,31 @@
-import { useCallback, useEffect, useRef } from "react";
-import { ComponentProps } from "@/utils";
-import { Copy } from "@/shared/components";
-import { useTabsContext } from "./state";
-import { STabListItem } from "./TabListItem.styles";
+import { useCallback, useEffect, useRef } from "react"
+import { ComponentProps } from "@/utils"
+import { Copy } from "@/shared/components"
+import { useTabsContext } from "./state"
+import { STabListItem } from "./TabListItem.styles"
 
 export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
   /**
    * ID of the Tab List Item
    */
-  id: string;
+  id: string
 }
 
 export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
-  const ref = useRef<HTMLButtonElement>(null);
-  const { selected, setSelected } = useTabsContext();
+  const ref = useRef<HTMLButtonElement>(null)
+  const { selected, setSelected } = useTabsContext()
 
   const handleOnClick = useCallback(() => {
-    setSelected(id);
-  }, [id, setSelected]);
+    setSelected(id)
+  }, [id, setSelected])
 
-  const isSelected = selected === id;
+  const isSelected = selected === id
 
   useEffect(() => {
     if (isSelected && ref.current) {
-      ref.current.focus();
+      ref.current.focus()
     }
-  }, [isSelected]);
+  }, [isSelected])
 
   return (
     <STabListItem
@@ -46,5 +46,5 @@ export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
         {children}
       </Copy>
     </STabListItem>
-  );
-};
+  )
+}

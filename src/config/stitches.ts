@@ -1,9 +1,9 @@
-import { createStitches, defaultThemeMap } from "@stitches/react";
+import { createStitches, defaultThemeMap } from "@stitches/react"
 
-import type * as Stitches from "@stitches/react";
+import type * as Stitches from "@stitches/react"
 
-import { theme } from "./theme";
-import { mediaQueries, MediaQuery } from "./responsive";
+import { theme } from "./theme"
+import { mediaQueries, MediaQuery } from "./responsive"
 
 export const stitchesConfig = createStitches({
   theme,
@@ -173,12 +173,12 @@ export const stitchesConfig = createStitches({
       ...total,
       [key]: mediaQueries[key as MediaQuery],
     }),
-    {}
+    {},
   ),
-});
+})
 
-export const { styled, css, globalCss, keyframes, getCssText } = stitchesConfig;
+export const { styled, css, globalCss, keyframes, getCssText } = stitchesConfig
 
-export type StitchesConfig = typeof stitchesConfig;
+export type StitchesConfig = typeof stitchesConfig
 
-export type CSS = Stitches.CSS<StitchesConfig>;
+export type CSS = Stitches.CSS<StitchesConfig>

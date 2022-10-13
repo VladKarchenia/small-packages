@@ -1,1 +1,1 @@
-export * from "./IllustrationLock";
+export * from "./IllustrationLock"

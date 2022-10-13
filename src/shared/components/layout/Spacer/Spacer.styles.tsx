@@ -1,22 +1,22 @@
-import { css } from "@/config";
-import { Spaces } from "@/config/theme/spacing";
-import { getStyleFromResponsiveProp, ResponsiveProp } from "@/utils";
+import { css } from "@/config"
+import { Spaces } from "@/config/theme/spacing"
+import { getStyleFromResponsiveProp, ResponsiveProp } from "@/utils"
 
 function getSpacingKey(
   horizontal: boolean | ResponsiveProp<boolean>,
-  key: keyof ResponsiveProp<boolean>
+  key: keyof ResponsiveProp<boolean>,
 ) {
-  const value = typeof horizontal === "boolean" ? horizontal : horizontal?.[key];
+  const value = typeof horizontal === "boolean" ? horizontal : horizontal?.[key]
 
-  return value ?? "vSpace" ? "hSpace" : "vSpace";
+  return value ?? "vSpace" ? "hSpace" : "vSpace"
 }
 
 export const applySpacerClassName = (
   size: Spaces | ResponsiveProp<Spaces>,
   horizontal: boolean | ResponsiveProp<boolean>,
   variants?: {
-    inline?: boolean | ResponsiveProp<boolean>;
-  }
+    inline?: boolean | ResponsiveProp<boolean>
+  },
 ) =>
   css({
     ...getStyleFromResponsiveProp(size, (value, key) => ({
@@ -29,4 +29,4 @@ export const applySpacerClassName = (
         true: { display: "inline-block" },
       },
     },
-  })(variants);
+  })(variants)

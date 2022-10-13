@@ -1,20 +1,20 @@
 export interface IFooterNavLink {
-  id: string;
-  name: string;
-  href: string;
+  id: string
+  name: string
+  href: string
 }
 
 export interface IFooterNavSection {
-  id: string;
-  title: string;
-  links: IFooterNavLink[];
+  id: string
+  title: string
+  links: IFooterNavLink[]
 }
 
 export type IFooterNavSections = {
-  contact: IFooterNavSection[];
-  info: IFooterNavSection[];
-  company: IFooterNavSection[];
-};
+  contact: IFooterNavSection[]
+  info: IFooterNavSection[]
+  company: IFooterNavSection[]
+}
 
 const sections: IFooterNavSections = {
   contact: [
@@ -107,6 +107,6 @@ const sections: IFooterNavSections = {
       ],
     },
   ],
-};
+}
 
-export default sections;
+export default sections

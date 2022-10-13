@@ -1,10 +1,10 @@
-import { styled, keyframes } from "@/config";
+import { styled, keyframes } from "@/config"
 
-import { rgba } from "@/utils";
+import { rgba } from "@/utils"
 
 const shimmer = keyframes({
   to: { transform: "translateX(100%)" },
-});
+})
 
 export const SRedacted = styled("div", {
   position: "relative",
@@ -24,7 +24,7 @@ export const SRedacted = styled("div", {
           left: 0,
           backgroundImage: `linear-gradient(90deg, ${rgba("neutrals-0", 0)} 0, ${rgba(
             "neutrals-0",
-            0.25
+            0.25,
           )} 20%, ${rgba("neutrals-0", 0.5)} 60%, ${rgba("neutrals-0", 0)})`,
           transform: "translateX(-100%)",
           animation: `${shimmer} 2s infinite`,
@@ -32,4 +32,4 @@ export const SRedacted = styled("div", {
       },
     },
   },
-});
+})

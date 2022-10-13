@@ -7,9 +7,9 @@ export const breakpoints = {
   lg: 1280,
   xl: 1440,
   xxl: 1920,
-};
+}
 
-export type Breakpoint = keyof typeof breakpoints;
+export type Breakpoint = keyof typeof breakpoints
 
 export const mediaQueries = {
   xxs: `only screen and (min-width: ${breakpoints.xxs}px)`,
@@ -32,6 +32,6 @@ export const mediaQueries = {
   isTouchDevice: "(pointer: coarse)",
 
   reduceMotion: "(prefers-reduced-motion: reduce)",
-};
+}
 
-export type MediaQuery = keyof typeof mediaQueries;
+export type MediaQuery = keyof typeof mediaQueries

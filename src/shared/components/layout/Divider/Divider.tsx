@@ -1,11 +1,11 @@
-import React from "react";
+import React from "react"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { SDivider } from "./Divider.styles";
+import { SDivider } from "./Divider.styles"
 
 export interface IDividerProps extends ComponentProps<typeof SDivider> {}
 
 export const Divider = ({ ...props }: IDividerProps) => {
-  return <SDivider {...props}></SDivider>;
-};
+  return <SDivider {...props}></SDivider>
+}

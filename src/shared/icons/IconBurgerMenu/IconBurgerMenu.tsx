@@ -1,4 +1,4 @@
-import { withIcon, IIconProps } from "../Icon/Icon";
+import { withIcon, IIconProps } from "../Icon/Icon"
 
 const IconBurgerMenuImpl = withIcon(
   () => `
@@ -7,8 +7,8 @@ const IconBurgerMenuImpl = withIcon(
       <path d="M28 22V23H4V22H28Z" />
       <path d="M28 16V17H12V16H28Z" />
     </g>
-  `
-);
+  `,
+)
 
 export const IconBurgerMenu = ({ width = 32, height = 32, ...props }: IIconProps) => {
   return (
@@ -22,5 +22,5 @@ export const IconBurgerMenu = ({ width = 32, height = 32, ...props }: IIconProps
       fixedSize
       {...props}
     />
-  );
-};
+  )
+}

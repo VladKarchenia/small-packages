@@ -1,1 +1,1 @@
-export const ABOUT_URL = "/about";
+export const ABOUT_URL = "/about"

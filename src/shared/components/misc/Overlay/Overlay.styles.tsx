@@ -1,6 +1,6 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-import { easing, rgba } from "@/utils";
+import { easing, rgba } from "@/utils"
 
 export const SOverlay = styled("div", {
   position: "fixed",
@@ -18,4 +18,4 @@ export const SOverlay = styled("div", {
       true: { opacity: 1 },
     },
   },
-});
+})

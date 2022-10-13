@@ -1,101 +1,101 @@
-import * as React from "react";
-import cx from "classnames";
+import * as React from "react"
+import cx from "classnames"
 
-import { CSS } from "@/config";
+import { CSS } from "@/config"
 
-import { generateImageSource, generateImageSourceSet } from "@/utils";
-import { ComponentProps } from "@/utils/types";
+import { generateImageSource, generateImageSourceSet } from "@/utils"
+import { ComponentProps } from "@/utils/types"
 
-import { SPicture, SPictureImg } from "./Picture.styles";
+import { SPicture, SPictureImg } from "./Picture.styles"
 
 export type PictureExtraParams = {
-  [key: string]: string | number;
+  [key: string]: string | number
 
-  h: number;
-  ar: string;
-  fit: string;
-  blur: number;
+  h: number
+  ar: string
+  fit: string
+  blur: number
 
-  "max-h": number;
-  "max-w": number;
-};
+  "max-h": number
+  "max-w": number
+}
 
 export type IPictureDimensions = {
-  width?: number;
+  width?: number
 
   /**
    * Extra params for imgix service
    */
 
-  extraParams?: Partial<PictureExtraParams>;
+  extraParams?: Partial<PictureExtraParams>
 
   /**
    * Quality of photo, from `0` to `100`. Defaults to `55`.
    * if using `fit=fill`, use `80` or above for best results
    */
-  quality?: number;
+  quality?: number
 
   /**
    * Will output `ar={ratio}` on the image url (imgix only parameter). Pattern should be `"16:9"`
    */
-  ratio?: string;
+  ratio?: string
 
-  sizes?: string;
+  sizes?: string
 } & (
   | {
-      mediaQuery: string;
-      mediaQueries?: never;
+      mediaQuery: string
+      mediaQueries?: never
     }
   | {
-      mediaQuery?: never;
-      mediaQueries: string[];
+      mediaQuery?: never
+      mediaQueries: string[]
     }
-);
+)
 
 export interface IPictureProps extends ComponentProps<typeof SPictureImg> {
   /** the source of the image */
-  src: string;
-  alt: string;
+  src: string
+  alt: string
 
-  defaultImageSize?: number;
-  defaultImageQuality?: number;
+  defaultImageSize?: number
+  defaultImageQuality?: number
   /**
    * Default image ratio (use when ratio is fixed across all dimensions/breakpoints).
    *
    * Check `IPictureDimensions` comment for usage and pattern
    * */
-  defaultImageRatio?: string;
+  defaultImageRatio?: string
 
-  defaultImageExtraParams?: Partial<PictureExtraParams>;
+  defaultImageExtraParams?: Partial<PictureExtraParams>
 
   /** the dimension (width) of the images to make it responsive */
-  dimensions?: IPictureDimensions[];
+  dimensions?: IPictureDimensions[]
 
-  lazyload?: boolean;
-  lazypreload?: boolean;
-  lazyblur?: boolean;
+  lazyload?: boolean
+  lazypreload?: boolean
+  lazyblur?: boolean
 
   /** lazysize expand attributes */
   /** https://github.com/aFarkas/lazysizes#data-expand-attribute */
-  lazyExpand?: string;
+  lazyExpand?: string
 
   /**
    * Array of ratios to be generated for the image
    */
-  dprRanges?: number[];
+  dprRanges?: number[]
 
-  dataTestid?: string;
+  dataTestid?: string
 
-  addDprToSrc?: boolean;
+  addDprToSrc?: boolean
 
-  pictureCss?: CSS;
+  pictureCss?: CSS
 }
 
 export const generateBlurredImage = (
   src: string,
   ratio?: string,
   extraParams?: Partial<PictureExtraParams>,
-  addDprToSrc?: boolean
+  addDprToSrc?: boolean,
 ) => {
   return generateImageSource(
     src,
@@ -107,9 +107,9 @@ export const generateBlurredImage = (
       ...extraParams,
     },
     1,
-    addDprToSrc
-  );
-};
+    addDprToSrc,
+  )
+}
 
 /**
  * Picture component for images with optional lazy loading. See lazysizes library
@@ -135,17 +135,17 @@ export const Picture: React.FC<IPictureProps> = ({
   pictureCss,
   ...props
 }) => {
-  const [shouldLazyload, setLazyload] = React.useState(lazyload);
+  const [shouldLazyload, setLazyload] = React.useState(lazyload)
 
-  const srcRef = React.useRef<string>(src);
+  const srcRef = React.useRef<string>(src)
 
-  const blurredSrcSet = generateBlurredImage(src, defaultImageRatio, defaultImageExtraParams);
+  const blurredSrcSet = generateBlurredImage(src, defaultImageRatio, defaultImageExtraParams)
   const imageSrc = generateImageSource(src, {
     w: defaultImageSize,
     q: defaultImageQuality,
     ar: defaultImageRatio,
     ...defaultImageExtraParams,
-  });
+  })
   const imageSrcSet = generateImageSourceSet(
     src,
     {
@@ -155,14 +155,14 @@ export const Picture: React.FC<IPictureProps> = ({
       ...defaultImageExtraParams,
     },
     dprRanges,
-    addDprToSrc
-  );
+    addDprToSrc,
+  )
 
   const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    setLazyload(false);
+    setLazyload(false)
 
-    onLoad && onLoad(e);
-  };
+    onLoad && onLoad(e)
+  }
 
   // Detect if the src has changed and trigger a lazysizes lazyload
   // Note: This doesn't interfere with lazysizes behaviour or the current behaviour
@@ -170,13 +170,13 @@ export const Picture: React.FC<IPictureProps> = ({
     if (lazyload) {
       // Compare old src with the new one
       if (src !== srcRef.current) {
-        setLazyload(true);
+        setLazyload(true)
       }
 
       // Save the new src
-      srcRef.current = src;
+      srcRef.current = src
     }
-  }, [src, lazyload]);
+  }, [src, lazyload])
 
   return (
     <SPicture data-plum-ui="picture" data-testid={dataTestid} css={pictureCss}>
@@ -209,16 +209,16 @@ export const Picture: React.FC<IPictureProps> = ({
         data-expand={lazyExpand}
       />
     </SPicture>
-  );
-};
+  )
+}
 
 interface IPictureSourceProps {
-  src: string;
-  dimension: IPictureDimensions;
-  dprRanges: number[];
-  addDprToSrc: boolean;
-  lazyload: boolean;
-  lazyblur: boolean;
+  src: string
+  dimension: IPictureDimensions
+  dprRanges: number[]
+  addDprToSrc: boolean
+  lazyload: boolean
+  lazyblur: boolean
 }
 
 function PictureSource({
@@ -229,13 +229,13 @@ function PictureSource({
   lazyload,
   lazyblur,
 }: IPictureSourceProps) {
-  const blurredSrcSet = generateBlurredImage(src, dimension.ratio, dimension.extraParams);
+  const blurredSrcSet = generateBlurredImage(src, dimension.ratio, dimension.extraParams)
   const imageSrcSet = generateImageSourceSet(
     src,
     { w: dimension.width, q: dimension.quality, ar: dimension.ratio, ...dimension.extraParams },
     dprRanges,
-    addDprToSrc
-  );
+    addDprToSrc,
+  )
 
   return (
     <source
@@ -244,5 +244,5 @@ function PictureSource({
       srcSet={lazyload ? (lazyblur ? blurredSrcSet : undefined) : imageSrcSet}
       sizes={dimension?.sizes}
     />
-  );
+  )
 }

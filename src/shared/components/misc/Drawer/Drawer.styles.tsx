@@ -1,8 +1,8 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-import { easing, rgba } from "@/utils";
+import { easing, rgba } from "@/utils"
 
-import { Flex } from "@/shared/components";
+import { Flex } from "@/shared/components"
 
 export const SDrawer = styled("div", {
   position: "fixed",
@@ -13,7 +13,7 @@ export const SDrawer = styled("div", {
   width: "100%",
   display: "flex",
   flexDirection: "column",
-});
+})
 
 export const SDrawerTopBar = styled("div", {
   padding: "$24",
@@ -39,7 +39,7 @@ export const SDrawerTopBar = styled("div", {
   "> *": {
     pointerEvents: "auto",
   },
-});
+})
 
 export const SDrawerCloseButton = styled("button", {
   reset: true,
@@ -62,7 +62,7 @@ export const SDrawerCloseButton = styled("button", {
   keyboardFocus: {
     outline: "1px solid $colors$neutrals-9",
   },
-});
+})
 
 export const SDrawerContent = styled(Flex, {
   flex: 1,
@@ -75,7 +75,7 @@ export const SDrawerContent = styled(Flex, {
   "@lg": {
     padding: "$64 $48",
   },
-});
+})
 
 export const SDrawerPanel = styled("div", {
   height: "100%",
@@ -143,8 +143,8 @@ export const SDrawerPanel = styled("div", {
 
     isLarge: "false",
   },
-});
+})
 
 export const SDrawerPanelFocusGuard = styled(Flex, {
   minHeight: "100%",
-});
+})

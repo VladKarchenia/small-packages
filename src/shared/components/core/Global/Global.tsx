@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "react"
 
-import { globalCss } from "@/config";
+import { globalCss } from "@/config"
 
-import { Colors } from "@/config/theme/types";
+import { Colors } from "@/config/theme/types"
 
-import { IconProvider } from "@/shared/icons";
+import { IconProvider } from "@/shared/icons"
 
-import lazysizes from "lazysizes";
-import "lazysizes/plugins/attrchange/ls.attrchange";
+import lazysizes from "lazysizes"
+import "lazysizes/plugins/attrchange/ls.attrchange"
 
-lazysizes.cfg.loadMode = 1;
+lazysizes.cfg.loadMode = 1
 
 const globalStyles = (backgroundColor?: Colors) => {
   return globalCss({
@@ -126,8 +126,8 @@ const globalStyles = (backgroundColor?: Colors) => {
         scrollBehavior: "auto",
       },
     },
-  })();
-};
+  })()
+}
 
 const pageCoverStyles = globalCss({
   "body::before": {
@@ -145,30 +145,30 @@ const pageCoverStyles = globalCss({
   ".render body::before": {
     display: "none",
   },
-});
+})
 
 export const Global = ({
   children,
   shouldCoverPage,
   backgroundColor,
 }: React.PropsWithChildren<{
-  shouldCoverPage?: boolean;
+  shouldCoverPage?: boolean
   /**
    * Use to set the body background colour
    */
-  backgroundColor?: Colors;
+  backgroundColor?: Colors
 }>) => {
-  globalStyles(backgroundColor);
+  globalStyles(backgroundColor)
 
   if (shouldCoverPage) {
-    pageCoverStyles();
+    pageCoverStyles()
   }
 
   useEffect(() => {
     if (shouldCoverPage) {
-      document.documentElement.classList.add("render");
+      document.documentElement.classList.add("render")
     }
-  }, [shouldCoverPage]);
+  }, [shouldCoverPage])
 
   return (
     <>
@@ -179,5 +179,5 @@ export const Global = ({
       )}
       <IconProvider>{children}</IconProvider>
     </>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 /**
  * If needed we can add missing CSS grid properties such as `grid-auto-flow` through a Stitches variant
@@ -59,4 +59,4 @@ export const SGrid = styled("div", {
       stretch: { justifyContent: "stretch" },
     },
   },
-});
+})

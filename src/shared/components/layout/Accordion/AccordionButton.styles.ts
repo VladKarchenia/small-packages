@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SAccordionButton = styled("button", {
   reset: true,
@@ -36,4 +36,4 @@ export const SAccordionButton = styled("button", {
     size: "large",
     compact: "false",
   },
-});
+})

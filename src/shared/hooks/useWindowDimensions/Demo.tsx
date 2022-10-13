@@ -1,21 +1,21 @@
-import React from "react";
-import { useWindowDimensions } from "./useWindowDimensions";
-import { Copy, Global } from "@/shared/components";
+import React from "react"
+import { useWindowDimensions } from "./useWindowDimensions"
+import { Copy, Global } from "@/shared/components"
 
 interface IWrapComponentProps {
-  debounce?: number;
+  debounce?: number
 }
 
 const DemoComponent = ({ debounce }: IWrapComponentProps) => {
-  const { width, height } = useWindowDimensions(debounce);
+  const { width, height } = useWindowDimensions(debounce)
   return (
     <Global>
       <Copy>{`window width: ${width}px`}</Copy>
       <Copy>{`window height: ${height}px`}</Copy>
     </Global>
-  );
-};
+  )
+}
 
 export const WrapComponent = ({ debounce }: IWrapComponentProps) => {
-  return <DemoComponent debounce={debounce} />;
-};
+  return <DemoComponent debounce={debounce} />
+}

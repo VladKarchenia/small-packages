@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const SGridContainer = styled("div", {
   maxWidth: "1920px",
@@ -29,4 +29,4 @@ export const SGridContainer = styled("div", {
   defaultVariants: {
     fullBleed: "false",
   },
-});
+})

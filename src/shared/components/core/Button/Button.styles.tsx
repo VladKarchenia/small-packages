@@ -1,6 +1,6 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-import { rgba } from "@/utils";
+import { rgba } from "@/utils"
 
 export const SButton = styled("button", {
   reset: true,
@@ -90,7 +90,7 @@ export const SButton = styled("button", {
     action: "primary",
     size: "medium",
   },
-});
+})
 
 export const SButtonSpinner = styled("div", {
   display: "flex",
@@ -106,7 +106,7 @@ export const SButtonSpinner = styled("div", {
     transition: "150ms opacity ease-out",
     opacity: 0,
   },
-});
+})
 
 export const SButtonIcon = styled("div", {
   display: "flex",
@@ -137,4 +137,4 @@ export const SButtonIcon = styled("div", {
       },
     },
   },
-});
+})

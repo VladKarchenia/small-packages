@@ -1,2 +1,2 @@
-export * from "./Hidden";
-export * from "./HiddenVisually";
+export * from "./Hidden"
+export * from "./HiddenVisually"

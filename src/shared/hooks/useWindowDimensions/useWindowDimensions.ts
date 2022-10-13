@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from "react"
 
-import debounce from "just-debounce-it";
+import debounce from "just-debounce-it"
 
-import { useEventListener } from "../useEventListener";
+import { useEventListener } from "../useEventListener"
 
 /**
  * Useful whenever we need to leverage the browser window's dimensions.
@@ -11,16 +11,16 @@ import { useEventListener } from "../useEventListener";
  * Note: This hook should be used with care, because it not only triggers a re-render, but also a browser paint whenever the resize event is called.
  */
 export const useWindowDimensions = (ms = 50) => {
-  const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+  const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
 
   const onResize = debounce(() => {
     setDimensions({
       height: window.innerHeight,
       width: window.innerWidth,
-    });
-  }, ms);
+    })
+  }, ms)
 
-  useEventListener("resize", onResize, { immediate: true, passive: true });
+  useEventListener("resize", onResize, { immediate: true, passive: true })
 
-  return dimensions;
-};
+  return dimensions
+}

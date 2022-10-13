@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { rgba } from "@/utils";
+import { styled } from "@/config"
+import { rgba } from "@/utils"
 
 export const SHeaderNav = styled("header", {
   $$headerBackground: "$colors$system-white",
@@ -61,4 +61,4 @@ export const SHeaderNav = styled("header", {
       },
     },
   ],
-});
+})

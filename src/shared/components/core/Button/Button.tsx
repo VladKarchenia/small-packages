@@ -1,46 +1,46 @@
-import * as React from "react";
+import * as React from "react"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { IconDots } from "@/shared/icons";
+import { IconDots } from "@/shared/icons"
 
-import { Copy, ICopyProps } from "@/shared/components";
+import { Copy, ICopyProps } from "@/shared/components"
 
-import { SButton, SButtonIcon, SButtonSpinner } from "./Button.styles";
+import { SButton, SButtonIcon, SButtonSpinner } from "./Button.styles"
 
 export interface IButtonProps extends ComponentProps<typeof SButton> {
-  icon?: JSX.Element;
+  icon?: JSX.Element
 
-  id?: string;
-  className?: string;
+  id?: string
+  className?: string
 
-  href?: string;
-  target?: string;
-  type?: "button" | "submit";
+  href?: string
+  target?: string
+  type?: "button" | "submit"
 
-  ariaLabel?: string;
-  dataTestid?: string;
-  dataTrackId?: string;
-  dataTrackValue?: string;
+  ariaLabel?: string
+  dataTestid?: string
+  dataTrackId?: string
+  dataTrackValue?: string
 
-  disabled?: boolean;
-  floatingIcon?: boolean;
-  noWrap?: boolean;
-  shouldPreventDefault?: boolean;
+  disabled?: boolean
+  floatingIcon?: boolean
+  noWrap?: boolean
+  shouldPreventDefault?: boolean
 
-  copyProps?: ICopyProps;
+  copyProps?: ICopyProps
 
-  onBlur?: (e: React.SyntheticEvent) => void;
-  onFocus?: (e: React.SyntheticEvent) => void;
-  onClick?: (e: React.SyntheticEvent) => void;
+  onBlur?: (e: React.SyntheticEvent) => void
+  onFocus?: (e: React.SyntheticEvent) => void
+  onClick?: (e: React.SyntheticEvent) => void
 }
 
 interface ButtonElementProps extends Partial<IButtonProps> {
-  "aria-label"?: string;
-  "data-track-id"?: string;
-  "data-track-value"?: string;
-  "data-testid"?: string;
-  rel?: string;
+  "aria-label"?: string
+  "data-track-id"?: string
+  "data-track-value"?: string
+  "data-testid"?: string
+  rel?: string
 }
 
 export function Button({
@@ -57,7 +57,7 @@ export function Button({
   copyProps,
   ...props
 }: IButtonProps) {
-  const isLink = props.as === "a";
+  const isLink = props.as === "a"
 
   const buttonProps = React.useMemo(() => {
     const commonButtonProps: ButtonElementProps = {
@@ -65,39 +65,31 @@ export function Button({
       "data-track-id": dataTrackId,
       "data-track-value": dataTrackValue,
       "data-testid": dataTestid,
-    };
+    }
 
     if (isLink) {
       return {
         ...commonButtonProps,
         rel: props.target === "_blank" ? "noopener noreferrer" : "",
-      };
+      }
     } else {
       return {
         ...commonButtonProps,
         type: props.type || "button",
-      };
+      }
     }
-  }, [
-    ariaLabel,
-    dataTestid,
-    dataTrackId,
-    dataTrackValue,
-    isLink,
-    props.target,
-    props.type,
-  ]);
+  }, [ariaLabel, dataTestid, dataTrackId, dataTrackValue, isLink, props.target, props.type])
 
   const handleClick = React.useCallback(
     (e: React.SyntheticEvent) => {
       if (shouldPreventDefault) {
-        e.preventDefault();
+        e.preventDefault()
       }
 
-      onClick && onClick(e);
+      onClick && onClick(e)
     },
-    [shouldPreventDefault, onClick]
-  );
+    [shouldPreventDefault, onClick],
+  )
 
   return (
     <SButton {...buttonProps} {...props} onClick={handleClick}>
@@ -121,5 +113,5 @@ export function Button({
       )}
       {icon && <SButtonIcon float={floatingIcon}>{icon}</SButtonIcon>}
     </SButton>
-  );
+  )
 }

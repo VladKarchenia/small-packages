@@ -1,19 +1,19 @@
-import React from "react";
+import React from "react"
 
-import { ComponentProps } from "@/utils";
+import { ComponentProps } from "@/utils"
 
-import { CSS } from "@/config";
+import { CSS } from "@/config"
 
-import { SRedacted } from "./Redacted.styles";
+import { SRedacted } from "./Redacted.styles"
 
 export interface IRedactedProps extends ComponentProps<typeof SRedacted> {
-  height?: CSS["height"];
-  width?: CSS["width"];
+  height?: CSS["height"]
+  width?: CSS["width"]
 
   /**
    * Use when the component is acting as a piece of text
    */
-  text?: boolean;
+  text?: boolean
 }
 
 export const Redacted: React.FC<React.PropsWithChildren<IRedactedProps>> = ({
@@ -37,5 +37,5 @@ export const Redacted: React.FC<React.PropsWithChildren<IRedactedProps>> = ({
     >
       {children}
     </SRedacted>
-  );
-};
+  )
+}

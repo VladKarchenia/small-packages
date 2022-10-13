@@ -1,4 +1,4 @@
-import { BaseIllustration, IIllustrationProps } from "../Illustration";
+import { BaseIllustration, IIllustrationProps } from "../Illustration"
 
 export const IllustrationLock = ({ scribble = false, ...props }: IIllustrationProps) => (
   <BaseIllustration {...props}>
@@ -48,4 +48,4 @@ export const IllustrationLock = ({ scribble = false, ...props }: IIllustrationPr
       />
     </svg>
   </BaseIllustration>
-);
+)

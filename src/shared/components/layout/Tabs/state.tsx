@@ -1,50 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 
 export type TabsContextValue = {
-  selected: string;
-  items: string[];
+  selected: string
+  items: string[]
 
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-  setItems: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<string>>
+  setItems: React.Dispatch<React.SetStateAction<string[]>>
 
-  animate?: boolean;
-};
-
-export const TabsContext = React.createContext<TabsContextValue>(
-  {} as TabsContextValue
-);
-
-export const useTabsContext = () => {
-  return React.useContext(TabsContext);
-};
-
-export interface ITabsProviderProps {
-  selectedTab?: string;
-  onChange?: (value: string) => void;
-  animate?: boolean;
+  animate?: boolean
 }
 
-export const TabsProvider: React.FC<
-  React.PropsWithChildren<ITabsProviderProps>
-> = ({ children, selectedTab = "", onChange, animate = true }) => {
-  const [selected, setSelected] = useState<string>(selectedTab);
-  const [items, setItems] = useState<string[]>([]);
+export const TabsContext = React.createContext<TabsContextValue>({} as TabsContextValue)
+
+export const useTabsContext = () => {
+  return React.useContext(TabsContext)
+}
+
+export interface ITabsProviderProps {
+  selectedTab?: string
+  onChange?: (value: string) => void
+  animate?: boolean
+}
+
+export const TabsProvider: React.FC<React.PropsWithChildren<ITabsProviderProps>> = ({
+  children,
+  selectedTab = "",
+  onChange,
+  animate = true,
+}) => {
+  const [selected, setSelected] = useState<string>(selectedTab)
+  const [items, setItems] = useState<string[]>([])
 
   useEffect(() => {
     if (items.length && !selected) {
-      setSelected(items[0]);
+      setSelected(items[0])
     }
-  }, [items, selected]);
+  }, [items, selected])
 
   useEffect(() => {
     if (selected && onChange) {
-      onChange(selected);
+      onChange(selected)
     }
-  }, [selected]);
+  }, [selected])
 
   useEffect(() => {
-    setSelected(selectedTab);
-  }, [selectedTab]);
+    setSelected(selectedTab)
+  }, [selectedTab])
 
   return (
     <TabsContext.Provider
@@ -60,5 +61,5 @@ export const TabsProvider: React.FC<
     >
       {children}
     </TabsContext.Provider>
-  );
-};
+  )
+}

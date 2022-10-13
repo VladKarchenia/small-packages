@@ -1,1 +1,1 @@
-export * from "./IconBurgerMenu";
+export * from "./IconBurgerMenu"

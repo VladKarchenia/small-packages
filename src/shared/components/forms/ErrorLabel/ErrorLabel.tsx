@@ -1,8 +1,8 @@
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { Copy } from "@/shared/components";
+import { Copy } from "@/shared/components"
 
-export type IErrorLabelProps = ComponentProps<typeof Copy>;
+export type IErrorLabelProps = ComponentProps<typeof Copy>
 
 export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
   return (
@@ -16,5 +16,5 @@ export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
     >
       {children}
     </Copy>
-  );
-};
+  )
+}

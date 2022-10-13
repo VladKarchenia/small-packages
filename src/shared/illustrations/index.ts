@@ -1,2 +1,2 @@
-export * from "./IllustrationLock";
-export * from "./IllustrationLogo";
+export * from "./IllustrationLock"
+export * from "./IllustrationLogo"

@@ -1,6 +1,6 @@
-import { keyframes } from "@/config";
+import { keyframes } from "@/config"
 
-import { Spaces } from "@/config/theme/spacing";
+import { Spaces } from "@/config/theme/spacing"
 
 const fadeIn = keyframes({
   from: {
@@ -9,7 +9,7 @@ const fadeIn = keyframes({
   to: {
     opacity: 1,
   },
-});
+})
 
 const fadeOut = keyframes({
   from: {
@@ -18,7 +18,7 @@ const fadeOut = keyframes({
   to: {
     opacity: 0,
   },
-});
+})
 
 const fadeInUp = (space: Spaces) =>
   keyframes({
@@ -30,7 +30,7 @@ const fadeInUp = (space: Spaces) =>
       opacity: 1,
       transform: "translateY(0)",
     },
-  });
+  })
 
 const fadeOutDown = (space: Spaces) =>
   keyframes({
@@ -42,7 +42,7 @@ const fadeOutDown = (space: Spaces) =>
       transform: `translateY(${space}px)`,
       opacity: 0,
     },
-  });
+  })
 
 const rotate = keyframes({
   from: {
@@ -51,7 +51,7 @@ const rotate = keyframes({
   to: {
     transform: "rotate(360deg)",
   },
-});
+})
 
 const scalePulse = keyframes({
   "0%": {
@@ -62,7 +62,7 @@ const scalePulse = keyframes({
     opacity: 0,
     transform: "scale(0.75)",
   },
-});
+})
 
 const opacityPulse = keyframes({
   "0%, 100%": {
@@ -71,7 +71,7 @@ const opacityPulse = keyframes({
   "50%": {
     opacity: 0.1,
   },
-});
+})
 
 export const animations = {
   fadeIn,
@@ -82,4 +82,4 @@ export const animations = {
   rotate,
   scalePulse,
   opacityPulse,
-};
+}

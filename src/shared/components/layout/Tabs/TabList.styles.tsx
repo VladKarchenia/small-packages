@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { Flex } from "../Flex";
+import { styled } from "@/config"
+import { Flex } from "../Flex"
 
 export const STabList = styled(Flex, {
   borderBottom: "1px solid $neutrals-4",
@@ -10,4 +10,4 @@ export const STabList = styled(Flex, {
   "@md": {
     overflow: "visible",
   },
-});
+})

@@ -1,6 +1,6 @@
-import { styled } from "@/config";
-import { rgba, multipleSelectors } from "@/utils";
-import { HeaderNavButton } from "./HeaderNavButton";
+import { styled } from "@/config"
+import { rgba, multipleSelectors } from "@/utils"
+import { HeaderNavButton } from "./HeaderNavButton"
 
 export const SAccountButton = styled(HeaderNavButton, {
   $$backgroundColor: "transparent",
@@ -41,4 +41,4 @@ export const SAccountButton = styled(HeaderNavButton, {
       },
     },
   },
-});
+})

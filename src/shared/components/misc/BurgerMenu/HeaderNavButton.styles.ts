@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { rgba, multipleSelectors } from "@/utils";
+import { styled } from "@/config"
+import { rgba, multipleSelectors } from "@/utils"
 
 export const SHeaderNavButton = styled("button", {
   reset: true,
@@ -54,4 +54,4 @@ export const SHeaderNavButton = styled("button", {
       },
     },
   },
-});
+})

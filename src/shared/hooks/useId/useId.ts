@@ -1,8 +1,8 @@
-import { nanoid } from "nanoid";
-import { useRef } from "react";
+import { nanoid } from "nanoid"
+import { useRef } from "react"
 
 export const useId = (characterAmount = 16) => {
-  const idRef = useRef(nanoid(characterAmount));
+  const idRef = useRef(nanoid(characterAmount))
 
-  return idRef.current;
-};
+  return idRef.current
+}

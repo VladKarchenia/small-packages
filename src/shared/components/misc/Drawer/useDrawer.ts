@@ -1,53 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-import { IDrawerProps } from "./Drawer";
+import { IDrawerProps } from "./Drawer"
 
 type UseDrawerConfig = Omit<IDrawerProps, "isVisible" | "portalElement" | "onClose"> & {
-  isVisible?: boolean;
-  portalElement?: IDrawerProps["portalElement"];
-};
+  isVisible?: boolean
+  portalElement?: IDrawerProps["portalElement"]
+}
 
 type UseDrawerReturn = {
-  drawerProps: IDrawerProps;
+  drawerProps: IDrawerProps
 
-  openDrawer: () => void;
-  closeDrawer: () => void;
-  toggleDrawer: () => void;
-};
+  openDrawer: () => void
+  closeDrawer: () => void
+  toggleDrawer: () => void
+}
 
 export const useDrawer = (
   config?: UseDrawerConfig,
-  onToggleCb?: (v: boolean) => void
+  onToggleCb?: (v: boolean) => void,
 ): UseDrawerReturn => {
-  const [isVisible, setVisible] = useState(config?.isVisible || false);
+  const [isVisible, setVisible] = useState(config?.isVisible || false)
   const [portalElement, setPortalElement] = useState<HTMLElement | null>(
-    config?.portalElement || null
-  );
+    config?.portalElement || null,
+  )
 
   const toggleDrawer = () => {
     setVisible((v) => {
-      onToggleCb?.(!v);
-      return !v;
-    });
-  };
+      onToggleCb?.(!v)
+      return !v
+    })
+  }
 
   const openDrawer = () => {
-    onToggleCb?.(true);
-    setVisible(true);
-  };
+    onToggleCb?.(true)
+    setVisible(true)
+  }
 
   const closeDrawer = () => {
-    onToggleCb?.(false);
-    setVisible(false);
-  };
+    onToggleCb?.(false)
+    setVisible(false)
+  }
 
   const onClose = () => {
-    closeDrawer();
-  };
+    closeDrawer()
+  }
 
   useEffect(() => {
-    if (!portalElement) setPortalElement(document.body);
-  }, [portalElement]);
+    if (!portalElement) setPortalElement(document.body)
+  }, [portalElement])
 
   return {
     drawerProps: {
@@ -61,5 +61,5 @@ export const useDrawer = (
     openDrawer,
     closeDrawer,
     toggleDrawer,
-  };
-};
+  }
+}

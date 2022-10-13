@@ -1,1 +1,1 @@
-export * from "./ErrorLabel";
+export * from "./ErrorLabel"

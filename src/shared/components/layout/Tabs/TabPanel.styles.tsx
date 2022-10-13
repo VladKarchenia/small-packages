@@ -1,4 +1,4 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
 export const STabPanel = styled("div", {
   display: "flex",
@@ -30,4 +30,4 @@ export const STabPanel = styled("div", {
   defaultVariants: {
     animate: true,
   },
-});
+})
