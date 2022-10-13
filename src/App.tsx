@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Navigate, useRoutes } from "react-router-dom"
+import { MainLayout } from "@/layout"
+import { Home, Login, PageNotFound } from "@/pages"
+import "@/styles/fonts.css"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App: React.FC = (): JSX.Element => {
+  const mainRoutes = {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      { path: "*", element: <Navigate to="/404" /> },
+      { path: "/", element: <Home /> },
+      { path: "404", element: <PageNotFound /> },
+      { path: "login", element: <Navigate to="/login/signin" /> },
+    ],
+  }
+
+  const loginRoutes = {
+    path: "login",
+    element: <MainLayout />,
+    children: [
+      { path: "*", element: <Navigate to="/404" /> },
+      // { path: ":id", element: <AccountDetailView /> },
+      // { path: "add", element: <AccountAddView /> },
+      // { path: "list", element: <AccountListView /> },
+      { path: "signin", element: <Login /> },
+    ],
+  }
+
+  const routing = useRoutes([mainRoutes, loginRoutes])
+
+  return <>{routing}</>
 }
 
-export default App;
+export default App
