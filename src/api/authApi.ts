@@ -1,10 +1,13 @@
-// import { LoginInput } from "@/pages/Login";
 import axios from "axios"
+import urljoin from "url-join"
 import { GenericResponse, ILoginResponse, IUserResponse } from "./types"
-const BASE_URL = "http://localhost:8000/api/"
+import { LoginInput } from "@/pages"
+
+// move to .env file
+const BASE_URL = "http://localhost:8000/"
 
 export const authApi = axios.create({
-  baseURL: BASE_URL,
+  baseURL: urljoin(BASE_URL, "api"),
   withCredentials: true,
 })
 
@@ -33,10 +36,26 @@ authApi.interceptors.response.use(
   },
 )
 
-// export const loginUser = async (user: LoginInput) => {
-//   const response = await authApi.post<ILoginResponse>("auth/login", user);
-//   return response.data;
-// };
+export const loginUser = async (user: LoginInput) => {
+  // const response = await authApi.post<ILoginResponse>("auth/login", user)
+  // return response.data
+  console.log(user)
+
+  return {
+    data: {
+      user: {
+        name: "Vlad",
+        email: "vlad@mail.com",
+        role: "admin",
+        _id: "aaa",
+        id: "aaa",
+        createdAt: "15-01-2020",
+        updatedAt: "16-01-2020",
+        __v: 123,
+      },
+    },
+  }
+}
 
 export const logoutUser = async () => {
   const response = await authApi.get<GenericResponse>("auth/logout")
@@ -44,6 +63,20 @@ export const logoutUser = async () => {
 }
 
 export const getMe = async () => {
-  const response = await authApi.get<IUserResponse>("users/me")
-  return response.data
+  // const response = await authApi.get<IUserResponse>("users/me")
+  // return response.data
+  return {
+    data: {
+      user: {
+        name: "Vlad",
+        email: "vlad@mail.com",
+        role: "admin",
+        _id: "aaa",
+        id: "aaa",
+        createdAt: "15-01-2020",
+        updatedAt: "16-01-2020",
+        __v: 123,
+      },
+    },
+  }
 }

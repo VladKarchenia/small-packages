@@ -1,35 +1,42 @@
 import { Navigate, useRoutes } from "react-router-dom"
-import { MainLayout } from "@/layout"
-import { Home, Login, PageNotFound } from "@/pages"
+import { ToastContainer } from "react-toastify"
+import { AuthGuard } from "@/shared/components"
+import MainLayout from "@/shared/layouts/main"
+import { Home, Login, PageNotFound, Profile, Unauthorize } from "@/pages"
+
+import "react-toastify/dist/ReactToastify.css"
 import "@/styles/fonts.css"
 
 const App: React.FC = (): JSX.Element => {
+  const authRoutes = {
+    path: "*",
+    children: [{ path: "login", element: <Login /> }],
+  }
+
   const mainRoutes = {
-    path: "/",
+    path: "*",
     element: <MainLayout />,
     children: [
+      { index: true, element: <Home /> },
+      {
+        path: "profile",
+        element: <AuthGuard allowedRoles={["user", "admin"]} />,
+        children: [{ path: "", element: <Profile /> }],
+      },
+      { path: "unauthorized", element: <Unauthorize /> },
       { path: "*", element: <Navigate to="/404" /> },
-      { path: "/", element: <Home /> },
       { path: "404", element: <PageNotFound /> },
-      { path: "login", element: <Navigate to="/login/signin" /> },
     ],
   }
 
-  const loginRoutes = {
-    path: "login",
-    element: <MainLayout />,
-    children: [
-      { path: "*", element: <Navigate to="/404" /> },
-      // { path: ":id", element: <AccountDetailView /> },
-      // { path: "add", element: <AccountAddView /> },
-      // { path: "list", element: <AccountListView /> },
-      { path: "signin", element: <Login /> },
-    ],
-  }
+  const routing = useRoutes([mainRoutes, authRoutes])
 
-  const routing = useRoutes([mainRoutes, loginRoutes])
-
-  return <>{routing}</>
+  return (
+    <>
+      <ToastContainer />
+      {routing}
+    </>
+  )
 }
 
 export default App

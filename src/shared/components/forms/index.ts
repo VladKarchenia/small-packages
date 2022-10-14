@@ -1,2 +1,5 @@
 export * from "./FormCheckbox"
 export * from "./ErrorLabel"
+export * from "./FormInput"
+export * from "./FormField"
+export * from "./FormLabel"

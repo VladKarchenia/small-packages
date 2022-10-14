@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, HeaderNavItem, HeaderNavWrapper, Logo } from "@/shared/components"
+import { Authorization, HeaderNavItem, HeaderNavWrapper, Logo } from "@/shared/components"
 
 interface IHeaderProps {
   hasShadow?: boolean
@@ -22,7 +22,7 @@ export const Header: React.FC<React.PropsWithChildren<IHeaderProps>> = ({
         <Logo />
       </HeaderNavItem>
       <HeaderNavItem justify="end">
-        <Box>Поиск</Box>
+        <Authorization />
       </HeaderNavItem>
     </HeaderNavWrapper>
   )
