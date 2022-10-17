@@ -1,7 +1,6 @@
 import React from "react"
+import { Flex, Spacer, Box, Copy } from "@/shared/components"
 import { IllustrationLogo } from "@/shared/illustrations"
-import { Flex, Spacer } from "@/shared/components/layout"
-import { Box, Copy } from "@/shared/components/core"
 
 interface ILogo {
   href?: string

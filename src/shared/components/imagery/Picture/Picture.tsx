@@ -1,10 +1,7 @@
 import * as React from "react"
 import cx from "classnames"
-
 import { CSS } from "@/config"
-
-import { generateImageSource, generateImageSourceSet } from "@/utils"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps, generateImageSource, generateImageSourceSet } from "@/utils"
 
 import { SPicture, SPictureImg } from "./Picture.styles"
 

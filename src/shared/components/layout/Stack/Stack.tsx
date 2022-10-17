@@ -1,11 +1,7 @@
 import React from "react"
-
 import { Spaces } from "@/config/theme/spacing"
-
-import { atomicClassNames, mergeCSSObjects, ResponsiveProp } from "@/utils"
-
 import { CSS } from "@/config"
-
+import { atomicClassNames, mergeCSSObjects, ResponsiveProp } from "@/utils"
 import { Box, Hidden, IHiddenProps, Spacer, Divider } from "@/shared/components"
 
 import { applyStackStyles, applyStackItemClassName } from "./Stack.styles"

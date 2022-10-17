@@ -1,7 +1,5 @@
 import React, { InputHTMLAttributes } from "react"
-
-import { FormComponentProps } from "@/utils/types"
-
+import { FormComponentProps } from "@/utils"
 import { Copy, Spacer, ErrorLabel } from "@/shared/components"
 
 import {

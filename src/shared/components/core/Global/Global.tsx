@@ -1,9 +1,6 @@
 import React, { useEffect } from "react"
-
 import { globalCss } from "@/config"
-
 import { Colors } from "@/config/theme/types"
-
 import { IconProvider } from "@/shared/icons"
 
 import lazysizes from "lazysizes"

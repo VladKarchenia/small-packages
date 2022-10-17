@@ -1,8 +1,6 @@
 import React from "react"
-
-import { ComponentProps } from "@/utils"
-
 import { CSS } from "@/config"
+import { ComponentProps } from "@/utils"
 
 import { SRedacted } from "./Redacted.styles"
 

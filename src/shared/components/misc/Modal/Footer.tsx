@@ -1,5 +1,6 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
+
 import { SModalFooter } from "./Footer.styles"
 
 export type ModalFooterProps = ComponentProps<typeof SModalFooter>

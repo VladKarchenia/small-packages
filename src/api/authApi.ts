@@ -37,24 +37,8 @@ authApi.interceptors.response.use(
 )
 
 export const loginUserFn = async (user: LoginInput) => {
-  // const response = await authApi.post<ILoginResponse>("auth/login", user)
-  // return response.data
-  console.log(user)
-
-  return {
-    data: {
-      user: {
-        name: "Vlad",
-        email: "vlad@mail.com",
-        role: "admin",
-        _id: "aaa",
-        id: "aaa",
-        createdAt: "15-01-2020",
-        updatedAt: "16-01-2020",
-        __v: 123,
-      },
-    },
-  }
+  const response = await authApi.post<ILoginResponse>("auth/login", user)
+  return response.data
 }
 
 export const logoutUserFn = async () => {
@@ -70,6 +54,7 @@ export const getMeFn = async () => {
       user: {
         name: "Vlad",
         email: "vlad@mail.com",
+        // role: "user",
         role: "admin",
         _id: "aaa",
         id: "aaa",

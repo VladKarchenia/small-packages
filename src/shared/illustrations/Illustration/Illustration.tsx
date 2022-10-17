@@ -1,5 +1,6 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
+
 import { SBaseIllustration } from "./Illustration.styles"
 
 export interface IIllustrationProps extends ComponentProps<typeof SBaseIllustration> {

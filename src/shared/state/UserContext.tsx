@@ -1,4 +1,4 @@
-import React from "react"
+import React, { createContext, useContext, useReducer } from "react"
 import { IUser } from "@/api/types"
 
 type State = {
@@ -13,24 +13,12 @@ type Action = {
 type Dispatch = (action: Action) => void
 
 const initialState: State = {
-  // authUser: null,
-  authUser: {
-    name: "Vlad",
-    email: "vlad@mail.com",
-    role: "admin",
-    _id: "aaa",
-    id: "aaa",
-    createdAt: "15-01-2020",
-    updatedAt: "16-01-2020",
-    __v: 123,
-  },
+  authUser: null,
 }
 
 type StateContextProviderProps = { children: React.ReactNode }
 
-const StateContext = React.createContext<{ state: State; dispatch: Dispatch } | undefined>(
-  undefined,
-)
+const StateContext = createContext<{ state: State; dispatch: Dispatch } | undefined>(undefined)
 
 const stateReducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -47,14 +35,14 @@ const stateReducer = (state: State, action: Action) => {
 }
 
 const StateContextProvider = ({ children }: StateContextProviderProps) => {
-  const [state, dispatch] = React.useReducer(stateReducer, initialState)
+  const [state, dispatch] = useReducer(stateReducer, initialState)
   const value = { state, dispatch }
 
   return <StateContext.Provider value={value}>{children}</StateContext.Provider>
 }
 
 const useStateContext = () => {
-  const context = React.useContext(StateContext)
+  const context = useContext(StateContext)
 
   return context
 }

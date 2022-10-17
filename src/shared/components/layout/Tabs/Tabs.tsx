@@ -1,6 +1,19 @@
-import { ComponentProps } from "@/utils"
-import { TabsProvider } from "./state"
+import { useEffect, useState } from "react"
+import { ComponentProps, createContext } from "@/utils"
+
 import { STabs } from "./Tabs.styles"
+
+export type TabsContextValue = {
+  selected: string
+  items: string[]
+
+  setSelected: React.Dispatch<React.SetStateAction<string>>
+  setItems: React.Dispatch<React.SetStateAction<string[]>>
+
+  animate?: boolean
+}
+
+export const [TabsProvider, useTabsContext] = createContext<TabsContextValue>("Tabs")
 
 export interface ITabsProps extends Omit<ComponentProps<typeof STabs>, "onChange"> {
   /**
@@ -17,12 +30,35 @@ export interface ITabsProps extends Omit<ComponentProps<typeof STabs>, "onChange
   animate?: boolean
 }
 
-export const Tabs = ({ children, selectedTab, onChange, animate, ...props }: ITabsProps) => {
+export const Tabs = ({ selectedTab = "", onChange, animate, ...props }: ITabsProps) => {
+  const [selected, setSelected] = useState<string>(selectedTab)
+  const [items, setItems] = useState<string[]>([])
+
+  useEffect(() => {
+    if (items.length && !selected) {
+      setSelected(items[0])
+    }
+  }, [items, selected])
+
+  useEffect(() => {
+    if (selected && onChange) {
+      onChange(selected)
+    }
+  }, [selected])
+
+  useEffect(() => {
+    setSelected(selectedTab)
+  }, [selectedTab])
+
   return (
-    <TabsProvider selectedTab={selectedTab} onChange={onChange} animate={animate}>
-      <STabs data-plum-ui="tabs" data-testid="tabs" {...props}>
-        {children}
-      </STabs>
+    <TabsProvider
+      selected={selected}
+      items={items}
+      setSelected={setSelected}
+      setItems={setItems}
+      animate={animate}
+    >
+      <STabs data-plum-ui="tabs" data-testid="tabs" {...props} />
     </TabsProvider>
   )
 }

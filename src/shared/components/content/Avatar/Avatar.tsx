@@ -1,5 +1,6 @@
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 import { Picture } from "@/shared/components"
+
 import { SAvatar } from "./Avatar.styles"
 
 export interface IAvatarProps extends ComponentProps<typeof SAvatar> {

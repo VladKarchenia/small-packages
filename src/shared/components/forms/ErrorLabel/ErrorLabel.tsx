@@ -1,5 +1,4 @@
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps } from "@/utils"
 import { Copy } from "@/shared/components"
 
 export type IErrorLabelProps = ComponentProps<typeof Copy>

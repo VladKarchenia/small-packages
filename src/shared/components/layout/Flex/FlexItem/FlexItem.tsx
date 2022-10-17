@@ -1,5 +1,4 @@
 import React from "react"
-
 import { ComponentProps } from "@/utils"
 
 import { SFlexItem } from "./FlexItem.styles"

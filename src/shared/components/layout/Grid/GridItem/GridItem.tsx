@@ -1,8 +1,10 @@
 import React from "react"
-
-import { ComponentProps, ResponsiveProp } from "@/utils/types"
-import { mergeCSSObjects, getStyleFromResponsiveProp } from "@/utils/styles"
-
+import {
+  ComponentProps,
+  ResponsiveProp,
+  mergeCSSObjects,
+  getStyleFromResponsiveProp,
+} from "@/utils"
 import { getGridCoords } from "../utils"
 
 import { SGridItem } from "./GridItem.styles"

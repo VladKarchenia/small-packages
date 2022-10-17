@@ -1,5 +1,4 @@
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps } from "@/utils"
 import { Title, TypographyScale } from "@/shared/components"
 
 import { SAccordionHeader } from "./AccordionHeader.styles"

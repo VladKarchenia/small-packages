@@ -1,11 +1,8 @@
 import React, { useRef } from "react"
 import ReactDOM from "react-dom"
 import FocusLock from "react-focus-lock"
-
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps } from "@/utils"
 import { useWaitForTransition } from "@/shared/hooks"
-
 import { IconCross } from "@/shared/icons"
 
 import { Overlay } from "../Overlay"

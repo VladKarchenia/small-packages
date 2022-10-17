@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useMemo } from "react"
 import { ComponentProps } from "@/utils"
 import { useTabs } from "./hooks"
+
 import { STabList } from "./TabList.styles"
 
 export interface ITabListProps extends Omit<ComponentProps<typeof STabList>, "onChange"> {

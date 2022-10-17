@@ -1,7 +1,5 @@
 import React, { useCallback } from "react"
-
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps } from "@/utils"
 import { Copy, ICopyProps } from "@/shared/components"
 
 import { SLink } from "./Link.styles"

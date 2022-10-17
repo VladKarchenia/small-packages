@@ -1,9 +1,5 @@
-import * as React from "react"
 import cx from "classnames"
-
-import { ComponentProps, ResponsiveProp } from "@/utils/types"
-import { atomicClassNames } from "@/utils/styles"
-
+import { ComponentProps, ResponsiveProp, atomicClassNames } from "@/utils"
 import { Colors } from "@/config/theme/types"
 
 import { STitle } from "./Title.styles"

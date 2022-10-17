@@ -1,7 +1,8 @@
 import { DialogClose } from "@radix-ui/react-dialog"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 import { Copy } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
+
 import { SModalCloseButton } from "./CloseButton.styles"
 
 export type ModalCloseButtonProps = ComponentProps<typeof SModalCloseButton>

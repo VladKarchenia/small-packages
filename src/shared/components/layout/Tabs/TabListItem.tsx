@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from "react"
 import { ComponentProps } from "@/utils"
 import { Copy } from "@/shared/components"
-import { useTabsContext } from "./state"
+
+import { useTabsContext } from "./Tabs"
 import { STabListItem } from "./TabListItem.styles"
 
 export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
@@ -13,7 +14,7 @@ export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
 
 export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
   const ref = useRef<HTMLButtonElement>(null)
-  const { selected, setSelected } = useTabsContext()
+  const { selected, setSelected } = useTabsContext("TabListItem")
 
   const handleOnClick = useCallback(() => {
     setSelected(id)

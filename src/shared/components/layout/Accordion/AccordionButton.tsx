@@ -1,15 +1,11 @@
 import React, { useCallback } from "react"
-
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps, easing } from "@/utils"
+import { Copy } from "@/shared/components"
 import { IconChevron } from "@/shared/icons"
 
 import { useAccordionContext } from "./Accordion"
 import { useAccordionItemContext } from "./AccordionItem"
-
 import { SAccordionButton } from "./AccordionButton.styles"
-import { easing } from "@/utils"
-import { Copy } from "@/shared/components"
 
 export interface IAccordionButtonProps extends ComponentProps<typeof SAccordionButton> {
   /**

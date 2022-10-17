@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import { AuthGuard } from "@/shared/components"
 import MainLayout from "@/shared/layouts/main"
+import { ModalsContainer } from "@/modals"
 import { Home, Login, PageNotFound, Profile, Unauthorize } from "@/pages"
 
 import "react-toastify/dist/ReactToastify.css"
@@ -34,6 +35,8 @@ const App: React.FC = (): JSX.Element => {
   return (
     <>
       <ToastContainer />
+      {/* check if this is the right place for the ModalsContainer */}
+      <ModalsContainer />
       {routing}
     </>
   )

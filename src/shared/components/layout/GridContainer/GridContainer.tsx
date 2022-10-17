@@ -1,6 +1,5 @@
 import React from "react"
-
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 
 import { SGridContainer } from "./GridContainer.styles"
 

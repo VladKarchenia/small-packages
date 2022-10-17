@@ -1,8 +1,5 @@
-import React from "react"
-
 import { Spaces } from "@/config/theme/spacing"
-
-import { ResponsiveProp } from "@/utils/types"
+import { ResponsiveProp } from "@/utils"
 
 import { applySpacerClassName } from "./Spacer.styles"
 

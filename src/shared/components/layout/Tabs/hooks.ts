@@ -1,7 +1,7 @@
-import { useTabsContext } from "./state"
+import { useTabsContext } from "./Tabs"
 
 export const useTabs = () => {
-  const { items, setItems, selected, setSelected } = useTabsContext()
+  const { items, setItems, selected, setSelected } = useTabsContext("TabsHooks")
 
   const getSelectedIndex = () => {
     return items.indexOf(selected)

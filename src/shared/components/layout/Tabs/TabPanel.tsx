@@ -1,5 +1,6 @@
 import { ComponentProps } from "@/utils"
-import { useTabsContext } from "./state"
+import { useTabsContext } from "./Tabs"
+
 import { STabPanel } from "./TabPanel.styles"
 
 export interface ITabPanelProps extends ComponentProps<typeof STabPanel> {
@@ -10,7 +11,7 @@ export interface ITabPanelProps extends ComponentProps<typeof STabPanel> {
 }
 
 export const TabPanel = ({ children, id }: ITabPanelProps) => {
-  const { selected, animate } = useTabsContext()
+  const { selected, animate } = useTabsContext("TabPanel")
   const isSelected = selected === id
   return (
     <STabPanel

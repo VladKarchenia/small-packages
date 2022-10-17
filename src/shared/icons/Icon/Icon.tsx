@@ -1,11 +1,7 @@
-import React, { memo, useEffect, useMemo } from "react"
-
-import { ComponentProps } from "@/utils/types"
-
-import { generateHash } from "@/utils"
+import { memo, useEffect, useMemo } from "react"
+import { ComponentProps, generateHash } from "@/utils"
 
 import { useIconCache } from "../IconProvider"
-
 import { SIcon, SIconSvg } from "./Icon.styles"
 
 const defaultDimensions = {

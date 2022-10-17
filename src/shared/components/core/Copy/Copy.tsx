@@ -1,9 +1,6 @@
 import cx from "classnames"
 import deepmerge from "deepmerge"
-
-import { ComponentProps, ResponsiveProp } from "@/utils/types"
-import { atomicClassNames } from "@/utils/styles"
-
+import { atomicClassNames, ComponentProps, ResponsiveProp } from "@/utils"
 import { Colors } from "@/config/theme/types"
 
 import { SCopy } from "./Copy.styles"

@@ -1,7 +1,5 @@
 import React from "react"
-
 import { CSS } from "@/config"
-
 import { getStyleFromResponsiveProp, mergeCSSObjects, ResponsiveProp } from "@/utils"
 
 import { SAspectRatio } from "./AspectRatio.styles"

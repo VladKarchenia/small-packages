@@ -1,4 +1,4 @@
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 
 import { SIconDots } from "./IconDots.styles"
 

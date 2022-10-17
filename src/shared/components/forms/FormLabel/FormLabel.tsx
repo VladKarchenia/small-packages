@@ -1,5 +1,5 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 import { Copy, HiddenVisually } from "@/shared/components"
 
 import { SFormLabel } from "./FormLabel.styles"

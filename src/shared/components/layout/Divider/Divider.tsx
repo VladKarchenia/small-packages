@@ -1,6 +1,4 @@
-import React from "react"
-
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 
 import { SDivider } from "./Divider.styles"
 

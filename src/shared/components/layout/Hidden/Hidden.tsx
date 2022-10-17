@@ -1,9 +1,6 @@
 import React from "react"
-
 import { breakpoints } from "@/config"
-
-import { ComponentProps } from "@/utils/types"
-import { atomicClassNames } from "@/utils"
+import { ComponentProps, atomicClassNames } from "@/utils"
 
 import { SHidden } from "./Hidden.styles"
 

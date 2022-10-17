@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-
-import { createContext } from "@/utils"
-
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps, createContext } from "@/utils"
 
 import { SAccordion } from "./Accordion.styles"
 

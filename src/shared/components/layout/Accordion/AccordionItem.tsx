@@ -1,11 +1,7 @@
-import { createContext } from "@/utils"
-
-import { ComponentProps } from "@/utils/types"
-
+import { createContext, ComponentProps } from "@/utils"
 import { useId } from "@/shared/hooks"
 
 import { useAccordionContext } from "./Accordion"
-
 import { SAccordionItem } from "./AccordionItem.styles"
 
 type AccordionItemContextValue = {

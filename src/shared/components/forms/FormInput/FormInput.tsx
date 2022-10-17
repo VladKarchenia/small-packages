@@ -1,9 +1,7 @@
 import React, { InputHTMLAttributes } from "react"
-
-import { FormComponentProps } from "@/utils/types"
+import { FormComponentProps } from "@/utils"
 
 import { FormField, IFormFieldCommonProps, getFormFieldProps } from "../FormField"
-
 import { SFormInput } from "./FormInput.styles"
 
 export interface IFormInputProps

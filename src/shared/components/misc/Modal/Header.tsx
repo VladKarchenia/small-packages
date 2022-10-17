@@ -1,5 +1,5 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
+import { ComponentProps } from "@/utils"
 import { Title } from "@/shared/components"
 
 import { SModalHeader } from "./Header.styles"

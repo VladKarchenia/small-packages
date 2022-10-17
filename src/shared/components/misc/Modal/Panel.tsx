@@ -1,6 +1,7 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
 import { DialogContentProps } from "@radix-ui/react-dialog"
+import { ComponentProps } from "@/utils"
+
 import { SModalPanel } from "./Panel.styles"
 
 export type ModalPanelProps = DialogContentProps & ComponentProps<typeof SModalPanel>

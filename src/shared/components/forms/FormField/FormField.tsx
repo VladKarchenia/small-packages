@@ -1,12 +1,9 @@
 import React from "react"
-
-import { ComponentProps } from "@/utils/types"
-
+import { ComponentProps } from "@/utils"
 import { Copy, Flex, Spacer } from "@/shared/components"
 
 import { ErrorLabel } from "../ErrorLabel"
 import { FormLabel, IFormLabelProps } from "../FormLabel"
-
 import {
   SFormField,
   SFormFieldContainer,

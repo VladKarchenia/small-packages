@@ -1,6 +1,5 @@
-import React from "react"
-import { useWindowDimensions } from "./useWindowDimensions"
 import { Copy, Global } from "@/shared/components"
+import { useWindowDimensions } from "./useWindowDimensions"
 
 interface IWrapComponentProps {
   debounce?: number
