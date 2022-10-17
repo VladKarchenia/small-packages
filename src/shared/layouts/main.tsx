@@ -7,6 +7,7 @@ const MainLayout = () => {
     <>
       <Header />
       <Outlet />
+      {/* check if this is the right place for the ModalsContainer */}
       <ModalsContainer />
     </>
   )
