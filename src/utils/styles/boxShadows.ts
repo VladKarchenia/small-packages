@@ -1,6 +1,6 @@
-import { theme } from "@/config";
+import { theme } from "@/config"
 
-const inset = (color: string) => `inset 0 0 0 1px ${color}`;
+const inset = (color: string) => `inset 0 0 0 1px ${color}`
 
 export const boxShadows = {
   // Use when the box-shadow is applied inset
@@ -10,4 +10,4 @@ export const boxShadows = {
     focus: inset(theme.colors["brand-yellow-dark"]),
     error: inset(theme.colors["special-error"]),
   },
-};
+}

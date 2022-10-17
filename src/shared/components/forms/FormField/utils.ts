@@ -1,4 +1,4 @@
-import { IFormFieldCommonProps, IFormFieldProps } from "./FormField";
+import { IFormFieldCommonProps, IFormFieldProps } from "./FormField"
 
 export const getFormFieldProps = ({
   id,
@@ -29,5 +29,5 @@ export const getFormFieldProps = ({
 
     prefix,
     suffix,
-  };
-};
+  }
+}

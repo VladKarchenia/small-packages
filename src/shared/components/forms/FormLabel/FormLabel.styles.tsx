@@ -1,3 +1,3 @@
-import { styled } from "@/config";
+import { styled } from "@/config"
 
-export const SFormLabel = styled("label", {});
+export const SFormLabel = styled("label", {})

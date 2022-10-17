@@ -1,36 +1,36 @@
-import React from "react";
+import React from "react"
 
-import { ComponentProps } from "@/utils/types";
+import { ComponentProps } from "@/utils/types"
 
-import { Copy, Flex, Spacer } from "@/shared/components";
+import { Copy, Flex, Spacer } from "@/shared/components"
 
-import { ErrorLabel } from "../ErrorLabel";
-import { FormLabel, IFormLabelProps } from "../FormLabel";
+import { ErrorLabel } from "../ErrorLabel"
+import { FormLabel, IFormLabelProps } from "../FormLabel"
 
 import {
   SFormField,
   SFormFieldContainer,
   SFormFieldPrefix,
   SFormFieldSuffix,
-} from "./FormField.styles";
+} from "./FormField.styles"
 
 export interface IFormFieldCommonProps {
-  label: React.ReactNode;
-  postLabel?: React.ReactNode;
+  label: React.ReactNode
+  postLabel?: React.ReactNode
 
-  description?: React.ReactNode;
+  description?: React.ReactNode
 
-  error?: React.ReactNode;
-  hasError?: boolean;
+  error?: React.ReactNode
+  hasError?: boolean
 
-  labelProps?: IFormLabelProps;
+  labelProps?: IFormLabelProps
 
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
+  prefix?: React.ReactNode
+  suffix?: React.ReactNode
 
-  afterField?: React.ReactNode;
+  afterField?: React.ReactNode
 
-  isFocused?: boolean;
+  isFocused?: boolean
 }
 
 export interface IFormFieldProps
@@ -100,5 +100,5 @@ export const FormField = ({
         </>
       )}
     </SFormField>
-  );
-};
+  )
+}

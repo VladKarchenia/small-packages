@@ -5,7 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { object, string, TypeOf } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "react-toastify"
-import { getMe, loginUser } from "@/api/authApi"
+import { getMeFn, loginUserFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
 import { LoginForm } from "./LoginForm"
 
@@ -18,10 +18,12 @@ const loginSchema = object({
 })
 
 export type LoginInput = TypeOf<typeof loginSchema>
+// export type LoginInput = TypeOf<typeof loginSchema> & { rememberMe: boolean }
 
 const defaultValues: LoginInput = {
   email: "",
   password: "",
+  //rememberMe boolean field probably should be set here
 }
 
 export const LoginFormContainer = () => {
@@ -52,7 +54,7 @@ export const LoginFormContainer = () => {
   }, [isSubmitSuccessful])
 
   // API Get Current Logged-in user
-  const query = useQuery(["authUser"], getMe, {
+  const query = useQuery(["authUser"], getMeFn, {
     enabled: false,
     select: (data) => data.data.user,
     retry: 1,
@@ -62,8 +64,8 @@ export const LoginFormContainer = () => {
   })
 
   //  API Login Mutation
-  const { mutate: loginUserFn, isLoading } = useMutation(
-    (userData: LoginInput) => loginUser(userData),
+  const { mutate: loginUser, isLoading } = useMutation(
+    (userData: LoginInput) => loginUserFn(userData),
     {
       onSuccess: () => {
         query.refetch()
@@ -88,7 +90,7 @@ export const LoginFormContainer = () => {
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
     // ? Executing the loginUser Mutation
-    loginUserFn(values)
+    loginUser(values)
   }
 
   return (

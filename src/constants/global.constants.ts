@@ -7,3 +7,5 @@ export const API_URLS = {
   //   list: `${API_URL}/lists`,
   //   dealers: `${API_URL}/dealers`,
 }
+
+export const MODAL_ANIMATION_DURATION = 200

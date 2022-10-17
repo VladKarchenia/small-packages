@@ -1,7 +1,7 @@
 import { useMutation } from "react-query"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { logoutUser } from "@/api/authApi"
+import { logoutUserFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
 import { Button, Flex } from "@/shared/components"
 
@@ -10,7 +10,7 @@ export const Authorization = () => {
   const stateContext = useStateContext()
   const user = stateContext?.state.authUser
 
-  const { mutate: logoutUserFn, isLoading } = useMutation(async () => await logoutUser(), {
+  const { mutate: logoutUser, isLoading } = useMutation(async () => await logoutUserFn(), {
     onSuccess: (data) => {
       window.location.href = "/login"
     },
@@ -30,7 +30,7 @@ export const Authorization = () => {
   })
 
   const onLogoutHandler = async () => {
-    logoutUserFn()
+    logoutUser()
   }
 
   return (

@@ -1,7 +1,7 @@
 import { useCookies } from "react-cookie"
 import { useQuery } from "react-query"
 import { Navigate, Outlet, useLocation } from "react-router-dom"
-import { getMe } from "@/api/authApi"
+import { getMeFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
 import { FullScreenLoader } from "@/pages"
 
@@ -14,7 +14,7 @@ export const AuthGuard = ({ allowedRoles }: { allowedRoles: string[] }) => {
     isLoading,
     isFetching,
     data: user,
-  } = useQuery(["authUser"], getMe, {
+  } = useQuery(["authUser"], getMeFn, {
     retry: 1,
     select: (data) => data.data.user,
     onSuccess: (data) => {

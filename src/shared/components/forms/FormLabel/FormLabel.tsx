@@ -1,15 +1,15 @@
-import React from "react";
-import { ComponentProps } from "@/utils/types";
-import { Copy, HiddenVisually } from "@/shared/components";
+import React from "react"
+import { ComponentProps } from "@/utils/types"
+import { Copy, HiddenVisually } from "@/shared/components"
 
-import { SFormLabel } from "./FormLabel.styles";
+import { SFormLabel } from "./FormLabel.styles"
 
 export interface IFormLabelProps extends ComponentProps<typeof SFormLabel> {
-  hidden?: boolean;
+  hidden?: boolean
 }
 
 export const FormLabel = ({ children, hidden, ...props }: IFormLabelProps) => {
-  const WrappingComponent = hidden ? HiddenVisually : React.Fragment;
+  const WrappingComponent = hidden ? HiddenVisually : React.Fragment
 
   return (
     <WrappingComponent>
@@ -19,5 +19,5 @@ export const FormLabel = ({ children, hidden, ...props }: IFormLabelProps) => {
         </Copy>
       </SFormLabel>
     </WrappingComponent>
-  );
-};
+  )
+}

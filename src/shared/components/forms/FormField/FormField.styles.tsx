@@ -1,5 +1,5 @@
-import { styled } from "@/config";
-import { boxShadows } from "@/utils/styles";
+import { styled } from "@/config"
+import { boxShadows } from "@/utils/styles"
 
 export const SFormField = styled("div", {
   variants: {
@@ -7,7 +7,7 @@ export const SFormField = styled("div", {
       true: { cursor: "not-allowed" },
     },
   },
-});
+})
 
 export const SFormFieldContainer = styled("label", {
   position: "relative",
@@ -51,7 +51,7 @@ export const SFormFieldContainer = styled("label", {
       },
     },
   },
-});
+})
 
 export const SFormFieldElement = styled("input", {
   position: "relative",
@@ -124,17 +124,17 @@ export const SFormFieldElement = styled("input", {
       true: { cursor: "pointer" },
     },
   },
-});
+})
 
 export const SFormFieldPrefix = styled("span", {
   paddingLeft: "$16",
   marginRight: "-$8",
   zIndex: "$1",
-});
+})
 
 export const SFormFieldSuffix = styled("span", {
   pointerEvents: "none",
   paddingRight: "$16",
   marginLeft: "-$8",
   zIndex: "$1",
-});
+})

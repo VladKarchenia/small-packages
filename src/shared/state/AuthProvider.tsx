@@ -1,7 +1,7 @@
 import React from "react"
 import { useCookies } from "react-cookie"
 import { useQuery } from "react-query"
-import { getMe } from "@/api/authApi"
+import { getMeFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
 import { FullScreenLoader } from "@/pages"
 
@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [cookies] = useCookies(["logged_in"])
   const stateContext = useStateContext()
 
-  const query = useQuery(["authUser"], () => getMe(), {
+  const query = useQuery(["authUser"], () => getMeFn(), {
     enabled: !!cookies.logged_in,
     select: (data) => data.data.user,
     onSuccess: (data) => {

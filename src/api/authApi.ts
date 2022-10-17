@@ -36,7 +36,7 @@ authApi.interceptors.response.use(
   },
 )
 
-export const loginUser = async (user: LoginInput) => {
+export const loginUserFn = async (user: LoginInput) => {
   // const response = await authApi.post<ILoginResponse>("auth/login", user)
   // return response.data
   console.log(user)
@@ -57,12 +57,12 @@ export const loginUser = async (user: LoginInput) => {
   }
 }
 
-export const logoutUser = async () => {
+export const logoutUserFn = async () => {
   const response = await authApi.get<GenericResponse>("auth/logout")
   return response.data
 }
 
-export const getMe = async () => {
+export const getMeFn = async () => {
   // const response = await authApi.get<IUserResponse>("users/me")
   // return response.data
   return {
