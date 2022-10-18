@@ -11,7 +11,7 @@ export * from "./generateHash"
 // export * from "./mergeRefs";
 
 // export * from "./scrollBy";
-// export * from "./scrollTo";
+export * from "./scrollTo"
 // export * from "./titleCase";
 
 // export * from "./price";

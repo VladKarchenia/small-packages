@@ -1,7 +1,10 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { Button, Copy, FormInput, Spacer } from "@/shared/components"
+import { Button, FormInput, Spacer } from "@/shared/components"
+import { IconTick } from "@/shared/icons"
+
 import { LoginInput } from "./LoginFormContainer"
+import { SShowPasswordButton } from "./LoginForm.styles"
 
 export const LoginForm = ({
   defaultValues,
@@ -14,6 +17,13 @@ export const LoginForm = ({
     control,
     formState: { errors },
   } = useFormContext<LoginInput>()
+
+  const [passwordShown, setPasswordShown] = useState(false)
+  const togglePasswordVisibility = () => {
+    console.log("wadawd")
+
+    setPasswordShown(!passwordShown)
+  }
 
   return (
     <>
@@ -44,8 +54,13 @@ export const LoginForm = ({
               {...field}
               id="password"
               label="Password"
-              type="password"
+              type={passwordShown ? "text" : "password"}
               error={errors[field.name]?.message}
+              suffix={
+                <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
+                  <IconTick size="xs" />
+                </SShowPasswordButton>
+              }
             />
           )
         }}

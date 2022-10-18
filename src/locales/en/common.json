@@ -1,6 +1,6 @@
 {
-    "test": {
-        "copy": "Test copy",
-        "title": "Test title"
-    }
+  "test": {
+    "copy": "Test copy",
+    "title": "Test title"
+  }
 }

@@ -8,10 +8,17 @@ const BASE_URL = "http://localhost:8000/"
 
 export const authApi = axios.create({
   baseURL: urljoin(BASE_URL, "api"),
+  // withCredentials is to send cookies in the requests all the time (our JWT)
   withCredentials: true,
 })
 
 authApi.defaults.headers.common["Content-Type"] = "application/json"
+
+// // we can also set JWT in axios headers
+// const token = localStorage.getItem("token") // inside App
+// // or
+// const token = response.data.token // inside login func
+// authApi.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
 export const refreshAccessToken = async () => {
   const response = await authApi.get<ILoginResponse>("auth/refresh")

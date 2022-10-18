@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "react-toastify"
 import { getMeFn, loginUserFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
+
 import { LoginForm } from "./LoginForm"
 
 const loginSchema = object({
@@ -61,6 +62,9 @@ export const LoginFormContainer = () => {
     onSuccess: (data) => {
       stateContext?.dispatch({ type: "SET_USER", payload: data })
     },
+    // possible settings
+    // cacheTime: 60 * 1000,
+    // staleTime: 30 * 1000,
   })
 
   //  API Login Mutation
