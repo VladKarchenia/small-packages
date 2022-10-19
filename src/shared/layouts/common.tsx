@@ -5,5 +5,4 @@ export const CommonLayout: React.FC<React.PropsWithChildren<unknown>> = ({ child
   return <Global backgroundColor="neutrals-1">{children}</Global>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getCommonLayout = (page: any) => <CommonLayout>{page}</CommonLayout>

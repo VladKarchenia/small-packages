@@ -45,13 +45,15 @@ export const AccordionButton = ({ children, ...props }: IAccordionButtonProps) =
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault()
 
-      if (open) {
-        onItemClose(value)
-      } else {
-        onItemOpen(value)
-      }
+      // TODO: check this to prevent closing the accordion panel (possibly with an additional prop)
+      // if (open) {
+      //   onItemClose(value)
+      // } else {
+      onItemOpen(value)
+      // }
     },
-    [onItemClose, onItemOpen, open, value],
+    // [onItemClose, onItemOpen, open, value],
+    [onItemOpen, value],
   )
 
   return (

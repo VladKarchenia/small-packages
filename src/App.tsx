@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify"
 import { AuthGuard } from "@/shared/components"
 import MainLayout from "@/shared/layouts/main"
 import { ModalsContainer } from "@/modals"
-import { Home, Login, PageNotFound, Profile, Unauthorize } from "@/pages"
+import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize } from "@/pages"
 
 import "react-toastify/dist/ReactToastify.css"
 import "@/styles/fonts.css"
@@ -23,6 +23,14 @@ const App: React.FC = (): JSX.Element => {
         path: "profile",
         element: <AuthGuard allowedRoles={["user", "admin"]} />,
         children: [{ path: "", element: <Profile /> }],
+      },
+      {
+        path: "create",
+        element: <AuthGuard allowedRoles={["user", "admin"]} />,
+        children: [
+          { path: "shipment", element: <CreateShipment /> },
+          // { path: "quote", element: <CreateQuote /> },
+        ],
       },
       { path: "unauthorized", element: <Unauthorize /> },
       { path: "*", element: <Navigate to="/404" /> },

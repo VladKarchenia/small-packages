@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
   Box,
@@ -46,6 +47,16 @@ export const Home = () => {
   return (
     <CommonLayout>
       <GridContainer>
+        {showTable ? (
+          <DashboardTable isLoading={loading} bookings={bookings} />
+        ) : (
+          <DashboardList isLoading={loading} bookings={bookings} />
+        )}
+        <Spacer size={40} />
+        <Button>
+          <Link to="/create/shipment">Create Shipment</Link>
+        </Button>
+        <Spacer size={40} />
         <Box>{t("common:test.title")}</Box>
         <Box>{t("common:test.copy")}</Box>
         <IconTick />
@@ -63,11 +74,6 @@ export const Home = () => {
           </TabPanels>
         </Tabs>
         <Spacer size={40} />
-        {showTable ? (
-          <DashboardTable isLoading={loading} bookings={bookings} />
-        ) : (
-          <DashboardList isLoading={loading} bookings={bookings} />
-        )}
       </GridContainer>
     </CommonLayout>
   )

@@ -10,6 +10,7 @@ type AccordionTextToggle = {
 
 type AccordionContextValue = {
   selected: string[]
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>
 
   disabled: boolean
   divider?: boolean
@@ -87,6 +88,7 @@ export const Accordion = ({
   return (
     <AccordionProvider
       selected={selected}
+      setSelected={setSelected}
       disabled={disabled}
       divider={divider}
       textToggle={textToggle}

@@ -20,9 +20,11 @@ export const STable = styled("table", {
 
 export const STableHead = styled("thead", {
   position: "sticky",
-  top: "calc($128 + $48)",
+  // top: "calc($128 + $48)",
+  top: "$0",
   zIndex: "$1",
-  backgroundColor: "$neutrals-0",
+  // backgroundColor: "$neutrals-0",
+  backgroundColor: "$neutrals-1",
   boxShadow: "0 1px 0 $colors$neutrals-4",
 
   "@xl": {

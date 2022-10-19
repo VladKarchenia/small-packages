@@ -10,7 +10,6 @@ const generateColorVariant = (property: string) => {
         [property]: `$${name}`,
       },
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     {} as Record<Colors, any>,
   )
 }
