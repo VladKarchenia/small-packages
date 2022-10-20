@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { Button, FormInput, Spacer } from "@/shared/components"
-import { IconTick } from "@/shared/icons"
+import { Button, FormInput, Spacer, Text } from "@/shared/components"
 
 import { LoginInput } from "./LoginFormContainer"
 import { SShowPasswordButton } from "./LoginForm.styles"
+import { IconClarityEye } from "@/shared/icons/IconClarityEye"
 
 export const LoginForm = ({
   defaultValues,
@@ -58,7 +58,7 @@ export const LoginForm = ({
               error={errors[field.name]?.message}
               suffix={
                 <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
-                  <IconTick size="xs" />
+                  <IconClarityEye size="sm" />
                 </SShowPasswordButton>
               }
             />
@@ -67,8 +67,9 @@ export const LoginForm = ({
       />
 
       <Spacer size={32} />
-
-      <Button type="submit" loading={isLoading}>
+      <Text>Remember me</Text>
+      <Spacer size={32} />
+      <Button type="submit" loading={isLoading} css={{width: '100%', backgroundColor: '$system-black', color: '$system-white'}}>
         Login
       </Button>
     </>
