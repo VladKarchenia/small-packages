@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { BrowserRouter } from "react-router-dom"
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
-import { AuthProvider, ShipmentContextProvider, StateContextProvider } from "@/shared/state"
+import { AuthProvider, StateContextProvider } from "@/shared/state"
 import commonTranslations from "@/locales/en/common.json"
 
 import App from "./App"
@@ -55,11 +55,9 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <StateContextProvider>
-          <ShipmentContextProvider>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          </ShipmentContextProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </StateContextProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />

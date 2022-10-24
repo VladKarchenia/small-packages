@@ -12,53 +12,56 @@ import {
 } from "@/shared/components"
 import { useStorageState } from "@/shared/hooks"
 import { CommonLayout } from "@/shared/layouts/common"
-import { IStep, useShipmentContext } from "@/shared/state"
+import { IStep, ShipmentContextProvider, useShipmentContext } from "@/shared/state"
 
 import { useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const CreateShipment = () => {
   return (
-    <CommonLayout>
-      <GridContainer>
-        <Spacer size={40} />
-        <Box>Create Shipment</Box>
-        <Spacer size={40} />
-        <AccordionWrapper />
-      </GridContainer>
-    </CommonLayout>
+    <ShipmentContextProvider>
+      <CommonLayout>
+        <GridContainer>
+          <Spacer size={40} />
+          <Box>Create Shipment</Box>
+          <Spacer size={40} />
+          <AccordionWrapper />
+        </GridContainer>
+      </CommonLayout>
+    </ShipmentContextProvider>
   )
 }
 
 const AccordionWrapper = () => {
   const shipmentContext = useShipmentContext()
 
-  const readStorage = () =>
-    window.sessionStorage.getItem("selectedStep") || shipmentContext?.state.activeStep || ""
+  // const readStorage = () =>
+  //   window.sessionStorage.getItem("selectedStep") || shipmentContext?.state.activeStep || ""
 
-  const [previouslySelectedPanel, setPreviouslySelectedPanel] = useStorageState(
-    "sessionStorage",
-    "selectedStep",
-    readStorage(),
-  )
+  // const [previouslySelectedPanel, setPreviouslySelectedPanel] = useStorageState(
+  //   "sessionStorage",
+  //   "selectedStep",
+  //   readStorage(),
+  // )
 
   const handleSelectedChange = useCallback(
     (selected: string[]) => {
       if (selected.length) {
-        setPreviouslySelectedPanel(selected[0])
+        // setPreviouslySelectedPanel(selected[0])
         shipmentContext?.dispatch({
           type: "SET_ACTIVE_STEP",
           payload: selected[0],
         })
       }
     },
-    [setPreviouslySelectedPanel],
+    // [setPreviouslySelectedPanel],
+    [],
   )
 
   return (
     <Accordion
-      defaultSelected={[previouslySelectedPanel]}
-      // defaultSelected={[state.activeStep]}
+      // defaultSelected={[previouslySelectedPanel]}
+      defaultSelected={["info"]}
       css={{ borderTop: 0 }}
       onSelectedChange={handleSelectedChange}
     >
