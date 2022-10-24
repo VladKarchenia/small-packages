@@ -64,16 +64,16 @@ export const SButton = styled("button", {
       black: {
         backgroundColor: "$system-black",
         borderColor: "$system-black",
-        color: "$system-white",
+        color: "$neutrals-0",
 
         hover: {
-          backgroundColor: "$system-grey-medium",
-          borderColor: "$system-grey-medium",
+          backgroundColor: "$neutrals-7",
+          borderColor: "$neutrals-7",
         },
 
         active: {
-          backgroundColor: "$system-grey-00",
-          borderColor: "$system-grey-00",
+          backgroundColor: "$neutrals-5",
+          borderColor: "$neutrals-5",
         },
       },
     },
