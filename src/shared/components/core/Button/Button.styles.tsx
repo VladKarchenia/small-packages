@@ -60,6 +60,24 @@ export const SButton = styled("button", {
       },
     },
 
+    color: {
+      black: {
+        backgroundColor: "$system-black",
+        borderColor: "$system-black",
+        color: "$neutrals-0",
+
+        hover: {
+          backgroundColor: "$neutrals-7",
+          borderColor: "$neutrals-7",
+        },
+
+        active: {
+          backgroundColor: "$neutrals-5",
+          borderColor: "$neutrals-5",
+        },
+      },
+    },
+
     size: {
       small: { height: "$48" },
       medium: { height: "$56" },
