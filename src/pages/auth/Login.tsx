@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, GridContainer, Grid, GridItem, Logo, Title } from "@/shared/components"
+import { Box, GridContainer, Grid, GridItem, Logo, Title, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 
 import { LoginFormContainer } from "./LoginFormContainer"
@@ -19,6 +19,7 @@ export const Login = () => {
             <Box css={{flex: '0 0 auto',}}>
               <Logo />
             </Box>
+            <Spacer size={32} />
             <Box
               css={{
                 display: "flex",
@@ -27,7 +28,7 @@ export const Login = () => {
                 flex: '1 1 100%',
               }}
               >
-                <Title css={{marginBottom: '$24'}}>Welcome!</Title>
+                <Title css={{marginBottom: '$24'}} as='h2'>Welcome!</Title>
                 <LoginFormContainer />
               </Box>
 
@@ -35,9 +36,6 @@ export const Login = () => {
           <GridItem css={{ backgroundColor: "$brand-blue-lightest", minHeight: '480px'}}></GridItem>
         </Grid>
       </GridContainer>
-
-
-
     </CommonLayout>
   )
 }

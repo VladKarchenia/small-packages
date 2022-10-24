@@ -133,7 +133,6 @@ export const SFormFieldPrefix = styled("span", {
 })
 
 export const SFormFieldSuffix = styled("span", {
-  paddingRight: "$16",
-  marginLeft: "-$8",
+  padding: "0 $8",
   zIndex: "$1",
 })
