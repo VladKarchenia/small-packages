@@ -36,9 +36,9 @@ export const LoginFormContainer = () => {
   const stateContext = useStateContext()
 
   const methods = useForm<LoginInput>({
+    mode: "all",
     defaultValues,
     resolver: zodResolver(loginSchema),
-    reValidateMode: "onBlur",
   })
 
   const {

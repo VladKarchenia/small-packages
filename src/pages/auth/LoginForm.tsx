@@ -63,8 +63,6 @@ export const LoginForm = ({
       />
 
       <Spacer size={32} />
-      <Copy>Remember me</Copy>
-      <Spacer size={32} />
       <Button type="submit"  full loading={isLoading} color="black">
         Login
       </Button>
