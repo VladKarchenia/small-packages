@@ -95,7 +95,7 @@ export const Accordion = ({
       onItemOpen={handleItemOpen}
       onItemClose={handleItemClose}
     >
-      <SAccordion data-plum-ui="accordion" data-testid="accordion" {...props} />
+      <SAccordion data-ui="accordion" data-testid="accordion" {...props} />
     </AccordionProvider>
   )
 }

@@ -36,7 +36,7 @@ export const AccordionItem = ({ value, ...props }: IAccordionItemProps) => {
   return (
     <AccordionItemProvider id={id} value={value} open={isOpen} disabled={isDisabled}>
       <SAccordionItem
-        data-plum-ui="accordion-item"
+        data-ui="accordion-item"
         data-state={isOpen ? "open" : "closed"}
         data-testid="accordion-item"
         {...props}

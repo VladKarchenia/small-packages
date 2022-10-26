@@ -50,7 +50,7 @@ export const Drawer = ({
   return ReactDOM.createPortal(
     <SDrawer
       data-testid="drawer"
-      data-plum-fixed
+      data-fixed
       style={{ visibility: isHidden ? "hidden" : "visible" }}
       aria-hidden={isVisible ? "false" : "true"}
     >

@@ -19,11 +19,7 @@ export const LoginForm = ({
   } = useFormContext<LoginInput>()
 
   const [passwordShown, setPasswordShown] = useState(false)
-  const togglePasswordVisibility = () => {
-    console.log("wadawd")
-
-    setPasswordShown(!passwordShown)
-  }
+  const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
 
   return (
     <>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { logoutUserFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
-import { Button, Flex } from "@/shared/components"
+import { Button, Flex, Spacer } from "@/shared/components"
 
 export const Authorization = () => {
   const navigate = useNavigate()
@@ -37,15 +37,18 @@ export const Authorization = () => {
     <Flex>
       {!user ? (
         <>
-          <Button onClick={() => navigate("/login")}>Login</Button>
+          <Button onClick={() => navigate("/login")} css={{ height: "$40" }}>
+            Login
+          </Button>
         </>
       ) : null}
       {user ? (
         <>
-          <Button loading={isLoading} onClick={() => navigate("/profile")}>
+          <Button loading={isLoading} onClick={() => navigate("/profile")} css={{ height: "$40" }}>
             Profile
           </Button>
-          <Button loading={isLoading} onClick={onLogoutHandler}>
+          <Spacer size={16} horizontal />
+          <Button loading={isLoading} onClick={onLogoutHandler} css={{ height: "$40" }}>
             Logout
           </Button>
         </>

@@ -10,7 +10,6 @@ export const DashboardTableHead = () => {
           "@lg": { width: "50%" },
         }}
       >
-        {/* {t("dashboard:earnings.table.bookingDetails")} */}
         Column 1
       </Column>
       <Column align="end">Column 2</Column>

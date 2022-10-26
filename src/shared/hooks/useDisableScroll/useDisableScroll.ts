@@ -8,7 +8,7 @@ export const useDisableScroll = (
   const elements = useRef<NodeListOf<HTMLElement>>()
 
   useEffect(() => {
-    elements.current = document.querySelectorAll("[data-plum-fixed]")
+    elements.current = document.querySelectorAll("[data-fixed]")
   }, [])
 
   useEffect(() => {

@@ -62,7 +62,7 @@ export const AccordionButton = ({ children, ...props }: IAccordionButtonProps) =
       aria-expanded={open || false}
       disabled={disabled || false}
       type="button"
-      data-plum-ui="accordion-button"
+      data-ui="accordion-button"
       data-testid="accordion-button"
       {...props}
       onClick={handleClick}

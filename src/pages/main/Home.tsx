@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
   Box,
@@ -14,7 +14,6 @@ import {
 } from "@/shared/components"
 import { useMedia, useModalActions } from "@/shared/hooks"
 import { CommonLayout } from "@/shared/layouts/common"
-import { IconTick } from "@/shared/icons"
 import { mediaQueries } from "@/config"
 import { DashboardList, DashboardTable } from "@/dashboard"
 
@@ -36,6 +35,7 @@ const bookings = [
 
 export const Home = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { open } = useModalActions()
   const isMedium = useMedia([mediaQueries.md], [true], false)
   const [showTable, setShowTable] = useState(false)
@@ -47,30 +47,26 @@ export const Home = () => {
   return (
     <CommonLayout>
       <GridContainer>
-        {showTable ? (
-          <DashboardTable isLoading={loading} bookings={bookings} />
-        ) : (
-          <DashboardList isLoading={loading} bookings={bookings} />
-        )}
+        <Box css={{ paddingTop: "$24" }}>
+          {showTable ? (
+            <DashboardTable isLoading={loading} bookings={bookings} />
+          ) : (
+            <DashboardList isLoading={loading} bookings={bookings} />
+          )}
+        </Box>
         <Spacer size={40} />
-        <Button>
-          <Link to="/create/shipment">Create Shipment</Link>
-        </Button>
-        <Spacer size={40} />
-        <Box>{t("common:test.title")}</Box>
-        <Box>{t("common:test.copy")}</Box>
-        <IconTick />
+        <Button onClick={() => navigate("/create/shipment")}>Create Shipment</Button>
         <Spacer size={40} />
         <Button onClick={() => open("timePeriod")}>Open modal</Button>
         <Spacer size={40} />
-        <Tabs selectedTab="listings">
+        <Tabs selectedTab="tab1">
           <TabList label="" css={{ marginBottom: "$24" }}>
-            <TabListItem id="listings">Listings</TabListItem>
-            <TabListItem id="payout-methods">Payout Methods</TabListItem>
+            <TabListItem id="tab1">Tab 1</TabListItem>
+            <TabListItem id="tab2">Tab 2</TabListItem>
           </TabList>
           <TabPanels>
-            <TabPanel id="listings">1. Content from listings tab</TabPanel>
-            <TabPanel id="payout-methods">2. Content from payout-methods tab</TabPanel>
+            <TabPanel id="tab1">Tab 1 content</TabPanel>
+            <TabPanel id="tab2">Tab 2 content</TabPanel>
           </TabPanels>
         </Tabs>
         <Spacer size={40} />

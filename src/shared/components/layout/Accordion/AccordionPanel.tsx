@@ -20,7 +20,7 @@ export const AccordionPanel = ({ children, contentCss, ...props }: IAccordionPan
     <SAccordionPanel
       id={id}
       role="region"
-      data-plum-ui="accordion-panel"
+      data-ui="accordion-panel"
       {...props}
       initial={state}
       animate={state}

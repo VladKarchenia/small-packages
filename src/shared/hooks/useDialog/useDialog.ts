@@ -9,17 +9,17 @@ type StorageKey = "drawers" | "modals" | string
 
 declare global {
   interface Window {
-    plumDialogs: Record<StorageKey, Set<string>>
+    dialogs: Record<StorageKey, Set<string>>
   }
 }
 
 function checkIfStorageIsInitialized(storageKey: StorageKey, cb: () => void) {
   if (
-    typeof window.plumDialogs === "undefined" ||
-    typeof window.plumDialogs[storageKey] === "undefined"
+    typeof window.dialogs === "undefined" ||
+    typeof window.dialogs[storageKey] === "undefined"
   ) {
-    window.plumDialogs = {
-      ...(window.plumDialogs || {}),
+    window.dialogs = {
+      ...(window.dialogs || {}),
       [storageKey]: new Set(),
     }
   }
@@ -38,7 +38,7 @@ export function useDialog(name: string, storageKey: StorageKey, defaultOpen?: bo
     window.dispatchEvent(new CustomEvent(`dialog.${storageKey}.close`))
 
     checkIfStorageIsInitialized(storageKey, () => {
-      window.plumDialogs[storageKey].delete(name)
+      window.dialogs[storageKey].delete(name)
     })
   }, [name, storageKey])
 
@@ -49,13 +49,13 @@ export function useDialog(name: string, storageKey: StorageKey, defaultOpen?: bo
     window.dispatchEvent(new CustomEvent(`dialog.${storageKey}.open`))
 
     checkIfStorageIsInitialized(storageKey, () => {
-      window.plumDialogs[storageKey].add(name)
+      window.dialogs[storageKey].add(name)
     })
   }, [name, storageKey])
 
   const toggle = useCallback(() => {
     checkIfStorageIsInitialized(storageKey, () => {
-      window.plumDialogs[storageKey].has(name) ? close() : open()
+      window.dialogs[storageKey].has(name) ? close() : open()
     })
   }, [name, storageKey])
 
@@ -85,7 +85,7 @@ export function useDialog(name: string, storageKey: StorageKey, defaultOpen?: bo
   useEffect(() => {
     if (defaultOpen) {
       checkIfStorageIsInitialized(storageKey, () => {
-        window.plumDialogs[storageKey].add(name)
+        window.dialogs[storageKey].add(name)
       })
     }
   }, [defaultOpen, storageKey, name])
@@ -102,12 +102,12 @@ export function useDialogActions(storageKey: StorageKey) {
 
       closeAll: () => {
         if (
-          typeof window.plumDialogs === "undefined" ||
-          typeof window.plumDialogs[storageKey] === "undefined"
+          typeof window.dialogs === "undefined" ||
+          typeof window.dialogs[storageKey] === "undefined"
         )
           return
 
-        const items = window.plumDialogs[storageKey]
+        const items = window.dialogs[storageKey]
 
         Array.from(items).forEach((name) => {
           window.dispatchEvent(new CustomEvent(`${name}.close`))
@@ -124,7 +124,7 @@ export function useDialogManager(storageKeys: StorageKey[]) {
   // Clear `pointer-events: none` from <body> only when no dialogs (drawers/modals) are opened
   const clearPointerEvents = useCallback(() => {
     const shouldClear = storageKeys.some((storageKey) =>
-      checkIfStorageIsInitialized(storageKey, () => !window.plumDialogs[storageKey].size),
+      checkIfStorageIsInitialized(storageKey, () => !window.dialogs[storageKey].size),
     )
 
     if (shouldClear) {

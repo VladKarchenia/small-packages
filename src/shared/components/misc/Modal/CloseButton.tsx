@@ -15,7 +15,7 @@ export const ModalCloseButton = (props: ModalCloseButtonProps) => {
         type="button"
         aria-label="Close"
         title="Close"
-        data-plum-modals="modal-close-button"
+        data-modals="modal-close-button"
         data-testid="modal-close-button"
       >
         {props?.variant === "text" ? (
