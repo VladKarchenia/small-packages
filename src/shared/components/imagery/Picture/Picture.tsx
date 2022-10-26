@@ -176,7 +176,7 @@ export const Picture: React.FC<IPictureProps> = ({
   }, [src, lazyload])
 
   return (
-    <SPicture data-plum-ui="picture" data-testid={dataTestid} css={pictureCss}>
+    <SPicture data-ui="picture" data-testid={dataTestid} css={pictureCss}>
       {dimensions.map((dimension, index) => (
         <PictureSource
           key={`${src}-${index}`}
@@ -200,7 +200,7 @@ export const Picture: React.FC<IPictureProps> = ({
         srcSet={shouldLazyload ? (lazyblur ? blurredSrcSet : undefined) : imageSrcSet}
         data-src={imageSrc}
         data-srcset={imageSrcSet}
-        data-plum-ui="picture-image"
+        data-ui="picture-image"
         lazyblur={lazyblur}
         onLoad={handleLoad}
         data-expand={lazyExpand}

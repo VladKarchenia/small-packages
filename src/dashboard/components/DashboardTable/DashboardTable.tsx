@@ -8,12 +8,12 @@ interface IBooking {
   code: string
 }
 
-interface IEarningsTableProps {
+interface ITableProps {
   isLoading: boolean
   bookings: IBooking[]
 }
 
-export const DashboardTable = ({ isLoading, bookings = [] }: IEarningsTableProps) => {
+export const DashboardTable = ({ isLoading, bookings = [] }: ITableProps) => {
   const { t } = useTranslation()
 
   if (isLoading) {
@@ -22,7 +22,7 @@ export const DashboardTable = ({ isLoading, bookings = [] }: IEarningsTableProps
 
   if (!isLoading && !bookings.length) {
     return (
-      <Table caption={t("dashboard:earnings.table.caption")}>
+      <Table caption="Dashboard table">
         <DashboardTableHead />
         <TableBody>
           <TableRow>
@@ -45,7 +45,7 @@ export const DashboardTable = ({ isLoading, bookings = [] }: IEarningsTableProps
   }
 
   return (
-    <Table caption={t("dashboard:earnings.table.caption")} hasBookings>
+    <Table caption="Dashboard table" hasBookings>
       <DashboardTableHead />
       <TableBody>
         {bookings.map(({ code }) => {

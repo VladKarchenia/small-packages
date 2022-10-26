@@ -7,7 +7,6 @@ export interface IStep {
 }
 
 type State = {
-  activeStep: string
   info: IStep
   shipment: IStep
   summary: IStep
@@ -16,14 +15,12 @@ type State = {
 
 type Action = {
   type: string
-  // payload: IStep
-  payload: any
+  payload: IStep
 }
 
 type Dispatch = (action: Action) => void
 
 const initialState: State = {
-  activeStep: "info",
   info: {
     name: "info",
     completed: false,
@@ -52,12 +49,6 @@ const ShipmentContext = createContext<{ state: State; dispatch: Dispatch } | und
 
 const stateReducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "SET_ACTIVE_STEP": {
-      return {
-        ...state,
-        activeStep: action.payload,
-      }
-    }
     case "SET_STEP_DATA": {
       return {
         ...state,

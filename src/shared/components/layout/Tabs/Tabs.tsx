@@ -58,7 +58,7 @@ export const Tabs = ({ selectedTab = "", onChange, animate, ...props }: ITabsPro
       setItems={setItems}
       animate={animate}
     >
-      <STabs data-plum-ui="tabs" data-testid="tabs" {...props} />
+      <STabs data-ui="tabs" data-testid="tabs" {...props} />
     </TabsProvider>
   )
 }

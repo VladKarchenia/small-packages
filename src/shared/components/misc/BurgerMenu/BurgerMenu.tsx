@@ -180,12 +180,6 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = ({ currentPathname = "" })
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
-        {/* <Stack space={16}>
-            <Link href="/catalog">Каталог</Link>
-            <Link href="/stocks">Акции</Link>
-            <Link href="/brands">Производители</Link>
-            <Link href="/faq">Часто задаваемые вопросы</Link>
-          </Stack> */}
       </Drawer>
     </>
   )

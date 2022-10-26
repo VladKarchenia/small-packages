@@ -11,7 +11,7 @@ export const ModalPanel = React.forwardRef<HTMLDivElement, ModalPanelProps>(
     return (
       <SModalPanel
         ref={forwardedRef}
-        data-plum-modals="modal-panel"
+        data-modals="modal-panel"
         data-testid="modal-panel"
         {...props}
       />

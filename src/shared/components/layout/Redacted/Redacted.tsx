@@ -24,7 +24,7 @@ export const Redacted: React.FC<React.PropsWithChildren<IRedactedProps>> = ({
 }: IRedactedProps) => {
   return (
     <SRedacted
-      data-plum-ui="redacted"
+      data-ui="redacted"
       {...props}
       css={{
         ...((css as {}) || {}),

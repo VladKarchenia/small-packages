@@ -15,7 +15,7 @@ export const AccordionHeader = ({
   ...props
 }: IAccordionHeaderProps) => {
   return (
-    <SAccordionHeader data-plum-ui="accordion-header" data-testid="accordion-header" {...props}>
+    <SAccordionHeader data-ui="accordion-header" data-testid="accordion-header" {...props}>
       <Title as="h4" scale={scale} thin={thin}>
         {children}
       </Title>

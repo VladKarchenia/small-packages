@@ -19,7 +19,7 @@ export const AspectRatio: React.FC<React.PropsWithChildren<IAspectRatioProps>> =
 }) => {
   return (
     <SAspectRatio
-      data-plum-ui="aspect-ratio"
+      data-ui="aspect-ratio"
       className={className}
       css={mergeCSSObjects(
         getStyleFromResponsiveProp(ratio, (value) => {

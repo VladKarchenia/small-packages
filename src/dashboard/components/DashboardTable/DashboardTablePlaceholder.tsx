@@ -77,7 +77,7 @@ export const DashboardTablePlaceholder = () => {
   const { t } = useTranslation()
 
   return (
-    <Table caption={t("dashboard:earnings.table.caption")}>
+    <Table caption="Dashboard table">
       <DashboardTableHead />
       <TableBody>
         {Array.from(new Array(20), (_, index) => index).map((v) => (

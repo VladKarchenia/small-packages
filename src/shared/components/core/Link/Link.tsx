@@ -61,7 +61,7 @@ export const Link = ({
 
   return (
     <SLink
-      data-plum-ui="link"
+      data-ui="link"
       isCtaIntent={intent === "cta"}
       onClick={handleOnClick}
       {...linkProps}
