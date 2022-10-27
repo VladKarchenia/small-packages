@@ -11,7 +11,6 @@ import {
   Title,
   useAccordionContext,
 } from "@/shared/components"
-import { useShipmentContext } from "@/shared/state"
 import { ShipmentStepEnum } from "@/shipment"
 
 const packageInfoSchema = object({
@@ -28,12 +27,15 @@ const defaultValues: PackageInfoInput = {
   depth: "",
 }
 
-export const ShipmentDetails = () => {
+export const ShipmentDetails = ({
+  handleContinueClick,
+}: {
+  handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
+}) => {
   const methods = useForm<PackageInfoInput>({
     mode: "all",
     defaultValues,
     resolver: zodResolver(packageInfoSchema),
-    // reValidateMode: "onBlur",
   })
 
   const {
@@ -43,30 +45,13 @@ export const ShipmentDetails = () => {
   } = methods
 
   const { setSelected } = useAccordionContext("ShipmentDetails")
-  const shipmentContext = useShipmentContext()
 
   const onSubmitHandler: SubmitHandler<PackageInfoInput> = (values) => {
     packageInfoSchema.parse(values)
 
     if (isValid) {
       setSelected([ShipmentStepEnum.SUMMARY])
-
-      shipmentContext?.dispatch({
-        type: "SET_STEP_DATA",
-        payload: {
-          name: ShipmentStepEnum.SHIPMENT,
-          completed: true,
-          disabled: false,
-        },
-      })
-      shipmentContext?.dispatch({
-        type: "SET_STEP_DATA",
-        payload: {
-          name: ShipmentStepEnum.SUMMARY,
-          completed: false,
-          disabled: false,
-        },
-      })
+      handleContinueClick(ShipmentStepEnum.SHIPMENT, ShipmentStepEnum.SUMMARY)
     }
   }
 

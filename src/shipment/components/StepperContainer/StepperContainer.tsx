@@ -1,34 +1,80 @@
+import { useState } from "react"
 import { Accordion } from "@/shared/components"
-import { ShipmentStepEnum } from "@/shipment"
-import { useShipmentContext } from "@/shared/state"
+import { IStep, ShipmentStepEnum } from "@/shipment"
 import { AddressInfo } from "../AddressInfo"
 import { Confirmation } from "../Confirmation"
 import { ShipmentDetails } from "../ShipmentDetails"
 import { Summary } from "../Summary"
 import { StepperItem } from "../StepperItem"
 
+type State = {
+  info: IStep
+  shipment: IStep
+  summary: IStep
+  confirmation: IStep
+}
+
+const initialState: State = {
+  info: {
+    name: "info",
+    completed: false,
+    disabled: false,
+  },
+  shipment: {
+    name: "shipment",
+    completed: false,
+    disabled: true,
+  },
+  summary: {
+    name: "summary",
+    completed: false,
+    disabled: true,
+  },
+  confirmation: {
+    name: "confirmation",
+    completed: false,
+    disabled: true,
+  },
+}
+
 export const StepperContainer = () => {
-  const shipmentContext = useShipmentContext()
+  const [stepperState, setStepperState] = useState(initialState)
+
+  const handleContinueClick = (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => {
+    setStepperState((prevState) => ({
+      ...prevState,
+      [step]: {
+        name: step,
+        completed: true,
+        disabled: false,
+      },
+      [nextStep]: {
+        name: nextStep,
+        completed: false,
+        disabled: false,
+      },
+    }))
+  }
 
   const stepsData = [
     {
       title: "1. Address Information",
-      data: shipmentContext?.state.info,
-      content: <AddressInfo />,
+      data: stepperState.info,
+      content: <AddressInfo handleContinueClick={handleContinueClick} />,
     },
     {
       title: "2. Shipment Details",
-      data: shipmentContext?.state.shipment,
-      content: <ShipmentDetails />,
+      data: stepperState.shipment,
+      content: <ShipmentDetails handleContinueClick={handleContinueClick} />,
     },
     {
       title: "3. Summary",
-      data: shipmentContext?.state.summary,
-      content: <Summary />,
+      data: stepperState.summary,
+      content: <Summary handleContinueClick={handleContinueClick} />,
     },
     {
       title: "4. Confirmation",
-      data: shipmentContext?.state.confirmation,
+      data: stepperState.confirmation,
       content: <Confirmation />,
     },
   ]

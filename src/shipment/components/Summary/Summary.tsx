@@ -1,30 +1,16 @@
-import { useShipmentContext } from "@/shared/state"
 import { Box, Button, GridContainer, Spacer, useAccordionContext } from "@/shared/components"
 import { ShipmentStepEnum } from "@/shipment"
 
-export const Summary = () => {
+export const Summary = ({
+  handleContinueClick,
+}: {
+  handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
+}) => {
   const { setSelected } = useAccordionContext("Summary")
-  const shipmentContext = useShipmentContext()
 
   const handleSelect = () => {
     setSelected([ShipmentStepEnum.CONFIRMATION])
-
-    shipmentContext?.dispatch({
-      type: "SET_STEP_DATA",
-      payload: {
-        name: ShipmentStepEnum.SUMMARY,
-        completed: true,
-        disabled: false,
-      },
-    })
-    shipmentContext?.dispatch({
-      type: "SET_STEP_DATA",
-      payload: {
-        name: ShipmentStepEnum.CONFIRMATION,
-        completed: false,
-        disabled: false,
-      },
-    })
+    handleContinueClick(ShipmentStepEnum.SUMMARY, ShipmentStepEnum.CONFIRMATION)
   }
 
   return (
