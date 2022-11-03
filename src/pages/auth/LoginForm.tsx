@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { Button, FormInput, Spacer, Text, Copy } from "@/shared/components"
+import { Button, FormInput, Spacer } from "@/shared/components"
 
 import { LoginInput } from "./LoginFormContainer"
 import { SShowPasswordButton } from "./LoginForm.styles"
@@ -32,13 +32,16 @@ export const LoginForm = ({
             <FormInput
               {...field}
               id="email"
-              label="Email Address"
+              label="Email"
               type="email"
               error={errors[field.name]?.message}
+              placeholder="Enter your email"
             />
           )
         }}
       />
+
+      <Spacer size={32} />
 
       <Controller
         control={control}
@@ -52,9 +55,10 @@ export const LoginForm = ({
               label="Password"
               type={passwordShown ? "text" : "password"}
               error={errors[field.name]?.message}
+              placeholder="Enter your password"
               suffix={
                 <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
-                  <IconClarityEye size="sm"/>
+                  <IconClarityEye height={20} width={20} fixedSize />
                 </SShowPasswordButton>
               }
             />
@@ -63,7 +67,7 @@ export const LoginForm = ({
       />
 
       <Spacer size={32} />
-      <Button type="submit"  full loading={isLoading} color="black">
+      <Button type="submit" full loading={isLoading} color="black">
         Login
       </Button>
     </>

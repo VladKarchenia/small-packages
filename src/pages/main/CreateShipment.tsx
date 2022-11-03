@@ -5,7 +5,7 @@ import { StepperContainer } from "@/shipment"
 export const CreateShipment = () => {
   return (
     <CommonLayout>
-      <GridContainer>
+      <GridContainer fullBleed>
         <Spacer size={40} />
         <StepperContainer />
         <Spacer size={40} />

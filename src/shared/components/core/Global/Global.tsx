@@ -123,6 +123,10 @@ const globalStyles = (backgroundColor?: Colors) => {
         scrollBehavior: "auto",
       },
     },
+
+    ".leaflet-control-container .leaflet-routing-container-hide": {
+      display: "none",
+    },
   })()
 }
 

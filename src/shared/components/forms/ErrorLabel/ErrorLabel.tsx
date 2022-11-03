@@ -10,7 +10,7 @@ export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
       as="label"
       color="special-error-text"
       id={`${id}__error`}
-      scale={8}
+      scale={9}
       role="alert"
     >
       {children}

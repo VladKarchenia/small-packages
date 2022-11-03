@@ -14,7 +14,7 @@ export const SFormFieldContainer = styled("label", {
   display: "flex",
   alignItems: "center",
   backgroundColor: "$neutrals-0",
-  borderRadius: "$2",
+  borderRadius: "$8",
   boxShadow: boxShadows.input.initial,
   transition: "100ms box-shadow ease-out",
 
@@ -74,6 +74,7 @@ export const SFormFieldElement = styled("input", {
   flex: 1,
   marginTop: 0,
   marginBottom: 0,
+  borderRadius: "$8",
 
   placeholder: {
     color: "$neutrals-5",

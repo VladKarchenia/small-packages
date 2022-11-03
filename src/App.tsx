@@ -3,9 +3,10 @@ import { ToastContainer } from "react-toastify"
 import { AuthGuard } from "@/shared/components"
 import MainLayout from "@/shared/layouts/main"
 import { ModalsContainer } from "@/modals"
-import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize } from "@/pages"
+import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize, Tracking } from "@/pages"
 
 import "react-toastify/dist/ReactToastify.css"
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
 import "@/styles/fonts.css"
 
 const App: React.FC = (): JSX.Element => {
@@ -31,6 +32,10 @@ const App: React.FC = (): JSX.Element => {
           { path: "shipment", element: <CreateShipment /> },
           // { path: "quote", element: <CreateQuote /> },
         ],
+      },
+      {
+        path: "tracking",
+        element: <Tracking />,
       },
       { path: "unauthorized", element: <Unauthorize /> },
       { path: "*", element: <Navigate to="/404" /> },

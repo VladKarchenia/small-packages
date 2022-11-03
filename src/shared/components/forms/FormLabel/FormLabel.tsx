@@ -14,7 +14,7 @@ export const FormLabel = ({ children, hidden, ...props }: IFormLabelProps) => {
   return (
     <WrappingComponent>
       <SFormLabel {...props}>
-        <Copy color="neutrals-9" intent="detail" bold>
+        <Copy color="neutrals-9" scale={9} bold>
           {children}
         </Copy>
       </SFormLabel>

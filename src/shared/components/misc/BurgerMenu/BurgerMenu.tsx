@@ -129,15 +129,15 @@ export interface IBurgerMenuProps {
 // }
 
 export const BurgerMenu: React.FC<IBurgerMenuProps> = ({ currentPathname = "" }) => {
-  const { openDrawer, drawerProps } = useDrawer({
-    direction: "right",
-    variant: "secondary",
-    hasSeparator: true,
-  })
+  // const { openDrawer, drawerProps } = useDrawer({
+  //   direction: "right",
+  //   variant: "secondary",
+  //   hasSeparator: true,
+  // })
 
   return (
     <>
-      <AccountButton
+      {/* <AccountButton
         // cdnUrl={config.cdnUrl}
         // isLoggedIn={isLoggedIn}
         // theme={theme}
@@ -180,7 +180,7 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = ({ currentPathname = "" })
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
-      </Drawer>
+      </Drawer> */}
     </>
   )
 }

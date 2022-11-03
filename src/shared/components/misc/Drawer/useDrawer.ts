@@ -1,65 +1,40 @@
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
+import debounce from "just-debounce-it"
 
-import { IDrawerProps } from "./Drawer"
+import { useDialog, useDialogActions, useEventListener } from "@/shared/hooks"
 
-type UseDrawerConfig = Omit<IDrawerProps, "isVisible" | "portalElement" | "onClose"> & {
-  isVisible?: boolean
-  portalElement?: IDrawerProps["portalElement"]
-}
+import type { DrawerProps } from "./Drawer"
 
-type UseDrawerReturn = {
-  drawerProps: IDrawerProps
+export function useDrawer(name: string, defaultOpen?: boolean) {
+  const [dialogProps, { container, setContainer }] = useDialog(name, "drawers", defaultOpen)
 
-  openDrawer: () => void
-  closeDrawer: () => void
-  toggleDrawer: () => void
-}
+  const [offset, setOffset] = useState<number>(0)
+  const [scrollable, setScrollable] = useState<boolean>(true)
 
-export const useDrawer = (
-  config?: UseDrawerConfig,
-  onToggleCb?: (v: boolean) => void,
-): UseDrawerReturn => {
-  const [isVisible, setVisible] = useState(config?.isVisible || false)
-  const [portalElement, setPortalElement] = useState<HTMLElement | null>(
-    config?.portalElement || null,
+  const drawerProps = useMemo<Omit<DrawerProps, "trigger" | "children">>(
+    () => ({
+      ...dialogProps,
+
+      offset,
+      scrollable,
+    }),
+    [dialogProps, offset, scrollable],
   )
 
-  const toggleDrawer = () => {
-    setVisible((v) => {
-      onToggleCb?.(!v)
-      return !v
-    })
-  }
+  const handleScroll = debounce(() => {
+    if (!container) return
 
-  const openDrawer = () => {
-    onToggleCb?.(true)
-    setVisible(true)
-  }
+    setOffset(container?.scrollTop)
+  }, 100)
 
-  const closeDrawer = () => {
-    onToggleCb?.(false)
-    setVisible(false)
-  }
+  useEventListener("scroll", handleScroll, {
+    element: container,
+    passive: true,
+  })
 
-  const onClose = () => {
-    closeDrawer()
-  }
+  return [drawerProps, { container, setContainer, setScrollable }] as const
+}
 
-  useEffect(() => {
-    if (!portalElement) setPortalElement(document.body)
-  }, [portalElement])
-
-  return {
-    drawerProps: {
-      ...config,
-
-      portalElement,
-      isVisible,
-      onClose,
-    },
-
-    openDrawer,
-    closeDrawer,
-    toggleDrawer,
-  }
+export function useDrawerActions() {
+  return useDialogActions("drawers")
 }

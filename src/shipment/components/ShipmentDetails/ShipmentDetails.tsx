@@ -1,132 +1,143 @@
-import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { object, string, TypeOf } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useFieldArray, useFormContext } from "react-hook-form"
+// import { object, string, TypeOf } from "zod"
+// import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Button,
   FormInput,
-  Grid,
+  FormInputGroup,
+  FormInputGroupItem,
   GridContainer,
-  GridItem,
   Spacer,
-  Title,
-  useAccordionContext,
+  Stack,
+  useStepperContext,
 } from "@/shared/components"
-import { ShipmentStepEnum } from "@/shipment"
+import { IStepperFormValues, ShipmentStepEnum } from "@/shipment"
 
-const packageInfoSchema = object({
-  height: string().min(1, "Height is required"),
-  width: string().min(1, "Width is required"),
-  depth: string().min(1, "Depth is required"),
-})
+// const packageInfoSchema = object({
+//   height: string().min(1, "Height is required"),
+//   width: string().min(1, "Width is required"),
+//   depth: string().min(1, "Depth is required"),
+// })
 
-type PackageInfoInput = TypeOf<typeof packageInfoSchema>
+// type PackageInfoInput = TypeOf<typeof packageInfoSchema>
 
-const defaultValues: PackageInfoInput = {
-  height: "",
-  width: "",
-  depth: "",
-}
+// const defaultValues: PackageInfoInput = {
+//   height: "",
+//   width: "",
+//   depth: "",
+// }
 
 export const ShipmentDetails = ({
   handleContinueClick,
 }: {
   handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
 }) => {
-  const methods = useForm<PackageInfoInput>({
-    mode: "all",
-    defaultValues,
-    resolver: zodResolver(packageInfoSchema),
-  })
+  const { watch, control } = useFormContext<IStepperFormValues>()
+  const { fields } = useFieldArray({ name: "parcels" })
+  const { parcels } = watch()
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid },
-  } = methods
+  const { setSelected } = useStepperContext("ShipmentDetails")
 
-  const { setSelected } = useAccordionContext("ShipmentDetails")
-
-  const onSubmitHandler: SubmitHandler<PackageInfoInput> = (values) => {
-    packageInfoSchema.parse(values)
-
-    if (isValid) {
-      setSelected([ShipmentStepEnum.SUMMARY])
-      handleContinueClick(ShipmentStepEnum.SHIPMENT, ShipmentStepEnum.SUMMARY)
-    }
+  const onContinueHandler = () => {
+    setSelected([ShipmentStepEnum.RATES])
+    handleContinueClick(ShipmentStepEnum.SHIPMENT, ShipmentStepEnum.RATES)
   }
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
-        <GridContainer fullBleed>
-          <Grid
-            columns={{ "@initial": "1fr", "@sm": "1fr 1fr 1fr" }}
-            columnGap={{ "@initial": 0, "@sm": 32 }}
-          >
-            <GridItem>
-              <Title as="h5">Package Details</Title>
-              <Spacer size={24} />
+    <GridContainer fullBleed>
+      {fields.map((field, index) => (
+        <Stack space={24} key={field.id}>
+          <Controller
+            name={`parcels.${index}.weight`}
+            control={control}
+            render={({ field }) => {
+              return (
+                <FormInput
+                  {...field}
+                  id={`parcels.${index}.weight`}
+                  label="Weight, kg"
+                  type="text"
+                  // error={errors[field.name]?.message}
+                />
+              )
+            }}
+          />
+          <FormInputGroup id="dimensions-input-group" label="Dimensions, cm">
+            <FormInputGroupItem>
               <Controller
+                name={`parcels.${index}.dimensions.length`}
                 control={control}
-                defaultValue={defaultValues.height}
-                name="height"
                 render={({ field }) => {
                   return (
                     <FormInput
                       {...field}
-                      id="height"
-                      label="Package height"
+                      id={`parcels.${index}.dimensions.length`}
+                      label="Length"
+                      labelProps={{ hidden: true }}
+                      description="Length"
                       type="text"
-                      error={errors[field.name]?.message}
+                      // error={errors[field.name]?.message}
                     />
                   )
                 }}
               />
-            </GridItem>
-            <GridItem>
-              <Spacer size={56} />
+            </FormInputGroupItem>
+            <FormInputGroupItem>
               <Controller
+                name={`parcels.${index}.dimensions.width`}
                 control={control}
-                defaultValue={defaultValues.width}
-                name="width"
                 render={({ field }) => {
                   return (
                     <FormInput
                       {...field}
-                      id="width"
-                      label="Package width"
+                      id={`parcels.${index}.dimensions.width`}
+                      label="Width"
+                      labelProps={{ hidden: true }}
+                      description="Width"
                       type="text"
-                      error={errors[field.name]?.message}
+                      // error={errors[field.name]?.message}
                     />
                   )
                 }}
               />
-            </GridItem>
-            <GridItem>
-              <Spacer size={56} />
+            </FormInputGroupItem>
+            <FormInputGroupItem>
               <Controller
+                name={`parcels.${index}.dimensions.height`}
                 control={control}
-                defaultValue={defaultValues.depth}
-                name="depth"
                 render={({ field }) => {
                   return (
                     <FormInput
                       {...field}
-                      id="depth"
-                      label="Package depth"
+                      id={`parcels.${index}.dimensions.height`}
+                      label="Height"
+                      labelProps={{ hidden: true }}
+                      description="Height"
                       type="text"
-                      error={errors[field.name]?.message}
+                      // error={errors[field.name]?.message}
                     />
                   )
                 }}
               />
-            </GridItem>
-          </Grid>
-          <Spacer size={32} />
-          <Button type="submit">Continue</Button>
-          <Spacer size={32} />
-        </GridContainer>
-      </form>
-    </FormProvider>
+            </FormInputGroupItem>
+          </FormInputGroup>
+        </Stack>
+      ))}
+
+      <Spacer size={32} />
+      <Button
+        onClick={onContinueHandler}
+        color="black"
+        full
+        disabled={
+          !parcels[0].weight ||
+          !parcels[0].dimensions.length ||
+          !parcels[0].dimensions.width ||
+          !parcels[0].dimensions.height
+        }
+      >
+        Get rates
+      </Button>
+    </GridContainer>
   )
 }

@@ -1,153 +1,73 @@
-import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { object, string, TypeOf } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useFormContext } from "react-hook-form"
+// import { object, string, TypeOf } from "zod"
+// import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Button,
   FormInput,
-  Grid,
   GridContainer,
-  GridItem,
   Spacer,
   Stack,
-  Title,
-  useAccordionContext,
+  useStepperContext,
 } from "@/shared/components"
-import { ShipmentStepEnum } from "@/shipment"
+import { IStepperFormValues, ShipmentStepEnum, LocationInput } from "@/shipment"
+// import { LocationInput } from "./LocationInput"
+// const addressInfoSchema = object({
+//   // fromAddress: string().min(1, "Your address is required"),
+//   // toAddress: string().min(1, "Recipient's address is required"),
+//   fromAddress: string(),
+//   toAddress: string(),
+// })
 
-const addressInfoSchema = object({
-  sendersName: string().min(1, "Your name is required"),
-  fromAddress: string().min(1, "Your address is required"),
-  recipientsName: string().min(1, "Recipient's address is required"),
-  toAddress: string().min(1, "Recipient's address is required"),
-})
+// type AddressInfoInput = TypeOf<typeof addressInfoSchema>
 
-type AddressInfoInput = TypeOf<typeof addressInfoSchema>
-
-const defaultValues: AddressInfoInput = {
-  sendersName: "",
-  fromAddress: "",
-  recipientsName: "",
-  toAddress: "",
-}
+// const defaultValues: AddressInfoInput = {
+//   fromAddress: "",
+//   toAddress: "",
+// }
 
 export const AddressInfo = ({
   handleContinueClick,
 }: {
   handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
 }) => {
-  const methods = useForm<AddressInfoInput>({
-    mode: "all",
-    defaultValues,
-    resolver: zodResolver(addressInfoSchema),
-  })
+  const { setValue, watch } = useFormContext<IStepperFormValues>()
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid },
-  } = methods
+  const { fromAddress, toAddress } = watch()
 
-  const { setSelected } = useAccordionContext("AddressInfo")
+  const { setSelected } = useStepperContext("AddressInfo")
 
-  const onSubmitHandler: SubmitHandler<AddressInfoInput> = (values) => {
-    addressInfoSchema.parse(values)
-
-    if (isValid) {
-      setSelected([ShipmentStepEnum.SHIPMENT])
-      handleContinueClick(ShipmentStepEnum.INFO, ShipmentStepEnum.SHIPMENT)
-    }
+  const onContinueHandler = () => {
+    setSelected([ShipmentStepEnum.SHIPMENT])
+    handleContinueClick(ShipmentStepEnum.INFO, ShipmentStepEnum.SHIPMENT)
   }
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
-        <GridContainer fullBleed>
-          <Grid
-            columns={{ "@initial": "1fr", "@sm": "1fr 1fr" }}
-            columnGap={{ "@initial": 0, "@sm": 32 }}
-          >
-            <GridItem>
-              <Title as="h5">From Address</Title>
-              <Spacer size={24} />
-              <Stack space={24}>
-                <Controller
-                  control={control}
-                  defaultValue={defaultValues.sendersName}
-                  name="sendersName"
-                  render={({ field }) => {
-                    return (
-                      <FormInput
-                        {...field}
-                        id="sendersName"
-                        label="Your Name"
-                        type="text"
-                        error={errors[field.name]?.message}
-                      />
-                    )
-                  }}
-                />
-                <Controller
-                  control={control}
-                  defaultValue={defaultValues.fromAddress}
-                  name="fromAddress"
-                  render={({ field }) => {
-                    return (
-                      <FormInput
-                        {...field}
-                        id="fromAddress"
-                        label="Your Address"
-                        type="text"
-                        error={errors[field.name]?.message}
-                      />
-                    )
-                  }}
-                />
-              </Stack>
-            </GridItem>
-            <GridItem>
-              <Title as="h5">To Address</Title>
-              <Spacer size={24} />
-              <Stack space={24}>
-                <Controller
-                  control={control}
-                  defaultValue={defaultValues.recipientsName}
-                  name="recipientsName"
-                  render={({ field }) => {
-                    return (
-                      <FormInput
-                        {...field}
-                        id="recipientsName"
-                        label="Recipient Name"
-                        type="text"
-                        error={errors[field.name]?.message}
-                      />
-                    )
-                  }}
-                />
-                <Controller
-                  control={control}
-                  defaultValue={defaultValues.toAddress}
-                  name="toAddress"
-                  render={({ field }) => {
-                    return (
-                      <FormInput
-                        {...field}
-                        id="toAddress"
-                        label="Recipient Address"
-                        type="text"
-                        error={errors[field.name]?.message}
-                      />
-                    )
-                  }}
-                />
-              </Stack>
-            </GridItem>
-          </Grid>
-          <Spacer size={32} />
-          <Button type="submit">Continue</Button>
-          <Spacer size={32} />
-        </GridContainer>
-      </form>
-    </FormProvider>
+    <GridContainer fullBleed>
+      <Stack space={8}>
+        <LocationInput
+          initialValue={fromAddress}
+          onChange={(destination) => {
+            setValue("fromAddress", destination)
+          }}
+          placeholder="From"
+        />
+        <LocationInput
+          initialValue={toAddress}
+          onChange={(destination) => {
+            setValue("toAddress", destination)
+          }}
+          placeholder="To"
+        />
+      </Stack>
+      <Spacer size={32} />
+      <Button
+        onClick={onContinueHandler}
+        color="black"
+        full
+        // disabled={!fromAddress.location || !toAddress.location}
+      >
+        Continue
+      </Button>
+    </GridContainer>
   )
 }

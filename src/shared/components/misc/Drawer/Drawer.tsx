@@ -1,90 +1,79 @@
-import React, { useRef } from "react"
-import ReactDOM from "react-dom"
-import FocusLock from "react-focus-lock"
-import { ComponentProps } from "@/utils"
-import { useWaitForTransition } from "@/shared/hooks"
-import { IconCross } from "@/shared/icons"
+import React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-import { Overlay } from "../Overlay"
+import { CSS } from "@/config"
 
-import {
-  SDrawer,
-  SDrawerPanel,
-  SDrawerPanelFocusGuard,
-  SDrawerContent,
-  SDrawerTopBar,
-  SDrawerCloseButton,
-} from "./Drawer.styles"
+import { DrawerPortal, DrawerPortalProps } from "./Portal"
+import { DrawerOverlay } from "./Overlay"
+import { DrawerPanel, DrawerPanelProps } from "./Panel"
+import { DrawerContent, DrawerContentProps } from "./Content"
+import { DrawerHeader } from "./Header"
 
-export interface IDrawerProps extends ComponentProps<typeof SDrawerPanel> {
-  isVisible: boolean
+export type DrawerProps = DialogPrimitive.DialogProps &
+  Pick<DrawerPortalProps, "container"> &
+  Omit<DrawerPanelProps, "css"> &
+  Omit<DrawerContentProps, "css"> & {
+    trigger: React.ReactNode
 
-  direction?: "left" | "right"
+    title?: React.ReactNode
 
-  isLocked?: boolean
+    header?: React.ReactNode
+    footer?: React.ReactNode
 
-  portalElement: HTMLElement | null
+    panelCss?: CSS
+    contentCss?: CSS
 
-  topBarContent?: React.ReactNode
-
-  onClose: () => void
-}
-
-export const Drawer = ({
-  children,
-  isVisible = false,
-  isLocked = true,
-  portalElement = null,
-  topBarContent,
-  onClose,
-  ...props
-}: IDrawerProps) => {
-  const drawerContent = useRef<HTMLDivElement>(null)
-
-  const isHidden = useWaitForTransition(drawerContent.current, isVisible)
-
-  if (!portalElement) {
-    return null
+    closeIcon?: React.ReactNode
+    hasSeparator?: boolean
   }
 
-  return ReactDOM.createPortal(
-    <SDrawer
-      data-testid="drawer"
-      data-fixed
-      style={{ visibility: isHidden ? "hidden" : "visible" }}
-      aria-hidden={isVisible ? "false" : "true"}
-    >
-      <Overlay isVisible={isVisible} onClick={onClose} />
-      <SDrawerPanel
-        ref={drawerContent}
-        role="dialog"
-        aria-modal="true"
-        data-testid="drawer-panel"
-        {...props}
-        data-state-direction={props.direction}
-        data-state-variant={props.variant}
-        data-state-large={String(!!props.isLarge)}
-        data-state-locked={String(!!isLocked)}
-        data-state-visible={String(!!isVisible)}
-      >
-        <FocusLock
-          as={SDrawerPanelFocusGuard}
-          lockProps={{
-            direction: "column",
-          }}
-          disabled={!isVisible || !isLocked}
-          returnFocus
-        >
-          <SDrawerTopBar>
-            <SDrawerCloseButton type="button" onClick={onClose}>
-              <IconCross />
-            </SDrawerCloseButton>
-            {topBarContent}
-          </SDrawerTopBar>
-          <SDrawerContent direction="column">{children}</SDrawerContent>
-        </FocusLock>
-      </SDrawerPanel>
-    </SDrawer>,
-    portalElement,
-  )
-}
+export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
+  (
+    {
+      children,
+      trigger,
+      container,
+      header,
+      nested,
+      offset,
+      fullWidth,
+      scrollable,
+      closeIcon,
+      hasSeparator,
+      panelCss,
+      contentCss,
+      open,
+      onOpenChange,
+      ...props
+    },
+    forwardedRef,
+  ) => {
+    return (
+      <DialogPrimitive.Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
+        <DrawerPortal container={container}>
+          <DrawerOverlay nested={nested} offset={offset} />
+
+          <DrawerPanel
+            ref={forwardedRef}
+            css={panelCss}
+            fullWidth={fullWidth}
+            nested={nested}
+            offset={offset}
+            scrollable={scrollable}
+          >
+            <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
+              {header}
+            </DrawerHeader>
+
+            <DrawerContent css={contentCss} {...props}>
+              {children}
+            </DrawerContent>
+          </DrawerPanel>
+        </DrawerPortal>
+      </DialogPrimitive.Dialog>
+    )
+  },
+)
+
+Drawer.displayName = "Drawer"

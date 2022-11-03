@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, GridContainer, Grid, GridItem, Logo, Title, Spacer, Flex } from "@/shared/components"
+import { Box, GridContainer, Grid, GridItem, Title, Spacer, Flex, Copy } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 
 import { LoginFormContainer } from "./LoginFormContainer"
@@ -15,7 +15,7 @@ export const Login = () => {
           <GridItem
             css={{
               backgroundColor: "$neutrals-1",
-              padding: "$32 $24",
+              padding: "$32 $16",
               display: "flex",
               flexFlow: "column nowrap",
               justifyContent: "center",
@@ -34,7 +34,7 @@ export const Login = () => {
                   <img
                     alt="logo"
                     src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                    style={{ height: "48px" }}
+                    style={{ height: "38px" }}
                   />
                 </Flex>
               </a>
@@ -47,9 +47,11 @@ export const Login = () => {
                 flex: "1 1 100%",
               }}
             >
-              <Title css={{ marginBottom: "$24" }} as="h2">
+              <Title as="h1" scale={4}>
                 Welcome!
               </Title>
+              <Copy scale={9}>Please, log in to continue</Copy>
+              <Spacer size={24} />
               <LoginFormContainer />
             </Flex>
           </GridItem>
