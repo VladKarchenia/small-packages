@@ -73,6 +73,26 @@ const opacityPulse = keyframes({
   },
 })
 
+const slideIn = (from: "left" | "right") =>
+  keyframes({
+    "0%": {
+      transform: `translateX(${from === "left" ? "-100%" : "100%"})`,
+    },
+    "100%": {
+      transform: "translateX(0)",
+    },
+  })
+
+const slideOut = (to: "left" | "right") =>
+  keyframes({
+    "0%": {
+      transform: "translateX(0)",
+    },
+    "100%": {
+      transform: `translateX(${to === "left" ? "-100%" : "100%"})`,
+    },
+  })
+
 export const animations = {
   fadeIn,
   fadeOut,
@@ -82,4 +102,7 @@ export const animations = {
   rotate,
   scalePulse,
   opacityPulse,
+
+  slideIn,
+  slideOut,
 }

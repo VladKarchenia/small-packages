@@ -1,6 +1,6 @@
 import React from "react"
 import { ComponentProps } from "@/utils"
-import { Copy, Flex, Spacer } from "@/shared/components"
+import { Box, Copy, Flex, Spacer } from "@/shared/components"
 
 import { ErrorLabel } from "../ErrorLabel"
 import { FormLabel, IFormLabelProps } from "../FormLabel"
@@ -69,11 +69,7 @@ export const FormField = ({
         )}
       </Flex>
 
-      {description && (
-        <Copy color="neutrals-7" intent="detail">
-          {description}
-        </Copy>
-      )}
+      {description && <Copy scale={10}>{description}</Copy>}
 
       {(!labelProps?.hidden || description) && <Spacer size={8} />}
 
@@ -86,7 +82,7 @@ export const FormField = ({
       </SFormFieldContainer>
 
       {(error || afterField) && (
-        <>
+        <Box css={{ position: "absolute" }}>
           <Spacer size={4} />
 
           <Flex justify="between">
@@ -94,7 +90,7 @@ export const FormField = ({
 
             <div>{afterField}</div>
           </Flex>
-        </>
+        </Box>
       )}
     </SFormField>
   )

@@ -1,5 +1,5 @@
 import { authApi } from "./authApi"
-import { GenericResponse, IPostResponse, IPostsResponse } from "./types"
+import { GenericResponse, IPostResponse, IPostsResponse, ISuggestionsResponse } from "./types"
 
 export const getAllPostsFn = async () => {
   const response = await authApi.get<IPostsResponse>(`posts`)
@@ -31,5 +31,10 @@ export const updatePostFn = async ({ id, formData }: { id: string; formData: For
 
 export const deletePostFn = async (id: string) => {
   const response = await authApi.delete<GenericResponse>(`posts/${id}`)
+  return response.data
+}
+
+export const getSuggestionsFn = async (term: string) => {
+  const response = await authApi.get<ISuggestionsResponse>(`suggestions/${term}`)
   return response.data
 }

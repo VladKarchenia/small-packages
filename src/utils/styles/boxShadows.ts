@@ -7,7 +7,7 @@ export const boxShadows = {
   input: {
     initial: inset(theme.colors["neutrals-4"]),
     hover: inset(theme.colors["neutrals-7"]),
-    focus: inset(theme.colors["brand-yellow-dark"]),
+    focus: inset(theme.colors["neutrals-7"]),
     error: inset(theme.colors["special-error"]),
   },
 }

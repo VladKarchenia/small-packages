@@ -55,7 +55,7 @@ export const LoginFormContainer = () => {
   }, [isSubmitSuccessful])
 
   // API Get Current Logged-in user
-  const query = useQuery(["authUser"], getMeFn, {
+  const { refetch } = useQuery(["authUser"], getMeFn, {
     enabled: false,
     select: (data) => data.data.user,
     retry: 1,
@@ -72,7 +72,7 @@ export const LoginFormContainer = () => {
     (userData: LoginInput) => loginUserFn(userData),
     {
       onSuccess: () => {
-        query.refetch()
+        refetch()
         toast.success("You successfully logged in")
         navigate(from)
       },

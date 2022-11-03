@@ -52,3 +52,20 @@ export interface IPostsResponse {
     posts: IPostResponse[]
   }
 }
+
+export interface GetPopularSuggestions_popularSuggestionsByCountryCode_places {
+  __typename: "Place"
+  placeId: string
+  title: string
+  latitude: number | null
+  longitude: number | null
+}
+
+export interface ISuggestionsResponse {
+  status: string
+  data: {
+    suggestionsByTerm: {
+      places: GetPopularSuggestions_popularSuggestionsByCountryCode_places[]
+    }
+  }
+}

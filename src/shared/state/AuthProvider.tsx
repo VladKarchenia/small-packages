@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [cookies] = useCookies(["logged_in"])
   const stateContext = useStateContext()
 
-  const query = useQuery(["authUser"], () => getMeFn(), {
+  const { isLoading } = useQuery(["authUser"], () => getMeFn(), {
     enabled: !!cookies.logged_in,
     select: (data) => data.data.user,
     onSuccess: (data) => {
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     },
   })
 
-  if (query.isLoading && cookies.logged_in) {
+  if (isLoading && cookies.logged_in) {
     return <FullScreenLoader />
   }
 

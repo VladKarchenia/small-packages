@@ -16,6 +16,7 @@ import { useMedia, useModalActions } from "@/shared/hooks"
 import { CommonLayout } from "@/shared/layouts/common"
 import { mediaQueries } from "@/config"
 import { DashboardList, DashboardTable } from "@/dashboard"
+import { useForm } from "react-hook-form"
 
 const loading = false
 const bookings = [
@@ -40,6 +41,15 @@ export const Home = () => {
   const isMedium = useMedia([mediaQueries.md], [true], false)
   const [showTable, setShowTable] = useState(false)
 
+  interface DestinationState {
+    location: string
+    placeId: string
+  }
+
+  interface IPrimaryFiltersFormValues {
+    destination: DestinationState
+  }
+
   useEffect(() => {
     setShowTable(isMedium)
   }, [isMedium])
@@ -58,6 +68,8 @@ export const Home = () => {
         <Button onClick={() => navigate("/create/shipment")}>Create Shipment</Button>
         <Spacer size={40} />
         <Button onClick={() => open("timePeriod")}>Open modal</Button>
+        <Spacer size={40} />
+        <Button onClick={() => navigate("/tracking")}>Tracking page</Button>
         <Spacer size={40} />
         <Tabs selectedTab="tab1">
           <TabList label="" css={{ marginBottom: "$24" }}>

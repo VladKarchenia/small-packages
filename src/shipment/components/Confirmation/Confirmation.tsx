@@ -13,7 +13,6 @@ export const Confirmation = () => {
       <Box>Confirmation content</Box>
       <Spacer size={32} />
       <Button onClick={() => handleSelect()}>Finish</Button>
-      <Spacer size={32} />
     </GridContainer>
   )
 }
