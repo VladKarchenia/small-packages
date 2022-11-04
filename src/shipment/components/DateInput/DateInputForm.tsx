@@ -101,6 +101,7 @@ const DatesInputFooter = ({
         dataTestid="apply-date"
         color="black"
         onClick={onConfirm}
+        size='small'
       >
         <Copy scale={8} color="system-white" bold>
           Done

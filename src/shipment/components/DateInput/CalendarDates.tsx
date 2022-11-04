@@ -1,8 +1,29 @@
-// import { Datepicker } from "@/shared/components"
 import addDays from "date-fns/addDays"
 import { useState } from "react"
 import { DayPicker } from "react-day-picker"
 import "react-day-picker/dist/style.css"
+
+const css = `
+  .my-selected:not([disabled]):not(.rdp-day_selected) { 
+    border: 2px solid currentColor;
+    background-color: black;
+    color: white;
+  }
+  .my-selected:hover:not([disabled]):not(.rdp-day_selected) { 
+    border-color: black;
+    background-color: black;
+    color: white;
+  }
+  @media screen and (max-width: 480px) {
+     .rdp { --rdp-cell-size: 46px; }
+   }
+   @media screen and (min-width: 481px) {
+     .rdp { --rdp-cell-size: 60px; }
+   }
+   @media screen and (min-width: 769px) {
+     .rdp { --rdp-cell-size: 40px; }
+   }
+`;
 
 export const CalendarDates = ({
   isDesktop,
@@ -24,21 +45,17 @@ export const CalendarDates = ({
     }
   }
   return (
-    // <Datepicker
-    //   direction={isDesktop ? "normal" : "vertical"}
-    //   {...(isDesktop ? { numberOfMonths: 2 } : {})}
-    //   isOpen
-    //   value={date}
-    //   clearHighlightedOnBlur
-    //   onDateChange={(date: string) => {
-    //     handleChange(date)
-    //   }}
-    // />
-    <DayPicker
-      mode="single"
-      selected={selectedDay}
-      onSelect={(day) => handleSelect(day)}
-      disabled={{ before: today, after: end }}
-    />
+    <>
+      <style>{css}</style>
+      <DayPicker
+        mode="single"
+        selected={selectedDay}
+        onSelect={(day) => handleSelect(day)}
+        disabled={{ before: today, after: end }}
+        modifiersClassNames={{
+          selected: 'my-selected',
+        }}
+      />
+    </>
   )
 }
