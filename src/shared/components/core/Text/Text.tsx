@@ -86,6 +86,9 @@ const scaleVariantMap: any = {
     ...getScaleVariantStyles(13),
   },
   11: {
+    ...getScaleVariantStyles(12),
+  },
+  12: {
     ...getScaleVariantStyles(6),
   },
 }

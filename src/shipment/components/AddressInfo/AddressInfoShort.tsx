@@ -1,23 +1,10 @@
 import { useFormContext } from "react-hook-form"
-import { Copy, Flex } from "@/shared/components"
 import { IStepperFormValues } from "@/shipment"
-import { IconArrowRight } from "@/shared/icons"
+import { AddressInfoInLine } from "@/shared/components/app"
 
 export const AddressInfoShort = () => {
   const { watch } = useFormContext<IStepperFormValues>()
   const { fromAddress, toAddress } = watch()
 
-  return (
-    <Flex align="center">
-      <Copy scale={8} color="system-black">
-        {fromAddress.location}
-      </Copy>
-      <Flex css={{ paddingX: "$8" }}>
-        <IconArrowRight size="xs" />
-      </Flex>
-      <Copy scale={8} color="system-black">
-        {toAddress.location}
-      </Copy>
-    </Flex>
-  )
+  return <AddressInfoInLine fromAddress={fromAddress.location} toAddress={toAddress.location} />
 }

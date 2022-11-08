@@ -9,7 +9,7 @@ export const SGridContainer = styled("div", {
     fullBleed: {
       true: { paddingX: 0 },
       false: {
-        paddingX: "$24",
+        paddingX: "$16",
 
         "@xs": {
           paddingX: "$32",
