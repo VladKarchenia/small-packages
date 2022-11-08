@@ -10,14 +10,16 @@ export const DeliveryRatesShort = () => {
 
   return (
     <Stack space={8}>
-      <Flex align="center">
-        <Flex css={{ paddingRight: "$8" }}>
-          <IconLocationPin size="xs" />
+      {date ? (
+        <Flex align="center">
+          <Flex css={{ paddingRight: "$8" }}>
+            <IconLocationPin size="xs" />
+          </Flex>
+          <Copy scale={8} color="system-black">
+            {format(date, "dd.MM.yyyy")}
+          </Copy>
         </Flex>
-        <Copy scale={8} color="system-black">
-          {format(date, "dd.MM.yyyy")}
-        </Copy>
-      </Flex>
+      ) : null}
       <Flex align="center">
         <Flex css={{ paddingRight: "$8" }}>
           <IconCross size="xs" />

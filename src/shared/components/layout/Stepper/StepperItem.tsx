@@ -23,32 +23,32 @@ export interface IStepperItemProps extends ComponentProps<typeof SStepperItem> {
   /**
    * Disable the Stepper Item
    */
-  disabled?: boolean
-  completed?: boolean
+  isDisabled?: boolean
+  isCompleted?: boolean
 }
 
-export const StepperItem = ({ value, ...props }: IStepperItemProps) => {
+export const StepperItem = ({ value, isDisabled, isCompleted, ...props }: IStepperItemProps) => {
   const { selected, disabled, completed } = useStepperContext("StepperItem")
 
   const id = useId(8)
 
   const isOpen = selected.includes(value) || false
-  const isDisabled = disabled || props.disabled || false
-  const isCompleted = completed || props.completed || false
+  const isStepDisabled = disabled || isDisabled || false
+  const isStepCompleted = completed || isCompleted || false
 
   return (
     <StepperItemProvider
       id={id}
       value={value}
       open={isOpen}
-      disabled={isDisabled}
-      completed={isCompleted}
+      disabled={isStepDisabled}
+      completed={isStepCompleted}
     >
       <SStepperItem
         data-ui="stepper-item"
         data-state={isOpen ? "open" : "closed"}
         data-testid="stepper-item"
-        inactive={isDisabled}
+        inactive={isStepDisabled}
         {...props}
       />
     </StepperItemProvider>

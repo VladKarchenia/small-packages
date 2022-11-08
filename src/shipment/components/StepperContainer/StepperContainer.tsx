@@ -6,6 +6,14 @@ import { AddressInfo, AddressInfoShort } from "../AddressInfo"
 import { ShipmentDetails, ShipmentDetailsShort } from "../ShipmentDetails"
 import { StepItem } from "../StepItem"
 import { FormProvider, useForm } from "react-hook-form"
+import {
+  IAddress,
+  IParcel,
+  IRate,
+  useShipmentActionContext,
+  useShipmentStateContext,
+} from "@/shared/state"
+import { useNavigate } from "react-router-dom"
 
 type State = {
   info: IStep
@@ -13,35 +21,11 @@ type State = {
   rates: IStep
 }
 
-export interface DestinationState {
-  location: string | null
-  placeId: string | null
-}
-
-interface IParcelDimensions {
-  length: string
-  width: string
-  height: string
-}
-
-interface IParcel {
-  weight: string
-  dimensions: IParcelDimensions
-}
-
-interface IRate {
-  type: string
-  name: string
-  price: string
-  currency: string
-  id: string
-}
-
 export interface IStepperFormValues {
-  fromAddress: DestinationState
-  toAddress: DestinationState
+  fromAddress: IAddress
+  toAddress: IAddress
   parcels: IParcel[]
-  date: Date
+  date: Date | null
   rate: IRate
 }
 
@@ -67,7 +51,10 @@ const initialState: State = {
 }
 
 export const StepperContainer = () => {
+  const navigate = useNavigate()
   const [stepperState, setStepperState] = useState(initialState)
+  const setShipmentContext = useShipmentActionContext()
+  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   const handleContinueClick = (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => {
     setStepperState((prevState) => {
@@ -111,46 +98,40 @@ export const StepperContainer = () => {
   ]
 
   const methods = useForm<IStepperFormValues>({
+    mode: "onBlur",
     defaultValues: {
       fromAddress: {
+        ...sender.fullAddress,
+        // TODO: remove it after BE connection with destination service
         location: "USA, New York",
-        // location: null,
-        placeId: null,
       },
       toAddress: {
+        ...recipient.fullAddress,
+        // TODO: remove it after BE connection with destination service
         location: "USA, Los Angeles",
-        // location: null,
-        placeId: null,
       },
-      parcels: [
-        {
-          weight: "2",
-          // weight: null,
-          dimensions: {
-            length: "1",
-            // length: null,
-            width: "2",
-            // width: null,
-            height: "3",
-            // height: null,
-          },
-        },
-      ],
-      date: new Date(),
-      // date: null,
-      rate: {
-        type: "UPS",
-        name: "Express Delivery",
-        price: "430.00",
-        currency: "$",
-        id: "23",
-      },
-      // rate: null,
+      parcels: parcels,
+      date: date,
+      rate: rate,
     },
   })
 
   const onSubmit = (data: IStepperFormValues) => {
-    console.log(data)
+    setShipmentContext({
+      sender: {
+        ...sender,
+        fullAddress: data.fromAddress,
+      },
+      recipient: {
+        ...recipient,
+        fullAddress: data.toAddress,
+      },
+      parcels: data.parcels,
+      date: data.date,
+      rate: data.rate,
+    })
+    // TODO: navigate to the create shipment page
+    navigate("/")
   }
 
   return (

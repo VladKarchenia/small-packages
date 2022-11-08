@@ -15,8 +15,8 @@ export const StepperFooter = () => {
   return (
     <Flex direction="column" css={{ paddingX: "$16" }}>
       <Spacer size={24} />
-      <Button type="submit" disabled={!rate.name} color="black">
-        <Copy scale={8} color="system-white" bold>
+      <Button type="submit" disabled={!rate.name}>
+        <Copy as="span" scale={8} color="system-white" bold>
           Create a shipment
         </Copy>
       </Button>

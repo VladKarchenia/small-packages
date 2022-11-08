@@ -67,7 +67,7 @@ export const LoginForm = ({
       />
 
       <Spacer size={32} />
-      <Button type="submit" full loading={isLoading} color="black">
+      <Button type="submit" full loading={isLoading}>
         Login
       </Button>
     </>

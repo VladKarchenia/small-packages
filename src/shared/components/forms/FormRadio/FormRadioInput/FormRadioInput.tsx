@@ -20,11 +20,11 @@ export interface IFormRadioInputProps
    * ! Every field should always contain a label, so whenever this prop is used, make sure to add a label for the field manually
    */
   noLabel?: boolean
-  iconType?: "circle" | "tick"
+  view?: "circle" | "tick"
 }
 
 export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInputProps>(
-  ({ id, disabled, label, noLabel, iconType = "circle", ...props }, ref) => {
+  ({ id, disabled, label, noLabel, view = "circle", ...props }, ref) => {
     const labelProps = React.useMemo(() => {
       return {
         disabled: disabled,
@@ -36,15 +36,15 @@ export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInput
       return {
         id: id,
         disabled: disabled,
-        iconType: iconType,
+        view: view,
         ...props,
       }
-    }, [id, disabled, iconType, props])
+    }, [id, disabled, view, props])
 
     return (
       <SFormRadioInputLabel data-ui="radiobutton" {...labelProps}>
         <SFormRadioInput ref={ref} data-ui="radiobutton__input" {...radioInputProps} type="radio" />
-        {iconType === "tick" ? (
+        {view === "tick" ? (
           <SFormRadioTickCopyBox>
             <Copy color="neutrals-9" intent="detail">
               {label}

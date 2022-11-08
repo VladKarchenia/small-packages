@@ -1,3 +1,4 @@
+// import { Datepicker } from "@/shared/components"
 import addDays from "date-fns/addDays"
 import { useState } from "react"
 import { DayPicker } from "react-day-picker"
@@ -9,10 +10,10 @@ export const CalendarDates = ({
   handleChange,
 }: {
   isDesktop?: boolean
-  date: Date
-  handleChange: (value: Date) => void
+  date: Date | null
+  handleChange: (value: Date | null) => void
 }) => {
-  const [selectedDay, setSelectedDay] = useState<Date>(date)
+  const [selectedDay, setSelectedDay] = useState<Date | null>(date)
   const today = new Date()
   const end = addDays(today, 13)
 
@@ -23,9 +24,19 @@ export const CalendarDates = ({
     }
   }
   return (
+    // <Datepicker
+    //   direction={isDesktop ? "normal" : "vertical"}
+    //   {...(isDesktop ? { numberOfMonths: 2 } : {})}
+    //   isOpen
+    //   value={date}
+    //   clearHighlightedOnBlur
+    //   onDateChange={(date: string) => {
+    //     handleChange(date)
+    //   }}
+    // />
     <DayPicker
       mode="single"
-      selected={selectedDay}
+      selected={selectedDay || undefined}
       onSelect={(day) => handleSelect(day)}
       disabled={{ before: today, after: end }}
     />

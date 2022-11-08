@@ -17,16 +17,10 @@ export interface IFormRadioGroupProps
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   disabled?: boolean
   error?: string
-  iconType?: "circle" | "tick"
+  view?: "circle" | "tick"
 }
 
-export const FormRadioGroup = ({
-  disabled,
-  value,
-  name,
-  iconType,
-  ...props
-}: IFormRadioGroupProps): JSX.Element => {
+export const FormRadioGroup = ({ disabled, value, name, view, ...props }: IFormRadioGroupProps) => {
   const { id, error, children, onChange, ...radioGroupProps } = props
 
   const clonedChildren = React.Children.map(
@@ -39,7 +33,7 @@ export const FormRadioGroup = ({
         disabled,
         checked: value === child.props.value,
         id: createRadioId(name, (child.props?.value as string) || ""),
-        iconType,
+        view,
       }),
   )
 

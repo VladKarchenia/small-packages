@@ -1,8 +1,9 @@
 import { Grid, Flex, Title, Spacer } from "@/shared/components"
+import { IAddress } from "@/shared/state"
 import { DestinationCombobox } from "../DestinationCombobox"
 
 export interface LocationInputFormProps {
-  initialValue: string | null
+  initialValue: IAddress
   onSelect: (location: string, placeId: string) => void
 }
 
@@ -14,7 +15,7 @@ export const LocationInputForm: React.FC<LocationInputFormProps> = ({ initialVal
           Find destination
         </Title>
         <Spacer size={24} />
-        <DestinationCombobox initialValue={initialValue} onSelect={onSelect} />
+        <DestinationCombobox initialValue={initialValue.location} onSelect={onSelect} />
       </Flex>
     </Grid>
   )

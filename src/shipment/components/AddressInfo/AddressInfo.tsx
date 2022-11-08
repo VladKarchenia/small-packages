@@ -1,29 +1,6 @@
 import { useFormContext } from "react-hook-form"
-// import { object, string, TypeOf } from "zod"
-// import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Button,
-  FormInput,
-  GridContainer,
-  Spacer,
-  Stack,
-  useStepperContext,
-} from "@/shared/components"
+import { Button, Copy, GridContainer, Spacer, Stack, useStepperContext } from "@/shared/components"
 import { IStepperFormValues, ShipmentStepEnum, LocationInput } from "@/shipment"
-// import { LocationInput } from "./LocationInput"
-// const addressInfoSchema = object({
-//   // fromAddress: string().min(1, "Your address is required"),
-//   // toAddress: string().min(1, "Recipient's address is required"),
-//   fromAddress: string(),
-//   toAddress: string(),
-// })
-
-// type AddressInfoInput = TypeOf<typeof addressInfoSchema>
-
-// const defaultValues: AddressInfoInput = {
-//   fromAddress: "",
-//   toAddress: "",
-// }
 
 export const AddressInfo = ({
   handleContinueClick,
@@ -62,11 +39,18 @@ export const AddressInfo = ({
       <Spacer size={32} />
       <Button
         onClick={onContinueHandler}
-        color="black"
         full
-        // disabled={!fromAddress.location || !toAddress.location}
+        disabled={
+          !fromAddress.location ||
+          !toAddress.location ||
+          // TODO: need to add better condition to prevent same from and to addresses using ID or some field
+          fromAddress.location === toAddress.location
+        }
       >
-        Continue
+        {/* TODO: fix default button copy */}
+        <Copy as="span" scale={8} color="system-white" bold>
+          Continue
+        </Copy>
       </Button>
     </GridContainer>
   )

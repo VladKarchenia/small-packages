@@ -2,12 +2,6 @@ import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { Copy, FormRadioGroup, RateRadioInput, GridContainer, Stack } from "@/shared/components"
 import { IStepperFormValues, DateInput } from "@/shipment"
-// const addressInfoSchema = object({
-//   // fromAddress: string().min(1, "Your address is required"),
-//   // toAddress: string().min(1, "Recipient's address is required"),
-//   fromAddress: string(),
-//   toAddress: string(),
-// })
 
 const rates = [
   {

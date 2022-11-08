@@ -1,8 +1,7 @@
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
-// import { object, string, TypeOf } from "zod"
-// import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Button,
+  Copy,
   FormInput,
   FormInputGroup,
   FormInputGroupItem,
@@ -13,26 +12,17 @@ import {
 } from "@/shared/components"
 import { IStepperFormValues, ShipmentStepEnum } from "@/shipment"
 
-// const packageInfoSchema = object({
-//   height: string().min(1, "Height is required"),
-//   width: string().min(1, "Width is required"),
-//   depth: string().min(1, "Depth is required"),
-// })
-
-// type PackageInfoInput = TypeOf<typeof packageInfoSchema>
-
-// const defaultValues: PackageInfoInput = {
-//   height: "",
-//   width: "",
-//   depth: "",
-// }
-
 export const ShipmentDetails = ({
   handleContinueClick,
 }: {
   handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
 }) => {
-  const { watch, control } = useFormContext<IStepperFormValues>()
+  const {
+    watch,
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<IStepperFormValues>()
   const { fields } = useFieldArray({ name: "parcels" })
   const { parcels } = watch()
 
@@ -54,10 +44,21 @@ export const ShipmentDetails = ({
               return (
                 <FormInput
                   {...field}
+                  {...register(field.name, {
+                    setValueAs: (v) => (v ? parseFloat(v) : ""),
+                    min: {
+                      value: 0.1,
+                      message: "The minimum weight is 0.1 kg",
+                    },
+                    max: {
+                      value: 10,
+                      message: "The maximum weight is 10 kg",
+                    },
+                  })}
                   id={`parcels.${index}.weight`}
                   label="Weight, kg"
-                  type="text"
-                  // error={errors[field.name]?.message}
+                  type="number"
+                  error={errors?.parcels?.[index]?.weight?.message}
                 />
               )
             }}
@@ -71,12 +72,23 @@ export const ShipmentDetails = ({
                   return (
                     <FormInput
                       {...field}
+                      {...register(field.name, {
+                        setValueAs: (v) => (v ? parseInt(v) : ""),
+                        min: {
+                          value: 1,
+                          message: "The minimum length is 1 cm",
+                        },
+                        max: {
+                          value: 10,
+                          message: "The maximum length is 10 cm",
+                        },
+                      })}
                       id={`parcels.${index}.dimensions.length`}
                       label="Length"
                       labelProps={{ hidden: true }}
                       description="Length"
-                      type="text"
-                      // error={errors[field.name]?.message}
+                      type="number"
+                      error={errors?.parcels?.[index]?.dimensions?.length?.message}
                     />
                   )
                 }}
@@ -90,12 +102,23 @@ export const ShipmentDetails = ({
                   return (
                     <FormInput
                       {...field}
+                      {...register(field.name, {
+                        setValueAs: (v) => (v ? parseInt(v) : ""),
+                        min: {
+                          value: 1,
+                          message: "The minimum width is 1 cm",
+                        },
+                        max: {
+                          value: 10,
+                          message: "The maximum width is 10 cm",
+                        },
+                      })}
                       id={`parcels.${index}.dimensions.width`}
                       label="Width"
                       labelProps={{ hidden: true }}
                       description="Width"
-                      type="text"
-                      // error={errors[field.name]?.message}
+                      type="number"
+                      error={errors?.parcels?.[index]?.dimensions?.width?.message}
                     />
                   )
                 }}
@@ -109,12 +132,23 @@ export const ShipmentDetails = ({
                   return (
                     <FormInput
                       {...field}
+                      {...register(field.name, {
+                        setValueAs: (v) => (v ? parseInt(v) : ""),
+                        min: {
+                          value: 1,
+                          message: "The minimum height is 1 cm",
+                        },
+                        max: {
+                          value: 10,
+                          message: "The maximum height is 10 cm",
+                        },
+                      })}
                       id={`parcels.${index}.dimensions.height`}
                       label="Height"
                       labelProps={{ hidden: true }}
                       description="Height"
-                      type="text"
-                      // error={errors[field.name]?.message}
+                      type="number"
+                      error={errors?.parcels?.[index]?.dimensions?.height?.message}
                     />
                   )
                 }}
@@ -127,8 +161,9 @@ export const ShipmentDetails = ({
       <Spacer size={32} />
       <Button
         onClick={onContinueHandler}
-        color="black"
         full
+        // TODO: create a constant for the desabled state
+        // TODO: Add if there are an errors
         disabled={
           !parcels[0].weight ||
           !parcels[0].dimensions.length ||
@@ -136,7 +171,9 @@ export const ShipmentDetails = ({
           !parcels[0].dimensions.height
         }
       >
-        Get rates
+        <Copy as="span" scale={8} color="system-white" bold>
+          Get rates
+        </Copy>
       </Button>
     </GridContainer>
   )
