@@ -28,9 +28,6 @@ export const CalendarDates = ({
       selected={selectedDay}
       onSelect={(day) => handleSelect(day)}
       disabled={{ before: today, after: end }}
-      modifiersClassNames={{
-        selected: "my-selected",
-      }}
     />
   )
 }
