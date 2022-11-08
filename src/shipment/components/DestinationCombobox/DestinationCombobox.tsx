@@ -30,7 +30,7 @@ import { mapDestinationToComboboxItem } from "./utils"
 
 export interface DestinationComboboxProps {
   onSelect: (location: string, placeId: string) => void
-  initialValue?: string | null
+  initialValue?: string
   isDesktop?: boolean
 }
 
@@ -83,8 +83,7 @@ export const DestinationCombobox = ({
   }, [comboboxProps])
 
   useEffect(() => {
-    if (!initialValue || initialValue.length < 2 || initialValue.trim().length === 0)
-      return
+    if (!initialValue || initialValue.length < 2 || initialValue.trim().length === 0) return
     setInputValue(initialValue)
     getSuggestions()
   }, [initialValue, getSuggestions])

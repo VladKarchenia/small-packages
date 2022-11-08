@@ -59,7 +59,7 @@ export const SFormRadioInput = styled("input", {
   hiddenInput: true,
 
   variants: {
-    iconType: {
+    view: {
       tick: {
         disabled: {
           [`+ ${SFormRadioTickCopyBox}`]: {

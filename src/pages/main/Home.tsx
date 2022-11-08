@@ -41,15 +41,6 @@ export const Home = () => {
   const isMedium = useMedia([mediaQueries.md], [true], false)
   const [showTable, setShowTable] = useState(false)
 
-  interface DestinationState {
-    location: string
-    placeId: string
-  }
-
-  interface IPrimaryFiltersFormValues {
-    destination: DestinationState
-  }
-
   useEffect(() => {
     setShowTable(isMedium)
   }, [isMedium])

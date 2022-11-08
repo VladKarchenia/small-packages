@@ -7,8 +7,8 @@ import { CalendarDates } from "./CalendarDates"
 import { SDatesInputContent, SFooterWrap } from "./DateInputForm.styles"
 
 export interface DateInputFormProps {
-  initialValue: Date
-  onSelect: (date: Date) => void
+  initialValue: Date | null
+  onSelect: (date: Date | null) => void
   onConfirm: () => void
   isDesktop?: boolean
 }
@@ -21,9 +21,8 @@ export const DateInputForm: React.FC<DateInputFormProps> = ({
 }) => {
   const { resetField } = useFormContext<IStepperFormValues>()
   const [dateValue, setDateValue] = useState(initialValue)
-  console.log(dateValue)
 
-  const handleChange = (value: Date) => {
+  const handleChange = (value: Date | null) => {
     setDateValue(value)
   }
 
@@ -63,8 +62,8 @@ const DatesInputContent = ({
   handleChange,
 }: {
   isDesktop?: boolean
-  date: Date
-  handleChange: (value: Date) => void
+  date: Date | null
+  handleChange: (value: Date | null) => void
 }) => {
   return (
     <SDatesInputContent>
@@ -78,7 +77,7 @@ const DatesInputFooter = ({
   onConfirm,
   onReset,
 }: {
-  date: Date
+  date: Date | null
   onConfirm: () => void
   onReset: () => void
 }) => {
@@ -99,11 +98,9 @@ const DatesInputFooter = ({
         css={{ paddingX: "$48" }}
         disabled={!hasDate}
         dataTestid="apply-date"
-        color="black"
         onClick={onConfirm}
-        size='small'
       >
-        <Copy scale={8} color="system-white" bold>
+        <Copy as="span" scale={8} color="system-white" bold>
           Done
         </Copy>
       </Button>

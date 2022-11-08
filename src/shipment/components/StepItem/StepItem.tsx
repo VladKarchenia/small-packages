@@ -23,7 +23,7 @@ export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }:
   const isStepLast = data.stepNumber === totalSteps
 
   return (
-    <StepperItem value={name} disabled={disabled} completed={completed}>
+    <StepperItem value={name} isDisabled={disabled} isCompleted={completed}>
       <StepperHeader scale={8}>
         <StepperButton
           size="small"

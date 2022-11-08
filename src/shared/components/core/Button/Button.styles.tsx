@@ -13,6 +13,7 @@ export const SButton = styled("button", {
   justifyContent: "center",
   transition: "150ms ease-out",
   cursor: "pointer",
+  borderRadius: "$8",
 
   focus: {
     boxShadow: `0 4px 12px 0 ${rgba("neutrals-5", 0.5)}`,
@@ -29,17 +30,17 @@ export const SButton = styled("button", {
   variants: {
     action: {
       primary: {
-        backgroundColor: "$brand-yellow-primary",
+        backgroundColor: "$system-black",
         borderColor: "transparent",
-        color: "$neutrals-9",
+        color: "$neutrals-0",
 
         hover: {
-          backgroundColor: "$brand-yellow-light",
+          backgroundColor: "$neutrals-7",
           borderColor: "transparent",
         },
 
         active: {
-          backgroundColor: "$brand-yellow-lighter",
+          backgroundColor: "$neutrals-5",
           borderColor: "transparent",
         },
       },
@@ -56,25 +57,6 @@ export const SButton = styled("button", {
         active: {
           backgroundColor: "$neutrals-3",
           borderColor: "$neutrals-9",
-        },
-      },
-    },
-
-    color: {
-      black: {
-        backgroundColor: "$system-black",
-        borderColor: "$system-black",
-        color: "$neutrals-0",
-        borderRadius: "$8",
-
-        hover: {
-          backgroundColor: "$neutrals-7",
-          borderColor: "$neutrals-7",
-        },
-
-        active: {
-          backgroundColor: "$neutrals-5",
-          borderColor: "$neutrals-5",
         },
       },
     },
@@ -107,7 +89,7 @@ export const SButton = styled("button", {
 
   defaultVariants: {
     action: "primary",
-    size: "medium",
+    size: "small",
   },
 })
 

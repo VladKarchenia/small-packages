@@ -26,11 +26,11 @@ export const ShipmentDetailsShort = () => {
             <IconClock size="xs" />
           </Flex>
           <Spacer size={12} horizontal />
-          <Copy scale={9} color="system-black" bold>
+          <Copy scale={9} color="system-black">
             {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height} cm;
           </Copy>
           <Spacer size={8} horizontal />
-          <Copy scale={9} color="system-black" bold>
+          <Copy scale={9} color="system-black">
             {parcel.weight} kg
           </Copy>
         </Flex>

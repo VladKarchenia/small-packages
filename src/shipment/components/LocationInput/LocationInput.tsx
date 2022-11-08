@@ -1,30 +1,46 @@
 import { Drawer, useDrawer, useDrawerActions } from "@/shared/components"
-import { IconArrowLeft, IconSearch } from "@/shared/icons"
+import { IconArrowLeft } from "@/shared/icons"
+import { IAddress } from "@/shared/state"
 import { useState } from "react"
 import { InputPreview } from "../InputPreview"
-import { DestinationState } from "../StepperContainer"
 import { LocationInputForm } from "./LocationInputForm"
 
-export interface LocationDetailsValues {
-  location: string
-  placeId: string
-}
-
 export interface LocationInputProps {
-  initialValue: DestinationState
-  onChange: (locationDetails: LocationDetailsValues) => void
+  initialValue: IAddress
+  onChange: (locationDetails: IAddress) => void
   placeholder: string
 }
 
-export const LocationInput: React.FC<LocationInputProps> = ({ initialValue, onChange, placeholder }) => {
+export const LocationInput: React.FC<LocationInputProps> = ({
+  initialValue,
+  onChange,
+  placeholder,
+}) => {
   const [drawerProps] = useDrawer("locationInput")
   const { close } = useDrawerActions()
 
-  const [locationDetails, setLocationDetails] = useState<DestinationState>(initialValue)
+  const [locationDetails, setLocationDetails] = useState<IAddress>(initialValue)
 
-  const handleChange = (location: string, placeId: string) => {
-    onChange({ location, placeId })
-    setLocationDetails({ location, placeId })
+  const handleChange = (location: string) => {
+    // TODO: FIX this
+    onChange({
+      location,
+      address: "",
+      city: "",
+      country: "",
+      isResidential: false,
+      postCode: "",
+      state: "",
+    })
+    setLocationDetails({
+      location,
+      address: "",
+      city: "",
+      country: "",
+      isResidential: false,
+      postCode: "",
+      state: "",
+    })
 
     close("locationInput")
   }
@@ -37,7 +53,6 @@ export const LocationInput: React.FC<LocationInputProps> = ({ initialValue, onCh
       noPadding
       trigger={
         <InputPreview
-          figure={<IconSearch />}
           value={locationDetails.location}
           placeholder={placeholder}
           dataTestid="location-button-filter"
@@ -46,7 +61,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ initialValue, onCh
         />
       }
     >
-      <LocationInputForm initialValue={locationDetails.location} onSelect={handleChange} />
+      <LocationInputForm initialValue={locationDetails} onSelect={handleChange} />
     </Drawer>
   )
 }

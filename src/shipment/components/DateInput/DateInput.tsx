@@ -6,17 +6,17 @@ import { DateInputForm } from "./DateInputForm"
 import format from "date-fns/format"
 
 export interface DateInputProps {
-  initialValue: Date
-  onChange: (value: Date) => void
+  initialValue: Date | null
+  onChange: (value: Date | null) => void
 }
 
 export const DateInput: React.FC<DateInputProps> = ({ initialValue, onChange }) => {
   const [drawerProps] = useDrawer("dateInput")
   const { close } = useDrawerActions()
 
-  const [date, setDate] = useState<Date>(initialValue)
+  const [date, setDate] = useState<Date | null>(initialValue)
 
-  const handleChange = (date: Date) => {
+  const handleChange = (date: Date | null) => {
     onChange(date)
     setDate(date)
   }
@@ -30,7 +30,7 @@ export const DateInput: React.FC<DateInputProps> = ({ initialValue, onChange }) 
       trigger={
         <InputPreview
           figure={<IconCalendar />}
-          value={format(date, "dd.MM.yyyy")}
+          value={date ? format(date, "dd.MM.yyyy") : ""}
           placeholder={"XX.YY.ZZ"}
           dataTestid="date-button-filter"
           // TODO: remove when using popovers on desktop, this is a temp fix until we remove this from the Desktop experience
