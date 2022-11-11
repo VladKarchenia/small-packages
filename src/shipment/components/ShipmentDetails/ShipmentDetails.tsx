@@ -13,7 +13,7 @@ import {
   useStepperContext,
 } from "@/shared/components"
 import { IStepperFormValues, ShippingType, StepName } from "@/shipment"
-import { ParcelType, ParcelContentType } from "@/shared/state"
+import { ParcelType, ParcelContentType } from "@/shared/state/ShipmentContext"
 
 const parcelTypeList: ParcelType[] = [ParcelType.Own, ParcelType.Product]
 
