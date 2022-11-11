@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form"
 import { Copy, Flex, Stack } from "@/shared/components"
-import { IStepperFormValues } from "../StepperContainer"
+import { IStepperFormValues } from "@/shipment"
 import { IconCross, IconLocationPin, IconPencil } from "@/shared/icons"
 import format from "date-fns/format"
 
@@ -25,7 +25,7 @@ export const DeliveryRatesShort = () => {
           <IconCross size="xs" />
         </Flex>
         <Copy scale={8} color="system-black">
-          {rate.type} {rate.name}
+          {rate.rateType} {rate.name}
         </Copy>
       </Flex>
       <Flex align="center">

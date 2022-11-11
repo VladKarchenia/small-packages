@@ -1,16 +1,13 @@
 import React, { createContext, useContext, useState } from "react"
 
-export enum ParcelDocumentType {
-  Correspondence = "correspondence",
-  Personal = "personal",
-  Interoffice = "interoffice",
-  Business = "business",
-  Other = "other",
+export enum ParcelContentType {
+  Gift = "Gift",
+  Other = "Other",
 }
 
 export enum ParcelType {
-  Documents = "documents",
-  Products = "products",
+  Own = "Own package",
+  Product = "Product",
 }
 
 export interface IParcelDimensions {
@@ -22,15 +19,15 @@ export interface IParcelDimensions {
 export interface IParcel {
   weight: string
   dimensions: IParcelDimensions
-  type: ParcelType
-  documentType: ParcelDocumentType
+  parcelType: ParcelType
+  content: ParcelContentType
   description: string
   totalPrice: string
   totalCurrency: string
 }
 
 export interface IRate {
-  type: string
+  rateType: string
   name: string
   price: string
   currency: string
@@ -55,7 +52,7 @@ export interface IPerson {
   fullAddress: IAddress
 }
 
-type ShipmentState = {
+export interface ShipmentState {
   sender: IPerson
   recipient: IPerson
   parcels: IParcel[]
@@ -102,8 +99,8 @@ const initialShipmentState: ShipmentState = {
         width: "",
         height: "",
       },
-      type: ParcelType.Products,
-      documentType: ParcelDocumentType.Correspondence,
+      parcelType: ParcelType.Own,
+      content: ParcelContentType.Gift,
       description: "",
       totalPrice: "",
       totalCurrency: "USD",
@@ -111,7 +108,7 @@ const initialShipmentState: ShipmentState = {
   ],
   date: null,
   rate: {
-    type: "",
+    rateType: "",
     name: "",
     price: "",
     currency: "",

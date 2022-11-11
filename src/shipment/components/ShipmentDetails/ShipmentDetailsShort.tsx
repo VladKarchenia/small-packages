@@ -1,9 +1,9 @@
 import { useFormContext } from "react-hook-form"
 import { Copy, Flex, Spacer } from "@/shared/components"
-import { IStepperFormValues } from "../StepperContainer"
+import { IStepperFormValues, ShippingType } from "@/shipment"
 import { IconClock } from "@/shared/icons"
 
-export const ShipmentDetailsShort = () => {
+export const ShipmentDetailsShort = ({ shippingType }: { shippingType: ShippingType }) => {
   const { watch } = useFormContext<IStepperFormValues>()
   const { parcels } = watch()
 

@@ -31,7 +31,8 @@ export const DateInput: React.FC<DateInputProps> = ({ initialValue, onChange }) 
         <InputPreview
           figure={<IconCalendar />}
           value={date ? format(date, "dd.MM.yyyy") : ""}
-          placeholder={"XX.YY.ZZ"}
+          placeholder={"XX. YY. ZZ 00:00 PM"}
+          isPlaceholderShown={false}
           dataTestid="date-button-filter"
           // TODO: remove when using popovers on desktop, this is a temp fix until we remove this from the Desktop experience
           css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
