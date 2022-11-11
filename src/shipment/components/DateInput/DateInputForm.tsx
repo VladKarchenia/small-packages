@@ -2,7 +2,7 @@ import { Button, Copy, Grid, Link } from "@/shared/components"
 import { useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { IStepperFormValues } from "../StepperContainer"
+import { IStepperFormValues } from "@/shipment"
 import { CalendarDates } from "./CalendarDates"
 import { SDatesInputContent, SFooterWrap } from "./DateInputForm.styles"
 
@@ -85,8 +85,6 @@ const DatesInputFooter = ({
 
   const hasDate = useMemo(() => !!date, [date])
 
-  if (!hasDate) return null
-
   return (
     <SFooterWrap align="center" justify="end">
       {/* <Link as="button" type="button" intent="detail" onClick={onReset}>
@@ -99,6 +97,7 @@ const DatesInputFooter = ({
         disabled={!hasDate}
         dataTestid="apply-date"
         onClick={onConfirm}
+        size="small"
       >
         <Copy as="span" scale={8} color="system-white" bold>
           Done

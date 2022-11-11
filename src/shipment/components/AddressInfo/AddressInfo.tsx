@@ -1,11 +1,11 @@
 import { useFormContext } from "react-hook-form"
 import { Button, Copy, GridContainer, Spacer, Stack, useStepperContext } from "@/shared/components"
-import { IStepperFormValues, ShipmentStepEnum, LocationInput } from "@/shipment"
+import { IStepperFormValues, StepName, LocationInput } from "@/shipment"
 
 export const AddressInfo = ({
   handleContinueClick,
 }: {
-  handleContinueClick: (step: ShipmentStepEnum, nextStep: ShipmentStepEnum) => void
+  handleContinueClick: (step: StepName.INFO, nextStep: StepName.SHIPMENT) => void
 }) => {
   const { setValue, watch } = useFormContext<IStepperFormValues>()
 
@@ -14,8 +14,8 @@ export const AddressInfo = ({
   const { setSelected } = useStepperContext("AddressInfo")
 
   const onContinueHandler = () => {
-    setSelected([ShipmentStepEnum.SHIPMENT])
-    handleContinueClick(ShipmentStepEnum.INFO, ShipmentStepEnum.SHIPMENT)
+    setSelected([StepName.SHIPMENT])
+    handleContinueClick(StepName.INFO, StepName.SHIPMENT)
   }
 
   return (

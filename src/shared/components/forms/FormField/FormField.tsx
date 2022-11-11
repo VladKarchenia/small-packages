@@ -69,7 +69,16 @@ export const FormField = ({
         )}
       </Flex>
 
-      {description && <Copy scale={10}>{description}</Copy>}
+      {description && (
+        <Copy scale={10}>
+          {description}
+          {labelProps?.required ? (
+            <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+              *
+            </Copy>
+          ) : null}
+        </Copy>
+      )}
 
       {(!labelProps?.hidden || description) && <Spacer size={8} />}
 

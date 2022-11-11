@@ -1,13 +1,13 @@
 import { GridContainer, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
-import { StepperContainer } from "@/shipment"
+import { ShippingType, StepperContainer } from "@/shipment"
 
-export const CreateShipment = () => {
+export const CreateShipment = ({ shippingType }: { shippingType: ShippingType }) => {
   return (
     <CommonLayout>
       <GridContainer fullBleed>
         <Spacer size={40} />
-        <StepperContainer />
+        <StepperContainer shippingType={shippingType} />
         <Spacer size={40} />
       </GridContainer>
     </CommonLayout>

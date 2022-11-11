@@ -23,13 +23,14 @@ export const SFormCheckboxBox = styled(
     cursor: "pointer",
   },
   {
-    borderRadius: 2,
+    borderRadius: "$4",
     color: "$neutrals-9",
   },
 )
 
 export const SFormCheckboxTick = styled(IconTick, {
   opacity: 0,
+  color: "$system-white",
   transform: "rotate(90deg)",
   transition: "150ms ease-out",
 
@@ -64,8 +65,7 @@ export const SFormCheckboxInput = styled("input", {
 
   checked: {
     [`+ ${SFormCheckboxBox}`]: {
-      backgroundColor: "$brand-yellow-primary",
-      borderColor: "$brand-yellow-primary",
+      backgroundColor: "$system-black",
 
       [`${SFormCheckboxTick}`]: {
         opacity: 1,
@@ -75,8 +75,7 @@ export const SFormCheckboxInput = styled("input", {
 
     ...multipleSelectors(["hover", "keyboardFocus"], {
       [`+ ${SFormCheckboxBox}`]: {
-        backgroundColor: "$brand-yellow-light",
-        borderColor: "$brand-yellow-light",
+        backgroundColor: "$system-black",
       },
     }),
 

@@ -8,13 +8,14 @@ export interface InputPreviewProps {
   figure?: React.ReactElement
   value: string | React.ReactElement | null
   placeholder?: string
+  isPlaceholderShown?: boolean
   onClick?: () => void
   dataTestid?: string
   css?: CSS
 }
 
 export const InputPreview = React.forwardRef<HTMLInputElement, InputPreviewProps>(
-  ({ figure, value, placeholder, onClick, dataTestid, css }, ref) => {
+  ({ figure, value, placeholder, isPlaceholderShown = true, onClick, dataTestid, css }, ref) => {
     return (
       <SInputPreview type="button" onClick={onClick} data-testid={dataTestid} css={css}>
         <Copy
@@ -24,7 +25,7 @@ export const InputPreview = React.forwardRef<HTMLInputElement, InputPreviewProps
           bold
           css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
         >
-          {value ? `${placeholder}: ${value}` : placeholder}
+          {value ? (isPlaceholderShown ? `${placeholder}: ${value}` : value) : placeholder}
         </Copy>
         {figure}
       </SInputPreview>

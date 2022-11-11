@@ -8,6 +8,7 @@ import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize, Tracki
 import "react-toastify/dist/ReactToastify.css"
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
 import "@/styles/fonts.css"
+import { ShippingType } from "./shipment"
 
 const App: React.FC = (): JSX.Element => {
   const authRoutes = {
@@ -29,8 +30,8 @@ const App: React.FC = (): JSX.Element => {
         path: "create",
         element: <AuthGuard allowedRoles={["user", "admin"]} />,
         children: [
-          { path: "shipment", element: <CreateShipment /> },
-          // { path: "quote", element: <CreateQuote /> },
+          { path: "quote", element: <CreateShipment shippingType={ShippingType.Quote} /> },
+          { path: "shipment", element: <CreateShipment shippingType={ShippingType.Shipment} /> },
         ],
       },
       {

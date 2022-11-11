@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { Copy, FormRadioGroup, RateRadioInput, GridContainer, Stack } from "@/shared/components"
-import { IStepperFormValues, DateInput } from "@/shipment"
+import {
+  Copy,
+  FormRadioGroup,
+  RateRadioInput,
+  GridContainer,
+  Stack,
+  Spacer,
+} from "@/shared/components"
+import { IStepperFormValues, DateInput, ShippingType } from "@/shipment"
 
 const rates = [
   {
-    type: "UPS",
+    rateType: "UPS",
     name: "Express Delivery",
     price: "430.00",
     currency: "$",
     id: "23",
   },
   {
-    type: "UPS",
+    rateType: "UPS",
     name: "Economy Delivery",
     price: "200.00",
     currency: "$",
@@ -20,7 +27,7 @@ const rates = [
   },
 ]
 
-export const DeliveryRates = () => {
+export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) => {
   const { setValue, watch } = useFormContext<IStepperFormValues>()
   const { date, rate } = watch()
 
@@ -43,27 +50,37 @@ export const DeliveryRates = () => {
   return (
     <GridContainer fullBleed>
       <Stack space={12}>
-        <Copy scale={9}>Please, select a delivery date to calculate the cost</Copy>
+        {!date ? <Copy scale={9}>Please, select a ready date to calculate the cost</Copy> : null}
         <DateInput
           initialValue={date}
           onChange={(value) => {
             setValue("date", value)
           }}
         />
+        {date ? (
+          <>
+            <Spacer size={12} />
+            <Copy scale={9}>
+              Rates showm here may be different than the actual charges for your shipment
+            </Copy>
+          </>
+        ) : null}
         <FormRadioGroup
           value={checkedOption}
           onChange={handleChange}
           id="rates-radio-id"
           name="rates-radio-group"
+          disabled={shippingType === ShippingType.Quote}
         >
           {rates.map((rate) => (
             <RateRadioInput
               key={rate.id}
               value={rate.id}
-              rateType={rate.type}
+              rateType={rate.rateType}
               rateName={rate.name}
               price={rate.price}
               currency={rate.currency}
+              disabled={shippingType === ShippingType.Quote}
             />
           ))}
         </FormRadioGroup>

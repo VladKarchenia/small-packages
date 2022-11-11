@@ -6,6 +6,7 @@ import { SFormLabel } from "./FormLabel.styles"
 
 export interface IFormLabelProps extends ComponentProps<typeof SFormLabel> {
   hidden?: boolean
+  required?: boolean
 }
 
 export const FormLabel = ({ children, hidden, ...props }: IFormLabelProps) => {

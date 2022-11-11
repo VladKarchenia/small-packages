@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form"
 import { Copy, Flex } from "@/shared/components"
-import { IStepperFormValues } from "../StepperContainer"
+import { IStepperFormValues } from "@/shipment"
 import { IconArrowRight } from "@/shared/icons"
 
 export const AddressInfoShort = () => {

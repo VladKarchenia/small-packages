@@ -16,7 +16,6 @@ import { useMedia, useModalActions } from "@/shared/hooks"
 import { CommonLayout } from "@/shared/layouts/common"
 import { mediaQueries } from "@/config"
 import { DashboardList, DashboardTable } from "@/dashboard"
-import { useForm } from "react-hook-form"
 
 const loading = false
 const bookings = [
@@ -55,6 +54,8 @@ export const Home = () => {
             <DashboardList isLoading={loading} bookings={bookings} />
           )}
         </Box>
+        <Spacer size={40} />
+        <Button onClick={() => navigate("/create/quote")}>Create Quote</Button>
         <Spacer size={40} />
         <Button onClick={() => navigate("/create/shipment")}>Create Shipment</Button>
         <Spacer size={40} />

@@ -1,23 +1,28 @@
 import { Button, Copy, Flex, Link, Spacer, useStepperContext } from "@/shared/components"
-import { ShipmentStepEnum } from "@/shipment"
+import { StepName, IStepperFormValues, ShippingType } from "@/shipment"
 import { useFormContext } from "react-hook-form"
-import { IStepperFormValues } from "../StepperContainer"
 
-export const StepperFooter = () => {
+export const StepperFooter = ({ shippingType }: { shippingType: ShippingType }) => {
   const { watch } = useFormContext<IStepperFormValues>()
-  const { rate } = watch()
+  const { rate, date } = watch()
 
   const { selected } = useStepperContext("StepperFooter")
-  const isLastStep = selected[0] === ShipmentStepEnum.RATES
+  const isLastStep = selected[0] === StepName.RATES
 
   if (!isLastStep) return null
 
   return (
     <Flex direction="column" css={{ paddingX: "$16" }}>
       <Spacer size={24} />
-      <Button type="submit" disabled={!rate.name}>
+      <Button
+        type="submit"
+        disabled={
+          (shippingType === ShippingType.Quote && !date) ||
+          (shippingType === ShippingType.Shipment && !rate.name)
+        }
+      >
         <Copy as="span" scale={8} color="system-white" bold>
-          Create a shipment
+          {shippingType === ShippingType.Quote ? "Create a shipment" : "Confirm"}
         </Copy>
       </Button>
       <Spacer size={16} />
