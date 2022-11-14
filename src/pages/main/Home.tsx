@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
   Box,
+  BurgerMenu,
   Button,
   GridContainer,
   Spacer,
@@ -46,6 +47,9 @@ export const Home = () => {
 
   return (
     <CommonLayout>
+      <GridContainer>
+        <BurgerMenu />
+      </GridContainer>
       <GridContainer>
         <Box css={{ paddingTop: "$24" }}>
           {showTable ? (
