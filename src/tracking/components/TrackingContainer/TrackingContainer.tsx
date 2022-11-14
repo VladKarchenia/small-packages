@@ -1,15 +1,22 @@
-import { GridContainer, Spacer, Title, Copy, Flex, Stack, Link } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
 import {
-  ShipmentLabels,
-  ShipmentRoute,
-  ShipmentURL,
-  TrackingHeader,
-  TrackingDetailsItem,
-} from "./components"
-import { AddressInfoInLine, Map, PersonInfoShortCard, ShortInfoLine } from "@/shared/components/app"
-//styles
-import { STrackingSection } from "./Tracking.styles"
+  GridContainer,
+  Spacer,
+  Title,
+  Copy,
+  Flex,
+  Stack,
+  AddressInfoShort,
+  Map,
+  PersonInfoShort,
+  ShortInfoLine,
+} from "@/shared/components"
+import { IconCalendar } from "@/shared/icons"
+import { TrackingHeader } from "../TrackingHeader"
+import { TrackingDetailsItem } from "../TrackingDetailsItem"
+import { ShipmentURL } from "../ShipmentURL"
+import { ShipmentRoute } from "../ShipmentRoute"
+import { ShipmentLabelContainer } from "../ShipmentLabelContainer"
+import { STrackingSection } from "./TrackingContainer.styles"
 
 const SHIPMENT_DETAILS = {
   shipmentID: "20214-5Z",
@@ -67,12 +74,11 @@ const SHIPMENT_DETAILS = {
       isResidential: false,
     },
   },
-  shipmentLabelPDFLink: "https//www.google.ru/search",
-  shipmentLabelZPLLink: "https//www.google.ru/search",
+  shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
+  shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
 }
 
 //TODO: add routing, "edit shipment" functionality, show content according user role
-
 export const TrackingContainer = () => {
   const data = SHIPMENT_DETAILS
 
@@ -83,60 +89,63 @@ export const TrackingContainer = () => {
         <Map />
         <GridContainer>
           <STrackingSection>
-            <Stack space={24} dividers={true}>
+            <Stack space={24} dividers>
               <>
-                <TrackingDetailsItem title="Tracking number" titleIndent={8}>
-                  <Copy scale={8} color="system-black">
+                <TrackingDetailsItem title="Tracking number" titleIndent={4}>
+                  <Copy scale={8} color="system-black" bold>
                     {data.trackingNumber}
                   </Copy>
                 </TrackingDetailsItem>
                 <Spacer size={20} />
-                <TrackingDetailsItem title="Shipment URL" titleIndent={8}>
+                <TrackingDetailsItem title="Shipment URL" titleIndent={4}>
                   <ShipmentURL url={data.shipmentURL} />
                 </TrackingDetailsItem>
-                <Spacer size={16} />
+                <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where">
-                  <AddressInfoInLine fromAddress={data.from} toAddress={data.to} />
+                  <AddressInfoShort fromAddress={data.from} toAddress={data.to} />
                 </TrackingDetailsItem>
               </>
 
               <TrackingDetailsItem title="Date and delivery service">
                 <Stack space={12}>
                   <Copy scale={9} color="system-black">
-                    Arrival date: {data.arrivalDate}
+                    Pick up date: {data.pickUpDate}
                   </Copy>
                   <Copy scale={9} color="system-black">
-                    Pick up date: {data.pickUpDate}
+                    Arrival date: {data.arrivalDate}
                   </Copy>
                   <ShortInfoLine icon={<IconCalendar size="xs" />} text={data.deliveryCompany} />
                 </Stack>
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Shipment Details">
-                <Copy scale={9} color="system-black">
-                  Product, furniture, $12.54
-                </Copy>
-                <Flex align="center">
-                  <Flex align="center" justify="center">
-                    <IconCalendar size="xs" />
+                <Stack space={12}>
+                  <Copy scale={9} color="system-black">
+                    Product, furniture, $12.54
+                  </Copy>
+                  <Flex align="center">
+                    <Flex align="center" justify="center">
+                      <IconCalendar size="xs" />
+                    </Flex>
+                    <Spacer size={8} horizontal />
+                    <Copy scale={9} color="system-black" bold>
+                      42x32x10 cm;
+                    </Copy>
+                    <Spacer size={8} horizontal />
+                    <Copy scale={9} color="system-black" bold>
+                      0,5 kg
+                    </Copy>
                   </Flex>
-                  <Spacer size={8} horizontal />
-                  <Copy scale={9} color="system-black" bold>
-                    42x32x10 cm;
-                  </Copy>
-                  <Spacer size={8} horizontal />
-                  <Copy scale={9} color="system-black" bold>
-                    0,5 kg
-                  </Copy>
-                </Flex>
+                </Stack>
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Route">
+                {/* TODO: Fix Route block after BE data and final design */}
                 <ShipmentRoute data={data.route} />
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Sender’s info">
-                <PersonInfoShortCard
+                <PersonInfoShort
                   person={"sender"}
                   sender={data.sendersInfo}
                   recipient={data.recipientsInfo}
@@ -144,7 +153,7 @@ export const TrackingContainer = () => {
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Recipient’s info">
-                <PersonInfoShortCard
+                <PersonInfoShort
                   person={"recipient"}
                   sender={data.sendersInfo}
                   recipient={data.recipientsInfo}
@@ -153,7 +162,7 @@ export const TrackingContainer = () => {
             </Stack>
           </STrackingSection>
         </GridContainer>
-        {/*TODO: add Coast component when it'll be ready*/}
+        {/*TODO: add Cost component when it'll be ready*/}
         {/*<GridContainer>*/}
         {/*  <STrackingSection>*/}
         {/*    <Title>Coast</Title>*/}
@@ -161,23 +170,19 @@ export const TrackingContainer = () => {
         {/*</GridContainer>*/}
         <GridContainer>
           <STrackingSection>
-            <Title>Shipment label</Title>
-            <Copy scale={9} color="neutrals-7">
+            <Title as="h3" scale={8}>
+              Shipment label
+            </Title>
+            <Spacer size={16} />
+            <Copy scale={9}>
               Shipment label must be printed and attached to a package before it is picked up
             </Copy>
             <Spacer size={24} />
-            <ShipmentLabels
+            <ShipmentLabelContainer
               pdfLabel={data.shipmentLabelPDFLink}
               zplLabel={data.shipmentLabelZPLLink}
             />
           </STrackingSection>
-        </GridContainer>
-        <GridContainer>
-          <Link href="/">
-            <Copy scale={8} color="system-black" bold>
-              Back to Home page
-            </Copy>
-          </Link>
         </GridContainer>
       </Stack>
     </GridContainer>

@@ -13,10 +13,9 @@ export const SShipmentURLButton = styled("button", {
 
   border: "1px solid $neutrals-4",
   borderRadius: "$8",
-  padding:"$8",
+  padding: "$4 $12",
 
   position: "relative",
-
 
   disabled: {
     pointerEvents: "none",
@@ -35,5 +34,5 @@ export const SShipmentURLButton = styled("button", {
 })
 
 export const SShipmentURLMessage = styled("div", {
-  height: "$12"
+  height: "$12",
 })

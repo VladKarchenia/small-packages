@@ -2,13 +2,13 @@ import { Copy, Flex, Stack } from "@/shared/components"
 import { IconLocationPin } from "@/shared/icons"
 import { IPerson } from "@/shared/state"
 
-type PersonInfoShortCardProps = {
+interface IPersonInfoShortProps {
   person: "sender" | "recipient"
   sender: IPerson
   recipient: IPerson
 }
 
-export const PersonInfoShortCard = ({ person, sender, recipient }: PersonInfoShortCardProps) => {
+export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortProps) => {
   return (
     <Stack space={12}>
       <Flex align="center">

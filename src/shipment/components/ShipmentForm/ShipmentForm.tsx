@@ -13,7 +13,7 @@ import {
   DeliveryRates,
   DeliveryRatesShort,
   ShipmentStep,
-  PersonInfoShort,
+  PersonInfoCollapsed,
   PersonInfo,
   ShippingType,
 } from "@/shipment"
@@ -83,13 +83,13 @@ export const ShipmentForm = () => {
       title: "Ship From",
       data: stepperState.from,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="sender" />,
-      shortContent: <PersonInfoShort person="sender" />,
+      shortContent: <PersonInfoCollapsed person="sender" />,
     },
     {
       title: "Ship To",
       data: stepperState.to,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="recipient" />,
-      shortContent: <PersonInfoShort person="recipient" />,
+      shortContent: <PersonInfoCollapsed person="recipient" />,
     },
     {
       title: "Shipment Details",

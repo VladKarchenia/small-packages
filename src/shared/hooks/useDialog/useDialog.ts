@@ -14,10 +14,7 @@ declare global {
 }
 
 function checkIfStorageIsInitialized(storageKey: StorageKey, cb: () => void) {
-  if (
-    typeof window.dialogs === "undefined" ||
-    typeof window.dialogs[storageKey] === "undefined"
-  ) {
+  if (typeof window.dialogs === "undefined" || typeof window.dialogs[storageKey] === "undefined") {
     window.dialogs = {
       ...(window.dialogs || {}),
       [storageKey]: new Set(),

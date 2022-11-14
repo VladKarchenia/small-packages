@@ -1,21 +1,22 @@
-import { ReactNode } from 'react';
-import { Copy, Flex, } from "@/shared/components"
+import { Copy, Flex, Spacer } from "@/shared/components"
 
-type ShortInfoLineProps = {
-  icon?: ReactNode | null,
-  text?: string,
-  children?: ReactNode | null,
+interface IShortInfoLineProps {
+  icon: React.ReactNode
+  text: string
 }
 
-export const ShortInfoLine = ({icon, text,children}: ShortInfoLineProps) => {
+export const ShortInfoLine: React.FC<React.PropsWithChildren<IShortInfoLineProps>> = ({
+  children,
+  icon,
+  text,
+}) => {
   return (
-    <Flex align="center" css={{paddingBottom: "$12"}}>
-      <Flex css={{ paddingRight: "$8" }}>
-        {icon}
-      </Flex>
-      {text && <Copy scale={9} color="system-black">
+    <Flex align="center">
+      {icon}
+      <Spacer size={8} horizontal />
+      <Copy scale={9} color="system-black">
         {text}
-      </Copy>}
+      </Copy>
       {children}
     </Flex>
   )

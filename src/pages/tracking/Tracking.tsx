@@ -1,10 +1,10 @@
 import { CommonLayout } from "@/shared/layouts/common"
-import {TrackingContainer } from "@/tracking"
+import { TrackingContainer } from "@/tracking"
 
 export const Tracking = () => {
   return (
     <CommonLayout>
-      <TrackingContainer/>
+      <TrackingContainer />
     </CommonLayout>
   )
 }

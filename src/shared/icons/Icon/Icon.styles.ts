@@ -35,7 +35,7 @@ export const SIconSvg = styled("svg", {
 
   variants: {
     fixedSize: {
-      false: { height: "1em"},
+      false: { height: "1em" },
       true: { height: "initial" },
     },
   },
