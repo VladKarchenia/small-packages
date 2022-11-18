@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 import {
   GridContainer,
   Spacer,
@@ -12,12 +11,17 @@ import {
   ShortInfoLine,
   HeaderBar,
 } from "@/shared/components"
+import {
+  TrackingHeader,
+  TrackingDetailsItem,
+  ShipmentURL,
+  ShipmentRoute,
+  ShipmentLabelContainer,
+  ShipmentCosts,
+} from "@/tracking"
+//icons
 import { IconCalendar } from "@/shared/icons"
-import { TrackingHeader } from "../TrackingHeader"
-import { TrackingDetailsItem } from "../TrackingDetailsItem"
-import { ShipmentURL } from "../ShipmentURL"
-import { ShipmentRoute } from "../ShipmentRoute"
-import { ShipmentLabelContainer } from "../ShipmentLabelContainer"
+//styles
 import { STrackingSection } from "./TrackingContainer.styles"
 
 const SHIPMENT_DETAILS = {
@@ -80,6 +84,32 @@ const SHIPMENT_DETAILS = {
       isResidential: false,
     },
   },
+  costs: [
+    {
+      name: "Base rate",
+      value: 1300,
+    },
+    {
+      name: "Fuel",
+      value: 140,
+    },
+    {
+      name: "Accessorial",
+      value: 0,
+    },
+    {
+      name: "Other",
+      value: 40,
+    },
+    {
+      name: "Service",
+      value: 10,
+    },
+    {
+      name: "Tax",
+      value: 50,
+    },
+  ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
 }
@@ -170,12 +200,12 @@ export const TrackingContainer = () => {
             </Stack>
           </STrackingSection>
         </GridContainer>
-        {/*TODO: add Cost component when it'll be ready*/}
-        {/*<GridContainer>*/}
-        {/*  <STrackingSection>*/}
-        {/*    <Title>Coast</Title>*/}
-        {/*  </STrackingSection>*/}
-        {/*</GridContainer>*/}
+        {/*TODO: check and update Costs component when back-end and design will be established*/}
+        <GridContainer>
+          <STrackingSection>
+            <ShipmentCosts title="Costs" price={1540} costs={data.costs} />
+          </STrackingSection>
+        </GridContainer>
         <GridContainer>
           <STrackingSection>
             <Title as="h3" scale={8}>
