@@ -8,3 +8,13 @@ export enum ShipmentStatus {
   "Delivered" = "Delivered",
   "Cancelled" = "Cancelled",
 }
+
+export enum Role {
+  "Admin" = "Admin",
+  "User" = "User",
+}
+
+export interface ICost {
+  name: string
+  value: number
+}
