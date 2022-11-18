@@ -33,8 +33,9 @@ export const SModalCloseButton = styled("button", {
         padding: "$4 $8",
       },
       icon: {
-        height: "$48",
-        width: "$48",
+        height: "$24",
+        width: "$24",
+        backgroundColor: "$neutrals-3",
         borderRadius: "50%",
       },
     },

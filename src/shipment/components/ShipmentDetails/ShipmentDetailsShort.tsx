@@ -1,14 +1,15 @@
 import { useFormContext } from "react-hook-form"
-import { Copy, Flex, Spacer } from "@/shared/components"
-import { IStepperFormValues, ShippingType } from "@/shipment"
+import { Copy, Flex, Spacer, Stack } from "@/shared/components"
+import { ShippingType } from "@/shipment"
 import { IconClock } from "@/shared/icons"
+import { ShipmentState } from "@/shared/state"
 
 export const ShipmentDetailsShort = ({ shippingType }: { shippingType: ShippingType }) => {
-  const { watch } = useFormContext<IStepperFormValues>()
+  const { watch } = useFormContext<ShipmentState>()
   const { parcels } = watch()
 
   return (
-    <>
+    <Stack space={8}>
       {parcels.map((parcel, index) => (
         <Flex align="center" key={index}>
           <Flex
@@ -35,6 +36,6 @@ export const ShipmentDetailsShort = ({ shippingType }: { shippingType: ShippingT
           </Copy>
         </Flex>
       ))}
-    </>
+    </Stack>
   )
 }

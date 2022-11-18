@@ -2,7 +2,8 @@ import { styled } from "@/config"
 
 export const STabListItem = styled("button", {
   reset: true,
-  paddingY: "$16",
+  paddingTop: "$16",
+  paddingBottom: "$4",
   position: "relative",
   textAlign: "left",
 

@@ -8,6 +8,16 @@ import { MODAL_ANIMATION_DURATION } from "@/constants"
 import { SModalContent } from "./Content.styles"
 import { SModalCloseButton } from "./CloseButton.styles"
 
+const fadeInRightUp = keyframes({
+  "0%": { opacity: 0, transform: `translate(0, $24)` },
+  "100%": { opacity: 1, transform: "translate(0, 0)" },
+})
+
+const fadeOutRightDown = keyframes({
+  "0%": { opacity: 1, transform: "translate(0, 0)" },
+  "100%": { opacity: 0, transform: `translate(0, $24)` },
+})
+
 const fadeInUp = keyframes({
   "0%": { opacity: 0, transform: `translate(-50%, $24)` },
   "100%": { opacity: 1, transform: "translate(-50%, 0)" },
@@ -73,6 +83,15 @@ export const SModalPanel = styled(DialogContent, {
       bottom: {
         top: "initial",
         bottom: 0,
+      },
+      bottomRight: {
+        "&[data-state='open']": {
+          animationName: fadeInRightUp,
+        },
+
+        "&[data-state='closed']": {
+          animationName: fadeOutRightDown,
+        },
       },
     },
 

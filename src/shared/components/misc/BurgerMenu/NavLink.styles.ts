@@ -1,5 +1,4 @@
 import { styled } from "@/config"
-import { multipleSelectors, easing } from "@/utils"
 
 export const SNavLink = styled("a", {
   $$color: "$colors$neutrals-7",
@@ -8,36 +7,10 @@ export const SNavLink = styled("a", {
   position: "relative",
   textDecoration: "none",
 
-  ...multipleSelectors(["keyboardFocus", "hover"], {
-    after: {
-      transform: "scaleX(1)",
-    },
-  }),
-
-  after: {
-    background: "$brand-yellow-primary",
-    bottom: "-$4",
-    content: "''",
-    display: "block",
-    height: 2,
-    position: "absolute",
-    transformOrigin: "left",
-    transform: "scaleX(0)",
-    transition: easing.smooth({
-      duration: 300,
-      property: "transform",
-    }),
-    width: "100%",
-  },
-
   variants: {
     selected: {
       true: {
         $$color: "$color$neutrals-9",
-
-        after: {
-          transform: "scaleX(1)",
-        },
       },
     },
     role: {

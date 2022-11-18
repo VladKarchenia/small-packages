@@ -13,6 +13,7 @@ export const SModalOverlay = styled(Overlay, {
   animationDuration: `${MODAL_ANIMATION_DURATION}ms`,
   animationFillMode: "both",
   animationTimingFunction: easing.smooth(),
+  backdropFilter: "blur(3px)",
 
   "&[data-state='open']": {
     animationName: animations.fadeIn,

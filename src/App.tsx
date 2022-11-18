@@ -1,14 +1,13 @@
 import { Navigate, useRoutes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-import { AuthGuard } from "@/shared/components"
-import MainLayout from "@/shared/layouts/main"
+import { AuthGuard, Box } from "@/shared/components"
 import { ModalsContainer } from "@/modals"
 import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize, Tracking } from "@/pages"
+import { ShippingType } from "@/shipment"
 
 import "react-toastify/dist/ReactToastify.css"
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
 import "@/styles/fonts.css"
-import { ShippingType } from "./shipment"
 
 const App: React.FC = (): JSX.Element => {
   const authRoutes = {
@@ -18,7 +17,6 @@ const App: React.FC = (): JSX.Element => {
 
   const mainRoutes = {
     path: "*",
-    element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
       {
@@ -47,12 +45,11 @@ const App: React.FC = (): JSX.Element => {
   const routing = useRoutes([mainRoutes, authRoutes])
 
   return (
-    <>
+    <Box css={{ height: "100vh" }}>
       <ToastContainer />
-      {/* check if this is the right place for the ModalsContainer */}
       <ModalsContainer />
       {routing}
-    </>
+    </Box>
   )
 }
 

@@ -35,8 +35,8 @@ export const SFormRadioTickInputBox = styled("span", {
 export const SFormRadioInputCircle = styled("span", {
   height: "$16",
   width: "$16",
-  backgroundColor: "$brand-yellow-primary",
-  border: "1px solid $brand-yellow-primary",
+  backgroundColor: "$system-black",
+  border: "1px solid $system-black",
   borderRadius: "50%",
   opacity: 0,
   transform: "scale(0.5)",
@@ -87,7 +87,7 @@ export const SFormRadioInput = styled("input", {
 
         keyboardFocus: {
           [`+ ${SFormRadioInputBox}`]: {
-            borderColor: "$brand-yellow-dark",
+            borderColor: "$system-black",
             boxShadow: `0px 2px 4px 0px ${rgba("neutrals-9", 0.15)}`,
           },
         },
@@ -102,7 +102,7 @@ export const SFormRadioInput = styled("input", {
 
         checked: {
           [`+ ${SFormRadioInputBox}`]: {
-            borderColor: "$brand-yellow-darker",
+            borderColor: "$system-black",
 
             [`${SFormRadioInputCircle}`]: {
               opacity: 1,
@@ -112,7 +112,7 @@ export const SFormRadioInput = styled("input", {
 
           ...multipleSelectors(["hover", "keyboardFocus"], {
             [`+ ${SFormRadioInputBox} ${SFormRadioInputCircle}`]: {
-              backgroundColor: "$brand-yellow-light",
+              backgroundColor: "$system-black",
             },
           }),
 

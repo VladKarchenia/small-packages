@@ -1,8 +1,8 @@
 import { styled } from "@/config"
 
 export const SDrawerHeader = styled("header", {
-  paddingX: "$24",
-  height: "$56",
+  paddingTop: "$20",
+  paddingX: "$16",
   display: "grid",
   alignItems: "center",
   gridTemplateColumns: "$32 1fr $32",
@@ -37,7 +37,7 @@ export const SDrawerCloseButton = styled("button", {
   alignItems: "center",
   justifyContent: "center",
   width: "$32",
-  height: "$32",
+  height: "$40",
   color: "$neutrals-9",
   transition: "200ms ease-out",
   cursor: "pointer",

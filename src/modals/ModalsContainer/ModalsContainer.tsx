@@ -1,5 +1,9 @@
 import { useModalsClose } from "@/shared/hooks"
-import { TimePeriodModal } from "../TimePeriodModal"
+import { CreateShipmentModal } from "../CreateShipmentModal"
+import { CancelShipmentModal } from "../CancelShipmentModal"
+import { DeleteShipmentModal } from "../DeleteShipmentModal"
+import { CancelQuoteModal } from "../CancelQuoteModal"
+import { DeleteQuoteModal } from "../DeleteQuoteModal"
 
 // lazy?
 // const TimePeriodModal = dynamic(() =>
@@ -11,7 +15,11 @@ export const ModalsContainer = () => {
 
   return (
     <>
-      <TimePeriodModal />
+      <CreateShipmentModal />
+      <CancelShipmentModal />
+      <DeleteShipmentModal />
+      <CancelQuoteModal />
+      <DeleteQuoteModal />
     </>
   )
 }

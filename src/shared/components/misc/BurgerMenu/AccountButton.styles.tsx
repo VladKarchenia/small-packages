@@ -6,8 +6,6 @@ export const SAccountButton = styled(HeaderNavButton, {
   $$backgroundColor: "transparent",
   backgroundColor: "$$backgroundColor",
   height: "$40",
-  paddingLeft: "$8",
-  paddingRight: "$4",
   width: "auto",
 
   variants: {

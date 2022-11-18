@@ -2,9 +2,9 @@ import { Button, Copy, Grid, Link } from "@/shared/components"
 import { useMemo, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { IStepperFormValues } from "@/shipment"
 import { CalendarDates } from "./CalendarDates"
 import { SDatesInputContent, SFooterWrap } from "./DateInputForm.styles"
+import { ShipmentState } from "@/shared/state"
 
 export interface DateInputFormProps {
   initialValue: Date | null
@@ -19,7 +19,7 @@ export const DateInputForm: React.FC<DateInputFormProps> = ({
   onConfirm,
   isDesktop,
 }) => {
-  const { resetField } = useFormContext<IStepperFormValues>()
+  const { resetField } = useFormContext<ShipmentState>()
   const [dateValue, setDateValue] = useState(initialValue)
 
   const handleChange = (value: Date | null) => {

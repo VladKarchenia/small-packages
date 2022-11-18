@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { Button, FormInput, Spacer } from "@/shared/components"
+import { Button, Copy, FormInput, Spacer } from "@/shared/components"
 
 import { LoginInput } from "./LoginFormContainer"
 import { SShowPasswordButton } from "./LoginForm.styles"
@@ -68,7 +68,9 @@ export const LoginForm = ({
 
       <Spacer size={32} />
       <Button type="submit" full loading={isLoading}>
-        Login
+        <Copy as="span" scale={8} color="system-white" bold>
+          Login
+        </Copy>
       </Button>
     </>
   )

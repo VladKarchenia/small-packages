@@ -3,17 +3,19 @@ import { useTranslation } from "react-i18next"
 import { TableRow, Table, TableBody, TabularData } from "@/shared/components"
 import { DashboardTableHead } from "./DashboardTableHead"
 import { DashboardTablePlaceholder } from "./DashboardTablePlaceholder"
+import { ShippingType } from "@/shipment"
 
-interface IBooking {
+interface IShipping {
   code: string
 }
 
 interface ITableProps {
   isLoading: boolean
-  bookings: IBooking[]
+  bookings: IShipping[]
+  shippingType: ShippingType
 }
 
-export const DashboardTable = ({ isLoading, bookings = [] }: ITableProps) => {
+export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITableProps) => {
   const { t } = useTranslation()
 
   if (isLoading) {

@@ -21,6 +21,13 @@ export type ShipmentStepperState = {
   rates: IStep
 }
 
+export interface IStepsDataItem {
+  title: string
+  data: IStep
+  mainContent: React.ReactNode
+  shortContent: React.ReactNode
+}
+
 export interface IStep {
   name: string
   completed: boolean

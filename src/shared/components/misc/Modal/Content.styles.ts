@@ -65,6 +65,10 @@ export const SModalContent = styled("div", {
           width: 680,
         },
       },
+
+      dimensionless: {
+        minHeight: "100%",
+      },
     },
 
     hasGutter: {

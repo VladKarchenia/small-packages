@@ -1,9 +1,10 @@
 import { Button, Copy, Flex, Link, Spacer, useStepperContext } from "@/shared/components"
-import { StepName, IStepperFormValues, ShippingType } from "@/shipment"
+import { ShipmentState } from "@/shared/state"
+import { StepName, ShippingType } from "@/shipment"
 import { useFormContext } from "react-hook-form"
 
 export const StepperFooter = ({ shippingType }: { shippingType: ShippingType }) => {
-  const { watch } = useFormContext<IStepperFormValues>()
+  const { watch } = useFormContext<ShipmentState>()
   const { rate, date } = watch()
 
   const { selected } = useStepperContext("StepperFooter")

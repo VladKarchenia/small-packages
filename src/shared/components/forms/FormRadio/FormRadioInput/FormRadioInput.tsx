@@ -1,6 +1,7 @@
 import React, { InputHTMLAttributes } from "react"
 import { FormComponentProps } from "@/utils/types"
 import { Copy, Spacer } from "@/shared/components"
+import { CSS } from "@/config"
 
 import {
   SFormRadioInputLabel,
@@ -21,10 +22,11 @@ export interface IFormRadioInputProps
    */
   noLabel?: boolean
   view?: "circle" | "tick"
+  labelCss?: CSS
 }
 
 export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInputProps>(
-  ({ id, disabled, label, noLabel, view = "circle", ...props }, ref) => {
+  ({ id, disabled, label, noLabel, view = "circle", labelCss, ...props }, ref) => {
     const labelProps = React.useMemo(() => {
       return {
         disabled: disabled,
@@ -42,7 +44,7 @@ export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInput
     }, [id, disabled, view, props])
 
     return (
-      <SFormRadioInputLabel data-ui="radiobutton" {...labelProps}>
+      <SFormRadioInputLabel data-ui="radiobutton" {...labelProps} css={labelCss}>
         <SFormRadioInput ref={ref} data-ui="radiobutton__input" {...radioInputProps} type="radio" />
         {view === "tick" ? (
           <SFormRadioTickCopyBox>

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import {
   GridContainer,
   Spacer,
@@ -9,6 +10,7 @@ import {
   Map,
   PersonInfoShort,
   ShortInfoLine,
+  HeaderBar,
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
 import { TrackingHeader } from "../TrackingHeader"
@@ -81,9 +83,11 @@ const SHIPMENT_DETAILS = {
 //TODO: add routing, "edit shipment" functionality, show content according user role
 export const TrackingContainer = () => {
   const data = SHIPMENT_DETAILS
+  const navigate = useNavigate()
 
   return (
     <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
+      <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
       <Stack space={16}>
         <TrackingHeader shipmentID={data.shipmentID} shipmentDate={data.shipmentDate} />
         <Map />

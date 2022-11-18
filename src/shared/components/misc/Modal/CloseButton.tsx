@@ -23,7 +23,7 @@ export const ModalCloseButton = (props: ModalCloseButtonProps) => {
             Close
           </Copy>
         ) : (
-          <IconCross block />
+          <IconCross size="xs" />
         )}
       </SModalCloseButton>
     </DialogClose>

@@ -1,11 +1,11 @@
 import { useFormContext } from "react-hook-form"
 import { Copy, Flex, Stack } from "@/shared/components"
-import { IStepperFormValues } from "@/shipment"
 import { IconCross, IconLocationPin, IconPencil } from "@/shared/icons"
 import format from "date-fns/format"
+import { ShipmentState } from "@/shared/state"
 
 export const DeliveryRatesShort = () => {
-  const { watch } = useFormContext<IStepperFormValues>()
+  const { watch } = useFormContext<ShipmentState>()
   const { rate, date } = watch()
 
   return (

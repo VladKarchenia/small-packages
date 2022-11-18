@@ -8,7 +8,8 @@ import {
   Stack,
   Spacer,
 } from "@/shared/components"
-import { IStepperFormValues, DateInput, ShippingType } from "@/shipment"
+import { DateInput, ShippingType } from "@/shipment"
+import { ShipmentState } from "@/shared/state"
 
 const rates = [
   {
@@ -28,7 +29,7 @@ const rates = [
 ]
 
 export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) => {
-  const { setValue, watch } = useFormContext<IStepperFormValues>()
+  const { setValue, watch } = useFormContext<ShipmentState>()
   const { date, rate } = watch()
 
   const [checkedOption, setCheckedOption] = useState(rate.id)

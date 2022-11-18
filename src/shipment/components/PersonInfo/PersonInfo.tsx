@@ -264,23 +264,23 @@ export const PersonInfo = ({
       <Button
         onClick={onContinueHandler}
         full
-        // disabled={
-        //   person === "sender"
-        //     ? !sendersName ||
-        //       !sendersPhone ||
-        //       !sendersCountry ||
-        //       !sendersPostCode ||
-        //       !sendersState ||
-        //       !sendersCity ||
-        //       !sendersAddress
-        //     : !recipientsName ||
-        //       !recipientsPhone ||
-        //       !recipientsCountry ||
-        //       !recipientsPostCode ||
-        //       !recipientsState ||
-        //       !recipientsCity ||
-        //       !recipientsAddress
-        // }
+        disabled={
+          person === "sender"
+            ? !sendersName ||
+              !sendersPhone ||
+              !sendersCountry ||
+              !sendersPostCode ||
+              !sendersState ||
+              !sendersCity ||
+              !sendersAddress
+            : !recipientsName ||
+              !recipientsPhone ||
+              !recipientsCountry ||
+              !recipientsPostCode ||
+              !recipientsState ||
+              !recipientsCity ||
+              !recipientsAddress
+        }
       >
         <Copy as="span" scale={8} color="system-white" bold>
           Continue

@@ -1,16 +1,15 @@
 import { useFormContext } from "react-hook-form"
 import { Button, Copy, GridContainer, Spacer, Stack, useStepperContext } from "@/shared/components"
-import { IStepperFormValues, StepName, LocationInput } from "@/shipment"
+import { ShipmentState } from "@/shared/state"
+import { StepName, LocationInput } from "@/shipment"
 
 export const AddressInfo = ({
   handleContinueClick,
 }: {
   handleContinueClick: (step: StepName.INFO, nextStep: StepName.SHIPMENT) => void
 }) => {
-  const { setValue, watch } = useFormContext<IStepperFormValues>()
-
-  const { fromAddress, toAddress } = watch()
-
+  const { setValue, watch } = useFormContext<ShipmentState>()
+  const { sender, recipient } = watch()
   const { setSelected } = useStepperContext("AddressInfo")
 
   const onContinueHandler = () => {
@@ -22,16 +21,16 @@ export const AddressInfo = ({
     <GridContainer fullBleed>
       <Stack space={8}>
         <LocationInput
-          initialValue={fromAddress}
+          initialValue={sender.fullAddress}
           onChange={(destination) => {
-            setValue("fromAddress", destination)
+            setValue("sender.fullAddress", destination)
           }}
           placeholder="From"
         />
         <LocationInput
-          initialValue={toAddress}
+          initialValue={recipient.fullAddress}
           onChange={(destination) => {
-            setValue("toAddress", destination)
+            setValue("recipient.fullAddress", destination)
           }}
           placeholder="To"
         />
@@ -41,10 +40,10 @@ export const AddressInfo = ({
         onClick={onContinueHandler}
         full
         disabled={
-          !fromAddress.location ||
-          !toAddress.location ||
+          !sender.fullAddress.location ||
+          !recipient.fullAddress.location ||
           // TODO: need to add better condition to prevent same from and to addresses using ID or some field
-          fromAddress.location === toAddress.location
+          sender.fullAddress.location === recipient.fullAddress.location
         }
       >
         {/* TODO: fix default button copy */}
