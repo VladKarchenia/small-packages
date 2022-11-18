@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+import { useStateContext } from "@/shared/state"
 //components
 import {
   GridContainer,
