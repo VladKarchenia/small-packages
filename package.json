@@ -31,6 +31,7 @@
     "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-cookie": "^4.1.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-day-picker": "^8.3.5",
     "react-dom": "^18.2.0",
     "react-focus-lock": "^2.9.1",
@@ -55,7 +56,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .tsx,.ts ./",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc"
   },
   "eslintConfig": {
     "extends": [
@@ -78,6 +79,7 @@
   "devDependencies": {
     "@types/leaflet": "^1.9.0",
     "@types/leaflet-routing-machine": "^3.2.4",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",

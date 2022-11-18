@@ -1,24 +1,14 @@
-import { useFormContext } from "react-hook-form"
 import { Copy, Flex, Stack } from "@/shared/components"
 import { IconLocationPin } from "@/shared/icons"
-import { ShipmentState } from "@/shared/state"
+import { IPerson } from "@/shared/state"
 
-export const PersonInfoShort = ({ person }: { person: "sender" | "recipient" }) => {
-  const { watch } = useFormContext<ShipmentState>()
-  const { sender, recipient } = watch()
-  const {
-    name: sendersName,
-    phone: sendersPhone,
-    company: sendersCompany,
-    fullAddress: { location: sendersAddress },
-  } = sender
-  const {
-    name: recipientsName,
-    phone: recipientsPhone,
-    company: recipientsCompany,
-    fullAddress: { location: recipientsAddress },
-  } = recipient
+interface IPersonInfoShortProps {
+  person: "sender" | "recipient"
+  sender: IPerson
+  recipient: IPerson
+}
 
+export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortProps) => {
   return (
     <Stack space={12}>
       <Flex align="center">
@@ -26,7 +16,7 @@ export const PersonInfoShort = ({ person }: { person: "sender" | "recipient" }) 
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={8} color="system-black">
-          {person === "sender" ? sendersName : recipientsName}
+          {person === "sender" ? sender.name : recipient.name}
         </Copy>
       </Flex>
       <Flex align="center">
@@ -34,26 +24,26 @@ export const PersonInfoShort = ({ person }: { person: "sender" | "recipient" }) 
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={8} color="system-black">
-          {person === "sender" ? sendersPhone : recipientsPhone}
+          {person === "sender" ? sender.phone : recipient.phone}
         </Copy>
       </Flex>
-      {person === "sender" && !!sendersCompany ? (
+      {person === "sender" && !!sender.company ? (
         <Flex align="center">
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
           </Flex>
           <Copy scale={8} color="system-black">
-            {sendersCompany}
+            {sender.company}
           </Copy>
         </Flex>
       ) : null}
-      {person === "recipient" && !!recipientsCompany ? (
+      {person === "recipient" && !!recipient.company ? (
         <Flex align="center">
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
           </Flex>
           <Copy scale={8} color="system-black">
-            {recipientsCompany}
+            {recipient.company}
           </Copy>
         </Flex>
       ) : null}
@@ -62,7 +52,7 @@ export const PersonInfoShort = ({ person }: { person: "sender" | "recipient" }) 
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={8} color="system-black">
-          {person === "sender" ? sendersAddress : recipientsAddress}
+          {person === "sender" ? sender.fullAddress.location : recipient.fullAddress.location}
         </Copy>
       </Flex>
     </Stack>

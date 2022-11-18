@@ -60,12 +60,7 @@ export const Link = ({
   }, [props, as, intent])
 
   return (
-    <SLink
-      data-ui="link"
-      isCtaIntent={intent === "cta"}
-      onClick={handleOnClick}
-      {...linkProps}
-    >
+    <SLink data-ui="link" isCtaIntent={intent === "cta"} onClick={handleOnClick} {...linkProps}>
       <Copy as="span" color="system-inherit" intent={intent} scale={scale}>
         {children}
       </Copy>

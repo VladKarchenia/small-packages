@@ -17,7 +17,7 @@ import {
   ShipmentDetails,
   ShipmentDetailsShort,
   AddressInfo,
-  AddressInfoShort,
+  AddressInfoCollapsed,
   DeliveryRates,
   DeliveryRatesShort,
   QuoteStep,
@@ -90,13 +90,16 @@ export const QuoteForm = () => {
       title: "Address Information",
       data: stepperState.info,
       mainContent: <AddressInfo handleContinueClick={handleContinueClick} />,
-      shortContent: <AddressInfoShort />,
+      shortContent: <AddressInfoCollapsed />,
     },
     {
       title: "Shipment Details",
       data: stepperState.shipment,
       mainContent: (
-        <ShipmentDetails handleContinueClick={handleContinueClick} shippingType={ShippingType.Quote} />
+        <ShipmentDetails
+          handleContinueClick={handleContinueClick}
+          shippingType={ShippingType.Quote}
+        />
       ),
       shortContent: <ShipmentDetailsShort shippingType={ShippingType.Quote} />,
     },
