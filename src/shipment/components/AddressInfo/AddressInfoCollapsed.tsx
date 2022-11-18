@@ -1,10 +1,15 @@
 import { useFormContext } from "react-hook-form"
-import { IStepperFormValues } from "@/shipment"
 import { AddressInfoShort } from "@/shared/components"
+import { ShipmentState } from "@/shared/state"
 
 export const AddressInfoCollapsed = () => {
-  const { watch } = useFormContext<IStepperFormValues>()
-  const { fromAddress, toAddress } = watch()
+  const { watch } = useFormContext<ShipmentState>()
+  const { sender, recipient } = watch()
 
-  return <AddressInfoShort fromAddress={fromAddress.location} toAddress={toAddress.location} />
+  return (
+    <AddressInfoShort
+      fromAddress={sender.fullAddress.location}
+      toAddress={recipient.fullAddress.location}
+    />
+  )
 }

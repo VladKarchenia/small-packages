@@ -1,13 +1,7 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { FormProvider, useForm } from "react-hook-form"
-import { Stepper } from "@/shared/components"
-import { ShipmentState, useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
 import {
   IStep,
   StepName,
-  StepperFooter,
-  StepItem,
   ShipmentDetails,
   ShipmentDetailsShort,
   DeliveryRates,
@@ -16,6 +10,8 @@ import {
   PersonInfoCollapsed,
   PersonInfo,
   ShippingType,
+  StepperForm,
+  IStepsDataItem,
 } from "@/shipment"
 
 type StepperState = {
@@ -53,10 +49,7 @@ const initialState: StepperState = {
 }
 
 export const ShipmentForm = () => {
-  const navigate = useNavigate()
   const [stepperState, setStepperState] = useState(initialState)
-  const setShipmentContext = useShipmentActionContext()
-  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   const handleContinueClick = (step: ShipmentStep, nextStep: ShipmentStep) => {
     setStepperState((prevState) => {
@@ -78,7 +71,7 @@ export const ShipmentForm = () => {
     })
   }
 
-  const stepsData = [
+  const stepsData: IStepsDataItem[] = [
     {
       title: "Ship From",
       data: stepperState.from,
@@ -110,54 +103,12 @@ export const ShipmentForm = () => {
     },
   ]
 
-  const methods = useForm<ShipmentState>({
-    mode: "onBlur",
-    defaultValues: {
-      sender: {
-        ...sender,
-        // TODO: remove it after BE connection with destination service
-        fullAddress: { ...sender.fullAddress, location: "USA, New York" },
-      },
-      recipient: {
-        ...recipient,
-        // TODO: remove it after BE connection with destination service
-        fullAddress: { ...recipient.fullAddress, location: "USA, Los Angeles" },
-      },
-      parcels: parcels,
-      date: date,
-      rate: rate,
-    },
-  })
-
-  const onSubmit = (data: ShipmentState) => {
-    setShipmentContext({
-      sender: data.sender,
-      recipient: data.recipient,
-      parcels: data.parcels,
-      date: data.date,
-      rate: data.rate,
-    })
-    // TODO: fix this navifation later
-    navigate("/")
-  }
-
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <Stepper defaultSelected={[StepName.FROM]}>
-          {stepsData.map((step) => (
-            <StepItem
-              key={step.title}
-              title={step.title}
-              data={step.data}
-              mainContent={step.mainContent}
-              shortContent={step.shortContent}
-              totalSteps={stepsData.length}
-            />
-          ))}
-          <StepperFooter shippingType={ShippingType.Shipment} />
-        </Stepper>
-      </form>
-    </FormProvider>
+    <StepperForm
+      shippingType={ShippingType.Shipment}
+      title="Create a shipment"
+      defaultStep={StepName.FROM}
+      stepsData={stepsData}
+    />
   )
 }

@@ -14,7 +14,7 @@ export interface IStepperButtonProps extends ComponentProps<typeof SStepperButto
 }
 
 export const StepperButton = ({ children, ...props }: IStepperButtonProps) => {
-  const { onItemOpen, onItemClose } = useStepperContext("StepperButton")
+  const { onItemOpen } = useStepperContext("StepperButton")
   const { id, value, open, disabled, completed } = useStepperItemContext("StepperButton")
 
   const handleClick = useCallback(

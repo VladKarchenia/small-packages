@@ -16,6 +16,7 @@ export type ModalProps = DialogPrimitive.DialogProps &
   Omit<ModalContentProps, "css"> & {
     trigger?: React.ReactNode
 
+    overlayCss?: CSS
     contentCss?: CSS
     panelCss?: CSS
 
@@ -38,6 +39,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       nested,
       fullscreen,
       scrollable,
+      overlayCss,
       panelCss,
       contentCss,
       title,
@@ -50,6 +52,10 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     },
     forwardedRef,
   ) => {
+    const overlayProps = {
+      css: overlayCss,
+    }
+
     const panelProps = {
       align,
       gap,
@@ -68,7 +74,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       <DialogPrimitive.Dialog open={open} onOpenChange={onOpenChange}>
         <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
         <ModalPortal container={container}>
-          <ModalOverlay nested={nested} />
+          <ModalOverlay nested={nested} {...overlayProps} />
 
           <ModalPanel ref={forwardedRef} {...panelProps}>
             <ModalContent {...contentProps}>

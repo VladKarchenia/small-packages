@@ -1,4 +1,3 @@
-import React from "react"
 import { Box, GridContainer, Grid, GridItem, Title, Spacer, Flex, Copy } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 
@@ -7,21 +6,26 @@ import { LoginFormContainer } from "./LoginFormContainer"
 export const Login = () => {
   return (
     <CommonLayout>
-      <GridContainer fullBleed>
+      <GridContainer css={{ height: "100%" }}>
         <Grid
-          columns={{ "@initial": "1fr", "@sm": "1fr 1fr" }}
+          columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
+          columnGap={32}
           css={{ "@sm": { height: "100vh" }, height: "100%" }}
         >
           <GridItem
+            column={{
+              "@initial": "span 6",
+              "@sm": "2 / span 10",
+              "@md": "4 / span 6",
+              "@lg": "8 / span 10",
+            }}
             css={{
-              backgroundColor: "$neutrals-1",
-              padding: "$32 $16",
               display: "flex",
               flexFlow: "column nowrap",
               justifyContent: "center",
             }}
           >
-            <Box css={{ flex: "0 0 auto" }}>
+            <Box>
               <a
                 aria-haspopup="false"
                 aria-label="Logo name"
@@ -40,13 +44,7 @@ export const Login = () => {
               </a>
             </Box>
             <Spacer size={32} />
-            <Flex
-              justify="center"
-              direction="column"
-              css={{
-                flex: "1 1 100%",
-              }}
-            >
+            <Flex justify="center" direction="column">
               <Title as="h1" scale={4}>
                 Welcome!
               </Title>
@@ -54,10 +52,8 @@ export const Login = () => {
               <Spacer size={24} />
               <LoginFormContainer />
             </Flex>
+            <Spacer size={96} />
           </GridItem>
-          <GridItem
-            css={{ backgroundColor: "$brand-blue-lightest", minHeight: "480px" }}
-          ></GridItem>
         </Grid>
       </GridContainer>
     </CommonLayout>

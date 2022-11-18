@@ -20,8 +20,9 @@ export const DropdownItem = memo(function ({ label, onSelect, testId }: IDropdow
           alignItems: "center",
           justifyContent: "flex-start",
           width: "100%",
+          minWidth: "$128",
           height: "inherit",
-          paddingX: "$24",
+          paddingX: "$20",
           cursor: "pointer",
         }}
       >

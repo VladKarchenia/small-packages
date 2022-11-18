@@ -1,3 +1,7 @@
 export * from "./DashboardTable"
 export * from "./DashboardTablePagination"
 export * from "./DashboardList"
+export * from "./DashboardTabs"
+export * from "./DashboardPagination"
+export * from "./SearchInput"
+export * from "./SearchInputPreview"

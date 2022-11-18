@@ -14,7 +14,7 @@ export const DrawerHeader = ({ children, closeIcon, hasSeparator }: DrawerHeader
   return (
     <SDrawerHeader hasSeparator={hasSeparator}>
       <DialogClose asChild>
-        <SDrawerCloseButton type="button">{closeIcon || <IconCross block />}</SDrawerCloseButton>
+        <SDrawerCloseButton type="button">{closeIcon || <IconCross />}</SDrawerCloseButton>
       </DialogClose>
       {children}
     </SDrawerHeader>

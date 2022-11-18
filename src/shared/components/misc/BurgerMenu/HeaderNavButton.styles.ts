@@ -9,8 +9,6 @@ export const SHeaderNavButton = styled("button", {
   fontFamily: "$sans",
   fontWeight: 500,
   justifyContent: "center",
-  paddingX: "$16",
-  marginRight: "$16",
   position: "relative",
   transition: "150ms background-color ease-out",
 

@@ -12,11 +12,7 @@ export const Header: React.FC<React.PropsWithChildren<IHeaderProps>> = ({
   theme = "default",
 }) => {
   return (
-    <HeaderNavWrapper
-      theme={theme}
-      hasShadow={{ "@initial": false, "@md": hasShadow }}
-      css={{ paddingX: "$16" }}
-    >
+    <HeaderNavWrapper theme={theme} hasShadow={{ "@initial": false, "@md": hasShadow }}>
       <HeaderNavItem justify="start">{children}</HeaderNavItem>
       <HeaderNavItem>
         <Logo />

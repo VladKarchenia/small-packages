@@ -16,7 +16,7 @@ const initialState: State = {
   authUser: null,
 }
 
-type StateContextProviderProps = { children: React.ReactNode }
+type UserProviderProps = { children: React.ReactNode }
 
 const StateContext = createContext<{ state: State; dispatch: Dispatch } | undefined>(undefined)
 
@@ -34,7 +34,7 @@ const stateReducer = (state: State, action: Action) => {
   }
 }
 
-const StateContextProvider = ({ children }: StateContextProviderProps) => {
+const UserProvider = ({ children }: UserProviderProps) => {
   const [state, dispatch] = useReducer(stateReducer, initialState)
   const value = { state, dispatch }
 
@@ -47,4 +47,4 @@ const useStateContext = () => {
   return context
 }
 
-export { StateContextProvider, useStateContext }
+export { UserProvider, useStateContext }

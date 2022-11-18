@@ -46,7 +46,7 @@ export const SButton = styled("button", {
       },
       secondary: {
         backgroundColor: "$neutrals-0",
-        borderColor: "$neutrals-5",
+        borderColor: "$system-black",
         color: "$neutrals-9",
 
         hover: {
