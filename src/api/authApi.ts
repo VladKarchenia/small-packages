@@ -2,6 +2,7 @@ import axios from "axios"
 import urljoin from "url-join"
 import { GenericResponse, ILoginResponse, IUserResponse } from "./types"
 import { LoginInput } from "@/pages"
+import { Role } from "@/shared/types"
 
 // move to .env file
 const BASE_URL = "http://localhost:8000/"
@@ -62,7 +63,7 @@ export const getMeFn = async () => {
         name: "Vlad",
         email: "vlad@mail.com",
         // role: "user",
-        role: "admin",
+        role: Role.Admin,
         _id: "aaa",
         id: "aaa",
         createdAt: "15-01-2020",
