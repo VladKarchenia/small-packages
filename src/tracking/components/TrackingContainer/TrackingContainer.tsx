@@ -1,3 +1,4 @@
+//components
 import {
   GridContainer,
   Spacer,
@@ -21,6 +22,8 @@ import {
 } from "@/tracking"
 //icons
 import { IconCalendar } from "@/shared/icons"
+//constants and types
+import { Role } from "@/shared/types"
 //styles
 import { STrackingSection } from "./TrackingContainer.styles"
 
@@ -113,6 +116,8 @@ const SHIPMENT_DETAILS = {
 //TODO: add routing, "edit shipment" functionality, show content according user role
 export const TrackingContainer = () => {
   const data = SHIPMENT_DETAILS
+  const stateContext = useStateContext()
+  const role = stateContext?.state.authUser?.role
   const navigate = useNavigate()
 
   return (
@@ -142,82 +147,93 @@ export const TrackingContainer = () => {
 
               <TrackingDetailsItem title="Date and delivery service">
                 <Stack space={12}>
-                  <Copy scale={9} color="system-black">
-                    Pick up date: {data.pickUpDate}
-                  </Copy>
+                  {role === Role.Admin && (
+                    <Copy scale={9} color="system-black">
+                      Pick up date: {data.pickUpDate}
+                    </Copy>
+                  )}
                   <Copy scale={9} color="system-black">
                     Arrival date: {data.arrivalDate}
                   </Copy>
                   <ShortInfoLine icon={<IconCalendar size="xs" />} text={data.deliveryCompany} />
                 </Stack>
               </TrackingDetailsItem>
-
-              <TrackingDetailsItem title="Shipment Details">
-                <Stack space={12}>
-                  <Copy scale={9} color="system-black">
-                    Product, furniture, $12.54
-                  </Copy>
-                  <Flex align="center">
-                    <Flex align="center" justify="center">
-                      <IconCalendar size="xs" />
+              {role === Role.Admin && (
+                <TrackingDetailsItem title="Shipment Details">
+                  <Stack space={12}>
+                    <Copy scale={9} color="system-black">
+                      Product, furniture, $12.54
+                    </Copy>
+                    <Flex align="center">
+                      <Flex align="center" justify="center">
+                        <IconCalendar size="xs" />
+                      </Flex>
+                      <Spacer size={8} horizontal />
+                      <Copy scale={9} color="system-black" bold>
+                        42x32x10 cm;
+                      </Copy>
+                      <Spacer size={8} horizontal />
+                      <Copy scale={9} color="system-black" bold>
+                        0,5 kg
+                      </Copy>
                     </Flex>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black" bold>
-                      42x32x10 cm;
-                    </Copy>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black" bold>
-                      0,5 kg
-                    </Copy>
-                  </Flex>
-                </Stack>
-              </TrackingDetailsItem>
+                  </Stack>
+                </TrackingDetailsItem>
+              )}
 
               <TrackingDetailsItem title="Route">
                 {/* TODO: Fix Route block after BE data and final design */}
                 <ShipmentRoute data={data.route} />
               </TrackingDetailsItem>
 
-              <TrackingDetailsItem title="Sender’s info">
-                <PersonInfoShort
-                  person={"sender"}
-                  sender={data.sendersInfo}
-                  recipient={data.recipientsInfo}
-                />
-              </TrackingDetailsItem>
-
-              <TrackingDetailsItem title="Recipient’s info">
-                <PersonInfoShort
-                  person={"recipient"}
-                  sender={data.sendersInfo}
-                  recipient={data.recipientsInfo}
-                />
-              </TrackingDetailsItem>
+              {role === Role.Admin && (
+                <TrackingDetailsItem title="Sender’s info">
+                  <PersonInfoShort
+                    person={"sender"}
+                    sender={data.sendersInfo}
+                    recipient={data.recipientsInfo}
+                  />
+                </TrackingDetailsItem>
+              )}
+              {role === Role.Admin && (
+                <TrackingDetailsItem title="Recipient’s info">
+                  <PersonInfoShort
+                    person={"recipient"}
+                    sender={data.sendersInfo}
+                    recipient={data.recipientsInfo}
+                  />
+                </TrackingDetailsItem>
+              )}
             </Stack>
           </STrackingSection>
         </GridContainer>
+
         {/*TODO: check and update Costs component when back-end and design will be established*/}
-        <GridContainer>
-          <STrackingSection>
-            <ShipmentCosts title="Costs" price={1540} costs={data.costs} />
-          </STrackingSection>
-        </GridContainer>
-        <GridContainer>
-          <STrackingSection>
-            <Title as="h3" scale={8}>
-              Shipment label
-            </Title>
-            <Spacer size={16} />
-            <Copy scale={9}>
-              Shipment label must be printed and attached to a package before it is picked up
-            </Copy>
-            <Spacer size={24} />
-            <ShipmentLabelContainer
-              pdfLabel={data.shipmentLabelPDFLink}
-              zplLabel={data.shipmentLabelZPLLink}
-            />
-          </STrackingSection>
-        </GridContainer>
+        {role === Role.Admin && (
+          <GridContainer>
+            <STrackingSection>
+              <ShipmentCosts title="Costs" price={1540} costs={data.costs} />
+            </STrackingSection>
+          </GridContainer>
+        )}
+        {role === Role.Admin && (
+          <GridContainer>
+            <STrackingSection>
+              <Title as="h3" scale={8}>
+                Shipment label
+              </Title>
+              <Spacer size={16} />
+              <Copy scale={9}>
+                Shipment label must be printed and attached to a package before it is picked up
+              </Copy>
+              <Spacer size={24} />
+              <ShipmentLabelContainer
+                pdfLabel={data.shipmentLabelPDFLink}
+                zplLabel={data.shipmentLabelZPLLink}
+              />
+            </STrackingSection>
+          </GridContainer>
+        )}
       </Stack>
     </GridContainer>
   )

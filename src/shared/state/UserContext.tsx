@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer } from "react"
 import { IUser } from "@/api/types"
+import { Role } from "@/shared/types"
 
 type State = {
   authUser: IUser | null
@@ -13,7 +14,16 @@ type Action = {
 type Dispatch = (action: Action) => void
 
 const initialState: State = {
-  authUser: null,
+  authUser: {
+    name: "Admin",
+    email: "admin@gmail.com",
+    role: Role.Admin,
+    _id: "23423543345",
+    id: "345345345",
+    createdAt: "18.11.2022",
+    updatedAt: "18.11.2022",
+    __v: 2,
+  },
 }
 
 type UserProviderProps = { children: React.ReactNode }
