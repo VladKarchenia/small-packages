@@ -1,10 +1,10 @@
-export enum SHIPMENT_STATUSES {
-  "CONFIRMED" = "Confirmed",
-  "DRAFT" = "Draft",
-  "PAID" = "Paid",
-  "BOOKED" = "Booked",
-  "PICKED_UP" = "Picked up",
-  "IN_DELIVERY" = "In delivery",
-  "DELIVERED" = "Delivered",
-  "CANCELLED" = "Cancelled",
+export enum ShipmentStatus {
+  "Confirmed" = "Confirmed",
+  "Draft" = "Draft",
+  "Paid" = "Paid",
+  "Booked" = "Booked",
+  "PickedUp" = "Picked up",
+  "InDelivery" = "In delivery",
+  "Delivered" = "Delivered",
+  "Cancelled" = "Cancelled",
 }

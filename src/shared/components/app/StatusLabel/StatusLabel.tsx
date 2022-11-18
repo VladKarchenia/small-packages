@@ -1,11 +1,13 @@
 import { Copy } from "@/shared/components"
 import { STrackerLabel } from "./StatusLabel.styles"
-import { SHIPMENT_STATUSES } from "@/shared/types"
+import { ShipmentStatus } from "@/shared/types"
 
-export const StatusLabel = ({status}:{status: SHIPMENT_STATUSES}) => {
-  return(
+export const StatusLabel = ({ status }: { status: ShipmentStatus }) => {
+  return (
     <STrackerLabel>
-      <Copy scale={10} color="neutrals-0">{status}</Copy>
+      <Copy scale={12} color="system-white">
+        {status}
+      </Copy>
     </STrackerLabel>
   )
 }

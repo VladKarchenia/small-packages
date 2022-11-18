@@ -1,2 +1,2 @@
 export * from "./AddressInfo"
-export * from "./AddressInfoShort"
+export * from "./AddressInfoCollapsed"

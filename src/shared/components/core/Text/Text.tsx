@@ -7,6 +7,8 @@ const editorialVariant = {
 
 const fontSizeLineHeightMap: any = {
   6: "16px",
+  11: "16px",
+  12: "18px",
   13: "20px",
   14: "22px",
   16: 1.5,
@@ -89,6 +91,9 @@ const scaleVariantMap: any = {
     ...getScaleVariantStyles(12),
   },
   12: {
+    ...getScaleVariantStyles(11),
+  },
+  13: {
     ...getScaleVariantStyles(6),
   },
 }
@@ -115,6 +120,7 @@ export const commonVariants = {
     9: {},
     10: {},
     11: {},
+    12: {},
   },
   tracking: trackingVariant,
 }

@@ -1,5 +1,5 @@
-export * from "./AddressInfoInLine"
+export * from "./AddressInfoShort"
+export * from "./PersonInfoShort"
 export * from "./Map"
-export * from "./PersonInfoShortCard"
 export * from "./ShortInfoLine"
 export * from "./StatusLabel"

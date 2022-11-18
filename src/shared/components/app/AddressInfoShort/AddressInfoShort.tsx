@@ -1,7 +1,7 @@
 import { Copy, Flex } from "@/shared/components"
 import { IconArrowRight } from "@/shared/icons"
 
-export const AddressInfoInLine = ({
+export const AddressInfoShort = ({
   fromAddress,
   toAddress,
 }: {

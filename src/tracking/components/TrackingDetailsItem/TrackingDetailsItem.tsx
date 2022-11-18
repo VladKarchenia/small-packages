@@ -1,13 +1,22 @@
-import { ReactNode } from "react"
-import { Copy, Spacer } from "@/shared/components"
 import { Spaces } from "@/config/theme/spacing"
+import { Copy, Spacer } from "@/shared/components"
 
+interface ITrackingDetailsItemProps {
+  title: string
+  titleIndent?: Spaces
+}
 
-export const TrackingDetailsItem = ({title, titleIndent=16, children}: {title: string, titleIndent?: Spaces,  children?: ReactNode[] | ReactNode | null}) => {
-  return(
+export const TrackingDetailsItem: React.FC<React.PropsWithChildren<ITrackingDetailsItemProps>> = ({
+  children,
+  title,
+  titleIndent = 16,
+}) => {
+  return (
     <>
-      <Copy scale={10}  color="neutrals-7" bold>{title}</Copy>
-      <Spacer size={titleIndent}/>
+      <Copy scale={10} color="neutrals-7" bold>
+        {title}
+      </Copy>
+      <Spacer size={titleIndent} />
       {children}
     </>
   )

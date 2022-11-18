@@ -1,15 +1,32 @@
-import { Copy, Flex, GridContainer } from "@/shared/components"
+import { ButtonIcon, Copy, Flex, GridContainer, Stack } from "@/shared/components"
 import { StatusLabel } from "@/shared/components/app"
-import { SHIPMENT_STATUSES } from "@/shared/types"
+import { IconPencil } from "@/shared/icons"
+import { ShipmentStatus } from "@/shared/types"
 
-export const TrackingHeader = ({shipmentID, shipmentDate}: {shipmentID: string, shipmentDate: string}) => {
-  return(
+interface ITrackingHeader {
+  shipmentID: string
+  shipmentDate: string
+}
+
+export const TrackingHeader = ({ shipmentID, shipmentDate }: ITrackingHeader) => {
+  return (
     <GridContainer>
-      <Flex css={{marginBottom: "$8"}} align="center">
-        <Copy css={{marginRight:"$8"}} color="system-black" bold scale={8}>Ship #{shipmentID}</Copy>
-        <StatusLabel status={SHIPMENT_STATUSES.CONFIRMED}/>
-      </Flex>
-      <Copy color="neutrals-7" scale={10}>{shipmentDate}</Copy>
+      <Stack space={8}>
+        <Flex align="center" justify="between">
+          <Flex align="center">
+            <Copy scale={8} color="system-black" bold css={{ paddingRight: "$12" }}>
+              Ship #{shipmentID}
+            </Copy>
+            <StatusLabel status={ShipmentStatus.Confirmed} />
+          </Flex>
+          <ButtonIcon
+            ariaLabel="Edit shipment"
+            icon={<IconPencil />}
+            onClick={() => console.log("Clicked edit button")}
+          />
+        </Flex>
+        <Copy scale={10}>{shipmentDate}</Copy>
+      </Stack>
     </GridContainer>
   )
 }
