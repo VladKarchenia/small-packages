@@ -2,10 +2,11 @@ import { ButtonIcon, Copy, Flex, GridContainer, Stack } from "@/shared/component
 import { StatusLabel } from "@/shared/components/app"
 import { IconPencil } from "@/shared/icons"
 import { ShipmentStatus } from "@/shared/types"
+import format from "date-fns/format"
 
 interface ITrackingHeader {
   shipmentID: string
-  shipmentDate: string
+  shipmentDate: Date | null
 }
 
 export const TrackingHeader = ({ shipmentID, shipmentDate }: ITrackingHeader) => {
@@ -26,7 +27,7 @@ export const TrackingHeader = ({ shipmentID, shipmentDate }: ITrackingHeader) =>
             onClick={() => console.log("Clicked edit button")}
           />
         </Flex>
-        <Copy scale={10}>{shipmentDate}</Copy>
+        <Copy scale={10}>{shipmentDate ? format(shipmentDate, "dd.MM.yyyy") : ""}</Copy>
       </Stack>
     </GridContainer>
   )
