@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
-import { useStateContext } from "@/shared/state"
+import { useShipmentStateContext, useStateContext } from "@/shared/state"
+import { format } from "date-fns"
 //components
 import {
   GridContainer,
@@ -121,29 +122,24 @@ export const TrackingContainer = () => {
   const stateContext = useStateContext()
   const role = stateContext?.state.authUser?.role
   const navigate = useNavigate()
+  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   return (
     <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
       <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
       <Stack space={16}>
-        <TrackingHeader shipmentID={data.shipmentID} shipmentDate={data.shipmentDate} />
+        <TrackingHeader shipmentID={data.shipmentID} shipmentDate={new Date(data.shipmentDate)} />
         <Map />
         <GridContainer>
           <STrackingSection>
             <Stack space={24} dividers>
               <>
                 <TrackingDetailsItem title="Tracking number" titleIndent={4}>
-                  <Copy scale={8} color="system-black" bold>
-                    {data.trackingNumber}
-                  </Copy>
-                </TrackingDetailsItem>
-                <Spacer size={20} />
-                <TrackingDetailsItem title="Shipment URL" titleIndent={4}>
-                  <ShipmentURL url={data.shipmentURL} />
+                  <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
                 </TrackingDetailsItem>
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where">
-                  <AddressInfoShort fromAddress={data.from} toAddress={data.to} />
+                  <AddressInfoShort fromAddress={sender.fullAddress.location} toAddress={recipient.fullAddress.location} />
                 </TrackingDetailsItem>
               </>
 
@@ -151,13 +147,13 @@ export const TrackingContainer = () => {
                 <Stack space={12}>
                   {role === Role.Admin && (
                     <Copy scale={9} color="system-black">
-                      Pick up date: {data.pickUpDate}
+                      Pick up date: { date === null ? '' : format( date , "dd.MM.yyyy")}
                     </Copy>
                   )}
                   <Copy scale={9} color="system-black">
                     Arrival date: {data.arrivalDate}
                   </Copy>
-                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={data.deliveryCompany} />
+                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 </Stack>
               </TrackingDetailsItem>
               {role === Role.Admin && (
@@ -192,8 +188,8 @@ export const TrackingContainer = () => {
                 <TrackingDetailsItem title="Sender’s info">
                   <PersonInfoShort
                     person={"sender"}
-                    sender={data.sendersInfo}
-                    recipient={data.recipientsInfo}
+                    sender={sender}
+                    recipient={recipient}
                   />
                 </TrackingDetailsItem>
               )}
@@ -201,8 +197,8 @@ export const TrackingContainer = () => {
                 <TrackingDetailsItem title="Recipient’s info">
                   <PersonInfoShort
                     person={"recipient"}
-                    sender={data.sendersInfo}
-                    recipient={data.recipientsInfo}
+                    sender={sender}
+                    recipient={recipient}
                   />
                 </TrackingDetailsItem>
               )}

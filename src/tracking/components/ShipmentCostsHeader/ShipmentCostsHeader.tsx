@@ -1,12 +1,14 @@
 import { ButtonIcon, Copy, Flex, GridContainer, Spacer, Stack } from "@/shared/components"
-import { IconChevronTop } from "@/shared/icons"
+import { IconChevronTop, IconChevronDown } from "@/shared/icons"
 
 interface IShipmentCostProps {
   title: string
   price: number
+  showCostsDetails: boolean
+  handleShowDetailsClick: () => void
 }
 
-export const ShipmentCostsHeader = ({ title, price }: IShipmentCostProps) => {
+export const ShipmentCostsHeader = ({ title, price, showCostsDetails, handleShowDetailsClick }: IShipmentCostProps) => {
   return (
     <GridContainer fullBleed>
       <Stack space={8}>
@@ -15,9 +17,9 @@ export const ShipmentCostsHeader = ({ title, price }: IShipmentCostProps) => {
             {title}
           </Copy>
           <ButtonIcon
-            ariaLabel="Edit shipment"
-            icon={<IconChevronTop />}
-            onClick={() => console.log("Clicked edit button")}
+            ariaLabel="Show details"
+            icon={showCostsDetails ? <IconChevronDown /> : <IconChevronTop/>}
+            onClick={ handleShowDetailsClick }
           />
         </Flex>
       </Stack>

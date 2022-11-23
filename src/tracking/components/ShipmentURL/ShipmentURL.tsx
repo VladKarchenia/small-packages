@@ -8,9 +8,10 @@ import { SShipmentURLButton, SShipmentURLMessage } from "./ShipmentURL.styles"
 
 type ShipmentURLProps = {
   url: string
+  value: string
 }
 
-export const ShipmentURL = ({ url }: ShipmentURLProps) => {
+export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
 
   const handleButtonClick = () => {
@@ -26,7 +27,7 @@ export const ShipmentURL = ({ url }: ShipmentURLProps) => {
     <>
       <CopyToClipboard text={url}>
         <SShipmentURLButton type="button" onClick={handleButtonClick}>
-          <Flex align="center" css={{ width: "100%" }}>
+          <Flex align="center" justify="between" css={{ width: "100%" }}>
             <Copy
               scale={9}
               color="system-black"
@@ -37,7 +38,7 @@ export const ShipmentURL = ({ url }: ShipmentURLProps) => {
                 textOverflow: "ellipsis",
               }}
             >
-              {url}
+              {value}
             </Copy>
             <Spacer size={8} horizontal />
             <Flex align="center" justify="center" css={{ color: "$system-black" }}>
