@@ -19,6 +19,7 @@ export const TrackingHeader = ({ shipmentID, shipmentDate }: ITrackingHeader) =>
             </Copy>
             <StatusLabel status={ShipmentStatus.Confirmed} />
           </Flex>
+          {/* TODO: navigate to Stepper by shipment ID */}
           <ButtonIcon
             ariaLabel="Edit shipment"
             icon={<IconPencil />}

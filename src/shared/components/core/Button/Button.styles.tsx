@@ -20,9 +20,9 @@ export const SButton = styled("button", {
   },
 
   disabled: {
-    backgroundColor: "$neutrals-2",
+    backgroundColor: "$neutrals-6",
     borderColor: "transparent",
-    color: "$neutrals-5",
+    color: "$system-white",
     boxShadow: "none",
     pointerEvents: "none",
   },

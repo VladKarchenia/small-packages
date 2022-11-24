@@ -1,9 +1,11 @@
 import { styled } from "@/config"
 
 export const SDrawerContent = styled("div", {
-  flex: 1,
   display: "flex",
   flexDirection: "column",
+  flex: 1,
+  // TODO: 60px it's a header height
+  height: "calc(100% - 60px)",
   padding: "$48 $24",
 
   focus: {

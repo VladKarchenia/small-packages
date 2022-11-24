@@ -1,8 +1,7 @@
-import { Drawer, useDrawer, useDrawerActions } from "@/shared/components"
+import { SearchFilterDrawer, useDrawerActions } from "@/shared/components"
 import { IconArrowLeft } from "@/shared/icons"
 import { IAddress } from "@/shared/state"
 import { useState } from "react"
-import { InputPreview } from "../InputPreview"
 import { LocationInputForm } from "./LocationInputForm"
 
 export interface LocationInputProps {
@@ -16,7 +15,6 @@ export const LocationInput: React.FC<LocationInputProps> = ({
   onChange,
   placeholder,
 }) => {
-  const [drawerProps] = useDrawer("locationInput")
   const { close } = useDrawerActions()
 
   const [locationDetails, setLocationDetails] = useState<IAddress>(initialValue)
@@ -25,20 +23,22 @@ export const LocationInput: React.FC<LocationInputProps> = ({
     // TODO: FIX this
     onChange({
       location,
-      address: "",
+      address1: "",
+      address2: "",
       city: "",
       country: "",
       isResidential: false,
-      postCode: "",
+      zipCode: "",
       state: "",
     })
     setLocationDetails({
       location,
-      address: "",
+      address1: "",
+      address2: "",
       city: "",
       country: "",
       isResidential: false,
-      postCode: "",
+      zipCode: "",
       state: "",
     })
 
@@ -46,22 +46,20 @@ export const LocationInput: React.FC<LocationInputProps> = ({
   }
 
   return (
-    <Drawer
-      {...drawerProps}
+    <SearchFilterDrawer
+      drawerName="locationInput"
+      drawerTitle="Find destination"
+      value={locationDetails.location}
+      placeholder={placeholder}
       closeIcon={<IconArrowLeft />}
-      fullWidth={{ "@max-sm": true }}
-      noPadding
-      trigger={
-        <InputPreview
-          value={locationDetails.location}
+      drawerForm={
+        <LocationInputForm
+          initialValue={locationDetails}
+          onSelect={handleChange}
           placeholder={placeholder}
-          dataTestid="location-button-filter"
-          // TODO: remove when using popovers on desktop, this is a temp fix until we remove this from the Desktop experience
-          css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
         />
       }
-    >
-      <LocationInputForm initialValue={locationDetails} onSelect={handleChange} />
-    </Drawer>
+      dataTestid="location-button-filter"
+    />
   )
 }

@@ -10,7 +10,8 @@ export const SStepperHeader = styled("div", {
 })
 
 export const SStepperPanel = styled(motion.div, {
-  overflow: "hidden",
+  // TODO: Why do we need this overflow here? I'll comment it because we need to show cost tooltips
+  // overflow: "hidden",
   position: "relative",
 
   before: {

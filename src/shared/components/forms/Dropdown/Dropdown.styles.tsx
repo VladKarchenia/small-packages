@@ -37,11 +37,10 @@ export const SDropdownMenuContent = styled(Content, {
   justifyContent: "center",
   width: "max-content",
   backgroundColor: "$neutrals-0",
-  border: "1px solid $neutrals-4",
-  borderRadius: "$2",
+  borderRadius: "$4",
   marginY: "$12",
   paddingY: "$16",
-  boxShadow: `0 $space$8 $space$24 0 ${rgba("system-black", 0.08)}`,
+  boxShadow: `0 $space$4 $space$8 0 ${rgba("system-black", 0.22)}`,
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",
     animationTimingFunction: "ease-in-out",

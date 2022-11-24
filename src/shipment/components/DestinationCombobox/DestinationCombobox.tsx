@@ -32,12 +32,14 @@ export interface DestinationComboboxProps {
   onSelect: (location: string, placeId: string) => void
   initialValue?: string
   isDesktop?: boolean
+  placeholder: string
 }
 
 export const DestinationCombobox = ({
   onSelect,
   initialValue,
   isDesktop,
+  placeholder,
 }: DestinationComboboxProps) => {
   const { t } = useTranslation()
 
@@ -98,7 +100,7 @@ export const DestinationCombobox = ({
           <FormInput
             id={t("filters.destination")}
             label={t("filters.destination")}
-            placeholder={t("filters.locationPlaceholder")}
+            placeholder={placeholder}
             labelProps={{ hidden: true }}
             autoCorrect="off"
             autoComplete="off"

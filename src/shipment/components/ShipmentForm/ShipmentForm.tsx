@@ -12,12 +12,15 @@ import {
   ShippingType,
   StepperForm,
   IStepsDataItem,
+  ShipmentDateDetails,
+  ShipmentDateDetailsShort,
 } from "@/shipment"
 
 type StepperState = {
   from: IStep
   to: IStep
   shipment: IStep
+  date: IStep
   rates: IStep
 }
 
@@ -40,11 +43,17 @@ const initialState: StepperState = {
     disabled: true,
     stepNumber: 3,
   },
+  date: {
+    name: "date",
+    completed: false,
+    disabled: true,
+    stepNumber: 4,
+  },
   rates: {
     name: "rates",
     completed: false,
     disabled: true,
-    stepNumber: 4,
+    stepNumber: 5,
   },
 }
 
@@ -94,6 +103,12 @@ export const ShipmentForm = () => {
         />
       ),
       shortContent: <ShipmentDetailsShort shippingType={ShippingType.Shipment} />,
+    },
+    {
+      title: "Ready Date",
+      data: stepperState.date,
+      mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
+      shortContent: <ShipmentDateDetailsShort />,
     },
     {
       title: "Delivery Rates",

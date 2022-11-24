@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import {
-  Copy,
-  FormRadioGroup,
-  RateRadioInput,
-  GridContainer,
-  Stack,
-  Spacer,
-} from "@/shared/components"
-import { DateInput, ShippingType } from "@/shipment"
+import { Copy, FormRadioGroup, RateRadioInput, GridContainer, Stack } from "@/shared/components"
+import { ShippingType } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
 
 const rates = [
@@ -30,7 +23,7 @@ const rates = [
 
 export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) => {
   const { setValue, watch } = useFormContext<ShipmentState>()
-  const { date, rate } = watch()
+  const { rate } = watch()
 
   const [checkedOption, setCheckedOption] = useState(rate.id)
 
@@ -51,27 +44,15 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
   return (
     <GridContainer fullBleed>
       <Stack space={12}>
-        {!date ? <Copy scale={9}>Please, select a ready date to calculate the cost</Copy> : null}
-        <DateInput
-          initialValue={date}
-          onChange={(value) => {
-            setValue("date", value)
-          }}
-        />
-        {date ? (
-          <>
-            <Spacer size={12} />
-            <Copy scale={9}>
-              Rates showm here may be different than the actual charges for your shipment
-            </Copy>
-          </>
-        ) : null}
+        <Copy scale={9}>
+          Rates shown here may be different than the actual charges for your shipment
+        </Copy>
         <FormRadioGroup
           value={checkedOption}
           onChange={handleChange}
           id="rates-radio-id"
           name="rates-radio-group"
-          disabled={shippingType === ShippingType.Quote}
+          // disabled={shippingType === ShippingType.Quote}
         >
           {rates.map((rate) => (
             <RateRadioInput
