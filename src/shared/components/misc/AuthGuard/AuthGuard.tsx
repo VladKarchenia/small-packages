@@ -2,10 +2,11 @@ import { useCookies } from "react-cookie"
 import { useQuery } from "react-query"
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { getMeFn } from "@/api/authApi"
+import { Role } from "@/shared/types"
 import { useStateContext } from "@/shared/state"
 import { FullScreenLoader } from "@/pages"
 
-export const AuthGuard = ({ allowedRoles }: { allowedRoles: string[] }) => {
+export const AuthGuard = ({ allowedRoles }: { allowedRoles: Role[] }) => {
   const [cookies] = useCookies(["logged_in"])
   const location = useLocation()
   const stateContext = useStateContext()
@@ -28,7 +29,7 @@ export const AuthGuard = ({ allowedRoles }: { allowedRoles: string[] }) => {
     return <FullScreenLoader />
   }
 
-  return (cookies.logged_in || user) && allowedRoles.includes(user?.role as string) ? (
+  return (cookies.logged_in || user) && allowedRoles.includes(user?.role as Role) ? (
     <Outlet />
   ) : cookies.logged_in && user ? (
     <Navigate to="/unauthorized" state={{ from: location }} replace />

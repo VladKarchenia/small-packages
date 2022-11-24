@@ -22,7 +22,7 @@ export const DeliveryRatesShort = () => {
           <IconPencil size="xs" />
         </Flex>
         <Copy scale={8} color="system-black">
-          {rate.currency} {rate.price}
+          {rate.currency} {rate.price.toFixed(2)}
         </Copy>
       </Flex>
     </Stack>

@@ -12,6 +12,7 @@ import {
   Tracking,
   Reset,
 } from "@/pages"
+import { Role } from "@/shared/types"
 import { ShippingType } from "@/shipment"
 
 import "react-toastify/dist/ReactToastify.css"
@@ -33,12 +34,12 @@ const App: React.FC = (): JSX.Element => {
       { index: true, element: <Home /> },
       {
         path: "profile",
-        element: <AuthGuard allowedRoles={["user", "admin"]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
         children: [{ path: "", element: <Profile /> }],
       },
       {
         path: "create",
-        element: <AuthGuard allowedRoles={["user", "admin"]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
         children: [
           { path: "quote", element: <CreateShipment shippingType={ShippingType.Quote} /> },
           { path: "shipment", element: <CreateShipment shippingType={ShippingType.Shipment} /> },

@@ -1,8 +1,10 @@
 // authorisation
+import { Role } from "@/shared/types"
+
 export interface IUser {
   name: string
   email: string
-  role: string
+  role: Role
   _id: string
   id: string
   createdAt: string

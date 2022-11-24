@@ -214,10 +214,7 @@ export const Tooltip = ({
           withArrow={withArrow}
         />
 
-        <STooltipContent
-          data-ui="tooltip-content"
-          css={{ maxWidth: contentWidth, ...contentCss }}
-        >
+        <STooltipContent data-ui="tooltip-content" css={{ maxWidth: contentWidth, ...contentCss }}>
           {tooltip}
         </STooltipContent>
       </STooltip>

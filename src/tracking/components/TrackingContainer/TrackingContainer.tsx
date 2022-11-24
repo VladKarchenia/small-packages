@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import { format } from "date-fns"
 import {
   GridContainer,
   Spacer,
@@ -13,27 +14,51 @@ import {
   HeaderBar,
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
-import { TrackingHeader } from "../TrackingHeader"
-import { TrackingDetailsItem } from "../TrackingDetailsItem"
-import { ShipmentURL } from "../ShipmentURL"
-import { ShipmentRoute } from "../ShipmentRoute"
-import { ShipmentLabelContainer } from "../ShipmentLabelContainer"
+import { useShipmentStateContext, useStateContext } from "@/shared/state"
+import { ICost, Role } from "@/shared/types"
+import {
+  TrackingHeader,
+  TrackingDetailsItem,
+  ShipmentURL,
+  ShipmentRoute,
+  ShipmentLabelContainer,
+  ShipmentCosts,
+} from "@/tracking"
 import { STrackingSection } from "./TrackingContainer.styles"
+
+const costs: ICost[] = [
+  {
+    name: "Base rate",
+    value: 1300,
+  },
+  {
+    name: "Fuel",
+    value: 140,
+  },
+  {
+    name: "Accessorial",
+    value: 0,
+  },
+  {
+    name: "Other",
+    value: 40,
+  },
+  {
+    name: "Service",
+    value: 10,
+  },
+  {
+    name: "Tax",
+    value: 50,
+  },
+]
 
 const SHIPMENT_DETAILS = {
   shipmentID: "20214-5Z",
   shipmentDate: "Oct 30, 2022, 7:29 PM",
   trackingNumber: "204-5Z87",
   shipmentURL: "https//www.gulfrelay/shipment/204-5Z87",
-  from: "USA, New York",
-  to: "USA, Los Angeles",
   arrivalDate: "18.10.2022",
-  pickUpDate: "17.10.2022",
-  deliveryCompany: "UPS Express Delivery",
-  shipmentName: "Product, furniture",
-  shipmentCoast: "$12.54",
-  shipmentSize: "42x32x10",
-  shipmentWeight: "0,2",
   route: [
     {
       status: "Order is processed",
@@ -48,38 +73,6 @@ const SHIPMENT_DETAILS = {
       date: "",
     },
   ],
-  sendersInfo: {
-    name: "Kevin Harris",
-    phone: "212-639-9675",
-    email: "email1@gmail.com",
-    fullAddress: {
-      location: "Cerritos, 278 Los Cerritos Mall",
-      country: "United States",
-      zipCode: "90703",
-      state: "California",
-      city: "Cerritos",
-      address1: "278 Los Cerritos Mall",
-      address2: "278 Los Cerritos Mall",
-      isResidential: false,
-    },
-    company: "USA, New York",
-  },
-  recipientsInfo: {
-    name: "Dexter Morissette",
-    phone: "806-622-3862",
-    email: "email2@gmail.com",
-    company: "USA, Texas",
-    fullAddress: {
-      location: "Redondo Beach, 512 N Pacific Coast Hwy",
-      country: "United States",
-      zipCode: "90277",
-      state: "California",
-      city: "Redondo Beach",
-      address1: "512 N Pacific Coast Hwy",
-      address2: "512 N Pacific Coast Hwy",
-      isResidential: false,
-    },
-  },
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
 }
@@ -87,111 +80,129 @@ const SHIPMENT_DETAILS = {
 //TODO: add routing, "edit shipment" functionality, show content according user role
 export const TrackingContainer = () => {
   const data = SHIPMENT_DETAILS
+  const stateContext = useStateContext()
+  const role = stateContext?.state.authUser?.role
   const navigate = useNavigate()
+  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   return (
     <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
       <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
       <Stack space={16}>
-        <TrackingHeader shipmentID={data.shipmentID} shipmentDate={data.shipmentDate} />
+        <TrackingHeader
+          shipmentID={data.shipmentID}
+          shipmentDate={new Date(data.shipmentDate)}
+          role={role}
+        />
         <Map />
         <GridContainer>
           <STrackingSection>
             <Stack space={24} dividers>
               <>
                 <TrackingDetailsItem title="Tracking number" titleIndent={4}>
-                  <Copy scale={8} color="system-black" bold>
-                    {data.trackingNumber}
-                  </Copy>
-                </TrackingDetailsItem>
-                <Spacer size={20} />
-                <TrackingDetailsItem title="Shipment URL" titleIndent={4}>
-                  <ShipmentURL url={data.shipmentURL} />
+                  <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
                 </TrackingDetailsItem>
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where">
-                  <AddressInfoShort fromAddress={data.from} toAddress={data.to} />
+                  <AddressInfoShort
+                    fromAddress={sender.fullAddress.location}
+                    toAddress={recipient.fullAddress.location}
+                  />
                 </TrackingDetailsItem>
               </>
 
               <TrackingDetailsItem title="Date and delivery service">
                 <Stack space={12}>
-                  <Copy scale={9} color="system-black">
-                    Pick up date: {data.pickUpDate}
-                  </Copy>
+                  {role === Role.Admin ? (
+                    <Copy scale={9} color="system-black">
+                      Pick up date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                    </Copy>
+                  ) : null}
                   <Copy scale={9} color="system-black">
                     Arrival date: {data.arrivalDate}
                   </Copy>
-                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={data.deliveryCompany} />
+                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 </Stack>
               </TrackingDetailsItem>
-
-              <TrackingDetailsItem title="Shipment Details">
-                <Stack space={12}>
-                  <Copy scale={9} color="system-black">
-                    Product, furniture, $12.54
-                  </Copy>
-                  <Flex align="center">
-                    <Flex align="center" justify="center">
-                      <IconCalendar size="xs" />
-                    </Flex>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black" bold>
-                      42x32x10 cm;
-                    </Copy>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black" bold>
-                      0,5 kg
-                    </Copy>
-                  </Flex>
-                </Stack>
-              </TrackingDetailsItem>
+              {role === Role.Admin ? (
+                <TrackingDetailsItem title="Shipment Details">
+                  <Stack space={12}>
+                    {parcels.map((parcel, index) => (
+                      <Stack space={8} key={index}>
+                        {parcels.length > 1 ? (
+                          <Copy scale={9} color="system-black" bold>
+                            Parcel {index + 1}
+                          </Copy>
+                        ) : null}
+                        <Copy scale={9} color="system-black">
+                          {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
+                          {parcel.pickupType}
+                        </Copy>
+                        <Flex align="center">
+                          <Flex align="center" justify="center">
+                            <IconCalendar size="xs" />
+                          </Flex>
+                          <Spacer size={8} horizontal />
+                          <Copy scale={9} color="system-black">
+                            {parcel.dimensions.length}x{parcel.dimensions.width}x
+                            {parcel.dimensions.height} in;
+                          </Copy>
+                          <Spacer size={8} horizontal />
+                          <Copy scale={9} color="system-black">
+                            {parcel.weight} lb
+                          </Copy>
+                        </Flex>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </TrackingDetailsItem>
+              ) : null}
 
               <TrackingDetailsItem title="Route">
                 {/* TODO: Fix Route block after BE data and final design */}
                 <ShipmentRoute data={data.route} />
               </TrackingDetailsItem>
 
-              <TrackingDetailsItem title="Sender’s info">
-                <PersonInfoShort
-                  person={"sender"}
-                  sender={data.sendersInfo}
-                  recipient={data.recipientsInfo}
-                />
-              </TrackingDetailsItem>
-
-              <TrackingDetailsItem title="Recipient’s info">
-                <PersonInfoShort
-                  person={"recipient"}
-                  sender={data.sendersInfo}
-                  recipient={data.recipientsInfo}
-                />
-              </TrackingDetailsItem>
+              {role === Role.Admin ? (
+                <TrackingDetailsItem title="Sender’s info">
+                  <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
+                </TrackingDetailsItem>
+              ) : null}
+              {role === Role.Admin ? (
+                <TrackingDetailsItem title="Recipient’s info">
+                  <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
+                </TrackingDetailsItem>
+              ) : null}
             </Stack>
           </STrackingSection>
         </GridContainer>
-        {/*TODO: add Cost component when it'll be ready*/}
-        {/*<GridContainer>*/}
-        {/*  <STrackingSection>*/}
-        {/*    <Title>Coast</Title>*/}
-        {/*  </STrackingSection>*/}
-        {/*</GridContainer>*/}
-        <GridContainer>
-          <STrackingSection>
-            <Title as="h3" scale={8}>
-              Shipment label
-            </Title>
-            <Spacer size={16} />
-            <Copy scale={9}>
-              Shipment label must be printed and attached to a package before it is picked up
-            </Copy>
-            <Spacer size={24} />
-            <ShipmentLabelContainer
-              pdfLabel={data.shipmentLabelPDFLink}
-              zplLabel={data.shipmentLabelZPLLink}
-            />
-          </STrackingSection>
-        </GridContainer>
+
+        {/*TODO: check and update Costs component when back-end and design will be established*/}
+        {role === Role.Admin ? (
+          <GridContainer>
+            <STrackingSection>
+              <ShipmentCosts title="Costs" price={rate.price} costs={costs} />
+            </STrackingSection>
+          </GridContainer>
+        ) : null}
+        {role === Role.Admin ? (
+          <GridContainer>
+            <STrackingSection>
+              <Title as="h3" scale={8}>
+                Shipment label
+              </Title>
+              <Spacer size={16} />
+              <Copy scale={9}>
+                Shipment label must be printed and attached to a package before it is picked up
+              </Copy>
+              <Spacer size={24} />
+              <ShipmentLabelContainer
+                pdfLabel={data.shipmentLabelPDFLink}
+                zplLabel={data.shipmentLabelZPLLink}
+              />
+            </STrackingSection>
+          </GridContainer>
+        ) : null}
       </Stack>
     </GridContainer>
   )
