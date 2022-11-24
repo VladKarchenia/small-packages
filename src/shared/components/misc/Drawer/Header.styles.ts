@@ -11,6 +11,7 @@ export const SDrawerHeader = styled("header", {
   position: "sticky",
   top: 0,
   zIndex: "$2",
+  textAlign: "center",
 
   "@sm": {
     paddingX: "$32",
@@ -41,6 +42,9 @@ export const SDrawerCloseButton = styled("button", {
   color: "$neutrals-9",
   transition: "200ms ease-out",
   cursor: "pointer",
+  appearance: "none",
+  "-webkit-appearance": "none",
+  outline: "none",
 
   hover: {
     color: "$neutrals-7",

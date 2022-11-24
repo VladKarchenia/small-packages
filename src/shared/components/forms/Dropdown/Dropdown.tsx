@@ -27,7 +27,7 @@ export const Dropdown: React.FC<React.PropsWithChildren<IDropdownProps>> = ({
         {trigger}
       </SDropdownMenuTrigger>
       <Portal>
-        <SDropdownMenuContent avoidCollisions collisionPadding={24} css={contentCss}>
+        <SDropdownMenuContent avoidCollisions collisionPadding={16} css={contentCss}>
           {children}
         </SDropdownMenuContent>
       </Portal>

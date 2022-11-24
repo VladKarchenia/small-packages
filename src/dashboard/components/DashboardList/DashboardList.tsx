@@ -1,11 +1,14 @@
-import { Box, Copy, Flex, Redacted, Spacer, Stack } from "@/shared/components"
-import { IconArrowDown } from "@/shared/icons"
+import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
+import { IconArrowDown, IconCross } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
+import { useMemo } from "react"
 
 import { DashboardPagination } from "../DashboardPagination"
 import { SearchInput } from "../SearchInput"
 import { ShippingCard } from "../ShippingCard"
 import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
+import { SortFilterBar } from "../SortFilterBar"
 
 interface IShipping {
   code: string
@@ -31,6 +34,17 @@ const DashboardListPlaceholder = () => (
 )
 
 export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
+  const { sortOrder, status, recipientName, originalAddress, destinationAddress } =
+    useDashboardStateContext()
+  const { resetFilterField } = useDashboardActionContext()
+  const isFilterApplied = useMemo<boolean>(() => {
+    return Boolean(
+      (shippingType === ShippingType.Shipment &&
+        (!!status || !!recipientName || destinationAddress)) ||
+        (shippingType === ShippingType.Quote && (!!originalAddress || destinationAddress)),
+    )
+  }, [shippingType, status, recipientName, originalAddress, destinationAddress])
+
   if (isLoading) {
     return <DashboardListPlaceholder />
   }
@@ -47,13 +61,71 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
   return (
     <>
       <SearchInput
-        initialValue={""}
-        // onChange={(destination) => {
-        //   setValue("sender.fullAddress", destination)
-        // }}
-        placeholder="Search for ID, address..."
+        placeholder={
+          shippingType === ShippingType.Quote
+            ? "Search for ID, address..."
+            : "Search for ID, tracking number, address..."
+        }
       />
+      <SortFilterBar isFilterApplied={isFilterApplied} />
       <Spacer size={20} />
+      {isFilterApplied ? (
+        <>
+          <Flex align="center" wrap>
+            {status && shippingType === ShippingType.Shipment ? (
+              <Pill
+                suffix={<IconCross size="xs" onClick={() => resetFilterField("status")} />}
+                size="small"
+                css={{ marginRight: "$8", marginBottom: "$8" }}
+                data-testid={"Status filter"}
+              >
+                {/* TODO: add number of results or what? */}
+                Status (3)
+              </Pill>
+            ) : null}
+
+            {recipientName && shippingType === ShippingType.Shipment ? (
+              <Pill
+                suffix={<IconCross size="xs" onClick={() => resetFilterField("recipientName")} />}
+                size="small"
+                css={{ marginRight: "$8", marginBottom: "$8" }}
+                data-testid={"Recipient name filter"}
+              >
+                {/* TODO: add number of results or what? */}
+                Recipient name (10)
+              </Pill>
+            ) : null}
+
+            {originalAddress && shippingType === ShippingType.Quote ? (
+              <Pill
+                suffix={<IconCross size="xs" onClick={() => resetFilterField("originalAddress")} />}
+                size="small"
+                css={{ marginRight: "$8", marginBottom: "$8" }}
+                data-testid={"Original address filter"}
+              >
+                {/* TODO: add number of results or what? */}
+                Original address (12)
+              </Pill>
+            ) : null}
+
+            {destinationAddress ? (
+              <Pill
+                suffix={
+                  <IconCross size="xs" onClick={() => resetFilterField("destinationAddress")} />
+                }
+                size="small"
+                css={{ marginRight: "$8", marginBottom: "$8" }}
+                data-testid={"Destination address filter"}
+              >
+                {/* TODO: add number of results or what? */}
+                Destination address (15)
+              </Pill>
+            ) : null}
+          </Flex>
+          <Spacer size={12} />
+        </>
+      ) : null}
+
       <Flex align="center" justify="between">
         <Flex align="center">
           <Copy scale={9} css={{ paddingRight: "$4" }}>
@@ -69,7 +141,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
             Sort by:
           </Copy>
           <Copy scale={9} color="system-black" bold>
-            creation date
+            {sortOrder}
           </Copy>
         </Flex>
       </Flex>

@@ -28,7 +28,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, IFormSelectProps>(
     return (
       <FormField {...fieldProps} suffix={<IconChevronDown size="xs" block />} id={props.id}>
         <>
-          <SFormSelect ref={ref} data-plum-ui="select" {...props}>
+          <SFormSelect ref={ref} data-ui="select" {...props}>
             {placeholder && !props.value && (
               <FormSelectOption disabled value="">
                 {placeholder}
@@ -41,7 +41,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, IFormSelectProps>(
           <SFormSelectValue
             isPlaceholder={props.isPlaceholder}
             large={props.large}
-            data-plum-ui="select__value"
+            data-ui="select__value"
           >
             {selectDisplayValue}
           </SFormSelectValue>

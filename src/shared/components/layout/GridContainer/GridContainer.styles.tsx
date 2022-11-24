@@ -11,7 +11,7 @@ export const SGridContainer = styled("div", {
       false: {
         paddingX: "$16",
 
-        "@xs": {
+        "@sm": {
           paddingX: "$32",
         },
       },

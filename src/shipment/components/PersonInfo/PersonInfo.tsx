@@ -14,14 +14,7 @@ import {
 import { StepName } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
 
-const countriesList = [
-  { full: "USA" },
-  { full: "Canada" },
-  { full: "Belarus" },
-  { full: "Australia" },
-  { full: "Brazil" },
-  { full: "Ukraine" },
-]
+const countriesList = [{ full: "USA" }]
 
 export const PersonInfo = ({
   handleContinueClick,
@@ -45,23 +38,25 @@ export const PersonInfo = ({
   const {
     name: sendersName,
     phone: sendersPhone,
+    email: sendersEmail,
     fullAddress: {
       country: sendersCountry,
-      postCode: sendersPostCode,
+      zipCode: sendersZipCode,
       state: sendersState,
       city: sendersCity,
-      address: sendersAddress,
+      address1: sendersAddress1,
     },
   } = sender
   const {
     name: recipientsName,
     phone: recipientsPhone,
+    email: recipientsEmail,
     fullAddress: {
       country: recipientsCountry,
-      postCode: recipientsPostCode,
+      zipCode: recipientsZipCode,
       state: recipientsState,
       city: recipientsCity,
-      address: recipientsAddress,
+      address1: recipientsAddress1,
     },
   } = recipient
 
@@ -135,6 +130,24 @@ export const PersonInfo = ({
           }}
         />
         <Controller
+          name={`${person}.email`}
+          control={control}
+          render={({ field }) => {
+            return (
+              <FormInput
+                {...field}
+                {...register(field.name, {})}
+                id={`${person}.email`}
+                label="Email"
+                labelProps={{ hidden: true, required: true }}
+                description="Email"
+                type="text"
+                error={errors[person]?.email?.message}
+              />
+            )
+          }}
+        />
+        <Controller
           name={`${person}.company`}
           control={control}
           render={({ field }) => {
@@ -175,19 +188,19 @@ export const PersonInfo = ({
           }}
         />
         <Controller
-          name={`${person}.fullAddress.postCode`}
+          name={`${person}.fullAddress.zipCode`}
           control={control}
           render={({ field }) => {
             return (
               <FormInput
                 {...field}
                 {...register(field.name, {})}
-                id={`${person}.fullAddress.postCode`}
+                id={`${person}.fullAddress.zipCode`}
                 label="Zip Code"
                 labelProps={{ hidden: true, required: true }}
                 description="Zip Code"
                 type="text"
-                error={errors[person]?.fullAddress?.postCode?.message}
+                error={errors[person]?.fullAddress?.zipCode?.message}
               />
             )
           }}
@@ -229,20 +242,39 @@ export const PersonInfo = ({
           }}
         />
         <Controller
-          name={`${person}.fullAddress.address`}
+          name={`${person}.fullAddress.address1`}
           control={control}
           render={({ field }) => {
             return (
               <FormInput
                 {...field}
                 {...register(field.name, {})}
-                id={`${person}.fullAddress.address`}
-                label="Address"
+                id={`${person}.fullAddress.address1`}
+                label="Address line 1"
                 labelProps={{ hidden: true, required: true }}
-                description="Address"
-                placeholder="Street, apt, suite, etc."
+                description="Address line 1"
+                placeholder="Street, apartment"
                 type="text"
-                error={errors[person]?.fullAddress?.address?.message}
+                error={errors[person]?.fullAddress?.address1?.message}
+              />
+            )
+          }}
+        />
+        <Controller
+          name={`${person}.fullAddress.address2`}
+          control={control}
+          render={({ field }) => {
+            return (
+              <FormInput
+                {...field}
+                {...register(field.name, {})}
+                id={`${person}.fullAddress.address2`}
+                label="Address line 2"
+                labelProps={{ hidden: true }}
+                description="Address line 2"
+                placeholder="House, suite, etc."
+                type="text"
+                error={errors[person]?.fullAddress?.address2?.message}
               />
             )
           }}
@@ -268,18 +300,20 @@ export const PersonInfo = ({
           person === "sender"
             ? !sendersName ||
               !sendersPhone ||
+              !sendersEmail ||
               !sendersCountry ||
-              !sendersPostCode ||
+              !sendersZipCode ||
               !sendersState ||
               !sendersCity ||
-              !sendersAddress
+              !sendersAddress1
             : !recipientsName ||
               !recipientsPhone ||
+              !recipientsEmail ||
               !recipientsCountry ||
-              !recipientsPostCode ||
+              !recipientsZipCode ||
               !recipientsState ||
               !recipientsCity ||
-              !recipientsAddress
+              !recipientsAddress1
         }
       >
         <Copy as="span" scale={8} color="system-white" bold>

@@ -6,7 +6,7 @@ import { SSelectIcon, SSelectTrigger, SSelectContent, SSelectViewport } from "./
 
 export interface SelectProps {
   value: string
-  onValueChange: (value: string) => void
+  onValueChange: (value: any) => void
   label: string
   postLabel?: string
   labelProps?: IFormLabelProps

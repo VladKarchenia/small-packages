@@ -34,11 +34,23 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
   ...props
 }) => (
   <SFormInputGroup {...props}>
-    <FormLabel {...labelProps}>{label}</FormLabel>
+    <FormLabel {...labelProps}>
+      {label}
+      {labelProps?.required ? (
+        <Copy as="span" scale={9} css={{ paddingLeft: "$2" }}>
+          *
+        </Copy>
+      ) : null}
+    </FormLabel>
 
     {description && (
       <Copy color="neutrals-7" intent="detail">
         {description}
+        {labelProps?.required ? (
+          <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+            *
+          </Copy>
+        ) : null}
       </Copy>
     )}
 
@@ -47,15 +59,10 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
     <SFormInputGroupItems css={{ ...((inputCss || {}) as {}) }}>{children}</SFormInputGroupItems>
 
     {(error || afterField) && (
-      <>
-        <Spacer size={4} />
-
-        <Flex justify="between">
-          <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
-
-          <div>{afterField}</div>
-        </Flex>
-      </>
+      <Flex justify="between">
+        <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
+        <div>{afterField}</div>
+      </Flex>
     )}
   </SFormInputGroup>
 )

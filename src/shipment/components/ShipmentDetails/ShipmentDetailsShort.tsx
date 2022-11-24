@@ -12,27 +12,16 @@ export const ShipmentDetailsShort = ({ shippingType }: { shippingType: ShippingT
     <Stack space={8}>
       {parcels.map((parcel, index) => (
         <Flex align="center" key={index}>
-          <Flex
-            align="center"
-            justify="center"
-            css={{
-              height: "$32",
-              width: "$32",
-              minWidth: "$32",
-              borderRadius: "$rounded",
-              backgroundColor: "$neutrals-3",
-              color: "$system-black",
-            }}
-          >
+          <Flex align="center" justify="center" css={{ color: "$system-black" }}>
             <IconClock size="xs" />
           </Flex>
           <Spacer size={12} horizontal />
           <Copy scale={9} color="system-black">
-            {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height} cm;
+            {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height} in;
           </Copy>
           <Spacer size={8} horizontal />
           <Copy scale={9} color="system-black">
-            {parcel.weight} kg
+            {parcel.weight} lb
           </Copy>
         </Flex>
       ))}

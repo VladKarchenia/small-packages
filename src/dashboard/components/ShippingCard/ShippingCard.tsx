@@ -10,11 +10,13 @@ import {
   Flex,
   Spacer,
   Stack,
+  StatusLabel,
 } from "@/shared/components"
 import { IconMore } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
 import { SShippingCard } from "./ShippingCard.styles"
 import { useModalActions } from "@/shared/hooks"
+import { ShipmentStatus } from "@/shared/types"
 
 interface IShipping {
   code: string
@@ -32,11 +34,12 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCard) => {
   const navigate = useNavigate()
 
   const handleEditClick = () => {
-    // TODO: navigate to edit shipment/quote page
-    shippingType === ShippingType.Quote ? navigate("/") : navigate("/")
+    // TODO: navigate to edit shipment/quote stepper page
+    shippingType === ShippingType.Quote ? navigate("/tracking") : navigate("/tracking")
   }
 
-  const handleCancelClick = () => {
+  const handleCancelClick = (event: Event) => {
+    event.stopPropagation()
     // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
     shippingType === ShippingType.Quote ? open("cancelQuote") : open("cancelShipment")
   }
@@ -47,15 +50,18 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCard) => {
   }
 
   return (
-    <SShippingCard direction="column">
-      <Flex align="start" justify="between" css={{ paddingBottom: "$16" }}>
+    <SShippingCard href={"/tracking"}>
+      <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
         <Box>
           <Flex align="baseline">
             <Copy scale={9} color="system-black" bold>
               #{code}-5Z
             </Copy>
             {shippingType === ShippingType.Shipment ? (
-              <Box css={{ paddingLeft: "$16" }}>Confirmed</Box>
+              <>
+                <Spacer size={16} horizontal />
+                <StatusLabel status={ShipmentStatus.Confirmed} />
+              </>
             ) : null}
           </Flex>
           <Spacer size={4} />
@@ -66,8 +72,13 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCard) => {
           asChild
           trigger={
             <ButtonIcon
+              type="button"
               ariaLabel="Show more button"
               icon={<IconMore fixedSize width={4} height={20} />}
+              onClick={(e: React.SyntheticEvent) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
             />
           }
           open={isActionDropdownOpen}
