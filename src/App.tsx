@@ -2,7 +2,16 @@ import { Navigate, useRoutes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import { AuthGuard, Box } from "@/shared/components"
 import { ModalsContainer } from "@/modals"
-import { CreateShipment, Home, Login, PageNotFound, Profile, Unauthorize, Tracking } from "@/pages"
+import {
+  CreateShipment,
+  Home,
+  Login,
+  PageNotFound,
+  Profile,
+  Unauthorize,
+  Tracking,
+  Reset,
+} from "@/pages"
 import { ShippingType } from "@/shipment"
 
 import "react-toastify/dist/ReactToastify.css"
@@ -12,7 +21,10 @@ import "@/styles/fonts.css"
 const App: React.FC = (): JSX.Element => {
   const authRoutes = {
     path: "*",
-    children: [{ path: "login", element: <Login /> }],
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "reset", element: <Reset /> },
+    ],
   }
 
   const mainRoutes = {

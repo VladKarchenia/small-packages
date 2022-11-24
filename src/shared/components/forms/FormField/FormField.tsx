@@ -59,7 +59,14 @@ export const FormField = ({
   return (
     <SFormField {...props} id={props.id ? `${props.id}-form-field` : undefined}>
       <Flex justify="between">
-        <FormLabel {...labelProps}>{label}</FormLabel>
+        <FormLabel {...labelProps}>
+          {label}
+          {labelProps?.required ? (
+            <Copy as="span" scale={9} css={{ paddingLeft: "$2" }}>
+              *
+            </Copy>
+          ) : null}
+        </FormLabel>
 
         {postLabel && (
           <>
@@ -92,11 +99,8 @@ export const FormField = ({
 
       {(error || afterField) && (
         <Box css={{ position: "absolute" }}>
-          <Spacer size={4} />
-
           <Flex justify="between">
             <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
-
             <div>{afterField}</div>
           </Flex>
         </Box>

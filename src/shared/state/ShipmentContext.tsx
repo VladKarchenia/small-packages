@@ -1,11 +1,20 @@
 import React, { createContext, useContext, useState } from "react"
 
+export enum PickupType {
+  Schedule = "Schedule a pickup",
+}
 export enum ParcelContentType {
   Gift = "Gift",
+  Company = "Data within my company",
+  Selling = "Selling items",
+  Documents = "Documents of no commercial value",
+  Samples = "Product samples",
+  Repair = "Items to be repaired",
+  Return = "Items for return",
   Other = "Other",
 }
 
-export enum ParcelType {
+export enum PackageType {
   Own = "Own package",
   Product = "Product",
 }
@@ -17,11 +26,11 @@ export interface IParcelDimensions {
 }
 
 export interface IParcel {
+  pickupType: PickupType
   weight: string
   dimensions: IParcelDimensions
-  parcelType: ParcelType
+  packageType: PackageType
   content: ParcelContentType
-  description: string
   totalPrice: string
   totalCurrency: string
 }
@@ -37,10 +46,11 @@ export interface IRate {
 export interface IAddress {
   location: string
   country: string
-  postCode: string
+  zipCode: string
   state: string
   city: string
-  address: string
+  address1: string
+  address2: string
   isResidential: boolean
 }
 
@@ -48,6 +58,7 @@ export interface IPerson {
   name: string
   phone: string
   extension?: string
+  email: string
   company?: string
   fullAddress: IAddress
 }
@@ -65,14 +76,16 @@ const initialShipmentState: ShipmentState = {
     name: "",
     phone: "",
     extension: "",
+    email: "",
     company: "",
     fullAddress: {
       location: "",
       country: "USA",
-      postCode: "",
+      zipCode: "",
       state: "",
       city: "",
-      address: "",
+      address1: "",
+      address2: "",
       isResidential: false,
     },
   },
@@ -80,33 +93,36 @@ const initialShipmentState: ShipmentState = {
     name: "",
     phone: "",
     extension: "",
+    email: "",
     company: "",
     fullAddress: {
       location: "",
       country: "USA",
-      postCode: "",
+      zipCode: "",
       state: "",
       city: "",
-      address: "",
+      address1: "",
+      address2: "",
       isResidential: false,
     },
   },
   parcels: [
     {
-      weight: "",
+      pickupType: PickupType.Schedule,
+      weight: "0.1",
       dimensions: {
-        length: "",
-        width: "",
-        height: "",
+        length: "1",
+        width: "1",
+        height: "1",
       },
-      parcelType: ParcelType.Own,
+      packageType: PackageType.Own,
       content: ParcelContentType.Gift,
-      description: "",
-      totalPrice: "",
+      totalPrice: "0.1",
       totalCurrency: "USD",
     },
   ],
-  date: null,
+  // date: null,
+  date: new Date(),
   rate: {
     rateType: "",
     name: "",

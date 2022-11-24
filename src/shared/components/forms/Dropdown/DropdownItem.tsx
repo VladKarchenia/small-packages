@@ -5,7 +5,7 @@ import { SDropdownMenuItem } from "./Dropdown.styles"
 export interface IDropdownItemProps {
   label: string
   testId?: string
-  onSelect?: () => void
+  onSelect?: (event: Event) => void
 }
 
 export const DropdownItem = memo(function ({ label, onSelect, testId }: IDropdownItemProps) {

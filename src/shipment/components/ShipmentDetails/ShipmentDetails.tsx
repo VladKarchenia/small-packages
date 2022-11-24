@@ -17,19 +17,30 @@ import {
 } from "@/shared/components"
 import { ShippingType, StepName } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
-import { ParcelType, ParcelContentType } from "@/shared/state/ShipmentContext"
+import { PackageType, ParcelContentType, PickupType } from "@/shared/state/ShipmentContext"
 import { IconBin, IconPlus } from "@/shared/icons"
 import { PARCEL_LIMIT } from "@/constants"
 
-const parcelTypeList: ParcelType[] = [ParcelType.Own, ParcelType.Product]
+const pickupTypeList: PickupType[] = [PickupType.Schedule]
 
-const parcelContentTypeList: ParcelContentType[] = [ParcelContentType.Gift, ParcelContentType.Other]
+const packageTypeList: PackageType[] = [PackageType.Own]
+
+const parcelContentTypeList: ParcelContentType[] = [
+  ParcelContentType.Gift,
+  ParcelContentType.Company,
+  ParcelContentType.Selling,
+  ParcelContentType.Documents,
+  ParcelContentType.Samples,
+  ParcelContentType.Repair,
+  ParcelContentType.Return,
+  ParcelContentType.Other,
+]
 
 export const ShipmentDetails = ({
   handleContinueClick,
   shippingType,
 }: {
-  handleContinueClick: (step: StepName.SHIPMENT, nextStep: StepName.RATES) => void
+  handleContinueClick: (step: StepName.SHIPMENT, nextStep: StepName.DATE) => void
   shippingType: ShippingType
 }) => {
   const {
@@ -45,24 +56,24 @@ export const ShipmentDetails = ({
   const { setSelected } = useStepperContext("ShipmentDetails")
 
   const onContinueHandler = () => {
-    setSelected([StepName.RATES])
-    handleContinueClick(StepName.SHIPMENT, StepName.RATES)
+    setSelected([StepName.DATE])
+    handleContinueClick(StepName.SHIPMENT, StepName.DATE)
   }
 
   const onAddParcelClick = () => {
     const newParcelsArray = [
       ...parcels,
       {
-        weight: "",
+        pickupType: PickupType.Schedule,
+        weight: "0.1",
         dimensions: {
-          length: "",
-          width: "",
-          height: "",
+          length: "1",
+          width: "1",
+          height: "1",
         },
-        parcelType: ParcelType.Own,
+        packageType: PackageType.Own,
         content: ParcelContentType.Gift,
-        description: "",
-        totalPrice: "",
+        totalPrice: "0.1",
         totalCurrency: "USD",
       },
     ]
@@ -98,6 +109,29 @@ export const ShipmentDetails = ({
             ) : null}
 
             <Controller
+              name={`parcels.${index}.pickupType`}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Select
+                    {...field}
+                    {...register(field.name, {})}
+                    label="Pickup type"
+                    labelProps={{ hidden: true, required: true }}
+                    description="Pickup type"
+                    onValueChange={field.onChange}
+                  >
+                    {pickupTypeList.map((pickupType) => (
+                      <SelectItem key={pickupType} value={pickupType}>
+                        {pickupType}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )
+              }}
+            />
+
+            <Controller
               name={`parcels.${index}.weight`}
               control={control}
               render={({ field }) => {
@@ -108,27 +142,27 @@ export const ShipmentDetails = ({
                       setValueAs: (v) => (v ? parseFloat(v) : ""),
                       min: {
                         value: 0.1,
-                        message: "The minimum weight is 0.1 kg",
+                        message: "The minimum weight is 0.1 lb",
                       },
                       max: {
                         value: 10,
-                        message: "The maximum weight is 10 kg",
+                        message: "The maximum weight is 10 lb",
                       },
                     })}
                     id={`parcels.${index}.weight`}
-                    label="Weight, kg"
-                    labelProps={{ hidden: true, required: true }}
-                    description="Weight, kg"
+                    label="Weight, lb"
+                    labelProps={{ required: true }}
                     type="number"
                     error={errors?.parcels?.[index]?.weight?.message}
                   />
                 )
               }}
             />
+
             <FormInputGroup
               id="dimensions-input-group"
-              label="Dimensions, cm"
-              labelProps={{ hidden: true }}
+              label="Dimensions, in"
+              labelProps={{ required: shippingType === ShippingType.Shipment }}
             >
               <FormInputGroupItem>
                 <Controller
@@ -142,17 +176,17 @@ export const ShipmentDetails = ({
                           setValueAs: (v) => (v ? parseInt(v) : ""),
                           min: {
                             value: 1,
-                            message: "The minimum length is 1 cm",
+                            message: "The minimum length is 1 in",
                           },
                           max: {
                             value: 10,
-                            message: "The maximum length is 10 cm",
+                            message: "The maximum length is 10 in",
                           },
                         })}
                         id={`parcels.${index}.dimensions.length`}
-                        label="Length, cm"
-                        labelProps={{ hidden: true, required: true }}
-                        description="Length, cm"
+                        label="Length"
+                        labelProps={{ hidden: true }}
+                        description="Length"
                         type="number"
                         error={errors?.parcels?.[index]?.dimensions?.length?.message}
                       />
@@ -160,6 +194,7 @@ export const ShipmentDetails = ({
                   }}
                 />
               </FormInputGroupItem>
+
               <FormInputGroupItem>
                 <Controller
                   name={`parcels.${index}.dimensions.width`}
@@ -172,17 +207,17 @@ export const ShipmentDetails = ({
                           setValueAs: (v) => (v ? parseInt(v) : ""),
                           min: {
                             value: 1,
-                            message: "The minimum width is 1 cm",
+                            message: "The minimum width is 1 in",
                           },
                           max: {
                             value: 10,
-                            message: "The maximum width is 10 cm",
+                            message: "The maximum width is 10 in",
                           },
                         })}
                         id={`parcels.${index}.dimensions.width`}
-                        label="Width, cm"
-                        labelProps={{ hidden: true, required: true }}
-                        description="Width, cm"
+                        label="Width"
+                        labelProps={{ hidden: true }}
+                        description="Width"
                         type="number"
                         error={errors?.parcels?.[index]?.dimensions?.width?.message}
                       />
@@ -190,6 +225,7 @@ export const ShipmentDetails = ({
                   }}
                 />
               </FormInputGroupItem>
+
               <FormInputGroupItem>
                 <Controller
                   name={`parcels.${index}.dimensions.height`}
@@ -202,17 +238,17 @@ export const ShipmentDetails = ({
                           setValueAs: (v) => (v ? parseInt(v) : ""),
                           min: {
                             value: 1,
-                            message: "The minimum height is 1 cm",
+                            message: "The minimum height is 1 in",
                           },
                           max: {
                             value: 10,
-                            message: "The maximum height is 10 cm",
+                            message: "The maximum height is 10 in",
                           },
                         })}
                         id={`parcels.${index}.dimensions.height`}
-                        label="Height, cm"
-                        labelProps={{ hidden: true, required: true }}
-                        description="Height, cm"
+                        label="Height"
+                        labelProps={{ hidden: true }}
+                        description="Height"
                         type="number"
                         error={errors?.parcels?.[index]?.dimensions?.height?.message}
                       />
@@ -221,20 +257,21 @@ export const ShipmentDetails = ({
                 />
               </FormInputGroupItem>
             </FormInputGroup>
+
             <Controller
-              name={`parcels.${index}.parcelType`}
+              name={`parcels.${index}.packageType`}
               control={control}
               render={({ field }) => {
                 return (
                   <Select
                     {...field}
                     {...register(field.name, {})}
-                    label="Type of the package"
+                    label="Package type"
                     labelProps={{ hidden: true, required: true }}
-                    description="Type of the package"
+                    description="Package type"
                     onValueChange={field.onChange}
                   >
-                    {parcelTypeList.map((packageType) => (
+                    {packageTypeList.map((packageType) => (
                       <SelectItem key={packageType} value={packageType}>
                         {packageType}
                       </SelectItem>
@@ -243,6 +280,7 @@ export const ShipmentDetails = ({
                 )
               }}
             />
+
             {shippingType === ShippingType.Shipment ? (
               <Stack space={24}>
                 <Controller
@@ -267,24 +305,7 @@ export const ShipmentDetails = ({
                     )
                   }}
                 />
-                <Controller
-                  name={`parcels.${index}.description`}
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <FormInput
-                        {...field}
-                        {...register(field.name, {})}
-                        id={`parcels.${index}.description`}
-                        label="Content description"
-                        labelProps={{ hidden: true, required: true }}
-                        description="Content description"
-                        type="text"
-                        error={errors?.parcels?.[index]?.description?.message}
-                      />
-                    )
-                  }}
-                />
+
                 {/* TODO: Make a price number field with currency selection and validation */}
                 <Controller
                   name={`parcels.${index}.totalPrice`}

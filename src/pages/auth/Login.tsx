@@ -1,6 +1,5 @@
-import { Box, GridContainer, Grid, GridItem, Title, Spacer, Flex, Copy } from "@/shared/components"
+import { Box, GridContainer, Grid, GridItem, Spacer, Flex } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
-
 import { LoginFormContainer } from "./LoginFormContainer"
 
 export const Login = () => {
@@ -44,14 +43,7 @@ export const Login = () => {
               </a>
             </Box>
             <Spacer size={32} />
-            <Flex justify="center" direction="column">
-              <Title as="h1" scale={4}>
-                Welcome!
-              </Title>
-              <Copy scale={9}>Please, log in to continue</Copy>
-              <Spacer size={24} />
-              <LoginFormContainer />
-            </Flex>
+            <LoginFormContainer />
             <Spacer size={96} />
           </GridItem>
         </Grid>

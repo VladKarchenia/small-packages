@@ -60,13 +60,7 @@ export const FormCheckbox = React.forwardRef(
           )}
         </SFormCheckboxLabel>
 
-        {error && (
-          <>
-            <Spacer size={4} />
-
-            <ErrorLabel id={id}>{error}</ErrorLabel>
-          </>
-        )}
+        {error && <ErrorLabel id={id}>{error}</ErrorLabel>}
       </>
     )
   },

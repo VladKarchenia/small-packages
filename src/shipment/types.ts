@@ -8,18 +8,13 @@ export enum StepName {
   FROM = "from",
   TO = "to",
   SHIPMENT = "shipment",
+  DATE = "date",
   RATES = "rates",
 }
 
 export type QuoteStep = Exclude<StepName, StepName.FROM | StepName.TO>
 
 export type ShipmentStep = Exclude<StepName, StepName.INFO>
-
-export type ShipmentStepperState = {
-  info: IStep
-  shipment: IStep
-  rates: IStep
-}
 
 export interface IStepsDataItem {
   title: string

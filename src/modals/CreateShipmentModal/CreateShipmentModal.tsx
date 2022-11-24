@@ -11,7 +11,7 @@ const modalProps: ModalProps = {
     zIndex: "$8",
   },
   panelCss: {
-    bottom: "94px",
+    bottom: "134px",
     left: "auto",
     right: "$16",
     zIndex: "$8",

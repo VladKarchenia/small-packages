@@ -7,6 +7,7 @@ export const theme = {
     4: "4px",
     8: "8px",
     16: "16px",
+    pill: "9999px",
     rounded: "50%",
   },
   colors: colorsMap,
