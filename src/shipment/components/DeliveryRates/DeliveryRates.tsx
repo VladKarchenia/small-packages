@@ -8,14 +8,14 @@ const rates = [
   {
     rateType: "UPS",
     name: "Express Delivery",
-    price: "430.00",
+    price: 430,
     currency: "$",
     id: "23",
   },
   {
     rateType: "UPS",
     name: "Economy Delivery",
-    price: "200.00",
+    price: 200,
     currency: "$",
     id: "24",
   },

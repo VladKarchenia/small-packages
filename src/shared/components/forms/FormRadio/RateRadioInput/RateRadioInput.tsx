@@ -4,11 +4,7 @@ import { rgba } from "@/utils"
 import { Copy, Flex, IconTooltip, Spacer, Stack } from "@/shared/components"
 import { IconInfoCircle } from "@/shared/icons"
 import { SRateRadioInputLabel, SRateRadioInputBox, SRateRadioInput } from "./RateRadioInput.styles"
-
-interface ICost {
-  name: string
-  value: number
-}
+import { ICost } from "@/shared/types"
 
 const costs: ICost[] = [
   {
@@ -41,7 +37,7 @@ export interface IRateRadioInputProps
   extends FormComponentProps<typeof SRateRadioInput, InputHTMLAttributes<HTMLInputElement>> {
   rateType: string
   rateName: string
-  price: string
+  price: number
   currency: string
 }
 
@@ -73,7 +69,7 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
             <Copy scale={10}>{rateName}</Copy>
             <Flex align="center">
               <Copy scale={8} color="system-black" bold>
-                {currency} {price}
+                {currency} {price.toFixed(2)}
               </Copy>
               <Spacer size={8} horizontal />
               <IconTooltip
@@ -82,7 +78,7 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                     <Stack space={0}>
                       <Copy scale={10}>Cost</Copy>
                       <Copy scale={8} color="system-black" bold>
-                        {currency} {price}
+                        {currency} {price.toFixed(2)}
                       </Copy>
                     </Stack>
                     <Stack space={8}>
@@ -93,7 +89,7 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                               {cost.name}
                             </Copy>
                             <Copy scale={9} color="system-black">
-                              ${cost.value}
+                              ${cost.value.toFixed(2)}
                             </Copy>
                           </Flex>
                         )

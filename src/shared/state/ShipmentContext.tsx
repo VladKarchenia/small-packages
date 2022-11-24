@@ -38,7 +38,7 @@ export interface IParcel {
 export interface IRate {
   rateType: string
   name: string
-  price: string
+  price: number
   currency: string
   id: string
 }
@@ -79,7 +79,8 @@ const initialShipmentState: ShipmentState = {
     email: "",
     company: "",
     fullAddress: {
-      location: "",
+      // location: "",
+      location: "USA, New York",
       country: "USA",
       zipCode: "",
       state: "",
@@ -96,7 +97,8 @@ const initialShipmentState: ShipmentState = {
     email: "",
     company: "",
     fullAddress: {
-      location: "",
+      // location: "",
+      location: "USA, Los Angeles",
       country: "USA",
       zipCode: "",
       state: "",
@@ -120,13 +122,28 @@ const initialShipmentState: ShipmentState = {
       totalPrice: "0.1",
       totalCurrency: "USD",
     },
+    {
+      pickupType: PickupType.Schedule,
+      weight: "0.2",
+      dimensions: {
+        length: "3",
+        width: "3",
+        height: "3",
+      },
+      packageType: PackageType.Own,
+      content: ParcelContentType.Gift,
+      totalPrice: "100",
+      totalCurrency: "USD",
+    },
   ],
   // date: null,
   date: new Date(),
   rate: {
     rateType: "",
-    name: "",
-    price: "",
+    // name: "",
+    name: "UPS, Delivery",
+    // price: 0,
+    price: 1520,
     currency: "",
     id: "",
   },
@@ -148,6 +165,7 @@ type StateContextProviderProps = { children: React.ReactNode }
 
 export const ShipmentProvider = ({ children }: StateContextProviderProps) => {
   const [state, setState] = useState<ShipmentState>(initialShipmentState)
+  console.log(state)
 
   return (
     <ShipmentStateContext.Provider value={state}>

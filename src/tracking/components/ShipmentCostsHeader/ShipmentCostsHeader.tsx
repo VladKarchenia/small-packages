@@ -8,7 +8,12 @@ interface IShipmentCostProps {
   handleShowDetailsClick: () => void
 }
 
-export const ShipmentCostsHeader = ({ title, price, showCostsDetails, handleShowDetailsClick }: IShipmentCostProps) => {
+export const ShipmentCostsHeader = ({
+  title,
+  price,
+  showCostsDetails,
+  handleShowDetailsClick,
+}: IShipmentCostProps) => {
   return (
     <GridContainer fullBleed>
       <Stack space={8}>
@@ -18,15 +23,14 @@ export const ShipmentCostsHeader = ({ title, price, showCostsDetails, handleShow
           </Copy>
           <ButtonIcon
             ariaLabel="Show details"
-            icon={showCostsDetails ? <IconChevronDown /> : <IconChevronTop/>}
-            onClick={ handleShowDetailsClick }
+            icon={showCostsDetails ? <IconChevronDown /> : <IconChevronTop />}
+            onClick={handleShowDetailsClick}
           />
         </Flex>
       </Stack>
       <Copy scale={8} color="system-black" bold>
         ${price.toFixed(2)}
       </Copy>
-      <Spacer size={16} />
     </GridContainer>
   )
 }

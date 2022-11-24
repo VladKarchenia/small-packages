@@ -10,8 +10,8 @@ export enum ShipmentStatus {
 }
 
 export enum Role {
-  "Admin" = "Admin",
-  "User" = "User",
+  Admin = "Admin",
+  User = "User",
 }
 
 export interface ICost {

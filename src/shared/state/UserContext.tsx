@@ -17,6 +17,7 @@ const initialState: State = {
   authUser: {
     name: "Admin",
     email: "admin@gmail.com",
+    // role: Role.User,
     role: Role.Admin,
     _id: "23423543345",
     id: "345345345",
