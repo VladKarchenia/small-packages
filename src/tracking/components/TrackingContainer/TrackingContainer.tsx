@@ -63,15 +63,15 @@ const SHIPMENT_DETAILS = {
   arrivalDate: "18.10.2022",
   route: [
     {
-      status: "Order is processed",
+      status: "Confirmed",
       date: "18.10.2022 by 5:46 PM",
     },
     {
-      status: "Order has been paid",
+      status: "Booked",
       date: "18.10.2022 by 6:26 PM",
     },
     {
-      status: "Order confirmation awaiting",
+      status: "Picked up",
       date: "",
     },
   ],
