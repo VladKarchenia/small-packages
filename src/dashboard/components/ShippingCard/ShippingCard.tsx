@@ -16,29 +16,33 @@ import { IconMore } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
 import { SShippingCard } from "./ShippingCard.styles"
 import { useModalActions } from "@/shared/hooks"
-import { ShipmentStatus } from "@/shared/types"
+import { Role, ShipmentStatus } from "@/shared/types"
+import { useStateContext } from "@/shared/state"
 
 interface IShipping {
   code: string
 }
 
-interface IShippingCard {
+interface IShippingCardProps {
   booking: IShipping
   shippingType: ShippingType
 }
 
-export const ShippingCard = ({ booking, shippingType }: IShippingCard) => {
+export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
   const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
   const { code } = booking
   const { open } = useModalActions()
   const navigate = useNavigate()
+
+  const stateContext = useStateContext()
+  const role = stateContext?.state.authUser?.role
 
   const handleEditClick = () => {
     // TODO: navigate to edit shipment/quote stepper page
     shippingType === ShippingType.Quote ? navigate("/tracking") : navigate("/tracking")
   }
 
-  const handleCancelClick = (event: Event) => {
+  const handleEliminateClick = (event: Event) => {
     event.stopPropagation()
     // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
     shippingType === ShippingType.Quote ? open("cancelQuote") : open("cancelShipment")
@@ -91,8 +95,10 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCard) => {
         >
           <Stack space={0} dividers>
             <DropdownItem key={"Edit"} label={"Edit"} onSelect={handleEditClick} />
-            <DropdownItem key={"Cancel"} label={"Cancel"} onSelect={handleCancelClick} />
-            <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
+            <DropdownItem key={"Eliminate"} label={"Eliminate"} onSelect={handleEliminateClick} />
+            {role === Role.Admin ? (
+              <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
+            ) : null}
           </Stack>
         </Dropdown>
       </Flex>

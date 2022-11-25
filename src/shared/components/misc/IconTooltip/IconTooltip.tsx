@@ -2,10 +2,10 @@ import React from "react"
 import { ITooltipProps, Tooltip } from "@/shared/components"
 import { SIconTooltip } from "./IconTooltip.styles"
 
-export interface IIconTooltipProps extends Omit<ITooltipProps, "children"> {
-  children?: React.ReactNode
+interface IIconTooltipProps extends ITooltipProps {
+  icon?: React.ReactNode
 }
 
-export const IconTooltip = (props: IIconTooltipProps) => {
-  return <Tooltip {...props}>{props.children ? props.children : <SIconTooltip />}</Tooltip>
+export const IconTooltip = ({ icon, ...props }: IIconTooltipProps) => {
+  return <Tooltip {...props}>{icon ? icon : <SIconTooltip />}</Tooltip>
 }

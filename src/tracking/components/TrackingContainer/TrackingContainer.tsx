@@ -12,10 +12,11 @@ import {
   PersonInfoShort,
   ShortInfoLine,
   HeaderBar,
+  Button,
 } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
+import { IconCalendar, IconClock } from "@/shared/icons"
 import { useShipmentStateContext, useStateContext } from "@/shared/state"
-import { ICost, Role } from "@/shared/types"
+import { ICost, Role, ShipmentStatus } from "@/shared/types"
 import {
   TrackingHeader,
   TrackingDetailsItem,
@@ -25,6 +26,7 @@ import {
   ShipmentCosts,
 } from "@/tracking"
 import { STrackingSection } from "./TrackingContainer.styles"
+import { ShippingType } from "@/shipment"
 
 const costs: ICost[] = [
   {
@@ -75,16 +77,114 @@ const SHIPMENT_DETAILS = {
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
+  // shippingType: "quote",
+  shippingType: "shipment",
+  status: ShipmentStatus.Confirmed,
+  // status: ShipmentStatus.Eliminated,
 }
 
 //TODO: add routing, "edit shipment" functionality, show content according user role
 export const TrackingContainer = () => {
   const data = SHIPMENT_DETAILS
+  // TODO: replace shippingType with the context later
+  // TODO: replace status with the context later
+  const { shippingType, status } = data
+
   const stateContext = useStateContext()
   const role = stateContext?.state.authUser?.role
   const navigate = useNavigate()
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
+  if (shippingType === ShippingType.Quote) {
+    return (
+      <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
+        <HeaderBar title="Quote details" onClick={() => navigate("/")} />
+        <Stack space={16}>
+          <TrackingHeader
+            shipmentID={data.shipmentID}
+            shipmentDate={new Date(data.shipmentDate)}
+            role={role}
+            shippingType={shippingType as ShippingType}
+            status={status}
+          />
+          <GridContainer>
+            <STrackingSection>
+              <Stack space={24} dividers>
+                <TrackingDetailsItem title="From where to where">
+                  <AddressInfoShort
+                    fromAddress={sender.fullAddress.location}
+                    toAddress={recipient.fullAddress.location}
+                  />
+                </TrackingDetailsItem>
+
+                <TrackingDetailsItem title="Pickup Date">
+                  <Flex align="center">
+                    <IconClock size="xs" css={{ paddingRight: "$8" }} />
+                    <Copy scale={9} color="system-black">
+                      {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                    </Copy>
+                  </Flex>
+                </TrackingDetailsItem>
+
+                <TrackingDetailsItem title="Shipment Details">
+                  <Stack space={12}>
+                    {parcels.map((parcel, index) => (
+                      <Stack space={8} key={index}>
+                        {parcels.length > 1 ? (
+                          <Copy scale={9} color="system-black" bold>
+                            Parcel {index + 1}
+                          </Copy>
+                        ) : null}
+                        <Copy scale={9} color="system-black">
+                          {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
+                          {parcel.pickupType}
+                        </Copy>
+                        <Flex align="center">
+                          <Flex align="center" justify="center">
+                            <IconCalendar size="xs" />
+                          </Flex>
+                          <Spacer size={8} horizontal />
+                          <Copy scale={9} color="system-black">
+                            {parcel.dimensions.length}x{parcel.dimensions.width}x
+                            {parcel.dimensions.height} in;
+                          </Copy>
+                          <Spacer size={8} horizontal />
+                          <Copy scale={9} color="system-black">
+                            {parcel.weight} lb
+                          </Copy>
+                        </Flex>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </TrackingDetailsItem>
+              </Stack>
+            </STrackingSection>
+            {status !== ShipmentStatus.Eliminated ? (
+              <>
+                <Spacer size={24} />
+                <Button
+                  type="button"
+                  full
+                  // TODO: disabled conditions?
+                  // disabled={
+                  //   (shippingType === ShippingType.Quote && !date) ||
+                  //   (shippingType === ShippingType.Shipment && !rate.name)
+                  // }
+
+                  // TODO: add click handler
+                  onClick={() => console.log("Create a shipment click")}
+                >
+                  <Copy as="span" scale={8} color="system-white" bold>
+                    Create a shipment
+                  </Copy>
+                </Button>
+              </>
+            ) : null}
+          </GridContainer>
+        </Stack>
+      </GridContainer>
+    )
+  }
   return (
     <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
       <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
@@ -93,6 +193,8 @@ export const TrackingContainer = () => {
           shipmentID={data.shipmentID}
           shipmentDate={new Date(data.shipmentDate)}
           role={role}
+          shippingType={shippingType as ShippingType}
+          status={status}
         />
         <Map />
         <GridContainer>
@@ -115,7 +217,7 @@ export const TrackingContainer = () => {
                 <Stack space={12}>
                   {role === Role.Admin ? (
                     <Copy scale={9} color="system-black">
-                      Pick up date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                      Pickup date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
                     </Copy>
                   ) : null}
                   <Copy scale={9} color="system-black">

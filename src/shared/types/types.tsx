@@ -6,7 +6,7 @@ export enum ShipmentStatus {
   PickedUp = "Picked up",
   InDelivery = "In delivery",
   Delivered = "Delivered",
-  Cancelled = "Cancelled",
+  Eliminated = "Eliminated",
 }
 
 export enum Role {

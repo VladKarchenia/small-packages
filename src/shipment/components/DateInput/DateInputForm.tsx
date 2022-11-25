@@ -2,11 +2,11 @@ import { Grid } from "@/shared/components"
 import { CalendarDates } from "./CalendarDates"
 import { SDatesInputContent } from "./DateInputForm.styles"
 
-export interface DateInputFormProps {
+interface IDateInputFormProps {
   isDesktop?: boolean
 }
 
-export const DateInputForm: React.FC<DateInputFormProps> = ({ isDesktop }) => {
+export const DateInputForm: React.FC<IDateInputFormProps> = ({ isDesktop }) => {
   return (
     <Grid rows="1fr" css={{ height: "100%" }}>
       <DatesInputContent isDesktop={isDesktop} />

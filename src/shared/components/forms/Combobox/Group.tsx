@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 
-export interface ComboboxGroupProps {
+interface IComboboxGroupProps {
   children: React.ReactNode
 
   className?: string
@@ -11,7 +11,7 @@ export const ComboboxGroup = memo(function ({
   className,
   children,
   labelledBy,
-}: ComboboxGroupProps) {
+}: IComboboxGroupProps) {
   return (
     <ul className={className} aria-labelledby={labelledBy} data-ui="combobox-group">
       {children}

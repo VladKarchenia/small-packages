@@ -28,7 +28,7 @@ import { getSuggestionsFn } from "@/api/postApi"
 import { ISuggestionsResponse } from "@/api/types"
 import { mapDestinationToComboboxItem } from "./utils"
 
-export interface SearchFilterComboboxProps {
+interface ISearchFilterComboboxProps {
   onSelect: (value: string, label: string) => void
   initialValue?: string
   isDesktop?: boolean
@@ -40,7 +40,7 @@ export const SearchFilterCombobox = ({
   initialValue,
   isDesktop,
   placeholder,
-}: SearchFilterComboboxProps) => {
+}: ISearchFilterComboboxProps) => {
   const { t } = useTranslation()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -134,7 +134,7 @@ export const SearchFilterCombobox = ({
   )
 }
 
-interface DestinationSectionProps {
+interface IDestinationSectionProps {
   name: "recent" | "popular" | "suggestions"
   label: string
   items: ComboboxItemFormat[]
@@ -151,7 +151,7 @@ function DestinationSection({
   hiddenLabel,
   indexOffset = 0,
   isDesktop,
-}: DestinationSectionProps) {
+}: IDestinationSectionProps) {
   if (!items.length) return null
   const itemCount = isDesktop && name === "recent" ? 3 : items.length
   const LabelOuter = hiddenLabel ? HiddenVisually : Fragment

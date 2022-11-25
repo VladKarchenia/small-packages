@@ -23,7 +23,7 @@ export const ShipmentCostsHeader = ({
           </Copy>
           <ButtonIcon
             ariaLabel="Show details"
-            icon={showCostsDetails ? <IconChevronDown /> : <IconChevronTop />}
+            icon={showCostsDetails ? <IconChevronTop /> : <IconChevronDown />}
             onClick={handleShowDetailsClick}
           />
         </Flex>

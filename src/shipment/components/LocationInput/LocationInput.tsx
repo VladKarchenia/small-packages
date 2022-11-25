@@ -4,13 +4,13 @@ import { IAddress } from "@/shared/state"
 import { useState } from "react"
 import { LocationInputForm } from "./LocationInputForm"
 
-export interface LocationInputProps {
+interface ILocationInputProps {
   initialValue: IAddress
   onChange: (locationDetails: IAddress) => void
   placeholder: string
 }
 
-export const LocationInput: React.FC<LocationInputProps> = ({
+export const LocationInput: React.FC<ILocationInputProps> = ({
   initialValue,
   onChange,
   placeholder,

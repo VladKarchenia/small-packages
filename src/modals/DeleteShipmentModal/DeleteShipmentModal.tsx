@@ -43,7 +43,7 @@ export const DeleteShipmentModal = () => {
       <Stack space={16} css={{ paddingX: "$16" }}>
         {isReasonsOpen ? (
           <Title as="h3" scale={6} css={{ textAlign: "center" }}>
-            Please, select the reason of deletion
+            Please, select the reason for deletion
           </Title>
         ) : (
           <Stack space={8} css={{ textAlign: "center" }}>
@@ -51,7 +51,7 @@ export const DeleteShipmentModal = () => {
               Do you want to delete the shipment?
             </Title>
             <Copy scale={9} css={{ paddingBottom: "$8" }}>
-              In case of delete, the data will not be saved
+              In case of deletion, the shipment will be cancelled and deleted from the list
             </Copy>
           </Stack>
         )}

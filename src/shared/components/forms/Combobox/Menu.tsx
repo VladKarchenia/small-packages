@@ -1,12 +1,12 @@
 import React, { memo } from "react"
 import { useComboboxContext } from "./Combobox"
 
-export interface ComboboxMenuProps {
+interface IComboboxMenuProps {
   className?: string
   children: React.ReactNode
 }
 
-export const ComboboxMenu = memo(function ({ className, children }: ComboboxMenuProps) {
+export const ComboboxMenu = memo(function ({ className, children }: IComboboxMenuProps) {
   const { getMenuProps, isOpen } = useComboboxContext("ComboboxMenu")
 
   return (

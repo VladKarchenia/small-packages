@@ -28,7 +28,7 @@ const callAll =
 export type TooltipTrigger = "click" | "hover" | "focus" | "none"
 
 export interface ITooltipProps extends ComponentProps<typeof STooltipTrigger> {
-  children: React.ReactNode
+  children?: React.ReactNode
   tooltip: React.ReactNode
   ariaLabel: string
   placement?: Placement

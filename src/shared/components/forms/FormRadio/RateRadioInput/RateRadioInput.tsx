@@ -118,9 +118,8 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                     borderRadius: "$rounded",
                   },
                 }}
-              >
-                <IconInfoCircle size="xs" css={{ color: "$system-black" }} />
-              </IconTooltip>
+                icon={<IconInfoCircle size="xs" css={{ color: "$system-black" }} />}
+              />
             </Flex>
           </Flex>
         </SRateRadioInputBox>

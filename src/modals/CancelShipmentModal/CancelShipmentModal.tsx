@@ -43,15 +43,16 @@ export const CancelShipmentModal = () => {
       <Stack space={16} css={{ paddingX: "$16" }}>
         {isReasonsOpen ? (
           <Title as="h3" scale={6} css={{ textAlign: "center" }}>
-            Please, select the reason of cancellation
+            Please, select the reason for elimination
           </Title>
         ) : (
           <Stack space={8} css={{ textAlign: "center" }}>
             <Title as="h3" scale={6}>
-              Do you want to cancel the shipment?
+              Do you want to eliminate the shipment?
             </Title>
             <Copy scale={9} css={{ paddingBottom: "$8" }}>
-              In case of cancellation, you will not be able to use it
+              In case of elimination, the shipment will be cancelled without being deleted from the
+              list
             </Copy>
           </Stack>
         )}

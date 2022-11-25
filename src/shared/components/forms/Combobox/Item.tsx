@@ -2,7 +2,7 @@ import React, { memo } from "react"
 
 import { ComboboxItemFormat, useComboboxContext } from "./Combobox"
 
-export interface ComboboxItemProps {
+interface IComboboxItemProps {
   className?: string
   children: React.ReactNode
 
@@ -15,7 +15,7 @@ export const ComboboxItem = memo(function ({
   children,
   index,
   item,
-}: ComboboxItemProps) {
+}: IComboboxItemProps) {
   const { getItemProps, highlightedIndex } = useComboboxContext("ComboboxItem")
 
   const isHighlighted = highlightedIndex === index

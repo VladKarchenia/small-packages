@@ -3,11 +3,11 @@ import { SearchFilterDrawer } from "@/shared/components"
 import { IconArrowLeft, IconCalendar } from "@/shared/icons"
 import { DateInputForm } from "./DateInputForm"
 
-export interface DateInputProps {
+interface IDateInputProps {
   date: Date | null
 }
 
-export const DateInput: React.FC<DateInputProps> = ({ date }) => {
+export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
   return (
     <SearchFilterDrawer
       drawerName="dateInput"

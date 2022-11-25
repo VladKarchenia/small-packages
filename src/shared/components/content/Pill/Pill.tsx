@@ -3,7 +3,7 @@ import { ComponentProps } from "@/utils"
 import { Copy, Spacer } from "@/shared/components"
 import { SPill, SSelectedDot } from "./Pill.styles"
 
-export interface PillProps extends Omit<ComponentProps<typeof SPill>, "prefix"> {
+export interface IPillProps extends Omit<ComponentProps<typeof SPill>, "prefix"> {
   children: React.ReactNode
 
   prefix?: React.ReactNode
@@ -14,7 +14,7 @@ export interface PillProps extends Omit<ComponentProps<typeof SPill>, "prefix"> 
   withDot?: boolean
 }
 
-export const Pill = forwardRef<HTMLButtonElement, PillProps>(
+export const Pill = forwardRef<HTMLButtonElement, IPillProps>(
   (
     { children, prefix, suffix, selected = false, active = false, withDot = false, ...props },
     ref,
@@ -49,7 +49,7 @@ export const Pill = forwardRef<HTMLButtonElement, PillProps>(
 
 Pill.displayName = "Pill"
 
-function getCopyScaleFromPillSize(size: PillProps["size"]) {
+function getCopyScaleFromPillSize(size: IPillProps["size"]) {
   function getValue(value?: string) {
     switch (value) {
       case "small":

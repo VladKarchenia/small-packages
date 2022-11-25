@@ -1,12 +1,10 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { object, string, TypeOf } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ResetForm } from "./ResetForm"
 
 const resetSchema = object({
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
   password: string()
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
@@ -20,14 +18,12 @@ const resetSchema = object({
 export type ResetInput = TypeOf<typeof resetSchema>
 
 const defaultValues: ResetInput = {
-  email: "",
   password: "",
   confirmPassword: "",
 }
 
 export const ResetFormContainer = () => {
-  const navigate = useNavigate()
-
+  const [isPasswordChanged, setIsPasswordChanged] = useState(false)
   const methods = useForm<ResetInput>({
     mode: "all",
     defaultValues,
@@ -50,13 +46,15 @@ export const ResetFormContainer = () => {
   const onSubmitHandler: SubmitHandler<ResetInput> = (values) => {
     console.log(values)
     // TODO: call request to the BE with new password
-    navigate("/login")
+
+    // TODO: add this call after successful password change
+    setIsPasswordChanged(true)
   }
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
-        <ResetForm defaultValues={defaultValues} isLoading={false} />
+        <ResetForm defaultValues={defaultValues} isLoading={false} isPasswordChanged={isPasswordChanged} />
       </form>
     </FormProvider>
   )

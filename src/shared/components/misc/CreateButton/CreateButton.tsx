@@ -3,7 +3,7 @@ import { Copy, Spacer } from "@/shared/components"
 import { IconPlus, IconSize } from "@/shared/icons"
 import { SCreateButton, SCreateButtonIcon } from "./CreateButton.styles"
 
-interface ICreateButton {
+interface ICreateButtonProps {
   label?: string
   size?: "sm" | "lg"
   color?: "white" | "black"
@@ -21,7 +21,7 @@ export const CreateButton = ({
   ariaLabel,
   onClick,
   buttonCss,
-}: ICreateButton) => {
+}: ICreateButtonProps) => {
   return (
     <SCreateButton onClick={onClick} css={buttonCss}>
       {label ? (

@@ -1,8 +1,12 @@
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
-import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
-import { IconArrowDown, IconCross } from "@/shared/icons"
-import { ShippingType } from "@/shipment"
 import { useMemo } from "react"
+import {
+  SortDirection,
+  useDashboardActionContext,
+  useDashboardStateContext,
+} from "@/dashboard/state"
+import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
+import { IconArrowDown, IconArrowTop, IconCross } from "@/shared/icons"
+import { ShippingType } from "@/shipment"
 
 import { DashboardPagination } from "../DashboardPagination"
 import { SearchInput } from "../SearchInput"
@@ -34,7 +38,7 @@ const DashboardListPlaceholder = () => (
 )
 
 export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
-  const { sortOrder, status, recipientName, originalAddress, destinationAddress } =
+  const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
     useDashboardStateContext()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
@@ -67,7 +71,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
             : "Search for ID, tracking number, address..."
         }
       />
-      <SortFilterBar isFilterApplied={isFilterApplied} />
+      <SortFilterBar isFilterApplied={isFilterApplied} shippingType={shippingType} />
       <Spacer size={20} />
       {isFilterApplied ? (
         <>
@@ -136,7 +140,11 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
           </Copy>
         </Flex>
         <Flex align="center">
-          <IconArrowDown size="xs" />
+          {direction === SortDirection.ASC ? (
+            <IconArrowDown size="xs" />
+          ) : (
+            <IconArrowTop size="xs" />
+          )}
           <Copy scale={9} css={{ paddingX: "$4" }}>
             Sort by:
           </Copy>

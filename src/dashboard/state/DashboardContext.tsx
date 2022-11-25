@@ -36,7 +36,7 @@ const initialDashboardState: DashboardState = {
   sortOrder: ShipmentsPagedOrderBy.CreationDateAsc,
   direction: SortDirection.ASC,
   // status: null,
-  status: [ShipmentStatus.Cancelled, ShipmentStatus.Draft],
+  status: [ShipmentStatus.Eliminated, ShipmentStatus.Draft],
   // recipientName: null,
   recipientName: "James Bond",
   // originalAddress: null,
@@ -48,7 +48,6 @@ const initialDashboardState: DashboardState = {
     city: "",
     address1: "",
     address2: "",
-    isResidential: false,
   },
   // destinationAddress: null,
   destinationAddress: {
@@ -67,6 +66,7 @@ type DashboardActions = {
   resetFilterField: (field: keyof DashboardState) => void
   setSearchTerm: (value: string) => void
   setSortOrder: (value: ShipmentsPagedOrderBy) => void
+  setSortDirection: (value: SortDirection) => void
   setStatusFilter: (array: ShipmentStatus[] | null) => void
   setRecipientNameFilter: (value: string) => void
   setOriginalAddressFilter: (value: IAddress) => void
@@ -106,6 +106,12 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
         setState((prevState) => ({
           ...prevState,
           sortOrder: value,
+        }))
+      },
+      setSortDirection: (value) => {
+        setState((prevState) => ({
+          ...prevState,
+          direction: value,
         }))
       },
       setStatusFilter: (array) => {
