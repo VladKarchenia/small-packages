@@ -2,13 +2,13 @@ import { Grid, Flex } from "@/shared/components"
 import { IAddress } from "@/shared/state"
 import { DestinationCombobox } from "../DestinationCombobox"
 
-export interface LocationInputFormProps {
+interface ILocationInputFormProps {
   initialValue: IAddress
   onSelect: (location: string, placeId: string) => void
   placeholder: string
 }
 
-export const LocationInputForm: React.FC<LocationInputFormProps> = ({
+export const LocationInputForm: React.FC<ILocationInputFormProps> = ({
   initialValue,
   onSelect,
   placeholder,

@@ -3,9 +3,9 @@ import { ComponentProps } from "@/utils"
 
 import { SHeaderNav } from "./Header.styles"
 
-export interface IHeaderNavWrapper extends ComponentProps<typeof SHeaderNav> {}
+interface IHeaderNavWrapperProps extends ComponentProps<typeof SHeaderNav> {}
 
-export const HeaderNavWrapper = React.forwardRef<HTMLElement, IHeaderNavWrapper>(
+export const HeaderNavWrapper = React.forwardRef<HTMLElement, IHeaderNavWrapperProps>(
   ({ children, ...props }, ref) => (
     <SHeaderNav {...props} ref={ref}>
       {children}

@@ -11,6 +11,7 @@ import {
   Unauthorize,
   Tracking,
   Reset,
+  Recovery,
 } from "@/pages"
 import { Role } from "@/shared/types"
 import { ShippingType } from "@/shipment"
@@ -24,6 +25,7 @@ const App: React.FC = (): JSX.Element => {
     path: "*",
     children: [
       { path: "login", element: <Login /> },
+      { path: "recovery", element: <Recovery /> },
       { path: "reset", element: <Reset /> },
     ],
   }

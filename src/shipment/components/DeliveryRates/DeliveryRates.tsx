@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form"
 import { Copy, FormRadioGroup, RateRadioInput, GridContainer, Stack } from "@/shared/components"
 import { ShippingType } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
+import { useModalActions } from "@/shared/hooks"
 
 const rates = [
   {
@@ -25,6 +26,10 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
   const { setValue, watch } = useFormContext<ShipmentState>()
   const { rate } = watch()
 
+  const { open } = useModalActions()
+  // TODO: get this expiredRates from shipment data
+  const expiredRates = false
+
   const [checkedOption, setCheckedOption] = useState(rate.id)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setCheckedOption(e.target.value)
@@ -33,6 +38,12 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
   //   // TODO: need to refetch getRates request with new date
   //   // + need to add loading and error views
   // }, [date])
+
+  useEffect(() => {
+    if (expiredRates) {
+      open("reloadRates")
+    }
+  }, [expiredRates, open])
 
   useEffect(() => {
     const selectedRate = rates.find((i) => i.id === checkedOption)

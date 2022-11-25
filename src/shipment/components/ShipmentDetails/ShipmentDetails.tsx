@@ -21,20 +21,9 @@ import { PackageType, ParcelContentType, PickupType } from "@/shared/state/Shipm
 import { IconBin, IconPlus } from "@/shared/icons"
 import { PARCEL_LIMIT } from "@/constants"
 
-const pickupTypeList: PickupType[] = [PickupType.Schedule]
-
-const packageTypeList: PackageType[] = [PackageType.Own]
-
-const parcelContentTypeList: ParcelContentType[] = [
-  ParcelContentType.Gift,
-  ParcelContentType.Company,
-  ParcelContentType.Selling,
-  ParcelContentType.Documents,
-  ParcelContentType.Samples,
-  ParcelContentType.Repair,
-  ParcelContentType.Return,
-  ParcelContentType.Other,
-]
+const pickupTypeList: PickupType[] = Object.values(PickupType)
+const packageTypeList: PackageType[] = Object.values(PackageType)
+const parcelContentTypeList: ParcelContentType[] = Object.values(ParcelContentType)
 
 export const ShipmentDetails = ({
   handleContinueClick,

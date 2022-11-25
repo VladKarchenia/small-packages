@@ -4,7 +4,7 @@ import { Copy, Flex, FormLabel, IFormLabelProps, Spacer } from "@/shared/compone
 import { IconChevronDown } from "@/shared/icons"
 import { SSelectIcon, SSelectTrigger, SSelectContent, SSelectViewport } from "./Select.styles"
 
-export interface SelectProps {
+interface ISelectProps {
   value: string
   onValueChange: (value: any) => void
   label: string
@@ -15,7 +15,7 @@ export interface SelectProps {
   children: React.ReactNode
 }
 
-export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
+export const Select = React.forwardRef<HTMLButtonElement, ISelectProps>(
   ({ children, label, postLabel, labelProps, description, ...props }, forwardedRef) => {
     return (
       <Root {...props}>

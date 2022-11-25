@@ -72,7 +72,7 @@ export const LoginForm = ({
       </Stack>
 
       <Spacer size={16} />
-      <Link href="/reset">
+      <Link href="/recovery">
         <Copy scale={9} color="system-black">
           Forgot a password?
         </Copy>

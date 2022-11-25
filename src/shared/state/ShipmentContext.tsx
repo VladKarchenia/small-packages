@@ -16,7 +16,6 @@ export enum ParcelContentType {
 
 export enum PackageType {
   Own = "Own package",
-  Product = "Product",
 }
 
 export interface IParcelDimensions {
@@ -51,7 +50,7 @@ export interface IAddress {
   city: string
   address1: string
   address2: string
-  isResidential: boolean
+  isResidential?: boolean
 }
 
 export interface IPerson {
@@ -87,7 +86,6 @@ const initialShipmentState: ShipmentState = {
       city: "",
       address1: "",
       address2: "",
-      isResidential: false,
     },
   },
   recipient: {
@@ -165,7 +163,6 @@ type StateContextProviderProps = { children: React.ReactNode }
 
 export const ShipmentProvider = ({ children }: StateContextProviderProps) => {
   const [state, setState] = useState<ShipmentState>(initialShipmentState)
-  console.log(state)
 
   return (
     <ShipmentStateContext.Provider value={state}>

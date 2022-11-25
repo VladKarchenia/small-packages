@@ -2,7 +2,7 @@ import { styled } from "@/config"
 import { rgba, multipleSelectors } from "@/utils"
 import { HeaderNavButton } from "./HeaderNavButton"
 
-export const SAccountButton = styled(HeaderNavButton, {
+export const SBurgerMenuButton = styled(HeaderNavButton, {
   $$backgroundColor: "transparent",
   backgroundColor: "$$backgroundColor",
   width: "$40",

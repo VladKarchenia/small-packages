@@ -134,7 +134,7 @@ export const DestinationCombobox = ({
   )
 }
 
-interface DestinationSectionProps {
+interface IDestinationSectionProps {
   name: "recent" | "popular" | "suggestions"
   label: string
   items: ComboboxItemFormat[]
@@ -151,7 +151,7 @@ function DestinationSection({
   hiddenLabel,
   indexOffset = 0,
   isDesktop,
-}: DestinationSectionProps) {
+}: IDestinationSectionProps) {
   if (!items.length) return null
   const itemCount = isDesktop && name === "recent" ? 3 : items.length
   const LabelOuter = hiddenLabel ? HiddenVisually : Fragment

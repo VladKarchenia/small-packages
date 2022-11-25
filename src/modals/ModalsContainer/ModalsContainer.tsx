@@ -4,6 +4,7 @@ import { CancelShipmentModal } from "../CancelShipmentModal"
 import { DeleteShipmentModal } from "../DeleteShipmentModal"
 import { CancelQuoteModal } from "../CancelQuoteModal"
 import { DeleteQuoteModal } from "../DeleteQuoteModal"
+import { ReloadRatesModal } from "../ReloadRatesModal"
 
 // lazy?
 // const TimePeriodModal = dynamic(() =>
@@ -20,6 +21,7 @@ export const ModalsContainer = () => {
       <DeleteShipmentModal />
       <CancelQuoteModal />
       <DeleteQuoteModal />
+      <ReloadRatesModal />
     </>
   )
 }

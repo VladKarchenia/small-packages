@@ -1,35 +1,23 @@
 import React from "react"
-import { SearchFilterDrawer, useDrawerActions } from "@/shared/components"
+import { SearchFilterDrawer } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
-import { SFilterIcon } from "./SortFilterBar.styles"
+import { ShippingType } from "@/shipment"
 import { SortFiltertForm } from "./SortFilterForm"
 
 export interface ISortFilterBarProps {
   isFilterApplied: boolean
+  shippingType: ShippingType
 }
 
-export const SortFilterBar: React.FC<ISortFilterBarProps> = ({ isFilterApplied }) => {
-  const { close } = useDrawerActions()
-
-  const handleChange = (location: string) => {
-    close("sortFilterBar")
-  }
-
+export const SortFilterBar: React.FC<ISortFilterBarProps> = ({ isFilterApplied, shippingType }) => {
   return (
     <SearchFilterDrawer
       drawerName="sortFilterBar"
       drawerTitle="Sort and Filter"
       closeIcon={<IconCross />}
-      trigger={
-        <SFilterIcon
-          fixedSize
-          width={20}
-          height={20}
-          selected={isFilterApplied}
-          css={{ display: "flex" }}
-        />
-      }
-      drawerForm={<SortFiltertForm />}
+      triggerIcon
+      isFilterApplied={isFilterApplied}
+      drawerForm={<SortFiltertForm shippingType={shippingType} />}
     />
   )
 }

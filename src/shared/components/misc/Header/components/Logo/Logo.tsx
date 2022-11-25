@@ -3,11 +3,11 @@ import { Flex } from "@/shared/components"
 import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/config"
 
-interface ILogo {
+interface ILogoProps {
   href?: string
 }
 
-export const Logo: React.FC<ILogo> = ({ href = "/" }) => {
+export const Logo: React.FC<ILogoProps> = ({ href = "/" }) => {
   const isExtraSmall = useMedia([mediaQueries.xs], [true], false)
 
   return (

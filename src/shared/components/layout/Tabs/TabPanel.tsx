@@ -24,7 +24,7 @@ export const TabPanel = ({ children, id }: ITabPanelProps) => {
       }}
       animate={animate}
     >
-      {children}
+      {isSelected ? children : null}
     </STabPanel>
   )
 }

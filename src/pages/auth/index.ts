@@ -1,6 +1,3 @@
 export * from "./Login"
-export * from "./LoginFormContainer"
-export * from "./LoginForm"
+export * from "./Recovery"
 export * from "./Reset"
-export * from "./ResetFormContainer"
-export * from "./ResetForm"

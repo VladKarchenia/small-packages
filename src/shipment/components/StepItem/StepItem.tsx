@@ -10,7 +10,7 @@ import {
 import { IconTick } from "@/shared/icons"
 import { IStep } from "@/shipment"
 
-interface IStepperItem {
+interface IStepperItemProps {
   title: string
   data: IStep
   mainContent: React.ReactNode
@@ -18,7 +18,7 @@ interface IStepperItem {
   totalSteps: number
 }
 
-export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }: IStepperItem) => {
+export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }: IStepperItemProps) => {
   const { name, disabled, stepNumber, completed } = data
   const isStepLast = data.stepNumber === totalSteps
 

@@ -1,7 +1,8 @@
 import { styled } from "@/config"
-import { IconBin } from "@/shared/icons"
 
-export const SFilterIcon = styled(IconBin, {
+export const SFilterIconBox = styled("button", {
+  reset: true,
+  display: "flex",
   alignItems: "center",
   justifyContent: "center",
   width: "$48",

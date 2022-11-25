@@ -1,10 +1,17 @@
-import { Drawer, SearchFilterDrawerPreview, Title, useDrawer } from "@/shared/components"
+import {
+  Drawer,
+  SearchFilterDrawerPreview,
+  SortFilterBarPreview,
+  Title,
+  useDrawer,
+} from "@/shared/components"
 
 interface ISearchFilterDrawerProps {
   drawerName: string
   drawerTitle: string
   closeIcon: React.ReactNode
-  trigger?: React.ReactNode
+  triggerIcon?: boolean
+  isFilterApplied?: boolean
   value?: string | React.ReactElement | null
   prefix?: React.ReactElement
   suffix?: React.ReactElement
@@ -19,7 +26,8 @@ export const SearchFilterDrawer = ({
   drawerName,
   drawerTitle,
   closeIcon,
-  trigger,
+  triggerIcon = false,
+  isFilterApplied = false,
   value = "",
   prefix,
   suffix,
@@ -43,8 +51,8 @@ export const SearchFilterDrawer = ({
         </Title>
       }
       trigger={
-        trigger ? (
-          trigger
+        triggerIcon ? (
+          <SortFilterBarPreview isFilterApplied={isFilterApplied} />
         ) : (
           <SearchFilterDrawerPreview
             value={value}

@@ -23,7 +23,7 @@ export const DeleteQuoteModal = () => {
             Do you want to delete the quote?
           </Title>
           <Copy scale={9} css={{ paddingBottom: "$8" }}>
-            In case of delete, the data will not be saved
+            In case of deletion, the quote will be cancelled and deleted from the list
           </Copy>
         </Stack>
 

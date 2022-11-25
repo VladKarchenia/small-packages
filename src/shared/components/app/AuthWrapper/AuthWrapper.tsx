@@ -1,8 +1,7 @@
-import { Box, GridContainer, Grid, GridItem, Spacer, Flex } from "@/shared/components"
+import { Box, Flex, Grid, GridContainer, GridItem, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
-import { LoginFormContainer } from "./LoginFormContainer"
 
-export const Login = () => {
+export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <CommonLayout>
       <GridContainer css={{ height: "100%" }}>
@@ -43,7 +42,7 @@ export const Login = () => {
               </a>
             </Box>
             <Spacer size={32} />
-            <LoginFormContainer />
+            {children}
             <Spacer size={96} />
           </GridItem>
         </Grid>

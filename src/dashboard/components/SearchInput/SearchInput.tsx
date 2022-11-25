@@ -3,11 +3,11 @@ import { SearchFilterDrawer, SearchFilterDrawerForm, useDrawerActions } from "@/
 import { IconArrowLeft, IconSearch } from "@/shared/icons"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
 
-export interface LocationInputProps {
+interface ISearchInputProps {
   placeholder: string
 }
 
-export const SearchInput: React.FC<LocationInputProps> = ({ placeholder }) => {
+export const SearchInput: React.FC<ISearchInputProps> = ({ placeholder }) => {
   const { searchTerm } = useDashboardStateContext()
   const { setSearchTerm } = useDashboardActionContext()
   const { close } = useDrawerActions()
