@@ -74,6 +74,10 @@ const SHIPMENT_DETAILS = {
       status: "Picked up",
       date: "",
     },
+    // {
+    //   status: "Cancelled",
+    //   date: "18.10.2022 by 6:46 PM",
+    // },
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
