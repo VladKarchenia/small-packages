@@ -1,7 +1,5 @@
+import { ShipmentStatus } from "@/shared/types"
 import { ShipmentRoutePoint } from "@/tracking"
-
-const RouteFull = ["Confirmed", "Booked", "Picked up", "In delivery", "Delivered"]
-const RouteShort = ["Confirmed", "Booked", "Cancelled"]
 
 interface RouteInfo {
   status: string
@@ -9,40 +7,35 @@ interface RouteInfo {
 }
 
 interface IShipmentRouteProps {
-  data: RouteInfo[]
+  routes: RouteInfo[]
 }
 
-export const ShipmentRoute = ({ data }: IShipmentRouteProps) => {
-  const stepsCount = data.length - 1
-  const isRoutShort = data.length === 3 && data[2].status === "Cancelled"
+export const ShipmentRoute = ({ routes }: IShipmentRouteProps) => {
+  const fullRoutesList = routes.find((route) => route.status === ShipmentStatus.Eliminated)
+    ? ["Confirmed", "Booked", "Eliminated"]
+    : ["Confirmed", "Booked", "Picked up", "In delivery", "Delivered"]
+
+  const restRoutesList = fullRoutesList.filter(
+    (route) => !routes.map((i) => i.status).includes(route),
+  )
 
   return (
     <>
-      {isRoutShort
-        ? RouteShort.map((item, index) => {
-            return (
-              <ShipmentRoutePoint
-                data={data[index]}
-                stepName={item}
-                key={index}
-                isLastStep={index === stepsCount}
-                isCompleted={true}
-                isAwaiting={false}
-              />
-            )
-          })
-        : RouteFull.map((item, index) => {
-            return (
-              <ShipmentRoutePoint
-                data={data[index]}
-                stepName={item}
-                key={index}
-                isLastStep={index === RouteFull.length - 1}
-                isCompleted={index < data.length - 1}
-                isAwaiting={index === data.length - 1}
-              />
-            )
-          })}
+      {routes.map((route) => {
+        return (
+          <ShipmentRoutePoint
+            key={route.status}
+            status={route.status}
+            date={route.date}
+            isStepInProgress={!route.date}
+            isStepCompleted={!!route.date}
+          />
+        )
+      })}
+      {restRoutesList.length > 0 &&
+        restRoutesList.map((route) => {
+          return <ShipmentRoutePoint key={route} status={route} />
+        })}
     </>
   )
 }

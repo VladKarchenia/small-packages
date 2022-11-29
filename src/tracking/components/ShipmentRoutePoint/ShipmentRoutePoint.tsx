@@ -1,76 +1,48 @@
-import { Box, Copy, Flex } from "@/shared/components"
-import { IconDot, IconTick, IconClock } from "@/shared/icons"
-
-interface RouteInfo {
-  status: string
-  date: string
-}
+import { Box, Copy, Spacer } from "@/shared/components"
+import { IconTick, IconClock, IconCross } from "@/shared/icons"
+import { ShipmentStatus } from "@/shared/types"
+import { SDot, SRoutePointIcon, SRoutePointWrapper } from "./ShipmentRoutePoint.styles"
 
 interface IShipmentRoutePointProps {
-  data: RouteInfo
-  isLastStep: boolean
-  stepName: string
-  isCompleted: boolean
-  isAwaiting: boolean
+  status: string
+  date?: string
+  isStepCompleted?: boolean
+  isStepInProgress?: boolean
 }
 
 export const ShipmentRoutePoint = ({
-  data,
-  isLastStep,
-  stepName,
-  isCompleted,
-  isAwaiting,
+  status,
+  date,
+  isStepCompleted = false,
+  isStepInProgress = false,
 }: IShipmentRoutePointProps) => {
-  const stepBackgroundColor = isCompleted || isAwaiting ? "$neutrals-7" : "$neutrals-5"
-  const stepStyles = isLastStep
-    ? { paddingBottom: "$32", position: "relative" }
-    : {
-        paddingBottom: "$32",
-        position: "relative",
-        "&:before": {
-          content: "",
-          position: "absolute",
-          top: "var(--space-14)",
-          bottom: "var(--space-8)",
-          margin: "auto",
-          height: "calc(100% - 40px)",
-          borderRight: "1px dashed black",
-          left: "8px",
-        },
-      }
+  const isLastStep = status === ShipmentStatus.Eliminated || status === ShipmentStatus.Delivered
 
   return (
-    <Flex align="start" css={stepStyles}>
-      <Flex>
-        <Flex
-          css={{
-            width: "20px",
-            height: "20px",
-            backgroundColor: stepBackgroundColor,
-            borderRadius: "50%",
-            marginRight: "$8",
-            color: "$system-white",
-          }}
-          align="center"
-          justify="center"
-        >
-          {isCompleted ? (
-            <IconTick size="xs" />
-          ) : isAwaiting ? (
-            <IconClock size="xs" />
-          ) : (
-            <IconDot width={8} height={8} />
-          )}
-        </Flex>
-        <Box>
-          <Copy scale={8} color="system-black" bold>
-            {stepName}
+    <SRoutePointWrapper align="start" last={isLastStep}>
+      <SRoutePointIcon align="center" justify="center" active={isStepCompleted || isStepInProgress}>
+        {status === ShipmentStatus.Eliminated ? (
+          <IconCross size="xs" />
+        ) : isStepCompleted ? (
+          <IconTick size="xs" />
+        ) : isStepInProgress ? (
+          <IconClock size="xs" />
+        ) : (
+          <SDot />
+        )}
+      </SRoutePointIcon>
+      <Box>
+        <Copy scale={8} color={isStepCompleted || isStepInProgress ? "system-black" : "neutrals-5"}>
+          {status}
+        </Copy>
+        {date ? (
+          <Copy scale={9} color="neutrals-5">
+            {date}
           </Copy>
-          <Copy scale={9} color="neutrals-7" bold>
-            {data?.date}
-          </Copy>
-        </Box>
-      </Flex>
-    </Flex>
+        ) : (
+          <Spacer size={20} />
+        )}
+      </Box>
+    </SRoutePointWrapper>
   )
 }
