@@ -1,5 +1,5 @@
-import { Box, Copy, Flex } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
+import { ShipmentStatus } from "@/shared/types"
+import { ShipmentRoutePoint } from "@/tracking"
 
 interface RouteInfo {
   status: string
@@ -7,54 +7,35 @@ interface RouteInfo {
 }
 
 interface IShipmentRouteProps {
-  data: RouteInfo[]
+  routes: RouteInfo[]
 }
 
-export const ShipmentRoute = ({ data }: IShipmentRouteProps) => {
+export const ShipmentRoute = ({ routes }: IShipmentRouteProps) => {
+  const fullRoutesList = routes.find((route) => route.status === ShipmentStatus.Eliminated)
+    ? ["Confirmed", "Booked", "Eliminated"]
+    : ["Confirmed", "Booked", "Picked up", "In delivery", "Delivered"]
+
+  const restRoutesList = fullRoutesList.filter(
+    (route) => !routes.map((i) => i.status).includes(route),
+  )
+
   return (
     <>
-      <Flex
-        align="start"
-        css={{
-          paddingBottom: "$32",
-          position: "relative",
-          "&:before": {
-            content: "",
-            position: "absolute",
-            top: "var(--space-14)",
-            bottom: "var(--space-8)",
-            margin: "auto",
-            height: "calc(100% - 40px)",
-            borderRight: "1px dashed black",
-            left: "8px",
-          },
-        }}
-      >
-        <Flex>
-          <IconCalendar size="xs" css={{ paddingTop: "$4", paddingRight: "$12" }} />
-          <Box>
-            <Copy scale={8} color="system-black" bold>
-              {data[0].status}
-            </Copy>
-            <Copy scale={9} color="neutrals-7" bold>
-              {data[0].date}
-            </Copy>
-          </Box>
-        </Flex>
-      </Flex>
-      <Flex>
-        <Flex>
-          <IconCalendar size="xs" css={{ paddingTop: "$4", paddingRight: "$12" }} />
-          <Box>
-            <Copy scale={8} color="system-black" bold>
-              {data[1].status}
-            </Copy>
-            <Copy scale={9} color="neutrals-7" bold>
-              {data[1].date}
-            </Copy>
-          </Box>
-        </Flex>
-      </Flex>
+      {routes.map((route) => {
+        return (
+          <ShipmentRoutePoint
+            key={route.status}
+            status={route.status}
+            date={route.date}
+            isStepInProgress={!route.date}
+            isStepCompleted={!!route.date}
+          />
+        )
+      })}
+      {restRoutesList.length > 0 &&
+        restRoutesList.map((route) => {
+          return <ShipmentRoutePoint key={route} status={route} />
+        })}
     </>
   )
 }

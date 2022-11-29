@@ -61,19 +61,35 @@ const SHIPMENT_DETAILS = {
   trackingNumber: "204-5Z87",
   shipmentURL: "https//www.gulfrelay/shipment/204-5Z87",
   arrivalDate: "18.10.2022",
-  route: [
+  routes: [
     {
-      status: "Order is processed",
+      status: "Confirmed",
       date: "18.10.2022 by 5:46 PM",
     },
     {
-      status: "Order has been paid",
+      status: "Booked",
       date: "18.10.2022 by 6:26 PM",
     },
     {
-      status: "Order confirmation awaiting",
+      status: "Picked up",
       date: "",
     },
+    // {
+    //   status: "Picked up",
+    //   date: "19.10.2022 by 3:26 PM",
+    // },
+    // {
+    //   status: "In delivery",
+    //   date: "22.10.2022 by 7:19 PM",
+    // },
+    // {
+    //   status: "Delivered",
+    //   date: "23.10.2022 by 3:59 AM",
+    // },
+    // {
+    //   status: "Eliminated",
+    //   date: "18.10.2022 by 6:46 PM",
+    // },
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
@@ -262,7 +278,7 @@ export const TrackingContainer = () => {
 
               <TrackingDetailsItem title="Route">
                 {/* TODO: Fix Route block after BE data and final design */}
-                <ShipmentRoute data={data.route} />
+                <ShipmentRoute routes={data.routes} />
               </TrackingDetailsItem>
 
               {role === Role.Admin ? (
