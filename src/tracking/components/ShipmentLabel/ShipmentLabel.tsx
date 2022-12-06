@@ -8,8 +8,10 @@ interface IShipmentLabelProps {
 export const ShipmentLabel = ({ title, link }: IShipmentLabelProps) => {
   return (
     <>
-      <Copy scale={10}>{title}</Copy>
-      <Link href={link}>{link}</Link>
+      <Copy scale={{ "@initial": 10, "@sm": 9 }}>{title}</Copy>
+      <Link scale={{ "@initial": 10, "@sm": 8 }} href={link}>
+        {link}
+      </Link>
     </>
   )
 }

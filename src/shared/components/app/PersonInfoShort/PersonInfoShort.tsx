@@ -15,7 +15,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
         <Flex css={{ paddingRight: "$8" }}>
           <IconLocationPin size="xs" />
         </Flex>
-        <Copy scale={8} color="system-black">
+        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
           {person === "sender" ? sender.name : recipient.name}
         </Copy>
       </Flex>
@@ -23,7 +23,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
         <Flex css={{ paddingRight: "$8" }}>
           <IconLocationPin size="xs" />
         </Flex>
-        <Copy scale={8} color="system-black">
+        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
           {person === "sender" ? sender.phone : recipient.phone}
         </Copy>
       </Flex>
@@ -32,7 +32,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
           </Flex>
-          <Copy scale={8} color="system-black">
+          <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
             {sender.company}
           </Copy>
         </Flex>
@@ -42,7 +42,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
           </Flex>
-          <Copy scale={8} color="system-black">
+          <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
             {recipient.company}
           </Copy>
         </Flex>
@@ -51,7 +51,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
         <Flex css={{ paddingRight: "$8" }}>
           <IconLocationPin size="xs" />
         </Flex>
-        <Copy scale={8} color="system-black">
+        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
           {person === "sender" ? sender.fullAddress.location : recipient.fullAddress.location}
         </Copy>
       </Flex>

@@ -8,6 +8,12 @@ export const SRoutePointWrapper = styled(Flex, {
     paddingBottom: "$24",
   },
 
+  "@sm": {
+    "&:not(:last-of-type)": {
+      paddingBottom: "$32",
+    },
+  },
+
   variants: {
     last: {
       false: {
