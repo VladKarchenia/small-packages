@@ -5,7 +5,7 @@ import { DestinationCombobox } from "../DestinationCombobox"
 interface ILocationInputFormProps {
   initialValue: IAddress
   onSelect: (location: string, placeId: string) => void
-  placeholder: string
+  placeholder?: string
 }
 
 export const LocationInputForm: React.FC<ILocationInputFormProps> = ({

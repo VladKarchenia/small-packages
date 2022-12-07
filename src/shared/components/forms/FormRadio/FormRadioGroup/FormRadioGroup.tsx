@@ -18,9 +18,17 @@ export interface IFormRadioGroupProps
   disabled?: boolean
   error?: string
   view?: "circle" | "tick"
+  withCells?: boolean
 }
 
-export const FormRadioGroup = ({ disabled, value, name, view, ...props }: IFormRadioGroupProps) => {
+export const FormRadioGroup = ({
+  disabled,
+  value,
+  name,
+  view,
+  withCells = false,
+  ...props
+}: IFormRadioGroupProps) => {
   const { id, error, children, onChange, ...radioGroupProps } = props
 
   const clonedChildren = React.Children.map(
@@ -38,7 +46,13 @@ export const FormRadioGroup = ({ disabled, value, name, view, ...props }: IFormR
   )
 
   return (
-    <SFormRadioGroup id={id} data-ui="radiogroup" role="radiogroup" {...radioGroupProps}>
+    <SFormRadioGroup
+      id={id}
+      data-ui="radiogroup"
+      role="radiogroup"
+      withCells={withCells}
+      {...radioGroupProps}
+    >
       {clonedChildren}
       {error && <ErrorLabel id={`${id}__error`}>{error}</ErrorLabel>}
     </SFormRadioGroup>

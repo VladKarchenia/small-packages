@@ -10,7 +10,7 @@ type ScrollCoords = {
 
 type ScrollValue = number | ScrollCoords
 
-export type ScrollToOptions = {
+type ScrollToOptions = {
   position?: ScrollValue
   offset?: ScrollValue
 

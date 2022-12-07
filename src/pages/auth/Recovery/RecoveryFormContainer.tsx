@@ -1,14 +1,9 @@
 import { useEffect } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { object, string, TypeOf } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { RecoveryInput } from "@/api/types"
 import { RecoveryForm } from "./RecoveryForm"
 
-const resetSchema = object({
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
-})
-
-export type RecoveryInput = TypeOf<typeof resetSchema>
+// TODO: Invalid email error after request
 
 const defaultValues: RecoveryInput = {
   email: "",
@@ -16,9 +11,8 @@ const defaultValues: RecoveryInput = {
 
 export const RecoveryFormContainer = () => {
   const methods = useForm<RecoveryInput>({
-    mode: "all",
+    mode: "onChange",
     defaultValues,
-    resolver: zodResolver(resetSchema),
   })
 
   const {

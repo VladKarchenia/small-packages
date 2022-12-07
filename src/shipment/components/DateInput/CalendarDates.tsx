@@ -225,7 +225,7 @@ export const CalendarDates = ({ isDesktop }: { isDesktop?: boolean }) => {
         <StaticDateTimePicker
           renderInput={() => <div />}
           value={date}
-          onChange={(value) => setValue("date", value)}
+          onChange={(value) => (value ? setValue("date", value) : "")}
           components={{ ActionBar: CustomActionBar }}
           componentsProps={{
             actionBar: {

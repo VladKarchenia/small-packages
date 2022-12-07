@@ -71,3 +71,17 @@ export interface ISuggestionsResponse {
     }
   }
 }
+
+export interface LoginInput {
+  email: string
+  password: string
+}
+
+export interface RecoveryInput {
+  email: string
+}
+
+export interface ResetInput {
+  password: string
+  confirmPassword: string
+}

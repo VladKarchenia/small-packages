@@ -86,7 +86,8 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
   }
 
   return (
-    <Grid rows="calc(100vh - $80 - 60px) $80" css={{ height: "100%" }}>
+    // 60px here is Drawer's header height
+    <Grid rows={`calc((var(--vh) * 100) - $80 - 60px) $80`} css={{ height: "100%" }}>
       <Flex direction="column" css={{ padding: "$16", overflow: "auto" }}>
         <Select
           name="sortBy"

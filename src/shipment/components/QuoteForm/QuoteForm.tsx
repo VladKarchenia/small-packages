@@ -93,7 +93,12 @@ export const QuoteForm = () => {
     {
       title: "Ready Date",
       data: stepperState.date,
-      mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
+      mainContent: (
+        <ShipmentDateDetails
+          shippingType={ShippingType.Quote}
+          handleContinueClick={handleContinueClick}
+        />
+      ),
       shortContent: <ShipmentDateDetailsShort />,
     },
     {

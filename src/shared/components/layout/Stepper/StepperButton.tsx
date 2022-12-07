@@ -1,7 +1,10 @@
 import React, { useCallback } from "react"
+import { useFormContext } from "react-hook-form"
 import { ComponentProps } from "@/utils"
 import { IconPencil } from "@/shared/icons"
+import { ShipmentState } from "@/shared/state"
 
+import { Hidden } from "../Hidden"
 import { useStepperContext } from "./Stepper"
 import { useStepperItemContext } from "./StepperItem"
 import { SStepperButton } from "./Stepper.styles"
@@ -16,6 +19,11 @@ export interface IStepperButtonProps extends ComponentProps<typeof SStepperButto
 export const StepperButton = ({ children, ...props }: IStepperButtonProps) => {
   const { onItemOpen } = useStepperContext("StepperButton")
   const { id, value, open, disabled, completed } = useStepperItemContext("StepperButton")
+  const {
+    formState: { errors },
+  } = useFormContext<ShipmentState>()
+  const stepperHasError =
+    !!errors?.date || !!errors?.parcels || !!errors?.rate || !!errors?.recipient || !!errors?.sender
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -25,11 +33,13 @@ export const StepperButton = ({ children, ...props }: IStepperButtonProps) => {
       // if (open) {
       //   onItemClose(value)
       // } else {
-      onItemOpen(value)
+      if (!stepperHasError) {
+        onItemOpen(value)
+      }
       // }
     },
     // [onItemClose, onItemOpen, open, value],
-    [onItemOpen, value],
+    [onItemOpen, value, stepperHasError],
   )
 
   return (
@@ -44,7 +54,11 @@ export const StepperButton = ({ children, ...props }: IStepperButtonProps) => {
       onClick={handleClick}
     >
       {children}
-      {completed ? <IconPencil /> : null}
+      {completed ? (
+        <Hidden above="sm">
+          <IconPencil />
+        </Hidden>
+      ) : null}
     </SStepperButton>
   )
 }

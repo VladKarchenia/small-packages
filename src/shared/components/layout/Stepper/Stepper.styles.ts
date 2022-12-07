@@ -1,7 +1,13 @@
 import { motion } from "framer-motion"
 import { styled } from "@/config"
 
-export const SStepper = styled("div", {})
+export const SStepper = styled("div", {
+  paddingBottom: "$40",
+
+  "@sm": {
+    paddingBottom: "$0",
+  },
+})
 
 export const SStepperHeader = styled("div", {
   paddingX: "$16",

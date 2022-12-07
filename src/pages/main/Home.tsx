@@ -1,30 +1,19 @@
-import { useTranslation } from "react-i18next"
-import { CreateButton, GridContainer, MobileHeader, Spacer } from "@/shared/components"
-import { useModalActions } from "@/shared/hooks"
+import { Hidden, MobileHeader } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
-import { DashboardTabs } from "@/dashboard"
+import { MainLayout } from "@/shared/layouts/main"
 import { DashboardProvider } from "@/dashboard/state"
+import { DashboardTabs } from "@/dashboard"
 
 export const Home = () => {
-  const { t } = useTranslation()
-  const { open } = useModalActions()
-
   return (
     <DashboardProvider>
       <CommonLayout>
-        <GridContainer>
-          <MobileHeader />
+        <MainLayout withGlobalSearch mobileFullBleed={false}>
+          <Hidden above="sm">
+            <MobileHeader />
+          </Hidden>
           <DashboardTabs />
-          <Spacer size={40} />
-          <CreateButton
-            size="lg"
-            color="black"
-            iconSize="lg"
-            ariaLabel="Create button"
-            buttonCss={{ zIndex: "$9", position: "fixed", bottom: "$56", right: "$16" }}
-            onClick={() => open("createShipment")}
-          />
-        </GridContainer>
+        </MainLayout>
       </CommonLayout>
     </DashboardProvider>
   )

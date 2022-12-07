@@ -5,7 +5,7 @@ import { ComponentProps, generateImageSource, generateImageSourceSet } from "@/u
 
 import { SPicture, SPictureImg } from "./Picture.styles"
 
-export type PictureExtraParams = {
+type PictureExtraParams = {
   [key: string]: string | number
 
   h: number
@@ -17,7 +17,7 @@ export type PictureExtraParams = {
   "max-w": number
 }
 
-export type IPictureDimensions = {
+type IPictureDimensions = {
   width?: number
 
   /**

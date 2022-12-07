@@ -1,14 +1,14 @@
 import { styled } from "@/config"
 import { ButtonIcon } from "@/shared/components"
 
-export const SCreateButton = styled("div", {
+export const SCreateRoundedButton = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "end",
   cursor: "pointer",
 })
 
-export const SCreateButtonIcon = styled(ButtonIcon, {
+export const SCreateRoundedButtonIcon = styled(ButtonIcon, {
   reset: true,
   display: "flex",
   alignItems: "center",

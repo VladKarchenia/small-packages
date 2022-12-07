@@ -5,7 +5,7 @@ import { Colors } from "@/config/theme/types"
 
 import { SCopy } from "./Copy.styles"
 
-export type CopyIntent = "cta" | "detail" | "copy"
+type CopyIntent = "cta" | "detail" | "copy"
 
 export interface ICopyProps extends Omit<ComponentProps<typeof SCopy>, "color"> {
   color?: Colors | ResponsiveProp<Colors>

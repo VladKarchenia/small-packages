@@ -16,7 +16,7 @@ export interface IFormInputGroupProps extends ComponentProps<typeof SFormInputGr
   inputCss?: CSS
 }
 
-export type IFormInputGroupItemProps = ComponentProps<typeof SFormInputGroupItem>
+type IFormInputGroupItemProps = ComponentProps<typeof SFormInputGroupItem>
 
 /**
  * Use with FormInputGroupItem to nest form field components.
@@ -60,8 +60,8 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
 
     {(error || afterField) && (
       <Flex justify="between">
-        <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
-        <div>{afterField}</div>
+        {error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}
+        {afterField}
       </Flex>
     )}
   </SFormInputGroup>

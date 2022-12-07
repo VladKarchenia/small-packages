@@ -12,8 +12,8 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
     <SearchFilterDrawer
       drawerName="dateInput"
       drawerTitle="Date and Time"
-      value={date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
-      placeholder={"XX. YY. ZZ 00:00 AM"}
+      value={date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+      placeholder={"Select date and time"}
       hidePlaceholder
       closeIcon={<IconArrowLeft />}
       suffix={<IconCalendar />}

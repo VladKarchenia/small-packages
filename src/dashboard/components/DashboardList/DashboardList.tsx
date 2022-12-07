@@ -4,23 +4,28 @@ import {
   useDashboardActionContext,
   useDashboardStateContext,
 } from "@/dashboard/state"
-import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
+import {
+  Box,
+  Copy,
+  CreateRoundedButton,
+  Flex,
+  Pill,
+  Redacted,
+  Spacer,
+  Stack,
+} from "@/shared/components"
 import { IconArrowDown, IconArrowTop, IconCross } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
-
+import { useModalActions } from "@/shared/hooks"
 import { DashboardPagination } from "../DashboardPagination"
 import { SearchInput } from "../SearchInput"
 import { ShippingCard } from "../ShippingCard"
 import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
 import { SortFilterBar } from "../SortFilterBar"
 
-interface IShipping {
-  code: string
-}
-
 interface IDashboardListProps {
   isLoading: boolean
-  bookings: IShipping[]
+  bookings: any[]
   shippingType: ShippingType
 }
 
@@ -38,14 +43,15 @@ const DashboardListPlaceholder = () => (
 )
 
 export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
+  const { open } = useModalActions()
   const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
     useDashboardStateContext()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
       (shippingType === ShippingType.Shipment &&
-        (!!status || !!recipientName || destinationAddress)) ||
-        (shippingType === ShippingType.Quote && (!!originalAddress || destinationAddress)),
+        (!!status || !!recipientName || !!destinationAddress)) ||
+        (shippingType === ShippingType.Quote && (!!originalAddress || !!destinationAddress)),
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
 
@@ -156,7 +162,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
       <Spacer size={12} />
       <Stack as="ul" space={12}>
         {bookings.map((booking) => (
-          <ShippingCard key={booking.code} booking={booking} shippingType={shippingType} />
+          <ShippingCard key={booking?.id} booking={booking} shippingType={shippingType} />
         ))}
       </Stack>
       {bookings.length > 0 ? (
@@ -181,6 +187,15 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
           />
         </>
       ) : null}
+
+      <CreateRoundedButton
+        size="lg"
+        color="black"
+        iconSize="lg"
+        ariaLabel="Create button"
+        buttonCss={{ zIndex: "$9", position: "fixed", bottom: "$56", right: "$16" }}
+        onClick={() => open("createShipment")}
+      />
     </>
   )
 }

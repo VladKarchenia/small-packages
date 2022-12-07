@@ -1,6 +1,6 @@
 import React from "react"
 import { CSS } from "@/config"
-import { Copy } from "@/shared/components"
+import { Copy, IFormLabelProps } from "@/shared/components"
 import { SSearchFilterDrawerPreview } from "./SearchFilterDrawerPreview.styles"
 
 export interface ISearchFilterDrawerPreviewProps {
@@ -8,6 +8,7 @@ export interface ISearchFilterDrawerPreviewProps {
   description?: string
   placeholder?: string
   hidePlaceholder?: boolean
+  labelProps?: IFormLabelProps
   onClick?: (event: unknown) => void
   dataTestid?: string
   css?: CSS
@@ -25,6 +26,7 @@ export const SearchFilterDrawerPreview = React.forwardRef<
       description,
       placeholder,
       hidePlaceholder = false,
+      labelProps,
       onClick,
       dataTestid,
       css,
@@ -38,6 +40,11 @@ export const SearchFilterDrawerPreview = React.forwardRef<
         {description ? (
           <Copy scale={10} css={{ paddingBottom: "$4" }}>
             {description}
+            {labelProps?.required ? (
+            <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+              *
+            </Copy>
+          ) : null}
           </Copy>
         ) : null}
         <SSearchFilterDrawerPreview
