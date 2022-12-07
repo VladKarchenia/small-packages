@@ -9,3 +9,6 @@ export const API_URLS = {
 }
 
 export const MODAL_ANIMATION_DURATION = 200
+
+export const HOME = "/"
+export const USER_MANAGEMENT = "/profile"

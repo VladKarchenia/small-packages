@@ -1,4 +1,4 @@
-import { SearchFilterDrawer, useDrawerActions } from "@/shared/components"
+import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/components"
 import { IconArrowLeft } from "@/shared/icons"
 import { IAddress } from "@/shared/state"
 import { useState } from "react"
@@ -8,12 +8,16 @@ interface ILocationInputProps {
   initialValue: IAddress
   onChange: (locationDetails: IAddress) => void
   placeholder: string
+  description?: string
+  labelProps?: IFormLabelProps
 }
 
 export const LocationInput: React.FC<ILocationInputProps> = ({
   initialValue,
   onChange,
   placeholder,
+  description,
+  labelProps,
 }) => {
   const { close } = useDrawerActions()
 
@@ -51,6 +55,9 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
       drawerTitle="Find destination"
       value={locationDetails.location}
       placeholder={placeholder}
+      hidePlaceholder
+      description={description}
+      labelProps={labelProps}
       closeIcon={<IconArrowLeft />}
       drawerForm={
         <LocationInputForm

@@ -8,9 +8,9 @@ export type ComboboxItemFormat = {
   label: string
 }
 
-export type ComboboxContextValue = UseComboboxReturnValue<ComboboxItemFormat> & {}
+type ComboboxContextValue = UseComboboxReturnValue<ComboboxItemFormat> & {}
 
-export type ComboboxProps = UseComboboxReturnValue<ComboboxItemFormat> & {
+type ComboboxProps = UseComboboxReturnValue<ComboboxItemFormat> & {
   className?: string
   children: React.ReactNode
 }

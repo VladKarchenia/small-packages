@@ -1,23 +1,8 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import {
-  Box,
-  ButtonIcon,
-  Copy,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  Flex,
-  Spacer,
-  Stack,
-  StatusLabel,
-} from "@/shared/components"
-import { IconMore } from "@/shared/icons"
+import { Box, Copy, Divider, Flex, Spacer, Stack, StatusLabel } from "@/shared/components"
 import { ShippingType } from "@/shipment"
+import { ShipmentStatus } from "@/shared/types"
+import { ActionDetailsButton } from "../ActionDetailsButton"
 import { SShippingCard } from "./ShippingCard.styles"
-import { useModalActions } from "@/shared/hooks"
-import { Role, ShipmentStatus } from "@/shared/types"
-import { useStateContext } from "@/shared/state"
 
 interface IShipping {
   code: string
@@ -29,29 +14,7 @@ interface IShippingCardProps {
 }
 
 export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
-  const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
   const { code } = booking
-  const { open } = useModalActions()
-  const navigate = useNavigate()
-
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
-
-  const handleEditClick = () => {
-    // TODO: navigate to edit shipment/quote stepper page
-    shippingType === ShippingType.Quote ? navigate("/tracking") : navigate("/tracking")
-  }
-
-  const handleEliminateClick = (event: Event) => {
-    event.stopPropagation()
-    // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
-    shippingType === ShippingType.Quote ? open("cancelQuote") : open("cancelShipment")
-  }
-
-  const handleDeleteClick = () => {
-    // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
-    shippingType === ShippingType.Quote ? open("deleteQuote") : open("deleteShipment")
-  }
 
   return (
     <SShippingCard href={"/tracking"}>
@@ -72,35 +35,7 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
           <Copy scale={9}>18.10.2022</Copy>
           {/* <Copy scale={9}>{booking.date}</Copy> */}
         </Box>
-        <Dropdown
-          asChild
-          trigger={
-            <ButtonIcon
-              type="button"
-              ariaLabel="Show more button"
-              icon={<IconMore fixedSize width={4} height={20} />}
-              onClick={(e: React.SyntheticEvent) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-            />
-          }
-          open={isActionDropdownOpen}
-          onOpenChange={() => setActionDropdownOpen(!isActionDropdownOpen)}
-          contentCss={{
-            paddingY: "$0",
-            borderRadius: "$8",
-          }}
-          // disabled={disabled}
-        >
-          <Stack space={0} dividers>
-            <DropdownItem key={"Edit"} label={"Edit"} onSelect={handleEditClick} />
-            <DropdownItem key={"Eliminate"} label={"Eliminate"} onSelect={handleEliminateClick} />
-            {role === Role.Admin ? (
-              <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
-            ) : null}
-          </Stack>
-        </Dropdown>
+        <ActionDetailsButton shippingType={shippingType} />
       </Flex>
       <Divider />
       <ShippingCardInfo shippingType={shippingType} />

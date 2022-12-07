@@ -32,7 +32,7 @@ export interface DestinationComboboxProps {
   onSelect: (location: string, placeId: string) => void
   initialValue?: string
   isDesktop?: boolean
-  placeholder: string
+  placeholder?: string
 }
 
 export const DestinationCombobox = ({

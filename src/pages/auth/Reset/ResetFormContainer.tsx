@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { object, string, TypeOf } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { ResetInput } from "@/api/types"
 import { ResetForm } from "./ResetForm"
-
-const resetSchema = object({
-  password: string()
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-  confirmPassword: string()
-    .min(1, "Confirm password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-})
-
-export type ResetInput = TypeOf<typeof resetSchema>
 
 const defaultValues: ResetInput = {
   password: "",
@@ -25,9 +11,8 @@ const defaultValues: ResetInput = {
 export const ResetFormContainer = () => {
   const [isPasswordChanged, setIsPasswordChanged] = useState(false)
   const methods = useForm<ResetInput>({
-    mode: "all",
+    mode: "onChange",
     defaultValues,
-    resolver: zodResolver(resetSchema),
   })
 
   const {
@@ -54,7 +39,11 @@ export const ResetFormContainer = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
-        <ResetForm defaultValues={defaultValues} isLoading={false} isPasswordChanged={isPasswordChanged} />
+        <ResetForm
+          defaultValues={defaultValues}
+          isLoading={false}
+          isPasswordChanged={isPasswordChanged}
+        />
       </form>
     </FormProvider>
   )

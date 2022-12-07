@@ -107,7 +107,12 @@ export const ShipmentForm = () => {
     {
       title: "Ready Date",
       data: stepperState.date,
-      mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
+      mainContent: (
+        <ShipmentDateDetails
+          shippingType={ShippingType.Shipment}
+          handleContinueClick={handleContinueClick}
+        />
+      ),
       shortContent: <ShipmentDateDetailsShort />,
     },
     {

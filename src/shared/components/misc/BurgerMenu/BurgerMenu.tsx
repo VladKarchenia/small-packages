@@ -1,12 +1,10 @@
 import React from "react"
 import { Copy, Drawer, Stack, useDrawer, useDrawerActions } from "@/shared/components"
 import { BurgerMenuButton } from "./BurgerMenuButton"
+import { HOME, USER_MANAGEMENT } from "@/constants"
 import { ComponentProps } from "@/utils"
 import { SNavLink } from "./NavLink.styles"
 import { IconCross } from "@/shared/icons"
-
-export const HOME = "/"
-export const USER_MANAGEMENT = "/profile"
 
 export interface INavItem {
   href: string

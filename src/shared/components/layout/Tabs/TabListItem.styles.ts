@@ -9,6 +9,7 @@ export const STabListItem = styled("button", {
 
   after: {
     backgroundColor: "$neutrals-9",
+    borderRadius: "$8",
     content: "''",
     bottom: "$0",
     height: "$2",
@@ -21,6 +22,8 @@ export const STabListItem = styled("button", {
   },
 
   "@sm": {
+    paddingTop: "$0",
+
     hover: {
       after: {
         transform: "scaleX(1)",
@@ -30,7 +33,8 @@ export const STabListItem = styled("button", {
   },
 
   "@md": {
-    paddingBottom: "$20",
+    bottom: "-1px",
+    paddingBottom: "$16",
   },
 
   hover: {

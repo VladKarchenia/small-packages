@@ -113,7 +113,7 @@ export const TrackingContainer = () => {
 
   if (shippingType === ShippingType.Quote) {
     return (
-      <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
+      <>
         <HeaderBar title="Quote details" onClick={() => navigate("/")} />
         <Stack space={16}>
           <TrackingHeader
@@ -137,7 +137,7 @@ export const TrackingContainer = () => {
                   <Flex align="center">
                     <IconClock size="xs" css={{ paddingRight: "$8" }} />
                     <Copy scale={9} color="system-black">
-                      {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                      {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
                     </Copy>
                   </Flex>
                 </TrackingDetailsItem>
@@ -198,11 +198,12 @@ export const TrackingContainer = () => {
             ) : null}
           </GridContainer>
         </Stack>
-      </GridContainer>
+        <Spacer size={{ "@initial": 48, "@sm": 0 }} />
+      </>
     )
   }
   return (
-    <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
+    <>
       <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
       <Stack space={16}>
         <TrackingHeader
@@ -233,7 +234,7 @@ export const TrackingContainer = () => {
                 <Stack space={12}>
                   {role === Role.Admin ? (
                     <Copy scale={9} color="system-black">
-                      Pickup date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                      Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
                     </Copy>
                   ) : null}
                   <Copy scale={9} color="system-black">
@@ -322,6 +323,7 @@ export const TrackingContainer = () => {
           </GridContainer>
         ) : null}
       </Stack>
-    </GridContainer>
+      <Spacer size={{ "@initial": 48, "@sm": 0 }} />
+    </>
   )
 }

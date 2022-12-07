@@ -25,7 +25,7 @@ const callAll =
     fns.forEach((fn) => fn && fn(...args))
   }
 
-export type TooltipTrigger = "click" | "hover" | "focus" | "none"
+type TooltipTrigger = "click" | "hover" | "focus" | "none"
 
 export interface ITooltipProps extends ComponentProps<typeof STooltipTrigger> {
   children?: React.ReactNode

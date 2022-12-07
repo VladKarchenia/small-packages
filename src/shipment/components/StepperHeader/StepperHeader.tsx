@@ -1,41 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { HeaderBar, useStepperContext } from "@/shared/components"
-import { StepName, ShippingType } from "@/shipment"
-
-const getPrevStep = ({
-  shippingType,
-  currentStep,
-}: {
-  shippingType: ShippingType
-  currentStep: string
-}) => {
-  let prevStep = currentStep
-
-  if (shippingType === ShippingType.Quote) {
-    switch (currentStep) {
-      case StepName.SHIPMENT:
-        prevStep = StepName.INFO
-        break
-      case StepName.RATES:
-        prevStep = StepName.SHIPMENT
-        break
-    }
-  } else {
-    switch (currentStep) {
-      case StepName.TO:
-        prevStep = StepName.FROM
-        break
-      case StepName.SHIPMENT:
-        prevStep = StepName.TO
-        break
-      case StepName.RATES:
-        prevStep = StepName.SHIPMENT
-        break
-    }
-  }
-
-  return prevStep
-}
+import { StepName, ShippingType, getPrevStep } from "@/shipment"
 
 export const StepperHeader = ({
   shippingType,
@@ -48,7 +13,7 @@ export const StepperHeader = ({
   const { selected, setSelected } = useStepperContext("StepperHeader")
   const isFirstStep = selected[0] === StepName.INFO || selected[0] === StepName.FROM
 
-  const handleBackClick = () => {
+  const onBackHandler = () => {
     if (isFirstStep) {
       return navigate("/")
     }
@@ -57,5 +22,5 @@ export const StepperHeader = ({
     return setSelected([prevStep])
   }
 
-  return <HeaderBar title={title} onClick={handleBackClick} />
+  return <HeaderBar title={title} onClick={onBackHandler} />
 }

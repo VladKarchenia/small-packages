@@ -1,23 +1,14 @@
-import { Box, GridContainer, Spacer, Stack } from "@/shared/components"
+import { Box, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
-import { useStateContext } from "@/shared/state"
+import { MainLayout } from "@/shared/layouts/main"
 
 export const Profile = () => {
-  const stateContext = useStateContext()
-  const user = stateContext?.state.authUser
-
   return (
     <CommonLayout>
-      <GridContainer>
-        <Spacer size={40} />
+      <MainLayout mobileFullBleed={false}>
+        <Spacer size={{ "@initial": 40, "@sm": 0 }} />
         <Box>Profile Page</Box>
-        <Stack space={24}>
-          <Box>{user?.id}</Box>
-          <Box>{user?.name}</Box>
-          <Box>{user?.email}</Box>
-          <Box>{user?.role}</Box>
-        </Stack>
-      </GridContainer>
+      </MainLayout>
     </CommonLayout>
   )
 }

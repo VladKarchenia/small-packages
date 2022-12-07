@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Controller, useFormContext } from "react-hook-form"
 import { Button, Copy, Flex, FormInput, Spacer, Stack, Title } from "@/shared/components"
-import { RecoveryInput } from "./RecoveryFormContainer"
+import { RecoveryInput } from "@/api/types"
 
 export const RecoveryForm = ({
   defaultValues,
@@ -15,6 +15,7 @@ export const RecoveryForm = ({
     control,
     formState: { errors },
     watch,
+    register,
   } = useFormContext<RecoveryInput>()
 
   const [isEmailSent, setIsEmailSent] = useState(false)
@@ -60,6 +61,16 @@ export const RecoveryForm = ({
             return (
               <FormInput
                 {...field}
+                {...register(field.name, {
+                  required: {
+                    value: true,
+                    message: "Required field",
+                  },
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email",
+                  },
+                })}
                 id="email"
                 label="Email"
                 type="email"

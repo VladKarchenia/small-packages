@@ -4,18 +4,18 @@ import { CommonLayout } from "@/shared/layouts/common"
 export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <CommonLayout>
-      <GridContainer css={{ height: "100%" }}>
+      <GridContainer css={{ height: "100%" }} fullBleed={{ "@initial": false, "@sm": true }}>
         <Grid
           columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
           columnGap={32}
-          css={{ "@sm": { height: "100vh" }, height: "100%" }}
+          css={{ height: `calc(var(--vh) * 100)` }}
         >
           <GridItem
             column={{
-              "@initial": "span 6",
+              "@initial": "1 / span 6",
               "@sm": "2 / span 10",
               "@md": "4 / span 6",
-              "@lg": "8 / span 10",
+              "@lg": "9 / span 8",
             }}
             css={{
               display: "flex",
@@ -23,7 +23,7 @@ export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ childr
               justifyContent: "center",
             }}
           >
-            <Box>
+            <Flex justify={{ "@sm": "center" }}>
               <a
                 aria-haspopup="false"
                 aria-label="Logo name"
@@ -32,17 +32,26 @@ export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ childr
                 href={"/"}
                 style={{ textDecoration: "none" }}
               >
-                <Flex>
+                <Flex css={{ height: "$40", "@sm": { height: "$64" } }}>
                   <img
                     alt="logo"
                     src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                    style={{ height: "38px" }}
                   />
                 </Flex>
               </a>
+            </Flex>
+            <Spacer size={{ "@initial": 32, "@sm": 48 }} />
+            <Box
+              css={{
+                "@sm": {
+                  padding: "$40",
+                  border: "1px solid $neutrals-4",
+                  borderRadius: "$8",
+                },
+              }}
+            >
+              {children}
             </Box>
-            <Spacer size={32} />
-            {children}
             <Spacer size={96} />
           </GridItem>
         </Grid>

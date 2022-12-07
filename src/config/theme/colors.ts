@@ -7,7 +7,6 @@ export const brand = {
     dark: "#b47f0f",
     darker: "#866010",
     darkest: "#684a0b",
-    aaa: "red",
   },
   blue: {
     lightest: "#effbfc",

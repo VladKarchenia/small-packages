@@ -4,7 +4,7 @@ import { Title } from "@/shared/components"
 
 import { SModalHeader } from "./Header.styles"
 
-export type ModalHeaderProps = ComponentProps<typeof SModalHeader> & {
+type ModalHeaderProps = ComponentProps<typeof SModalHeader> & {
   title?: string
 }
 

@@ -44,7 +44,7 @@ export const LoggedOutLabel: React.FC<ILoggedOutLabelProps> = ({ isTransparent }
       trigger={
         <ButtonIcon
           type="button"
-          ariaLabel="Show more button"
+          ariaLabel="Account button"
           icon={
             <IconAccount
               width={32}
@@ -53,6 +53,7 @@ export const LoggedOutLabel: React.FC<ILoggedOutLabelProps> = ({ isTransparent }
               theme={isTransparent ? "transparent" : "default"}
               css={{
                 borderRadius: "$rounded",
+                cursor: "pointer",
               }}
             />
           }

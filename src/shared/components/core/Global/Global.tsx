@@ -33,7 +33,7 @@ const globalStyles = (backgroundColor?: Colors) => {
 
     /* Set core body defaults */
     body: {
-      minHeight: "100vh",
+      minHeight: `calc(var(--vh) * 100)`,
       fontFamily: "$sans",
       fontStyle: "normal",
       fontStretch: "normal",

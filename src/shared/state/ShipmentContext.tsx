@@ -3,11 +3,12 @@ import React, { createContext, useContext, useState } from "react"
 export enum PickupType {
   Schedule = "Schedule a pickup",
 }
+
 export enum ParcelContentType {
   Gift = "Gift",
   Company = "Data within my company",
   Selling = "Selling items",
-  Documents = "Documents of no commercial value",
+  Documents = "Non commercial documents",
   Samples = "Product samples",
   Repair = "Items to be repaired",
   Return = "Items for return",
@@ -49,7 +50,7 @@ export interface IAddress {
   state: string
   city: string
   address1: string
-  address2: string
+  address2?: string
   isResidential?: boolean
 }
 
@@ -66,42 +67,56 @@ export interface ShipmentState {
   sender: IPerson
   recipient: IPerson
   parcels: IParcel[]
-  date: Date | null
+  date: Date
   rate: IRate
 }
 
 const initialShipmentState: ShipmentState = {
   sender: {
-    name: "",
-    phone: "",
+    // name: "",
+    name: "Vlad Karch",
+    // phone: "",
+    phone: "+111111111111",
     extension: "",
-    email: "",
+    // email: "",
+    email: "blabla@gmail.com",
     company: "",
     fullAddress: {
       // location: "",
       location: "USA, New York",
       country: "USA",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
+      // zipCode: "",
+      zipCode: "12345",
+      // state: "",
+      state: "State",
+      // city: "",
+      city: "City",
+      // address1: "",
+      address1: "Address 1",
       address2: "",
     },
   },
   recipient: {
-    name: "",
-    phone: "",
+    // name: "",
+    name: "Natalia Zakh",
+    // phone: "",
+    phone: "+12222222222",
     extension: "",
-    email: "",
+    // email: "",
+    email: "miamia@gmail.com",
     company: "",
     fullAddress: {
       // location: "",
       location: "USA, Los Angeles",
       country: "USA",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
+      // zipCode: "",
+      zipCode: "67890",
+      // state: "",
+      state: "State",
+      // city: "",
+      city: "City",
+      // address1: "",
+      address1: "Address 2",
       address2: "",
       isResidential: false,
     },
@@ -109,7 +124,7 @@ const initialShipmentState: ShipmentState = {
   parcels: [
     {
       pickupType: PickupType.Schedule,
-      weight: "0.1",
+      weight: "1.0",
       dimensions: {
         length: "1",
         width: "1",
@@ -117,20 +132,7 @@ const initialShipmentState: ShipmentState = {
       },
       packageType: PackageType.Own,
       content: ParcelContentType.Gift,
-      totalPrice: "0.1",
-      totalCurrency: "USD",
-    },
-    {
-      pickupType: PickupType.Schedule,
-      weight: "0.2",
-      dimensions: {
-        length: "3",
-        width: "3",
-        height: "3",
-      },
-      packageType: PackageType.Own,
-      content: ParcelContentType.Gift,
-      totalPrice: "100",
+      totalPrice: "20.00",
       totalCurrency: "USD",
     },
   ],
@@ -138,8 +140,8 @@ const initialShipmentState: ShipmentState = {
   date: new Date(),
   rate: {
     rateType: "",
-    // name: "",
-    name: "UPS, Delivery",
+    name: "",
+    // name: "UPS, Delivery",
     // price: 0,
     price: 1520,
     currency: "",

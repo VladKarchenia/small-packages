@@ -4,7 +4,7 @@ export const SDrawerContent = styled("div", {
   display: "flex",
   flexDirection: "column",
   flex: 1,
-  // TODO: 60px it's a header height
+  // 60px here is Drawer's header height
   height: "calc(100% - 60px)",
   padding: "$48 $24",
 

@@ -1,4 +1,4 @@
-import { CreateButton, Modal, ModalProps, Stack } from "@/shared/components"
+import { CreateRoundedButton, Modal, ModalProps, Stack } from "@/shared/components"
 import { useModal, useModalActions } from "@/shared/hooks"
 import { ShippingType } from "@/shipment"
 import { useNavigate } from "react-router-dom"
@@ -41,13 +41,13 @@ export const CreateShipmentModal = () => {
   return (
     <Modal {...createShipment} {...modalProps}>
       <Stack space={20} css={{ display: "flex", flexDirection: "column", alignItems: "end" }}>
-        <CreateButton
+        <CreateRoundedButton
           label="Creare a quote"
           iconSize="sm"
           ariaLabel="Creare a quote"
           onClick={() => handleClick(ShippingType.Quote)}
         />
-        <CreateButton
+        <CreateRoundedButton
           label="Creare a shipment"
           iconSize="sm"
           ariaLabel="Creare a shipment"
