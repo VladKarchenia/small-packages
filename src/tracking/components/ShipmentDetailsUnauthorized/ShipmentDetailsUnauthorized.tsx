@@ -1,22 +1,23 @@
-import { useShipmentStateContext } from "@/shared/state"
-import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
 import {
   AddressInfoShort,
   Copy,
   GridItem,
+  Hidden,
   Map,
   ShortInfoLine,
   Spacer,
   Stack,
   Title,
 } from "@/shared/components"
+import { IconCalendar } from "@/shared/icons"
+import { useShipmentStateContext } from "@/shared/state"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/config"
 import { ShipmentRoute, TrackingDetailsItem, SHIPMENT_DETAILS } from "@/tracking"
 import {
   STrackingGrid,
   STrackingGridItem,
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
-import { IconCalendar } from "@/shared/icons"
 
 export const ShipmentDetailsUnauthorized = () => {
   const data = SHIPMENT_DETAILS
@@ -40,13 +41,15 @@ export const ShipmentDetailsUnauthorized = () => {
       }}
     >
       <STrackingGridItem css={{ gridArea: "main" }}>
-        {isSmallAndAbove ? (
+        <Hidden below="sm">
           <Title as="h3" scale={7} color="system-black">
             Main Info
           </Title>
-        ) : null}
-        {isSmallAndAbove ? <Spacer size={24} /> : null}
-        {isSmallAndAbove ? (
+        </Hidden>
+        <Hidden below="sm">
+          <Spacer size={24} />
+        </Hidden>
+        <Hidden below="sm">
           <Stack space={32}>
             <TrackingDetailsItem
               title="From where to where"
@@ -72,7 +75,8 @@ export const ShipmentDetailsUnauthorized = () => {
               </Stack>
             </TrackingDetailsItem>
           </Stack>
-        ) : (
+        </Hidden>
+        <Hidden above="sm">
           <Stack space={24} dividers>
             <>
               <TrackingDetailsItem title="From where to where" titleSize={11}>
@@ -102,8 +106,9 @@ export const ShipmentDetailsUnauthorized = () => {
               <ShipmentRoute routes={data.routes} />
             </TrackingDetailsItem>
           </Stack>
-        )}
+        </Hidden>
       </STrackingGridItem>
+
       <GridItem
         column={{ "@sm": "span 3" }}
         css={{ gridArea: "map", margin: "0 -$16", "@sm": { margin: "0" } }}
@@ -111,7 +116,7 @@ export const ShipmentDetailsUnauthorized = () => {
         <Map />
       </GridItem>
 
-      {isSmallAndAbove ? (
+      <Hidden below="sm">
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"
@@ -123,7 +128,7 @@ export const ShipmentDetailsUnauthorized = () => {
             <ShipmentRoute routes={data.routes} />
           </TrackingDetailsItem>
         </STrackingGridItem>
-      ) : null}
+      </Hidden>
     </STrackingGrid>
   )
 }

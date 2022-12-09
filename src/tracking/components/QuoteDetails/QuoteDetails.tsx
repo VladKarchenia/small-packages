@@ -1,3 +1,4 @@
+import { format } from "date-fns"
 import { useShipmentStateContext } from "@/shared/state"
 import {
   AddressInfoShort,
@@ -8,12 +9,11 @@ import {
   Spacer,
   Stack,
 } from "@/shared/components"
+import { IconCalendar, IconClock } from "@/shared/icons"
 import { TrackingDetailsItem } from "@/tracking"
 import { ShippingType } from "@/shipment"
-import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
-import { IconCalendar, IconClock } from "@/shared/icons"
-import { format } from "date-fns"
 import { ShipmentStatus } from "@/shared/types"
+import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 interface IQuoteDetailsProps {
   shippingType?: ShippingType
@@ -33,7 +33,6 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
         },
         "@sm": {
           maxWidth: "565px",
-          paddingBottom: "$48",
           marginLeft: "initial",
         },
       }}

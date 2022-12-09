@@ -94,7 +94,7 @@ export const TrackingContainer = () => {
   if (shippingType === ShippingType.Quote) {
     return (
       <GridContainer css={{ paddingBottom: "$48" }}>
-        <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
+        <HeaderBar title="Quote details" onClick={() => navigate("/")} />
         <TrackingHeader
           shipmentID={data.shipmentID}
           shipmentDate={new Date(data.shipmentDate)}

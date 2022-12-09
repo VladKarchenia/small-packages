@@ -1,7 +1,5 @@
-import { ButtonIcon, Copy, Flex, GridContainer, Spacer, Stack } from "@/shared/components"
+import { ButtonIcon, Copy, Flex, GridContainer, Hidden, Stack } from "@/shared/components"
 import { IconChevronTop, IconChevronDown } from "@/shared/icons"
-import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
 
 interface IShipmentCostProps {
   title: string
@@ -16,26 +14,24 @@ export const ShipmentCostsHeader = ({
   showCostsDetails,
   handleShowDetailsClick,
 }: IShipmentCostProps) => {
-  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
-
   return (
     <GridContainer fullBleed>
       <Stack space={8}>
         <Flex align="center" justify="between">
           <Copy
-            scale={isSmallAndAbove ? 7 : 11}
-            color={isSmallAndAbove ? "system-black" : "neutrals-7"}
+            scale={{ "@initial": 11, "@sm": 7 }}
+            color={{ "@initial": "neutrals-7", "@sm": "system-black" }}
             bold
           >
             {title}
           </Copy>
-          {isSmallAndAbove ? null : (
+          <Hidden above="sm">
             <ButtonIcon
               ariaLabel="Show details"
               icon={showCostsDetails ? <IconChevronTop /> : <IconChevronDown />}
               onClick={handleShowDetailsClick}
             />
-          )}
+          </Hidden>
         </Flex>
       </Stack>
       <Copy scale={{ "@initial": 8, "@sm": 6 }} color="system-black" bold>

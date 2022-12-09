@@ -33,13 +33,16 @@ export const ShipmentRoutePoint = ({
       </SRoutePointIcon>
       <Box>
         <Copy
-          scale={{ "@initial": 8, "@sm": 8 }}
+          scale={8} //TODO: check fonts { "@initial": 8, "@sm": 8 }
           color={isStepCompleted || isStepInProgress ? "system-black" : "neutrals-5"}
         >
           {status}
         </Copy>
         {date ? (
-          <Copy scale={{ "@initial": 9, "@sm": 9 }} color="neutrals-5">
+          <Copy
+            scale={9} //TODO: check fonts { "@initial": 9, "@sm": 9 }
+            color="neutrals-5"
+          >
             {date}
           </Copy>
         ) : (

@@ -1,3 +1,18 @@
+import { format } from "date-fns"
+import {
+  AddressInfoShort,
+  Copy,
+  Flex,
+  GridItem,
+  Map,
+  PersonInfoShort,
+  ShortInfoLine,
+  Spacer,
+  Stack,
+  Title,
+  Hidden,
+} from "@/shared/components"
+import { IconCalendar } from "@/shared/icons"
 import { useShipmentStateContext } from "@/shared/state"
 import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/config"
@@ -11,28 +26,13 @@ import {
   ShipmentLabelContainer,
 } from "@/tracking"
 import {
-  AddressInfoShort,
-  Copy,
-  Flex,
-  GridItem,
-  Map,
-  PersonInfoShort,
-  ShortInfoLine,
-  Spacer,
-  Stack,
-  Title,
-} from "@/shared/components"
-import {
   STrackingGrid,
   STrackingGridItem,
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
-import { format } from "date-fns"
-import { IconCalendar } from "@/shared/icons"
 
 export const ShipmentDetails = () => {
   const data = SHIPMENT_DETAILS
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
-  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
 
   return (
     <STrackingGrid
@@ -41,12 +41,12 @@ export const ShipmentDetails = () => {
       rows={"auto auto"}
     >
       <STrackingGridItem css={{ gridArea: "main" }}>
-        {isSmallAndAbove ? (
+        <Hidden below="sm">
           <Title as="h3" scale={{ "@initial": 8, "@sm": 7 }}>
             Main Info
           </Title>
-        ) : null}
-        {isSmallAndAbove ? (
+        </Hidden>
+        <Hidden below="sm">
           <Stack space={24}>
             <TrackingDetailsItem
               title="From where to where"
@@ -107,7 +107,8 @@ export const ShipmentDetails = () => {
               </Stack>
             </TrackingDetailsItem>
           </Stack>
-        ) : (
+        </Hidden>
+        <Hidden above="sm">
           <Stack space={24} dividers>
             <>
               <TrackingDetailsItem
@@ -192,7 +193,7 @@ export const ShipmentDetails = () => {
               <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
             </TrackingDetailsItem>
           </Stack>
-        )}
+        </Hidden>
       </STrackingGridItem>
 
       <GridItem
@@ -202,7 +203,7 @@ export const ShipmentDetails = () => {
         <Map />
       </GridItem>
 
-      {isSmallAndAbove ? (
+      <Hidden below="sm">
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"
@@ -214,9 +215,9 @@ export const ShipmentDetails = () => {
             <ShipmentRoute routes={data.routes} />
           </TrackingDetailsItem>
         </STrackingGridItem>
-      ) : null}
+      </Hidden>
 
-      {isSmallAndAbove ? (
+      <Hidden below="sm">
         <STrackingGridItem css={{ gridArea: "usersInfo" }}>
           <Stack space={12}>
             <TrackingDetailsItem
@@ -237,14 +238,14 @@ export const ShipmentDetails = () => {
             </TrackingDetailsItem>
           </Stack>
         </STrackingGridItem>
-      ) : null}
+      </Hidden>
 
       <STrackingGridItem css={{ gridArea: "costs" }}>
         <ShipmentCosts title="Costs" price={rate.price} costs={costs} />
       </STrackingGridItem>
 
       <STrackingGridItem css={{ gridArea: "labels" }}>
-        {isSmallAndAbove ? (
+        <Hidden below="sm">
           <TrackingDetailsItem
             title="Tracking number"
             titleIndent={20}
@@ -253,7 +254,7 @@ export const ShipmentDetails = () => {
           >
             <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
           </TrackingDetailsItem>
-        ) : null}
+        </Hidden>
 
         <Title as="h3" scale={{ "@initial": 8, "@sm": 7 }}>
           Shipment label

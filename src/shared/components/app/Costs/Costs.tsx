@@ -8,8 +8,6 @@ interface ICostsProps {
 }
 
 export const Costs = ({ costs }: ICostsProps) => {
-  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
-
   return (
     <GridContainer fullBleed>
       <Stack space={{ "@initial": 12, "@sm": 16 }} css={{ paddingTop: "$16" }}>
@@ -18,7 +16,7 @@ export const Costs = ({ costs }: ICostsProps) => {
             <Flex justify="between" key={cost.name}>
               <Copy
                 scale={{ "@initial": 9, "@sm": 8 }}
-                color={isSmallAndAbove ? "system-black" : "neutrals-7"}
+                color={{ "@initial": "system-black", "@sm": "neutrals-7" }}
               >
                 {cost.name}
               </Copy>

@@ -27,12 +27,7 @@ export const ShipmentCosts = ({ title, price, costs }: IShipmentCostsProps) => {
         showCostsDetails={showCostsDetails}
         handleShowDetailsClick={handleShowDetailsClick}
       />
-      {isSmallAndAbove ? (
-        <Costs costs={costs} />
-      ) : showCostsDetails ? (
-        <Costs costs={costs} />
-      ) : null}
-      {/*{showCostsDetails ? <Costs costs={costs} /> : null}*/}
+      {isSmallAndAbove || showCostsDetails ? <Costs costs={costs} /> : null}
     </>
   )
 }
