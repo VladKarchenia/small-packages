@@ -1,9 +1,10 @@
+import format from "date-fns/format"
 import { ButtonIcon, Copy, Flex, GridContainer, Stack } from "@/shared/components"
 import { StatusLabel } from "@/shared/components/app"
 import { IconPencil } from "@/shared/icons"
+import { useStateContext } from "@/shared/state"
 import { Role, ShipmentStatus } from "@/shared/types"
 import { ShippingType } from "@/shipment"
-import format from "date-fns/format"
 
 interface ITrackingHeaderProps {
   shipmentID: string
@@ -16,10 +17,12 @@ interface ITrackingHeaderProps {
 export const TrackingHeader = ({
   shipmentID,
   shipmentDate,
-  role,
   shippingType,
   status,
 }: ITrackingHeaderProps) => {
+  const stateContext = useStateContext()
+  const role = stateContext?.state.authUser?.role
+
   return (
     <GridContainer fullBleed>
       <Stack space={{ "@initial": 8, "@sm": 12 }}>

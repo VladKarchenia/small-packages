@@ -11,8 +11,6 @@ import {
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
 import { useShipmentStateContext } from "@/shared/state"
-import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
 import { ShipmentRoute, TrackingDetailsItem, SHIPMENT_DETAILS } from "@/tracking"
 import {
   STrackingGrid,
@@ -22,7 +20,6 @@ import {
 export const ShipmentDetailsUnauthorized = () => {
   const data = SHIPMENT_DETAILS
   const { rate, recipient, sender } = useShipmentStateContext()
-  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
 
   return (
     <STrackingGrid
@@ -32,11 +29,11 @@ export const ShipmentDetailsUnauthorized = () => {
       css={{
         "@initial": {
           gridTemplateAreas: `"map"
-                                "main"`,
+                              "main"`,
         },
         "@sm": {
           gridTemplateAreas: `"main  map " 
-                                "route map "`,
+                              "route map "`,
         },
       }}
     >

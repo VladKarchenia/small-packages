@@ -1,14 +1,13 @@
+import { Spacer } from "@/shared/components"
 import { useStateContext } from "@/shared/state"
 import { ICost, Role, ShipmentStatus } from "@/shared/types"
-import { GridContainer, HeaderBar, Spacer } from "@/shared/components"
+import { ShippingType } from "@/shipment"
 import {
   ShipmentDetailsUnauthorized,
   ShipmentDetails,
   QuoteDetails,
-  TrackingHeader,
+  TrackingMain,
 } from "@/tracking"
-import { ShippingType } from "@/shipment"
-import { useNavigate } from "react-router-dom"
 
 export const costs: ICost[] = [
   {
@@ -89,51 +88,46 @@ export const TrackingContainer = () => {
 
   const stateContext = useStateContext()
   const role = stateContext?.state.authUser?.role
-  const navigate = useNavigate()
 
   if (shippingType === ShippingType.Quote) {
     return (
-      <GridContainer css={{ paddingBottom: "$48" }}>
-        <HeaderBar title="Quote details" onClick={() => navigate("/")} />
-        <TrackingHeader
-          shipmentID={data.shipmentID}
-          shipmentDate={new Date(data.shipmentDate)}
-          role={role}
-          shippingType={shippingType as ShippingType}
-          status={status}
-        />
-        <Spacer size={{ "@initial": 16, "@sm": 24 }} />
+      <TrackingMain
+        headerTitle="Quote detail"
+        shipmentID={data.shipmentID}
+        shipmentDate={new Date(data.shipmentDate)}
+        shippingType={shippingType as ShippingType}
+        status={status}
+      >
         <QuoteDetails shippingType={data.shippingType} status={data.status} />
-      </GridContainer>
+      </TrackingMain>
     )
-  } else if (role === Role.Admin) {
+  }
+
+  if (role === Role.Admin) {
     return (
-      <GridContainer css={{ paddingBottom: "$48" }}>
-        <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
-        <TrackingHeader
-          shipmentID={data.shipmentID}
-          shipmentDate={new Date(data.shipmentDate)}
-          role={role}
-          shippingType={shippingType as ShippingType}
-          status={status}
-        />
+      <TrackingMain
+        headerTitle="Shipment details"
+        shipmentID={data.shipmentID}
+        shipmentDate={new Date(data.shipmentDate)}
+        shippingType={shippingType as ShippingType}
+        status={status}
+      >
         <Spacer size={{ "@initial": 16, "@sm": 24 }} />
         <ShipmentDetails />
-      </GridContainer>
+      </TrackingMain>
     )
-  } else
-    return (
-      <GridContainer css={{ paddingBottom: "$48" }}>
-        <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
-        <TrackingHeader
-          shipmentID={data.shipmentID}
-          shipmentDate={new Date(data.shipmentDate)}
-          role={role}
-          shippingType={shippingType as ShippingType}
-          status={status}
-        />
-        <Spacer size={{ "@initial": 16, "@sm": 24 }} />
-        <ShipmentDetailsUnauthorized />
-      </GridContainer>
-    )
+  }
+
+  return (
+    <TrackingMain
+      headerTitle="Shipment details"
+      shipmentID={data.shipmentID}
+      shipmentDate={new Date(data.shipmentDate)}
+      shippingType={shippingType as ShippingType}
+      status={status}
+    >
+      <Spacer size={{ "@initial": 16, "@sm": 24 }} />
+      <ShipmentDetailsUnauthorized />
+    </TrackingMain>
+  )
 }
