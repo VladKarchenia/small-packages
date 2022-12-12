@@ -14,8 +14,6 @@ import {
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
 import { useShipmentStateContext } from "@/shared/state"
-import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
 import {
   SHIPMENT_DETAILS,
   costs,
@@ -48,22 +46,13 @@ export const ShipmentDetails = () => {
         </Hidden>
         <Hidden below="sm">
           <Stack space={24}>
-            <TrackingDetailsItem
-              title="From where to where"
-              titleColor={"neutrals-7"}
-              titleSize={9}
-              titleIndent={16}
-            >
+            <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
                 fromAddress={sender.fullAddress.location}
                 toAddress={recipient.fullAddress.location}
               />
             </TrackingDetailsItem>
-            <TrackingDetailsItem
-              title="Date and delivery service"
-              titleColor={"neutrals-7"}
-              titleSize={9}
-            >
+            <TrackingDetailsItem title="Date and delivery service">
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
                   Pickup date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
@@ -75,7 +64,7 @@ export const ShipmentDetails = () => {
               </Stack>
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Shipment Details" titleColor={"neutrals-7"} titleSize={9}>
+            <TrackingDetailsItem title="Shipment Details">
               <Stack space={12}>
                 {parcels.map((parcel, index) => (
                   <Stack space={8} key={index}>
@@ -111,20 +100,11 @@ export const ShipmentDetails = () => {
         <Hidden above="sm">
           <Stack space={24} dividers>
             <>
-              <TrackingDetailsItem
-                title="Tracking number"
-                titleIndent={4}
-                titleColor={"neutrals-7"}
-                titleSize={11}
-              >
+              <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
                 <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
               </TrackingDetailsItem>
               <Spacer size={24} />
-              <TrackingDetailsItem
-                title="From where to where"
-                titleColor={"neutrals-7"}
-                titleSize={11}
-              >
+              <TrackingDetailsItem title="From where to where" titleScale={11}>
                 <AddressInfoShort
                   fromAddress={sender.fullAddress.location}
                   toAddress={recipient.fullAddress.location}
@@ -132,11 +112,7 @@ export const ShipmentDetails = () => {
               </TrackingDetailsItem>
             </>
 
-            <TrackingDetailsItem
-              title="Date and delivery service"
-              titleColor={"neutrals-7"}
-              titleSize={11}
-            >
+            <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
                   Pickup date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
@@ -148,7 +124,7 @@ export const ShipmentDetails = () => {
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
               </Stack>
             </TrackingDetailsItem>
-            <TrackingDetailsItem title="Shipment Details" titleColor={"neutrals-7"} titleSize={11}>
+            <TrackingDetailsItem title="Shipment Details" titleScale={11}>
               <Stack space={12}>
                 {parcels.map((parcel, index) => (
                   <Stack space={8} key={index}>
@@ -180,16 +156,16 @@ export const ShipmentDetails = () => {
               </Stack>
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Route" titleColor={"neutrals-7"} titleSize={11}>
+            <TrackingDetailsItem title="Route" titleScale={11}>
               {/* TODO: Fix Route block after BE data and final design */}
               <ShipmentRoute routes={data.routes} />
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Sender’s info" titleColor={"neutrals-7"} titleSize={11}>
+            <TrackingDetailsItem title="Sender’s info" titleScale={11}>
               <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Recipient’s info" titleColor={"neutrals-7"} titleSize={11}>
+            <TrackingDetailsItem title="Recipient’s info" titleScale={11}>
               <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
             </TrackingDetailsItem>
           </Stack>
@@ -207,7 +183,7 @@ export const ShipmentDetails = () => {
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"
-            titleSize={7}
+            titleScale={7}
             titleColor={"system-black"}
             titleIndent={24}
           >
@@ -222,7 +198,7 @@ export const ShipmentDetails = () => {
           <Stack space={12}>
             <TrackingDetailsItem
               title="Sender’s info"
-              titleSize={7}
+              titleScale={7}
               titleColor={"system-black"}
               titleIndent={24}
             >
@@ -230,7 +206,7 @@ export const ShipmentDetails = () => {
             </TrackingDetailsItem>
             <TrackingDetailsItem
               title="Recipient’s info"
-              titleSize={7}
+              titleScale={7}
               titleColor={"system-black"}
               titleIndent={24}
             >
@@ -249,11 +225,12 @@ export const ShipmentDetails = () => {
           <TrackingDetailsItem
             title="Tracking number"
             titleIndent={20}
-            titleSize={7}
+            titleScale={7}
             titleColor={"system-black"}
           >
             <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
           </TrackingDetailsItem>
+          <Spacer size={32} />
         </Hidden>
 
         <Title as="h3" scale={{ "@initial": 8, "@sm": 7 }}>

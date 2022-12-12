@@ -112,7 +112,6 @@ export const TrackingContainer = () => {
         shippingType={shippingType as ShippingType}
         status={status}
       >
-        <Spacer size={{ "@initial": 16, "@sm": 24 }} />
         <ShipmentDetails />
       </TrackingMain>
     )
@@ -126,7 +125,6 @@ export const TrackingContainer = () => {
       shippingType={shippingType as ShippingType}
       status={status}
     >
-      <Spacer size={{ "@initial": 16, "@sm": 24 }} />
       <ShipmentDetailsUnauthorized />
     </TrackingMain>
   )

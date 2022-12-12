@@ -1,7 +1,5 @@
 import { Copy, Flex, GridContainer, Stack } from "@/shared/components"
 import { ICost } from "@/shared/types"
-import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
 
 interface ICostsProps {
   costs: ICost[]

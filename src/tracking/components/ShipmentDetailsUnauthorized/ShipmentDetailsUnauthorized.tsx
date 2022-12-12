@@ -48,22 +48,13 @@ export const ShipmentDetailsUnauthorized = () => {
         </Hidden>
         <Hidden below="sm">
           <Stack space={32}>
-            <TrackingDetailsItem
-              title="From where to where"
-              titleColor={"neutrals-7"}
-              titleSize={9}
-              titleIndent={16}
-            >
+            <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
                 fromAddress={sender.fullAddress.location}
                 toAddress={recipient.fullAddress.location}
               />
             </TrackingDetailsItem>
-            <TrackingDetailsItem
-              title="Date and delivery service"
-              titleColor={"neutrals-7"}
-              titleSize={9}
-            >
+            <TrackingDetailsItem title="Date and delivery service">
               <Stack space={16}>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
@@ -76,7 +67,7 @@ export const ShipmentDetailsUnauthorized = () => {
         <Hidden above="sm">
           <Stack space={24} dividers>
             <>
-              <TrackingDetailsItem title="From where to where" titleSize={11}>
+              <TrackingDetailsItem title="From where to where" titleScale={11}>
                 <AddressInfoShort
                   fromAddress={sender.fullAddress.location}
                   toAddress={recipient.fullAddress.location}
@@ -84,7 +75,7 @@ export const ShipmentDetailsUnauthorized = () => {
               </TrackingDetailsItem>
             </>
 
-            <TrackingDetailsItem title="Date and delivery service" titleSize={11} titleIndent={16}>
+            <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
                   Arrival date: {data.arrivalDate}
@@ -93,12 +84,7 @@ export const ShipmentDetailsUnauthorized = () => {
               </Stack>
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem
-              title="Route"
-              titleSize={11}
-              titleColor={"neutrals-7"}
-              titleIndent={16}
-            >
+            <TrackingDetailsItem title="Route" titleScale={11}>
               {/* TODO: Fix Route block after BE data and final design */}
               <ShipmentRoute routes={data.routes} />
             </TrackingDetailsItem>
@@ -117,7 +103,7 @@ export const ShipmentDetailsUnauthorized = () => {
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"
-            titleSize={7}
+            titleScale={7}
             titleColor={"system-black"}
             titleIndent={24}
           >

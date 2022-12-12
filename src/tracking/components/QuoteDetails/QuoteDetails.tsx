@@ -1,5 +1,4 @@
 import { format } from "date-fns"
-import { useShipmentStateContext } from "@/shared/state"
 import {
   AddressInfoShort,
   Button,
@@ -10,9 +9,10 @@ import {
   Stack,
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
+import { useShipmentStateContext } from "@/shared/state"
+import { ShipmentStatus } from "@/shared/types"
 import { TrackingDetailsItem } from "@/tracking"
 import { ShippingType } from "@/shipment"
-import { ShipmentStatus } from "@/shared/types"
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 interface IQuoteDetailsProps {
@@ -39,14 +39,14 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
     >
       <STrackingSection>
         <Stack space={24} dividers>
-          <TrackingDetailsItem title="From where to where" titleSize={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="From where to where" titleScale={{ "@initial": 11, "@sm": 9 }}>
             <AddressInfoShort
               fromAddress={sender.fullAddress.location}
               toAddress={recipient.fullAddress.location}
             />
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Pickup Date" titleSize={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@sm": 9 }}>
             <Flex align="center">
               <IconClock size="xs" css={{ paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
@@ -55,7 +55,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
             </Flex>
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Shipment Details" titleSize={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@sm": 9 }}>
             <Stack space={12}>
               {parcels.map((parcel, index) => (
                 <Stack space={8} key={index}>

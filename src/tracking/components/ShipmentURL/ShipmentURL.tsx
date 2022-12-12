@@ -48,11 +48,13 @@ export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
         </SShipmentURLButton>
       </CopyToClipboard>
       {/* TODO: maybe move it to toast? */}
-      <SShipmentURLMessage>
-        <Copy scale={10} color="neutrals-7">
-          {copiedToClipboard ? "URL was copied" : ``}
-        </Copy>
-      </SShipmentURLMessage>
+      {copiedToClipboard ? (
+        <SShipmentURLMessage>
+          <Copy scale={10} color="neutrals-7">
+            URL was copied
+          </Copy>
+        </SShipmentURLMessage>
+      ) : null}
     </>
   )
 }

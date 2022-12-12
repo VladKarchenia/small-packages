@@ -8,6 +8,7 @@ export const STrackingSection = styled("div", {
 })
 
 export const STrackingGridItem = styled(GridItem, {
+  height: "100%",
   border: "1px solid $neutrals-4",
   borderRadius: "$8",
   padding: "$16",
