@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react"
+import { DATE_CEIL_INTERVAL } from "@/constants"
 
 export enum PickupType {
   Schedule = "Schedule a pickup",
@@ -137,7 +138,8 @@ const initialShipmentState: ShipmentState = {
     },
   ],
   // date: null,
-  date: new Date(),
+  // date: new Date(),
+  date: new Date(Math.ceil(new Date().getTime() / DATE_CEIL_INTERVAL) * DATE_CEIL_INTERVAL),
   rate: {
     rateType: "",
     name: "",

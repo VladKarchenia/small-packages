@@ -11,12 +11,12 @@ import {
 import { IconCross, IconSearch } from "@/shared/icons"
 import { useClearButton } from "@/shared/hooks"
 import { DestinationCombobox } from "@/shipment"
-import { SComboboxClearButton, SPopoverTriggerInput } from "./GlobalSearch.styles"
+import { SComboboxClearButton } from "./GlobalSearch.styles"
 
 export const GlobalSearch = () => {
   const { t } = useTranslation()
   const { clearRef, isClearButtonClick } = useClearButton()
-  const { clearRef: inputRef, isClearButtonClick: isInputClick } = useClearButton()
+  const { clearRef: triggerRef, isClearButtonClick: isTriggerClick } = useClearButton()
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState<string>("")
 
@@ -43,8 +43,8 @@ export const GlobalSearch = () => {
   const handleClearButton = () => {
     setSearchValue("")
     // onChange({ location: "", placeId: "" })
-    if (inputRef.current) {
-      ;(inputRef.current as HTMLInputElement).focus()
+    if (triggerRef.current) {
+      ;(triggerRef.current as HTMLInputElement).focus()
     }
   }
 
@@ -53,6 +53,7 @@ export const GlobalSearch = () => {
       <PopoverAnchor asChild={true}>
         <Flex align="center" css={{ position: "relative" }}>
           <FormInput
+            ref={triggerRef}
             value={searchValue}
             label="Search"
             labelProps={{ hidden: true }}
@@ -75,7 +76,7 @@ export const GlobalSearch = () => {
               }
             }}
             prefix={<IconSearch height={20} width={20} fixedSize />}
-            css={{ width: "410px", paddingRight: "$56" }}
+            css={{ width: "410px", height: "$40", minHeight: "$40", paddingRight: "$56" }}
           />
           {searchValue?.length > 0 && (
             <SComboboxClearButton
@@ -100,7 +101,7 @@ export const GlobalSearch = () => {
           //   }
           //   return
           // }
-          if (isInputClick(e)) {
+          if (isTriggerClick(e)) {
             return
           }
           return setIsOpen(false)

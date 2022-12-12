@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Box,
   Copy,
@@ -16,6 +16,7 @@ import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard
 import { SStatusFilterButton } from "./DashboardTableNameFilter.styles"
 
 const namesMockList = [
+  "James Bond",
   "Harry Brown",
   "Oviler Calhoun",
   "Jack Donaldson",
@@ -26,43 +27,43 @@ const namesMockList = [
 export const DashboardTableNameFilter = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { recipientName } = useDashboardStateContext()
-  const { setRecipientNameFilter } = useDashboardActionContext()
+  const { setRecipientNameFilter, resetFilterField } = useDashboardActionContext()
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [searchValue, setSearchValue] = useState<string>("")
+  const triggerRef = useRef<any>()
+  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    // if (!event.currentTarget.checked && Array.isArray(status)) {
-    //   const newArray = status.filter((status) => status !== event.currentTarget.value)
-    //   return setStatusFilter(newArray)
-    // }
-    // if (Array.isArray(status)) {
-    //   const newArray = [...status, event.currentTarget.value as ShipmentStatus]
-    //   return setStatusFilter(newArray)
-    // }
+    if (!event.currentTarget.checked) {
+      const newArray = recipientName.filter((name) => name !== event.currentTarget.value)
+      return setRecipientNameFilter(newArray)
+    }
+
+    const newArray = [...recipientName, event.currentTarget.value as string]
+    return setRecipientNameFilter(newArray)
   }
 
   const handleCheckAllClick = (event: React.FormEvent<HTMLInputElement>) => {
-    // if (!event.currentTarget.checked && Array.isArray(status)) {
-    //   return setStatusFilter([])
-    // }
-    // if (Array.isArray(status)) {
-    //   return setStatusFilter(shipmentStatusesList)
-    // }
+    if (!event.currentTarget.checked) {
+      return resetFilterField("recipientName")
+    }
+
+    return setRecipientNameFilter(namesMockList)
   }
 
   useEffect(() => {
-    // if (status && status?.length === 8) {
-    //   setIsCheckAll(true)
-    // } else {
-    //   setIsCheckAll(false)
-    // }
+    if (recipientName.length === namesMockList.length) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
   }, [recipientName])
 
   return (
     <Popover open={isOpen}>
       <PopoverAnchor asChild>
         <SStatusFilterButton
-          // ref={inputRef}
+          ref={triggerRef}
           onClick={() => {
             if (!isOpen) {
               return setIsOpen(true)
@@ -92,9 +93,9 @@ export const DashboardTableNameFilter = () => {
           //   }
           //   return
           // }
-          // if (isInputClick(e)) {
-          //   return
-          // }
+          if (isTriggerClick(e)) {
+            return
+          }
           return setIsOpen(false)
         }}
         onOpenAutoFocus={(e) => {
@@ -153,10 +154,11 @@ export const DashboardTableNameFilter = () => {
               name={item}
               id={item}
               label={item}
-              checked={status?.includes(item)}
+              checked={recipientName.includes(item)}
             />
           </Box>
         ))}
+        {/* TODO: Add logic to fix the Show more button */}
         <Box css={{ padding: "$12 $16" }}>
           <Copy
             scale={8}

@@ -1,51 +1,39 @@
-import { Grid, Flex, SearchFilterCombobox } from "@/shared/components"
-import { DestinationCombobox } from "@/shipment"
+import {
+  Grid,
+  Flex,
+  SearchTermCombobox,
+  RecipientNameFilterCombobox,
+  OriginalAddressFilterCombobox,
+  DestinationAddressFilterCombobox,
+} from "@/shared/components"
+// import { DestinationCombobox } from "@/shipment"
 
-type ComboboxType = "address" | "string"
+type ComboboxType = "searchTerm" | "recipientName" | "originalAddress" | "destinationAddress"
 
 export interface ISearchFilterDrawerFormProps {
-  initialValue: string
-  onSelect: (value: any) => void
   comboboxType: ComboboxType
-  placeholder: string
 }
 
-function getComboboxComponent(
-  type: ComboboxType,
-  initialValue: any,
-  onSelect: (value: string, label: string) => void,
-  placeholder: string,
-) {
+function getComboboxComponent(type: ComboboxType) {
   switch (type) {
-    case "string":
-      return (
-        <SearchFilterCombobox
-          initialValue={initialValue}
-          onSelect={onSelect}
-          placeholder={placeholder}
-        />
-      )
-    case "address":
-      return (
-        <DestinationCombobox
-          initialValue={initialValue}
-          onSelect={onSelect}
-          placeholder={placeholder}
-        />
-      )
+    case "recipientName":
+      return <RecipientNameFilterCombobox />
+    case "searchTerm":
+      return <SearchTermCombobox />
+    case "originalAddress":
+      return <OriginalAddressFilterCombobox />
+    case "destinationAddress":
+      return <DestinationAddressFilterCombobox />
   }
 }
 
 export const SearchFilterDrawerForm: React.FC<ISearchFilterDrawerFormProps> = ({
-  initialValue,
-  onSelect,
   comboboxType,
-  placeholder,
 }) => {
   return (
     <Grid rows="calc(100% - $80) $80" css={{ height: "100%" }}>
-      <Flex direction="column" css={{ padding: "$16" }}>
-        {getComboboxComponent(comboboxType, initialValue, onSelect, placeholder)}
+      <Flex direction="column" css={{ paddingY: "$16" }}>
+        {getComboboxComponent(comboboxType)}
       </Flex>
     </Grid>
   )

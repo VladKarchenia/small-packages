@@ -38,6 +38,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       offset,
       fullWidth,
       scrollable,
+      direction,
       closeIcon,
       hasSeparator,
       panelCss,
@@ -61,6 +62,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             nested={nested}
             offset={offset}
             scrollable={scrollable}
+            direction={direction}
           >
             <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
               {header}

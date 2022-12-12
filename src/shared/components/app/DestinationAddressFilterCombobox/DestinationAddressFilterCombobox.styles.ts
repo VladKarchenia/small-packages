@@ -2,7 +2,7 @@ import { styled } from "@/config"
 import { ComboboxMenu, ComboboxItem } from "@/shared/components"
 
 export const SSearchFilterComboboxMenu = styled(ComboboxMenu, {
-  marginTop: "$16",
+  marginTop: "$8",
 
   "@md": {
     marginTop: 0,

@@ -10,6 +10,7 @@ export interface ISearchFilterDrawerPreviewProps {
   hidePlaceholder?: boolean
   labelProps?: IFormLabelProps
   onClick?: (event: unknown) => void
+  onFocus?: (event: unknown) => void
   dataTestid?: string
   css?: CSS
   prefix?: React.ReactElement
@@ -17,7 +18,7 @@ export interface ISearchFilterDrawerPreviewProps {
 }
 
 export const SearchFilterDrawerPreview = React.forwardRef<
-  HTMLInputElement,
+  HTMLButtonElement,
   ISearchFilterDrawerPreviewProps
 >(
   (
@@ -28,6 +29,7 @@ export const SearchFilterDrawerPreview = React.forwardRef<
       hidePlaceholder = false,
       labelProps,
       onClick,
+      onFocus,
       dataTestid,
       css,
       prefix,
@@ -41,15 +43,17 @@ export const SearchFilterDrawerPreview = React.forwardRef<
           <Copy scale={10} css={{ paddingBottom: "$4" }}>
             {description}
             {labelProps?.required ? (
-            <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
-              *
-            </Copy>
-          ) : null}
+              <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+                *
+              </Copy>
+            ) : null}
           </Copy>
         ) : null}
         <SSearchFilterDrawerPreview
+          ref={ref}
           type="button"
           onClick={onClick}
+          onFocus={onFocus}
           data-testid={dataTestid}
           withIcon={!!prefix}
           css={css}

@@ -22,7 +22,7 @@ export const ShipmentDateDetails = ({
 
   return (
     <GridContainer fullBleed>
-      <Stack space={12}>
+      <Stack space={12} css={{ position: "relative" }}>
         <Copy scale={9}>Please, select a ready date to calculate the cost</Copy>
         <DateInput date={date} />
       </Stack>
