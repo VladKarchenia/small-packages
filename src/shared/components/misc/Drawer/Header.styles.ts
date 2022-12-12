@@ -15,12 +15,10 @@ export const SDrawerHeader = styled("header", {
 
   "@sm": {
     paddingX: "$32",
-    height: "$64",
   },
 
   "@lg": {
     paddingX: "$48",
-    height: "$80",
   },
 
   variants: {

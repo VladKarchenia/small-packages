@@ -1,9 +1,9 @@
 import { CSS } from "@/config"
 import { Copy, Spacer } from "@/shared/components"
 import { IconPlus, IconSize } from "@/shared/icons"
-import { SCreateButton, SCreateButtonIcon } from "./CreateButton.styles"
+import { SCreateRoundedButton, SCreateRoundedButtonIcon } from "./CreateRoundedButton.styles"
 
-interface ICreateButtonProps {
+interface ICreateRoundedButtonProps {
   label?: string
   size?: "sm" | "lg"
   color?: "white" | "black"
@@ -13,7 +13,7 @@ interface ICreateButtonProps {
   onClick: () => void
 }
 
-export const CreateButton = ({
+export const CreateRoundedButton = ({
   label,
   size,
   color,
@@ -21,9 +21,9 @@ export const CreateButton = ({
   ariaLabel,
   onClick,
   buttonCss,
-}: ICreateButtonProps) => {
+}: ICreateRoundedButtonProps) => {
   return (
-    <SCreateButton onClick={onClick} css={buttonCss}>
+    <SCreateRoundedButton onClick={onClick} css={buttonCss}>
       {label ? (
         <>
           <Copy scale={8} color="system-white" bold>
@@ -32,13 +32,13 @@ export const CreateButton = ({
           <Spacer size={12} horizontal />
         </>
       ) : null}
-      <SCreateButtonIcon
+      <SCreateRoundedButtonIcon
         icon={<IconPlus size={iconSize} />}
         ariaLabel={ariaLabel}
         size={size}
         color={color}
         css={{ borderRadius: "$rounded" }}
       />
-    </SCreateButton>
+    </SCreateRoundedButton>
   )
 }

@@ -11,6 +11,7 @@ import {
   TabularData,
 } from "@/shared/components"
 import { DashboardTableHead } from "./DashboardTableHead"
+import { ShippingType } from "@/shipment"
 
 const PlaceholderRow = () => (
   <TableRow>
@@ -73,12 +74,16 @@ const PlaceholderRow = () => (
   </TableRow>
 )
 
-export const DashboardTablePlaceholder = () => {
+interface IDashboardTablePlaceholderProps {
+  shippingType: ShippingType
+}
+
+export const DashboardTablePlaceholder = ({ shippingType }: IDashboardTablePlaceholderProps) => {
   const { t } = useTranslation()
 
   return (
     <Table caption="Dashboard table">
-      <DashboardTableHead />
+      <DashboardTableHead shippingType={shippingType} />
       <TableBody>
         {Array.from(new Array(20), (_, index) => index).map((v) => (
           <PlaceholderRow key={`placeholder-row-${v}`} />

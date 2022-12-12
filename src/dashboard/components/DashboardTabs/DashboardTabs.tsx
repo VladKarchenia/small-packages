@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Box, TabList, TabListItem, TabPanel, TabPanels, Tabs } from "@/shared/components"
 import { useMedia } from "@/shared/hooks"
@@ -8,39 +7,286 @@ import { ShippingType } from "@/shipment"
 
 const loading = false
 const bookings = [
-  { code: "12" },
-  { code: "34" },
-  { code: "56" },
-  { code: "121" },
-  { code: "341" },
-  { code: "561" },
-  { code: "122" },
-  { code: "342" },
-  { code: "562" },
-  { code: "123" },
-  { code: "343" },
-  { code: "563" },
+  {
+    id: "#10214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#20214-7Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#30214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#40214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#50214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#60214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#70214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#80214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#90214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#21214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#22214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#23214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#24214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#25214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#26214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#27214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#28214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#29214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#20214-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
+  {
+    id: "#20114-8Z",
+    sender: {
+      name: "Vlad Karch",
+      fullAddress: { location: "USA, New York, 601 AMSTERDAM AVE STATEN ISLAND 44" },
+    },
+    recipient: {
+      name: "Natali Zakh",
+      fullAddress: { location: "USA, Los Angeles, 101 AMSTERDAM AVE STATEN ISLAND 34" },
+    },
+    creationDate: "Oct 9, 2022",
+    status: "Confirmed",
+  },
 ]
 
 export const DashboardTabs = () => {
   const { t } = useTranslation()
-  const isMedium = useMedia([mediaQueries.md], [true], false)
-  const [showTable, setShowTable] = useState(false)
-
-  useEffect(() => {
-    setShowTable(isMedium)
-  }, [isMedium])
+  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
 
   return (
-    <Tabs selectedTab="shipments">
-      <TabList label="dashboard-tabs" css={{ marginBottom: "$20" }}>
+    <Tabs
+      selectedTab="shipments"
+      animate={false}
+      css={{ paddingBottom: "$40", "@sm": { paddingBottom: "$0" } }}
+    >
+      <TabList label="dashboard-tabs">
         <TabListItem id="shipments">Shipments</TabListItem>
         <TabListItem id="quotes">Quotes</TabListItem>
       </TabList>
       <TabPanels>
         <TabPanel id="shipments">
           <Box>
-            {showTable ? (
+            {isMediumAndAbove ? (
               <DashboardTable
                 isLoading={loading}
                 bookings={bookings}
@@ -57,7 +303,7 @@ export const DashboardTabs = () => {
         </TabPanel>
         <TabPanel id="quotes">
           <Box>
-            {showTable ? (
+            {isMediumAndAbove ? (
               <DashboardTable
                 isLoading={loading}
                 bookings={bookings}

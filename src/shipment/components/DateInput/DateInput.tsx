@@ -1,24 +1,83 @@
+import { useRef, useState } from "react"
 import format from "date-fns/format"
-import { SearchFilterDrawer } from "@/shared/components"
+import {
+  Hidden,
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  SearchFilterDrawer,
+  SearchFilterDrawerPreview,
+} from "@/shared/components"
 import { IconArrowLeft, IconCalendar } from "@/shared/icons"
 import { DateInputForm } from "./DateInputForm"
 
 interface IDateInputProps {
-  date: Date | null
+  date: Date
 }
 
 export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const triggerRef = useRef<any>()
+  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
+
   return (
-    <SearchFilterDrawer
-      drawerName="dateInput"
-      drawerTitle="Date and Time"
-      value={date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
-      placeholder={"XX. YY. ZZ 00:00 AM"}
-      hidePlaceholder
-      closeIcon={<IconArrowLeft />}
-      suffix={<IconCalendar />}
-      drawerForm={<DateInputForm />}
-      dataTestid="date-button-filter"
-    />
+    <>
+      <Hidden above="sm">
+        <SearchFilterDrawer
+          drawerName="dateInput"
+          drawerTitle="Date and Time"
+          value={date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+          placeholder={"Select date and time"}
+          hidePlaceholder
+          closeIcon={<IconArrowLeft />}
+          suffix={<IconCalendar />}
+          drawerForm={<DateInputForm />}
+          dataTestid="date-button-filter"
+        />
+      </Hidden>
+
+      <Hidden below="sm">
+        <Popover open={isOpen}>
+          <PopoverAnchor asChild>
+            <SearchFilterDrawerPreview
+              ref={triggerRef}
+              value={date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+              suffix={<IconCalendar />}
+              placeholder={"Select date and time"}
+              hidePlaceholder
+              dataTestid="date-button-filter"
+              css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
+              onClick={() => {
+                if (!isOpen) {
+                  return setIsOpen(true)
+                }
+              }}
+              onFocus={() => {
+                if (!isOpen) {
+                  return setIsOpen(true)
+                }
+              }}
+            />
+          </PopoverAnchor>
+          <PopoverContent
+            align="start"
+            css={{ padding: "$0", border: "none", borderRadius: "$8", zIndex: "$2" }}
+            alignOffset={-1}
+            onInteractOutside={(e) => {
+              if (isTriggerClick(e)) {
+                return
+              }
+
+              return setIsOpen(false)
+            }}
+            onOpenAutoFocus={(e) => {
+              e.preventDefault()
+            }}
+          >
+            <DateInputForm />
+          </PopoverContent>
+        </Popover>
+      </Hidden>
+    </>
   )
 }

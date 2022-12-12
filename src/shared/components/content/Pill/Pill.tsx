@@ -38,7 +38,7 @@ export const Pill = forwardRef<HTMLButtonElement, IPillProps>(
 
         {suffix && (
           <>
-            <Spacer size={4} horizontal />
+            <Spacer size={{ "@initial": 4, "@sm": 12 }} horizontal />
             {suffix}
           </>
         )}

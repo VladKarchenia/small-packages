@@ -3,8 +3,6 @@ import {
   Flex,
   Spacer,
   Stack,
-  Select,
-  SelectItem,
   SearchFilterDrawer,
   SearchFilterDrawerForm,
   FormCheckbox,
@@ -12,6 +10,8 @@ import {
   Button,
   Copy,
   useDrawerActions,
+  FormSelect,
+  Box,
 } from "@/shared/components"
 import { IconChevronLeft } from "@/shared/icons"
 import {
@@ -41,54 +41,35 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
     setRecipientNameFilter,
     setOriginalAddressFilter,
     setDestinationAddressFilter,
+    resetFilterField,
   } = useDashboardActionContext()
   const { close } = useDrawerActions()
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    if (!event.currentTarget.checked && Array.isArray(status)) {
+    if (!event.currentTarget.checked) {
       const newArray = status.filter((status) => status !== event.currentTarget.value)
-      setStatusFilter(newArray)
+      return setStatusFilter(newArray)
+    }
 
-      return
-    }
-    if (Array.isArray(status)) {
-      const newArray = [...status, event.currentTarget.value as ShipmentStatus]
-      setStatusFilter(newArray)
-    }
+    const newArray = [...status, event.currentTarget.value as ShipmentStatus]
+    setStatusFilter(newArray)
   }
 
   const handleResetClick = () => {
     setSortOrder(ShipmentsPagedOrderBy.CreationDateAsc)
     setSortDirection(SortDirection.ASC)
-    setStatusFilter([])
-    setRecipientNameFilter("")
-    setOriginalAddressFilter({
-      location: "USA, New York",
-      country: "",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
-      address2: "",
-    })
-    setDestinationAddressFilter({
-      location: "USA, New York",
-      country: "",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
-      address2: "",
-      isResidential: false,
-    })
-
+    resetFilterField("status")
+    resetFilterField("recipientName")
+    resetFilterField("originalAddress")
+    resetFilterField("destinationAddress")
     close("sortFilterBar")
   }
 
   return (
-    <Grid rows="calc(100vh - $80 - 60px) $80" css={{ height: "100%" }}>
+    // 60px here is Drawer's header height
+    <Grid rows={`calc((var(--vh) * 100) - $80 - 60px) $80`} css={{ height: "100%" }}>
       <Flex direction="column" css={{ padding: "$16", overflow: "auto" }}>
-        <Select
+        <FormSelect
           name="sortBy"
           label="Sort by"
           labelProps={{ hidden: true }}
@@ -107,27 +88,20 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
 
             setSortOrder(val)
           }}
-        >
-          {sortingShipmentList
-            .filter((sortType) =>
-              shippingType === ShippingType.Quote
-                ? sortType !== ShipmentsPagedOrderBy.RecipientNameAsc &&
-                  sortType !== ShipmentsPagedOrderBy.RecipientNameDesc
-                : true,
-            )
-            .map((sortType) => (
-              <SelectItem key={sortType} value={sortType}>
-                {sortType}
-              </SelectItem>
-            ))}
-        </Select>
+          options={sortingShipmentList.filter((sortType) =>
+            shippingType === ShippingType.Quote
+              ? sortType !== ShipmentsPagedOrderBy.RecipientNameAsc &&
+                sortType !== ShipmentsPagedOrderBy.RecipientNameDesc
+              : true,
+          )}
+        />
         <Spacer size={20} />
         <Stack space={16}>
           {shippingType === ShippingType.Shipment ? (
             <SearchFilterDrawer
               drawerName="statusDrawer"
               drawerTitle="Status"
-              value={status?.join(", ")}
+              value={status.join(", ")}
               description="Status"
               placeholder="Status"
               hidePlaceholder
@@ -135,19 +109,26 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
               drawerForm={
                 <Grid rows="1fr $80" css={{ height: "100%" }}>
                   <Flex direction="column" css={{ padding: "$16" }}>
-                    <Stack space={12}>
-                      {shipmentStatusesList.map((item) => (
+                    {shipmentStatusesList.map((item) => (
+                      <Box
+                        key={item}
+                        css={{
+                          "> label": {
+                            paddingY: "$16",
+                            cursor: "pointer",
+                          },
+                        }}
+                      >
                         <FormCheckbox
-                          key={item}
                           value={item}
                           onChange={handleChange}
                           name={item}
                           id={item}
                           label={item}
-                          checked={status?.includes(item)}
+                          checked={status.includes(item)}
                         />
-                      ))}
-                    </Stack>
+                      </Box>
+                    ))}
                   </Flex>
                   <Grid
                     gap={{ "@initial": 8, "@sm": 16 }}
@@ -184,10 +165,10 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
               closeIcon={<IconChevronLeft />}
               drawerForm={
                 <SearchFilterDrawerForm
-                  initialValue={recipientName || ""}
-                  onSelect={(name: string) => setRecipientNameFilter(name)}
-                  comboboxType="string"
-                  placeholder="Recipient's name"
+                  // initialValue={recipientName || ""}
+                  // onSelect={(name: string) => setRecipientNameFilter(name)}
+                  // placeholder="Search for recipient's name"
+                  comboboxType="recipientName"
                 />
               }
             />
@@ -196,17 +177,17 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
           {shippingType === ShippingType.Quote ? (
             <SearchFilterDrawer
               drawerName="originalAddressDrawer"
-              drawerTitle="Original address"
+              drawerTitle="Origin address"
               value={""}
-              description="Original address"
-              placeholder="Original address"
+              description="Origin address"
+              placeholder="Origin address"
               closeIcon={<IconChevronLeft />}
               drawerForm={
                 <SearchFilterDrawerForm
-                  initialValue={originalAddress?.location || ""}
-                  onSelect={(address: IAddress) => setOriginalAddressFilter(address)}
-                  comboboxType="address"
-                  placeholder="Original address"
+                  // initialValue={originalAddress?.location || ""}
+                  // onSelect={(address: IAddress) => setOriginalAddressFilter(address)}
+                  // placeholder="Original address"
+                  comboboxType="originalAddress"
                 />
               }
             />
@@ -221,10 +202,10 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
             closeIcon={<IconChevronLeft />}
             drawerForm={
               <SearchFilterDrawerForm
-                initialValue={destinationAddress?.location || ""}
-                onSelect={(address: IAddress) => setDestinationAddressFilter(address)}
-                comboboxType="address"
-                placeholder="Destination address"
+                // initialValue={destinationAddress?.location || ""}
+                // onSelect={(address: IAddress) => setDestinationAddressFilter(address)}
+                // placeholder="Destination address"
+                comboboxType="destinationAddress"
               />
             }
           />

@@ -1,7 +1,6 @@
 import axios from "axios"
 import urljoin from "url-join"
-import { GenericResponse, ILoginResponse, IUserResponse } from "./types"
-import { LoginInput } from "@/pages"
+import { GenericResponse, ILoginResponse, IUserResponse, LoginInput } from "./types"
 import { Role } from "@/shared/types"
 
 // move to .env file

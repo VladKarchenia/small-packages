@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { GridContainer, HeaderBar, Spacer } from "@/shared/components"
+import { HeaderBar, Hidden, Spacer } from "@/shared/components"
 import { ShippingType } from "@/shipment"
 import { ShipmentStatus } from "@/shared/types"
 import { TrackingHeader } from "@/tracking"
@@ -23,8 +23,10 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
   const navigate = useNavigate()
 
   return (
-    <GridContainer css={{ paddingBottom: "$48" }}>
-      <HeaderBar title={headerTitle} onClick={() => navigate("/")} />
+    <>
+      <Hidden above="sm">
+        <HeaderBar title={headerTitle} onClick={() => navigate("/")} />
+      </Hidden>
       <TrackingHeader
         shipmentID={shipmentID}
         shipmentDate={shipmentDate}
@@ -33,6 +35,7 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
       />
       <Spacer size={{ "@initial": 16, "@sm": 24 }} />
       {children}
-    </GridContainer>
+      <Spacer size={{ "@initial": 24, "@sm": 0 }} />
+    </>
   )
 }

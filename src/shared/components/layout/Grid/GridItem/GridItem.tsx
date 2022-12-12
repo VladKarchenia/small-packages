@@ -9,9 +9,9 @@ import { getGridCoords } from "../utils"
 
 import { SGridItem } from "./GridItem.styles"
 
-export type GridItemTrack = string | undefined
+type GridItemTrack = string | undefined
 
-export type GridItemCoord = GridItemTrack | ResponsiveProp<GridItemTrack>
+type GridItemCoord = GridItemTrack | ResponsiveProp<GridItemTrack>
 
 export interface IGridItemProps extends ComponentProps<typeof SGridItem> {
   column?: GridItemCoord

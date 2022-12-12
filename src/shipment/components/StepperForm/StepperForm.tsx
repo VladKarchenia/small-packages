@@ -26,18 +26,10 @@ export const StepperForm = ({ shippingType, title, defaultStep, stepsData }: ISt
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   const methods = useForm<ShipmentState>({
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
-      sender: {
-        ...sender,
-        // TODO: remove it after BE connection with destination service
-        fullAddress: { ...sender.fullAddress, location: "USA, New York" },
-      },
-      recipient: {
-        ...recipient,
-        // TODO: remove it after BE connection with destination service
-        fullAddress: { ...recipient.fullAddress, location: "USA, Los Angeles" },
-      },
+      sender: sender,
+      recipient: recipient,
       parcels: parcels,
       date: date,
       rate: rate,

@@ -1,5 +1,6 @@
 import {
   Drawer,
+  IFormLabelProps,
   SearchFilterDrawerPreview,
   SortFilterBarPreview,
   Title,
@@ -18,6 +19,7 @@ interface ISearchFilterDrawerProps {
   description?: string
   placeholder?: string
   hidePlaceholder?: boolean
+  labelProps?: IFormLabelProps
   dataTestid?: string
   drawerForm: React.ReactNode
 }
@@ -34,6 +36,7 @@ export const SearchFilterDrawer = ({
   description,
   placeholder,
   hidePlaceholder = false,
+  labelProps,
   dataTestid,
   drawerForm,
 }: ISearchFilterDrawerProps) => {
@@ -61,6 +64,7 @@ export const SearchFilterDrawer = ({
             description={description}
             placeholder={placeholder}
             hidePlaceholder={hidePlaceholder}
+            labelProps={labelProps}
             dataTestid={dataTestid}
             css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
           />

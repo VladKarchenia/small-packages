@@ -1,6 +1,7 @@
 import { keyframes, styled } from "@/config"
 import { multipleSelectors, rgba } from "@/utils"
 import {
+  CheckboxItem,
   Content,
   Item,
   ItemIndicator,
@@ -80,6 +81,13 @@ export const SDropdownMenuItem = styled(Item, {
   height: "$40",
   transition: "150ms background-color ease-out",
 
+  "&:first-of-type": {
+    borderRadius: "$8 $8 0 0",
+  },
+  "&:last-of-type": {
+    borderRadius: "0 0 $8 $8",
+  },
+
   ...multipleSelectors(["hover", "keyboardFocus"], {
     backgroundColor: "$neutrals-1",
   }),
@@ -93,6 +101,23 @@ export const SDropdownMenuRadioGroup = styled(RadioGroup, {
 })
 
 export const SDropdownMenuRadioItem = styled(RadioItem, {
+  all: "unset",
+  userSelect: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  position: "relative",
+  height: "$40",
+  cursor: "pointer",
+  transition: "150ms background-color ease-out",
+
+  ...multipleSelectors(["hover", "keyboardFocus"], {
+    backgroundColor: "$neutrals-1",
+  }),
+})
+
+export const SDropdownMenuCheckboxItem = styled(CheckboxItem, {
   all: "unset",
   userSelect: "none",
   display: "flex",

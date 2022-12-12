@@ -9,9 +9,9 @@ import { getGridCoords } from "../utils"
 
 import { SGrid } from "./Grid.styles"
 
-export type GridTrack = number | string | undefined
+type GridTrack = number | string | undefined
 
-export type GridCoord = GridTrack | ResponsiveProp<GridTrack>
+type GridCoord = GridTrack | ResponsiveProp<GridTrack>
 
 /**
  * If needed we can expose an API to easily create "grid areas"

@@ -100,8 +100,8 @@ export const FormField = ({
       {(error || afterField) && (
         <Box css={{ position: "absolute" }}>
           <Flex justify="between">
-            <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
-            <div>{afterField}</div>
+            {error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}
+            {afterField}
           </Flex>
         </Box>
       )}

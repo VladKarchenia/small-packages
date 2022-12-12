@@ -1,7 +1,7 @@
 import { ComponentProps } from "@/utils"
 import { Copy } from "@/shared/components"
 
-export type IErrorLabelProps = ComponentProps<typeof Copy>
+type IErrorLabelProps = ComponentProps<typeof Copy>
 
 export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
   return (
@@ -10,7 +10,7 @@ export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
       as="label"
       color="special-error-text"
       id={`${id}__error`}
-      scale={9}
+      scale={10}
       role="alert"
     >
       {children}

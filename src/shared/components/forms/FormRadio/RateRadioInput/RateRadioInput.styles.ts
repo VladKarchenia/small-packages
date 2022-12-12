@@ -5,11 +5,6 @@ import { rgba } from "@/utils"
 export const SRateRadioInputLabel = styled("label", {
   display: "flex",
   alignItems: "flex-start",
-  paddingBottom: "$12",
-
-  lastChild: {
-    paddingBottom: "$0",
-  },
 })
 
 export const SRateRadioInputBox = styled(Flex, {

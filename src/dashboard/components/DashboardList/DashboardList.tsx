@@ -4,23 +4,28 @@ import {
   useDashboardActionContext,
   useDashboardStateContext,
 } from "@/dashboard/state"
-import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
+import {
+  Box,
+  Copy,
+  CreateRoundedButton,
+  Flex,
+  Pill,
+  Redacted,
+  Spacer,
+  Stack,
+} from "@/shared/components"
 import { IconArrowDown, IconArrowTop, IconCross } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
-
+import { useModalActions } from "@/shared/hooks"
 import { DashboardPagination } from "../DashboardPagination"
 import { SearchInput } from "../SearchInput"
 import { ShippingCard } from "../ShippingCard"
 import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
 import { SortFilterBar } from "../SortFilterBar"
 
-interface IShipping {
-  code: string
-}
-
 interface IDashboardListProps {
   isLoading: boolean
-  bookings: IShipping[]
+  bookings: any[]
   shippingType: ShippingType
 }
 
@@ -38,14 +43,16 @@ const DashboardListPlaceholder = () => (
 )
 
 export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
+  const { open } = useModalActions()
   const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
     useDashboardStateContext()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
       (shippingType === ShippingType.Shipment &&
-        (!!status || !!recipientName || destinationAddress)) ||
-        (shippingType === ShippingType.Quote && (!!originalAddress || destinationAddress)),
+        (status.length > 0 || recipientName.length > 0 || destinationAddress.length > 0)) ||
+        (shippingType === ShippingType.Quote &&
+          (originalAddress.length > 0 || destinationAddress.length > 0)),
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
 
@@ -76,43 +83,40 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
       {isFilterApplied ? (
         <>
           <Flex align="center" wrap>
-            {status && shippingType === ShippingType.Shipment ? (
+            {status.length > 0 && shippingType === ShippingType.Shipment ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("status")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Status filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Status (3)
+                Status ({status.length})
               </Pill>
             ) : null}
 
-            {recipientName && shippingType === ShippingType.Shipment ? (
+            {recipientName.length > 0 && shippingType === ShippingType.Shipment ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("recipientName")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Recipient name filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Recipient name (10)
+                Recipient name ({recipientName.length})
               </Pill>
             ) : null}
 
-            {originalAddress && shippingType === ShippingType.Quote ? (
+            {originalAddress.length > 0 && shippingType === ShippingType.Quote ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("originalAddress")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Original address filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Original address (12)
+                Original address ({originalAddress.length})
               </Pill>
             ) : null}
 
-            {destinationAddress ? (
+            {destinationAddress.length > 0 ? (
               <Pill
                 suffix={
                   <IconCross size="xs" onClick={() => resetFilterField("destinationAddress")} />
@@ -121,8 +125,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Destination address filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Destination address (15)
+                Destination address ({destinationAddress.length})
               </Pill>
             ) : null}
           </Flex>
@@ -156,7 +159,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
       <Spacer size={12} />
       <Stack as="ul" space={12}>
         {bookings.map((booking) => (
-          <ShippingCard key={booking.code} booking={booking} shippingType={shippingType} />
+          <ShippingCard key={booking?.id} booking={booking} shippingType={shippingType} />
         ))}
       </Stack>
       {bookings.length > 0 ? (
@@ -181,6 +184,15 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
           />
         </>
       ) : null}
+
+      <CreateRoundedButton
+        size="lg"
+        color="black"
+        iconSize="lg"
+        ariaLabel="Create button"
+        buttonCss={{ zIndex: "$9", position: "fixed", bottom: "$56", right: "$16" }}
+        onClick={() => open("createShipment")}
+      />
     </>
   )
 }

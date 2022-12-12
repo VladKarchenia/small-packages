@@ -24,7 +24,7 @@ export const TrackingHeader = ({
   const role = stateContext?.state.authUser?.role
 
   return (
-    <GridContainer fullBleed>
+    <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
       <Stack space={{ "@initial": 8, "@sm": 12 }}>
         <Flex align="center" justify={{ "@initial": "between", "@sm": "start" }}>
           <Flex align="center" css={{ marginRight: "$16" }}>

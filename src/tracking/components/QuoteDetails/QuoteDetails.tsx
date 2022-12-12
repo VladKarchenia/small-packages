@@ -50,7 +50,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
             <Flex align="center">
               <IconClock size="xs" css={{ paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
-                {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
+                {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
               </Copy>
             </Flex>
           </TrackingDetailsItem>

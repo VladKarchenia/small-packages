@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Button, Copy, Flex, FormInput, Link, Spacer, Stack, Title } from "@/shared/components"
 
-import { LoginInput } from "./LoginFormContainer"
+import { LoginInput } from "@/api/types"
 import { SShowPasswordButton } from "./LoginForm.styles"
 import { IconClarityEye } from "@/shared/icons"
 
@@ -15,6 +15,7 @@ export const LoginForm = ({
 }) => {
   const {
     control,
+    register,
     formState: { errors },
   } = useFormContext<LoginInput>()
 
@@ -38,6 +39,16 @@ export const LoginForm = ({
             return (
               <FormInput
                 {...field}
+                {...register(field.name, {
+                  required: {
+                    value: true,
+                    message: "Required field",
+                  },
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email",
+                  },
+                })}
                 id="email"
                 label="Email"
                 type="email"
@@ -55,6 +66,12 @@ export const LoginForm = ({
             return (
               <FormInput
                 {...field}
+                {...register(field.name, {
+                  required: {
+                    value: true,
+                    message: "Required field",
+                  },
+                })}
                 id="password"
                 label="Password"
                 type={passwordShown ? "text" : "password"}

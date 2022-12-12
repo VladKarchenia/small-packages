@@ -9,8 +9,8 @@ export interface IFormInputProps
     FormComponentProps<typeof SFormInput, InputHTMLAttributes<HTMLInputElement>> {}
 
 export const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
-  ({ labelProps, prefix, suffix, id, ...props }, ref) => {
-    const fieldProps = getFormFieldProps({ id, labelProps, prefix, suffix, ...props })
+  ({ labelProps, prefix, suffix, id, hasError, ...props }, ref) => {
+    const fieldProps = getFormFieldProps({ id, labelProps, prefix, suffix, hasError, ...props })
 
     return (
       <FormField id={id} {...fieldProps}>

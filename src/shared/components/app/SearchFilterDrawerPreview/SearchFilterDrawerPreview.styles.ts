@@ -12,12 +12,6 @@ export const SSearchFilterDrawerPreview = styled("button", {
   paddingY: "$12",
   borderRadius: "$8",
 
-  "@md": {
-    border: "none",
-    width: "auto",
-    padding: "$0",
-  },
-
   variants: {
     withIcon: {
       true: {

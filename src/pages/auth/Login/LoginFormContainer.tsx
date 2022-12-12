@@ -2,24 +2,14 @@ import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useMutation, useQuery } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { object, string, TypeOf } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "react-toastify"
 import { getMeFn, loginUserFn } from "@/api/authApi"
 import { useStateContext } from "@/shared/state"
+import { LoginInput } from "@/api/types"
 
 import { LoginForm } from "./LoginForm"
 
-const loginSchema = object({
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
-  password: string()
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-})
-
-export type LoginInput = TypeOf<typeof loginSchema>
-// export type LoginInput = TypeOf<typeof loginSchema> & { rememberMe: boolean }
+// TODO: Invalid email or password error after request
 
 const defaultValues: LoginInput = {
   email: "",
@@ -36,9 +26,8 @@ export const LoginFormContainer = () => {
   const stateContext = useStateContext()
 
   const methods = useForm<LoginInput>({
-    mode: "all",
+    mode: "onChange",
     defaultValues,
-    resolver: zodResolver(loginSchema),
   })
 
   const {

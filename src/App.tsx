@@ -60,7 +60,7 @@ const App: React.FC = (): JSX.Element => {
   const routing = useRoutes([mainRoutes, authRoutes])
 
   return (
-    <Box css={{ height: "100vh" }}>
+    <Box>
       <ToastContainer />
       <ModalsContainer />
       {routing}

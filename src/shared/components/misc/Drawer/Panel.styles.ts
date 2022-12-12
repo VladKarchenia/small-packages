@@ -24,14 +24,6 @@ export const SDrawerPanel = styled(DialogContent, {
     width: 500,
   },
 
-  "&[data-state='open']": {
-    animationName: animations.slideIn("right"),
-  },
-
-  "&[data-state='closed']": {
-    animationName: animations.slideOut("right"),
-  },
-
   variants: {
     nested: {
       false: { position: "fixed" },
@@ -49,10 +41,32 @@ export const SDrawerPanel = styled(DialogContent, {
         width: "100%",
       },
     },
+
+    direction: {
+      left: {
+        "&[data-state='open']": {
+          animationName: animations.slideIn("left"),
+        },
+
+        "&[data-state='closed']": {
+          animationName: animations.slideOut("left"),
+        },
+      },
+      right: {
+        "&[data-state='open']": {
+          animationName: animations.slideIn("right"),
+        },
+
+        "&[data-state='closed']": {
+          animationName: animations.slideOut("right"),
+        },
+      },
+    },
   },
 
   defaultVariants: {
     nested: false,
     scrollable: true,
+    direction: "right",
   },
 })

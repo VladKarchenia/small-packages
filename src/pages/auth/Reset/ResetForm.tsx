@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Controller, useFormContext } from "react-hook-form"
 import { Button, Copy, Flex, FormInput, Spacer, Stack, Title } from "@/shared/components"
 import { IconClarityEye } from "@/shared/icons"
-import { ResetInput } from "./ResetFormContainer"
+import { ResetInput } from "@/api/types"
 import { SShowPasswordButton } from "./ResetForm.styles"
 
 export const ResetForm = ({
@@ -19,15 +19,15 @@ export const ResetForm = ({
 
   const {
     control,
-    formState: { errors },
+    register,
     watch,
+    formState: { errors },
   } = useFormContext<ResetInput>()
-  const { password, confirmPassword } = watch()
-
   const [passwordShown, setPasswordShown] = useState(false)
   const [confirmPasswordShown, setConfirmPasswordShown] = useState(false)
   const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
   const toggleConfirmPasswordVisibility = () => setConfirmPasswordShown(!confirmPasswordShown)
+  const { password } = watch()
 
   if (isPasswordChanged) {
     return (
@@ -62,6 +62,32 @@ export const ResetForm = ({
             return (
               <FormInput
                 {...field}
+                {...register(field.name, {
+                  required: {
+                    value: true,
+                    message: "Required field",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z0-9]+$/,
+                    message: "Only alphanumeric characters allowed",
+                  },
+                  validate: {
+                    notOnlyNumbers: (v: string) =>
+                      /^(?=.*\d)/.test(v) || "Alphanumeric characters required",
+                    notOnlyLetters: (v: string) =>
+                      /^(?=.*[a-zA-Z])/.test(v) || "Alphanumeric characters required",
+                    oneUppercaseLetter: (v: string) =>
+                      /^(?=.*[A-Z])/.test(v) || "Minimum 1 uppercase letter required",
+                  },
+                  minLength: {
+                    value: 7,
+                    message: "Password min length not met",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Password max length exceeded",
+                  },
+                })}
                 id="New password"
                 label="New password"
                 type={passwordShown ? "text" : "password"}
@@ -84,6 +110,27 @@ export const ResetForm = ({
             return (
               <FormInput
                 {...field}
+                {...register(field.name, {
+                  required: {
+                    value: true,
+                    message: "Required field",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z0-9]+$/,
+                    message: "Only alphanumeric characters allowed",
+                  },
+                  validate: {
+                    matching: (v: string) => v === password || "Passwords not match",
+                  },
+                  minLength: {
+                    value: 7,
+                    message: "Password min length not met",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Password max length exceeded",
+                  },
+                })}
                 id="Re-enter password"
                 label="Re-enter password"
                 type={confirmPasswordShown ? "text" : "password"}
@@ -103,7 +150,7 @@ export const ResetForm = ({
         />
       </Stack>
       <Spacer size={32} />
-      <Button type="submit" full loading={isLoading} disabled={password !== confirmPassword}>
+      <Button type="submit" full loading={isLoading} disabled={!!errors.confirmPassword?.message}>
         <Copy as="span" scale={8} color="system-white" bold>
           OK
         </Copy>

@@ -3,7 +3,7 @@ import { ComponentProps, createContext } from "@/utils"
 
 import { STabs } from "./Tabs.styles"
 
-export type TabsContextValue = {
+type TabsContextValue = {
   selected: string
   items: string[]
 

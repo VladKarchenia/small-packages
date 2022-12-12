@@ -22,11 +22,11 @@ export interface DashboardState {
   offset: number
   searchTerm: string
   sortOrder: ShipmentsPagedOrderBy
-  direction?: SortDirection
-  status?: ShipmentStatus[] | null
-  recipientName?: string | null
-  originalAddress?: IAddress | null
-  destinationAddress?: IAddress | null
+  direction: SortDirection
+  status: ShipmentStatus[]
+  recipientName: string[]
+  originalAddress: IAddress[]
+  destinationAddress: IAddress[]
 }
 
 const initialDashboardState: DashboardState = {
@@ -35,31 +35,35 @@ const initialDashboardState: DashboardState = {
   searchTerm: "",
   sortOrder: ShipmentsPagedOrderBy.CreationDateAsc,
   direction: SortDirection.ASC,
-  // status: null,
+  // status: [],
   status: [ShipmentStatus.Eliminated, ShipmentStatus.Draft],
-  // recipientName: null,
-  recipientName: "James Bond",
-  // originalAddress: null,
-  originalAddress: {
-    location: "USA, New York",
-    country: "",
-    zipCode: "",
-    state: "",
-    city: "",
-    address1: "",
-    address2: "",
-  },
-  // destinationAddress: null,
-  destinationAddress: {
-    location: "USA, New York",
-    country: "",
-    zipCode: "",
-    state: "",
-    city: "",
-    address1: "",
-    address2: "",
-    isResidential: false,
-  },
+  // recipientName: [],
+  recipientName: ["James Bond"],
+  // originalAddress: [],
+  originalAddress: [
+    {
+      location: "USA, New York",
+      country: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+    },
+  ],
+  // destinationAddress: [],
+  destinationAddress: [
+    {
+      location: "USA, New York",
+      country: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+      isResidential: false,
+    },
+  ],
 }
 
 type DashboardActions = {
@@ -67,10 +71,10 @@ type DashboardActions = {
   setSearchTerm: (value: string) => void
   setSortOrder: (value: ShipmentsPagedOrderBy) => void
   setSortDirection: (value: SortDirection) => void
-  setStatusFilter: (array: ShipmentStatus[] | null) => void
-  setRecipientNameFilter: (value: string) => void
-  setOriginalAddressFilter: (value: IAddress) => void
-  setDestinationAddressFilter: (value: IAddress) => void
+  setStatusFilter: (array: ShipmentStatus[]) => void
+  setRecipientNameFilter: (value: string[]) => void
+  setOriginalAddressFilter: (value: IAddress[]) => void
+  setDestinationAddressFilter: (value: IAddress[]) => void
 }
 
 export const DashboardStateContext = createContext<DashboardState>({} as DashboardState)
@@ -93,7 +97,7 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
       resetFilterField: (field) => {
         setState((prevState) => ({
           ...prevState,
-          [field]: null,
+          [field]: [],
         }))
       },
       setSearchTerm: (value) => {
@@ -120,22 +124,22 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
           status: array,
         }))
       },
-      setRecipientNameFilter: (value) => {
+      setRecipientNameFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          recipientName: value,
+          recipientName: array,
         }))
       },
-      setOriginalAddressFilter: (value) => {
+      setOriginalAddressFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          originalAddress: value,
+          originalAddress: array,
         }))
       },
-      setDestinationAddressFilter: (value) => {
+      setDestinationAddressFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          destinationAddress: value,
+          destinationAddress: array,
         }))
       },
     }),

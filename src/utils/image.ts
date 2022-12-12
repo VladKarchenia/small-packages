@@ -21,7 +21,7 @@ function addProtocolToUrl(url: string): string {
   )
 }
 
-export type GenerateImageSourceParams = {
+type GenerateImageSourceParams = {
   [key: string]: string | number | undefined
 
   w?: string | number

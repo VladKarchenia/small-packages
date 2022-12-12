@@ -7,18 +7,25 @@ import { useModalActions } from "@/shared/hooks"
 
 const rates = [
   {
-    rateType: "UPS",
+    rateType: "UPS (Priority)",
     name: "Express Delivery",
     price: 430,
     currency: "$",
     id: "23",
   },
   {
-    rateType: "UPS",
+    rateType: "UPS (Economy)",
     name: "Economy Delivery",
     price: 200,
     currency: "$",
     id: "24",
+  },
+  {
+    rateType: "FedEx (Economy)",
+    name: "Economy Delivery",
+    price: 250,
+    currency: "$",
+    id: "25",
   },
 ]
 
@@ -63,7 +70,8 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
           onChange={handleChange}
           id="rates-radio-id"
           name="rates-radio-group"
-          // disabled={shippingType === ShippingType.Quote}
+          disabled={shippingType === ShippingType.Quote}
+          withCells
         >
           {rates.map((rate) => (
             <RateRadioInput

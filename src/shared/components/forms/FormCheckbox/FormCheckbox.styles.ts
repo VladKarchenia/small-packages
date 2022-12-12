@@ -6,6 +6,7 @@ import { IconTick } from "@/shared/icons"
 export const SFormCheckboxLabel = styled("label", {
   display: "flex",
   alignItems: "flex-start",
+  cursor: "pointer",
 })
 
 export const SFormCheckboxBox = styled(
