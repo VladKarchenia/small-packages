@@ -50,8 +50,9 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
       (shippingType === ShippingType.Shipment &&
-        (!!status || !!recipientName || !!destinationAddress)) ||
-        (shippingType === ShippingType.Quote && (!!originalAddress || !!destinationAddress)),
+        (status.length > 0 || recipientName.length > 0 || destinationAddress.length > 0)) ||
+        (shippingType === ShippingType.Quote &&
+          (originalAddress.length > 0 || destinationAddress.length > 0)),
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
 
@@ -82,43 +83,40 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
       {isFilterApplied ? (
         <>
           <Flex align="center" wrap>
-            {status && shippingType === ShippingType.Shipment ? (
+            {status.length > 0 && shippingType === ShippingType.Shipment ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("status")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Status filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Status (3)
+                Status ({status.length})
               </Pill>
             ) : null}
 
-            {recipientName && shippingType === ShippingType.Shipment ? (
+            {recipientName.length > 0 && shippingType === ShippingType.Shipment ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("recipientName")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Recipient name filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Recipient name (10)
+                Recipient name ({recipientName.length})
               </Pill>
             ) : null}
 
-            {originalAddress && shippingType === ShippingType.Quote ? (
+            {originalAddress.length > 0 && shippingType === ShippingType.Quote ? (
               <Pill
                 suffix={<IconCross size="xs" onClick={() => resetFilterField("originalAddress")} />}
                 size="small"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Original address filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Original address (12)
+                Original address ({originalAddress.length})
               </Pill>
             ) : null}
 
-            {destinationAddress ? (
+            {destinationAddress.length > 0 ? (
               <Pill
                 suffix={
                   <IconCross size="xs" onClick={() => resetFilterField("destinationAddress")} />
@@ -127,8 +125,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
                 css={{ marginRight: "$8", marginBottom: "$8" }}
                 data-testid={"Destination address filter"}
               >
-                {/* TODO: add number of results or what? */}
-                Destination address (15)
+                Destination address ({destinationAddress.length})
               </Pill>
             ) : null}
           </Flex>

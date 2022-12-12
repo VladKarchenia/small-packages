@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Box,
   Copy,
@@ -19,31 +19,31 @@ const shipmentStatusesList: ShipmentStatus[] = Object.values(ShipmentStatus)
 export const DashboardTableStatusFilter = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { status } = useDashboardStateContext()
-  const { setStatusFilter } = useDashboardActionContext()
+  const { setStatusFilter, resetFilterField } = useDashboardActionContext()
   const [isCheckAll, setIsCheckAll] = useState(false)
+  const triggerRef = useRef<any>()
+  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    if (!event.currentTarget.checked && Array.isArray(status)) {
+    if (!event.currentTarget.checked) {
       const newArray = status.filter((status) => status !== event.currentTarget.value)
       return setStatusFilter(newArray)
     }
-    if (Array.isArray(status)) {
-      const newArray = [...status, event.currentTarget.value as ShipmentStatus]
-      return setStatusFilter(newArray)
-    }
+
+    const newArray = [...status, event.currentTarget.value as ShipmentStatus]
+    return setStatusFilter(newArray)
   }
 
   const handleCheckAllClick = (event: React.FormEvent<HTMLInputElement>) => {
-    if (!event.currentTarget.checked && Array.isArray(status)) {
-      return setStatusFilter([])
+    if (!event.currentTarget.checked) {
+      return resetFilterField("status")
     }
-    if (Array.isArray(status)) {
-      return setStatusFilter(shipmentStatusesList)
-    }
+
+    return setStatusFilter(shipmentStatusesList)
   }
 
   useEffect(() => {
-    if (status && status?.length === 8) {
+    if (status.length === shipmentStatusesList.length) {
       setIsCheckAll(true)
     } else {
       setIsCheckAll(false)
@@ -54,7 +54,7 @@ export const DashboardTableStatusFilter = () => {
     <Popover open={isOpen}>
       <PopoverAnchor asChild>
         <SStatusFilterButton
-          // ref={inputRef}
+          ref={triggerRef}
           onClick={() => {
             if (!isOpen) {
               return setIsOpen(true)
@@ -84,9 +84,9 @@ export const DashboardTableStatusFilter = () => {
           //   }
           //   return
           // }
-          // if (isInputClick(e)) {
-          //   return
-          // }
+          if (isTriggerClick(e)) {
+            return
+          }
           return setIsOpen(false)
         }}
         onOpenAutoFocus={(e) => {
@@ -133,7 +133,7 @@ export const DashboardTableStatusFilter = () => {
               name={item}
               id={item}
               label={item}
-              checked={status?.includes(item)}
+              checked={status.includes(item)}
             />
           </Box>
         ))}

@@ -9,10 +9,9 @@ import {
   FormInput,
   FormInputGroup,
   FormInputGroupItem,
+  FormSelect,
   GridContainer,
   Link,
-  Select,
-  SelectItem,
   Spacer,
   Stack,
   useStepperContext,
@@ -106,20 +105,15 @@ export const ShipmentDetails = ({
                   control={control}
                   render={({ field }) => {
                     return (
-                      <Select
+                      <FormSelect
                         {...field}
-                        {...register(field.name)}
+                        {...register(field.name, {})}
+                        onValueChange={field.onChange}
                         label="Pickup type"
                         labelProps={{ hidden: true, required: true }}
                         description="Pickup type"
-                        onValueChange={field.onChange}
-                      >
-                        {pickupTypeList.map((pickupType) => (
-                          <SelectItem key={pickupType} value={pickupType}>
-                            {pickupType}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                        options={pickupTypeList}
+                      />
                     )
                   }}
                 />
@@ -387,20 +381,15 @@ export const ShipmentDetails = ({
                   control={control}
                   render={({ field }) => {
                     return (
-                      <Select
+                      <FormSelect
                         {...field}
                         {...register(field.name, {})}
+                        onValueChange={field.onChange}
                         label="Package type"
                         labelProps={{ hidden: true, required: true }}
                         description="Package type"
-                        onValueChange={field.onChange}
-                      >
-                        {packageTypeList.map((packageType) => (
-                          <SelectItem key={packageType} value={packageType}>
-                            {packageType}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                        options={packageTypeList}
+                      />
                     )
                   }}
                 />
@@ -415,20 +404,15 @@ export const ShipmentDetails = ({
                     control={control}
                     render={({ field }) => {
                       return (
-                        <Select
+                        <FormSelect
                           {...field}
                           {...register(field.name, {})}
+                          onValueChange={field.onChange}
                           label="Package contents"
                           labelProps={{ hidden: true, required: true }}
                           description="Package contents"
-                          onValueChange={field.onChange}
-                        >
-                          {parcelContentTypeList.map((parcelContentType) => (
-                            <SelectItem key={parcelContentType} value={parcelContentType}>
-                              {parcelContentType}
-                            </SelectItem>
-                          ))}
-                        </Select>
+                          options={parcelContentTypeList}
+                        />
                       )
                     }}
                   />

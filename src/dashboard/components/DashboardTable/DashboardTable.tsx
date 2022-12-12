@@ -10,7 +10,6 @@ import {
   Spacer,
   Copy,
   CreateButton,
-  Tooltip,
 } from "@/shared/components"
 import { ShippingType } from "@/shipment"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
@@ -36,10 +35,18 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
       (shippingType === ShippingType.Shipment &&
-        (!!status || !!recipientName || destinationAddress)) ||
-        (shippingType === ShippingType.Quote && (!!originalAddress || destinationAddress)),
+        (status.length > 0 || recipientName.length > 0 || destinationAddress.length > 0)) ||
+        (shippingType === ShippingType.Quote &&
+          (originalAddress.length > 0 || destinationAddress.length > 0)),
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
+
+  const handleResetClick = () => {
+    resetFilterField("status")
+    resetFilterField("recipientName")
+    resetFilterField("originalAddress")
+    resetFilterField("destinationAddress")
+  }
 
   if (isLoading) {
     return <DashboardTablePlaceholder shippingType={shippingType} />
@@ -92,7 +99,7 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
               scale={8}
               color="system-black"
               bold
-              onClick={() => console.log("Clear all filters")}
+              onClick={handleResetClick}
               css={{ cursor: "pointer" }}
             >
               Clear all filters
@@ -116,37 +123,30 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
           {bookings.map((booking) => {
             return (
               <TableRow key={booking?.id}>
-                <TabularDataLink href={"/tracking"}>{booking?.id}</TabularDataLink>
+                <TabularDataLink href={"/tracking"} text={booking?.id} />
                 {shippingType === ShippingType.Shipment ? (
                   <>
-                    <TabularDataLink href={"/tracking"}>{booking?.sender?.name}</TabularDataLink>
-                    <TabularDataLink href={"/tracking"}>{booking?.recipient?.name}</TabularDataLink>
+                    <TabularDataLink href={"/tracking"} text={booking?.sender?.name} />
+                    <TabularDataLink href={"/tracking"} text={booking?.recipient?.name} />
                   </>
                 ) : (
                   <TabularDataLink
                     href={"/tracking"}
                     tdCss={{ maxWidth: 200 }}
                     linkCss={{ "@lg": { paddingRight: "$80" } }}
-                  >
-                    {booking?.sender?.fullAddress?.location}
-                  </TabularDataLink>
+                    text={booking?.sender?.fullAddress?.location}
+                    showTitle
+                  />
                 )}
                 <TabularDataLink
                   href={"/tracking"}
                   tdCss={{ maxWidth: 200 }}
                   linkCss={{ "@lg": { paddingRight: "$80" } }}
-                >
-                  {/* <Tooltip
-                    trigger="hover"
-                    tooltip={<Copy>{booking?.recipient?.fullAddress?.location}</Copy>}
-                    ariaLabel={booking?.recipient?.fullAddress?.location}
-                  >
-                    {booking?.recipient?.fullAddress?.location}
-                  </Tooltip> */}
-                  {booking?.recipient?.fullAddress?.location}
-                </TabularDataLink>
-                <TabularDataLink href={"/tracking"}>{booking?.creationDate}</TabularDataLink>
-                <TabularDataLink href={"/tracking"} linkCss={{ paddingRight: "$0" }} text={false}>
+                  text={booking?.recipient?.fullAddress?.location}
+                  showTitle
+                />
+                <TabularDataLink href={"/tracking"} text={booking?.creationDate} />
+                <TabularDataLink href={"/tracking"} linkCss={{ paddingRight: "$0" }}>
                   <Flex align="center" justify="between" css={{ width: "100%" }}>
                     <StatusLabel status={booking?.status} />
                     <Spacer size={8} horizontal />
@@ -174,8 +174,14 @@ const SLink = styled("a", {
 })
 
 const TabularDataLink: React.FC<
-  React.PropsWithChildren<{ href: string; tdCss?: CSS; linkCss?: CSS; text?: boolean }>
-> = ({ href, tdCss, linkCss, text = true, children }) => (
+  React.PropsWithChildren<{
+    href: string
+    tdCss?: CSS
+    linkCss?: CSS
+    text?: string
+    showTitle?: boolean
+  }>
+> = ({ href, tdCss, linkCss, text = "", showTitle = false, children }) => (
   <TabularData css={tdCss}>
     <SLink href={href} css={linkCss}>
       {text ? (
@@ -184,8 +190,9 @@ const TabularDataLink: React.FC<
           scale={8}
           color="system-black"
           css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
+          title={showTitle ? text : ""}
         >
-          {children}
+          {text}
         </Copy>
       ) : (
         children

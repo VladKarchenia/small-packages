@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Box,
   Copy,
@@ -13,56 +13,114 @@ import {
 } from "@/shared/components"
 import { IconChevronDown, IconSearch } from "@/shared/icons"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { IAddress } from "@/shared/state"
 import { SStatusFilterButton } from "./DashboardTableOriginAddressFilter.styles"
 
-const addressesMockList = [
-  "101 AMSTERDAM AVE STATEN ISLAND ROCKET ANTA",
-  "75 PARK PLACE 8TH FLOOR NEW YORK CITY",
-  "620 12TH AVENUE, NEW YORK NY 100 STREET PARK",
-  "201 AVE STATEN AMSTERDAM ISLAND ROCKET ANTA",
-  "775 9TH SUPER PLACE 8TH FLOOR NEW YORK CITY",
+const addressesMockList: IAddress[] = [
+  {
+    location: "USA, New York",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
+  {
+    location: "USA, 101 AMSTERDAM AVE STATEN ISLAND ROCKET ANTA",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
+  {
+    location: "USA, 75 PARK PLACE 8TH FLOOR NEW YORK CITY",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
+  {
+    location: "USA, 620 12TH AVENUE, NEW YORK NY 100 STREET PARK",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
+  {
+    location: "USA, 201 AVE STATEN AMSTERDAM ISLAND ROCKET ANTA",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
+  {
+    location: "USA, 775 9TH SUPER PLACE 8TH FLOOR NEW YORK CITY",
+    country: "",
+    zipCode: "",
+    state: "",
+    city: "",
+    address1: "",
+    address2: "",
+  },
 ]
 
 export const DashboardTableOriginAddressFilter = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { originalAddress } = useDashboardStateContext()
-  const { setOriginalAddressFilter } = useDashboardActionContext()
+  const { setOriginalAddressFilter, resetFilterField } = useDashboardActionContext()
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [searchValue, setSearchValue] = useState<string>("")
+  const triggerRef = useRef<any>()
+  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    // if (!event.currentTarget.checked && Array.isArray(status)) {
-    //   const newArray = status.filter((status) => status !== event.currentTarget.value)
-    //   return setStatusFilter(newArray)
-    // }
-    // if (Array.isArray(status)) {
-    //   const newArray = [...status, event.currentTarget.value as ShipmentStatus]
-    //   return setStatusFilter(newArray)
-    // }
+    if (!event.currentTarget.checked) {
+      const newArray = originalAddress.filter(
+        (address) => address.location !== event.currentTarget.value,
+      )
+      return setOriginalAddressFilter(newArray)
+    }
+
+    const newAddress = addressesMockList.find(
+      (address) => address.location === event.currentTarget.value,
+    )
+    if (newAddress) {
+      const newArray = [...originalAddress, newAddress]
+
+      return setOriginalAddressFilter(newArray)
+    }
   }
 
   const handleCheckAllClick = (event: React.FormEvent<HTMLInputElement>) => {
-    // if (!event.currentTarget.checked && Array.isArray(status)) {
-    //   return setStatusFilter([])
-    // }
-    // if (Array.isArray(status)) {
-    //   return setStatusFilter(shipmentStatusesList)
-    // }
+    if (!event.currentTarget.checked) {
+      return resetFilterField("originalAddress")
+    }
+
+    return setOriginalAddressFilter(addressesMockList)
   }
 
   useEffect(() => {
-    // if (status && status?.length === 8) {
-    //   setIsCheckAll(true)
-    // } else {
-    //   setIsCheckAll(false)
-    // }
+    if (originalAddress.length === addressesMockList.length) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
   }, [originalAddress])
 
   return (
     <Popover open={isOpen}>
       <PopoverAnchor asChild>
         <SStatusFilterButton
-          // ref={inputRef}
+          ref={triggerRef}
           onClick={() => {
             if (!isOpen) {
               return setIsOpen(true)
@@ -92,9 +150,9 @@ export const DashboardTableOriginAddressFilter = () => {
           //   }
           //   return
           // }
-          // if (isInputClick(e)) {
-          //   return
-          // }
+          if (isTriggerClick(e)) {
+            return
+          }
           return setIsOpen(false)
         }}
         onOpenAutoFocus={(e) => {
@@ -136,7 +194,7 @@ export const DashboardTableOriginAddressFilter = () => {
         <Divider />
         {addressesMockList.map((item) => (
           <Box
-            key={item}
+            key={item.location}
             css={{
               "> label": {
                 padding: "$12 $16",
@@ -154,15 +212,16 @@ export const DashboardTableOriginAddressFilter = () => {
             }}
           >
             <FormCheckbox
-              value={item}
+              value={item.location}
               onChange={handleChange}
-              name={item}
-              id={item}
-              label={item}
-              checked={status?.includes(item)}
+              name={item.location}
+              id={item.location}
+              label={item.location}
+              checked={originalAddress.some((address) => address.location === item.location)}
             />
           </Box>
         ))}
+        {/* TODO: Add logic to fix the Show more button */}
         <Box css={{ padding: "$12 $16" }}>
           <Copy
             scale={8}

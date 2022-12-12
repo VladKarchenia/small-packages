@@ -1,5 +1,9 @@
 import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
+import { Copy, Flex, Grid } from "@/shared/components"
+import { IconTick } from "@/shared/icons"
 import { RecoveryInput } from "@/api/types"
 import { RecoveryForm } from "./RecoveryForm"
 
@@ -10,6 +14,7 @@ const defaultValues: RecoveryInput = {
 }
 
 export const RecoveryFormContainer = () => {
+  const navigate = useNavigate()
   const methods = useForm<RecoveryInput>({
     mode: "onChange",
     defaultValues,
@@ -31,6 +36,14 @@ export const RecoveryFormContainer = () => {
   const onSubmitHandler: SubmitHandler<RecoveryInput> = (values) => {
     console.log(values)
     // TODO: call request to the BE with email
+    navigate("/login")
+    toast.success(<ToastMessage />, {
+      icon: false,
+      position: "bottom-right",
+      progressStyle: {
+        backgroundColor: "black",
+      },
+    })
   }
 
   return (
@@ -41,3 +54,22 @@ export const RecoveryFormContainer = () => {
     </FormProvider>
   )
 }
+
+const ToastMessage = () => (
+  <Grid columns={"$40 1fr"} gap={16}>
+    <Flex
+      align="center"
+      justify="center"
+      css={{
+        height: "$40",
+        backgroundColor: "$neutrals-4",
+        borderRadius: "$8",
+      }}
+    >
+      <IconTick />
+    </Flex>
+    <Copy scale={8} color="system-black" css={{ lineHeight: 1.2 }}>
+      Please, check your e-mail for further instructions
+    </Copy>
+  </Grid>
+)

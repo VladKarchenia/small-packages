@@ -62,6 +62,7 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = () => {
         fullWidth={{ "@max-sm": true }}
         trigger={<BurgerMenuButton onClick={() => open("BurgerMenu")} />}
         contentCss={{ padding: "$24 $16" }}
+        direction="left"
       >
         <MenuNavItems items={menuItems} />
       </Drawer>

@@ -4,11 +4,10 @@ import {
   Copy,
   FormCheckbox,
   FormInput,
+  FormSelect,
   Grid,
   GridContainer,
   GridItem,
-  Select,
-  SelectItem,
   Spacer,
   Stack,
   useStepperContext,
@@ -16,7 +15,7 @@ import {
 import { ShippingType, StepActionsBar, StepInputGroup, StepName } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
 
-const countriesList = [{ full: "USA" }]
+const countriesList = ["USA"]
 
 export const PersonInfo = ({
   handleContinueClick,
@@ -271,20 +270,15 @@ export const PersonInfo = ({
               control={control}
               render={({ field }) => {
                 return (
-                  <Select
+                  <FormSelect
                     {...field}
-                    {...register(field.name)}
+                    {...register(field.name, {})}
+                    onValueChange={field.onChange}
                     label="Country"
                     labelProps={{ hidden: true, required: true }}
                     description="Country"
-                    onValueChange={field.onChange}
-                  >
-                    {countriesList.map((country) => (
-                      <SelectItem key={country.full} value={country.full}>
-                        {country.full}
-                      </SelectItem>
-                    ))}
-                  </Select>
+                    options={countriesList}
+                  />
                 )
               }}
             />

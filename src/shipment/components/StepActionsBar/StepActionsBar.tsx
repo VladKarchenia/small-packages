@@ -4,10 +4,12 @@ import { StepName, getPrevStep, ShippingType } from "@/shipment"
 
 interface IStepActionsBarProps {
   shippingType: ShippingType
+  backDisabled?: boolean
 }
 
 export const StepActionsBar: React.FC<React.PropsWithChildren<IStepActionsBarProps>> = ({
   shippingType,
+  backDisabled,
   children,
 }) => {
   const { selected, setSelected } = useStepperContext("AddressInfo")
@@ -30,7 +32,7 @@ export const StepActionsBar: React.FC<React.PropsWithChildren<IStepActionsBarPro
     >
       <GridItem>
         <Hidden below="sm">
-          <Button action="secondary" onClick={onBackHandler} full>
+          <Button action="secondary" onClick={onBackHandler} full disabled={backDisabled}>
             {/* TODO: fix default button copy */}
             <Copy as="span" scale={8} color="system-black" bold>
               Back
