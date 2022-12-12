@@ -61,7 +61,7 @@ export const getMeFn = async () => {
       user: {
         name: "Vlad",
         email: "vlad@mail.com",
-        // role: Role.User,
+        //role: Role.User,
         role: Role.Admin,
         _id: "aaa",
         id: "aaa",

@@ -1,4 +1,4 @@
-import { ButtonIcon, Copy, Flex, GridContainer, Spacer, Stack } from "@/shared/components"
+import { ButtonIcon, Copy, Flex, GridContainer, Hidden, Stack } from "@/shared/components"
 import { IconChevronTop, IconChevronDown } from "@/shared/icons"
 
 interface IShipmentCostProps {
@@ -18,17 +18,23 @@ export const ShipmentCostsHeader = ({
     <GridContainer fullBleed>
       <Stack space={8}>
         <Flex align="center" justify="between">
-          <Copy scale={10} color="neutrals-7" bold>
+          <Copy
+            scale={{ "@initial": 11, "@sm": 7 }}
+            color={{ "@initial": "neutrals-7", "@sm": "system-black" }}
+            bold
+          >
             {title}
           </Copy>
-          <ButtonIcon
-            ariaLabel="Show details"
-            icon={showCostsDetails ? <IconChevronTop /> : <IconChevronDown />}
-            onClick={handleShowDetailsClick}
-          />
+          <Hidden above="sm">
+            <ButtonIcon
+              ariaLabel="Show details"
+              icon={showCostsDetails ? <IconChevronTop /> : <IconChevronDown />}
+              onClick={handleShowDetailsClick}
+            />
+          </Hidden>
         </Flex>
       </Stack>
-      <Copy scale={8} color="system-black" bold>
+      <Copy scale={{ "@initial": 8, "@sm": 6 }} color="system-black" bold>
         ${price.toFixed(2)}
       </Copy>
     </GridContainer>

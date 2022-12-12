@@ -8,7 +8,7 @@ interface IShipmentLabelContainerProps {
 
 export const ShipmentLabelContainer = ({ pdfLabel, zplLabel }: IShipmentLabelContainerProps) => {
   return (
-    <Stack space={16}>
+    <Stack space={{ "@initial": 16, "@sm": 24 }}>
       <ShipmentLabel title="Label in PDF" link={pdfLabel} />
       <ShipmentLabel title="Label in ZPL" link={zplLabel} />
     </Stack>

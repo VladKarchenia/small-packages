@@ -4,9 +4,9 @@ import { Box } from "@/shared/components"
 
 export const Map = () => {
   return (
-    <Box>
+    <Box css={{ height: "100%" }}>
       <MapContainer
-        style={{ height: "260px" }}
+        style={{ minHeight: "260px", height: "inherit" }}
         center={[57.74, 11.94]}
         zoom={13}
         scrollWheelZoom={true}
