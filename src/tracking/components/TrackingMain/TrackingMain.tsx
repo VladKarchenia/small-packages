@@ -33,9 +33,9 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
         shippingType={shippingType as ShippingType}
         status={status}
       />
-      <Spacer size={{ "@initial": 16, "@sm": 24 }} />
+      <Spacer size={{ "@initial": 16, "@md": 24 }} />
       {children}
-      <Spacer size={{ "@initial": 24, "@sm": 0 }} />
+      <Spacer size={{ "@initial": 24, "@md": 0 }} />
     </>
   )
 }

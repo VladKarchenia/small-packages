@@ -25,13 +25,13 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
 
   return (
     <GridContainer
-      fullBleed
+      fullBleed={{ "@initial": false, "@sm": true }}
       css={{
         "@initial": {
           maxWidth: "100%",
           paddingBottom: "$48",
         },
-        "@sm": {
+        "@md": {
           maxWidth: "565px",
           marginLeft: "initial",
         },
@@ -39,14 +39,17 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
     >
       <STrackingSection>
         <Stack space={24} dividers>
-          <TrackingDetailsItem title="From where to where" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem
+            title="From where to where"
+            titleScale={{ "@initial": 11, "@md": 9 }}
+          >
             <AddressInfoShort
               fromAddress={sender.fullAddress.location}
               toAddress={recipient.fullAddress.location}
             />
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Flex align="center">
               <IconClock size="xs" css={{ paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
@@ -55,7 +58,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
             </Flex>
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Stack space={12}>
               {parcels.map((parcel, index) => (
                 <Stack space={8} key={index}>

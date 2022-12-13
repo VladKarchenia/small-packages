@@ -5,7 +5,7 @@ export const HeaderBar = ({ title, onClick }: { title: string; onClick: () => vo
   return (
     <Flex
       align="center"
-      css={{ padding: "$16 $8", "@sm": { paddingTop: "$0", paddingBottom: "$40" } }}
+      css={{ padding: "$16 $8", "@md": { paddingTop: "$0", paddingBottom: "$40" } }}
     >
       <Hidden above="sm">
         <ButtonIcon
@@ -21,10 +21,10 @@ export const HeaderBar = ({ title, onClick }: { title: string; onClick: () => vo
           flex: "1 1 100%",
           paddingRight: "$32",
           textAlign: "center",
-          "@sm": { textAlign: "start" },
+          "@md": { textAlign: "start" },
         }}
       >
-        <Copy scale={{ "@initial": 8, "@sm": 5 }} color="system-black" bold>
+        <Copy scale={{ "@initial": 8, "@md": 5 }} color="system-black" bold>
           {title}
         </Copy>
       </Box>
