@@ -72,7 +72,7 @@ export const SHIPMENT_DETAILS = {
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
-  //shippingType: ShippingType.Quote,
+  // shippingType: ShippingType.Quote,
   shippingType: ShippingType.Shipment,
   status: ShipmentStatus.Confirmed,
   //status: ShipmentStatus.Eliminated,

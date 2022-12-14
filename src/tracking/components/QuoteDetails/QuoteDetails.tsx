@@ -5,11 +5,15 @@ import {
   Copy,
   Flex,
   GridContainer,
+  Hidden,
   Spacer,
   Stack,
+  Title,
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
 import { useShipmentStateContext } from "@/shared/state"
+import { mediaQueries } from "@/config"
+import { useMedia } from "@/shared/hooks"
 import { ShipmentStatus } from "@/shared/types"
 import { TrackingDetailsItem } from "@/tracking"
 import { ShippingType } from "@/shipment"
@@ -22,6 +26,7 @@ interface IQuoteDetailsProps {
 
 export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
   const { date, parcels, recipient, sender } = useShipmentStateContext()
+  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
 
   return (
     <GridContainer
@@ -38,7 +43,13 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
       }}
     >
       <STrackingSection>
-        <Stack space={24} dividers>
+        <Hidden below="md">
+          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
+            Main Info
+          </Title>
+          <Spacer size={24} />
+        </Hidden>
+        <Stack space={24} dividers={isMediumAndAbove ? false : true}>
           <TrackingDetailsItem
             title="From where to where"
             titleScale={{ "@initial": 11, "@md": 9 }}

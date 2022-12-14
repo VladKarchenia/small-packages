@@ -41,10 +41,10 @@ export const ShipmentDetails = () => {
     >
       <Hidden below="md" css={{ gridArea: "main" }}>
         <STrackingGridItem>
-          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-            Main Info
-          </Title>
           <Stack space={24}>
+            <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
+              Main Info
+            </Title>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
                 fromAddress={sender.fullAddress.location}
@@ -181,44 +181,40 @@ export const ShipmentDetails = () => {
       </GridItem>
 
       <Hidden below="md">
-        <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-          <STrackingGridItem css={{ gridArea: "route" }}>
+        <STrackingGridItem css={{ gridArea: "route" }}>
+          <TrackingDetailsItem
+            title="Route"
+            titleScale={7}
+            titleColor={"system-black"}
+            titleIndent={24}
+          >
+            {/* TODO: Fix Route block after BE data and final design */}
+            <ShipmentRoute routes={data.routes} />
+          </TrackingDetailsItem>
+        </STrackingGridItem>
+      </Hidden>
+
+      <Hidden below="md">
+        <STrackingGridItem css={{ gridArea: "usersInfo" }}>
+          <Stack space={12}>
             <TrackingDetailsItem
-              title="Route"
+              title="Sender’s info"
               titleScale={7}
               titleColor={"system-black"}
               titleIndent={24}
             >
-              {/* TODO: Fix Route block after BE data and final design */}
-              <ShipmentRoute routes={data.routes} />
+              <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
             </TrackingDetailsItem>
-          </STrackingGridItem>
-        </GridContainer>
-      </Hidden>
-
-      <Hidden below="md">
-        <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-          <STrackingGridItem css={{ gridArea: "usersInfo" }}>
-            <Stack space={12}>
-              <TrackingDetailsItem
-                title="Sender’s info"
-                titleScale={7}
-                titleColor={"system-black"}
-                titleIndent={24}
-              >
-                <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
-              </TrackingDetailsItem>
-              <TrackingDetailsItem
-                title="Recipient’s info"
-                titleScale={7}
-                titleColor={"system-black"}
-                titleIndent={24}
-              >
-                <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
-              </TrackingDetailsItem>
-            </Stack>
-          </STrackingGridItem>
-        </GridContainer>
+            <TrackingDetailsItem
+              title="Recipient’s info"
+              titleScale={7}
+              titleColor={"system-black"}
+              titleIndent={24}
+            >
+              <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
+            </TrackingDetailsItem>
+          </Stack>
+        </STrackingGridItem>
       </Hidden>
 
       <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
