@@ -12,8 +12,10 @@ import {
   Title,
   Hidden,
   GridContainer,
+  Link,
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
+import { useModalActions } from "@/shared/hooks"
 import { useShipmentStateContext } from "@/shared/state"
 import {
   SHIPMENT_DETAILS,
@@ -32,6 +34,7 @@ import {
 export const ShipmentDetails = () => {
   const data = SHIPMENT_DETAILS
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
+  const { open } = useModalActions()
 
   return (
     <STrackingGrid
@@ -65,33 +68,29 @@ export const ShipmentDetails = () => {
 
             <TrackingDetailsItem title="Shipment Details">
               <Stack space={12}>
-                {parcels.map((parcel, index) => (
-                  <Stack space={8} key={index}>
-                    {parcels.length > 1 ? (
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black" bold>
-                        Parcel {index + 1}
-                      </Copy>
-                    ) : null}
-                    <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                      {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                      {parcel.pickupType}
-                    </Copy>
-                    <Flex align="center">
-                      <Flex align="center" justify="center">
-                        <IconCalendar size="xs" />
-                      </Flex>
-                      <Spacer size={8} horizontal />
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                        {parcel.dimensions.length}x{parcel.dimensions.width}x
-                        {parcel.dimensions.height} in;
-                      </Copy>
-                      <Spacer size={8} horizontal />
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                        {parcel.weight} lb
-                      </Copy>
+                <Flex align="center" justify="between">
+                  <Flex>
+                    <Flex align="center" justify="center">
+                      <IconCalendar size="xs" />
                     </Flex>
-                  </Stack>
-                ))}
+                    <Spacer size={8} horizontal />
+                    <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                      {parcels.length} package(s)
+                    </Copy>
+                  </Flex>
+
+                  <Spacer size={8} horizontal />
+                  <Link
+                    as="button"
+                    onClick={() => {
+                      open("shipmentDetails")
+                    }}
+                  >
+                    <Copy scale={{ "@initial": 9, "@sm": 8 }} color={"system-black"}>
+                      View more {">"}
+                    </Copy>
+                  </Link>
+                </Flex>
               </Stack>
             </TrackingDetailsItem>
           </Stack>
