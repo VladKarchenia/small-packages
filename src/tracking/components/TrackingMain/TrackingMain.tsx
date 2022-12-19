@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { HeaderBar, Hidden, Spacer } from "@/shared/components"
+import { HeaderBar, Hidden, Spacer, Breadcrumbs } from "@/shared/components"
 import { ShippingType } from "@/shipment"
 import { ShipmentStatus } from "@/shared/types"
 import { TrackingHeader } from "@/tracking"
@@ -27,6 +27,9 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
       <Hidden above="sm">
         <HeaderBar title={headerTitle} onClick={() => navigate("/")} />
       </Hidden>
+
+      <Breadcrumbs />
+
       <TrackingHeader
         shipmentID={shipmentID}
         shipmentDate={shipmentDate}
