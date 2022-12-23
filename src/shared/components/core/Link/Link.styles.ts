@@ -8,17 +8,15 @@ export const SLink = styled("a", {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "blue",
+  color: "$system-black",
   transition: "150ms color ease-out",
 
   focus: {
-    color: "$brand-blue-primary",
-    textDecoration: "underline",
+    color: "$neutrals-5",
   },
 
   hover: {
-    color: "$brand-blue-primary",
-    textDecoration: "underline",
+    color: "$neutrals-5",
   },
 
   variants: {
@@ -38,6 +36,14 @@ export const SLink = styled("a", {
       true: {
         textDecoration: "underline",
         textUnderlineOffset: "$space$4",
+
+        focus: {
+          textDecoration: "underline",
+        },
+
+        hover: {
+          textDecoration: "underline",
+        },
       },
     },
   },
