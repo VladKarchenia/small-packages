@@ -14,7 +14,7 @@ import {
   GridContainer,
   Link,
 } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
+import { IconCalendar, IconChevronRight } from "@/shared/icons"
 import { useModalActions } from "@/shared/hooks"
 import { useShipmentStateContext } from "@/shared/state"
 import {
@@ -30,6 +30,7 @@ import {
   STrackingGrid,
   STrackingGridItem,
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
+import React from "react"
 
 export const ShipmentDetails = () => {
   const data = SHIPMENT_DETAILS
@@ -86,9 +87,12 @@ export const ShipmentDetails = () => {
                       open("shipmentDetails")
                     }}
                   >
-                    <Copy scale={{ "@initial": 9, "@sm": 8 }} color={"system-black"}>
-                      View more {">"}
-                    </Copy>
+                    <Flex>
+                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color={"system-black"}>
+                        View more
+                      </Copy>
+                      <IconChevronRight css={{ color: "$system-black" }} />
+                    </Flex>
                   </Link>
                 </Flex>
               </Stack>
