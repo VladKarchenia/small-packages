@@ -1,11 +1,10 @@
-import { Drawer, IFormLabelProps, Title, useDrawer } from "@/shared/components"
+import { Drawer, IFormLabelProps, Title } from "@/shared/components"
 import { ProfileDrawerPreview } from "@/profile"
 
 interface IProfileDrawerProps {
-  drawerName: string
   drawerTitle: string
   closeIcon: React.ReactNode
-  value?: string | React.ReactElement | null
+  value?: string
   prefix?: React.ReactElement
   suffix?: React.ReactElement
   placeholder?: string
@@ -16,10 +15,9 @@ interface IProfileDrawerProps {
 }
 
 export const ProfileDrawer = ({
-  drawerName,
-  drawerTitle,
   closeIcon,
-  value = "",
+  drawerTitle,
+  value,
   prefix,
   suffix,
   placeholder,
@@ -28,13 +26,11 @@ export const ProfileDrawer = ({
   dataTestid,
   drawerForm,
 }: IProfileDrawerProps) => {
-  const [drawerProps] = useDrawer(drawerName)
-
   return (
     <Drawer
-      {...drawerProps}
       closeIcon={closeIcon}
       fullWidth={{ "@max-sm": true }}
+      contentCss={{ padding: "$24 $16" }}
       header={
         <Title as="h3" scale={7}>
           {drawerTitle}
@@ -42,7 +38,7 @@ export const ProfileDrawer = ({
       }
       trigger={
         <ProfileDrawerPreview
-          value={value}
+          value={value ? value : ""}
           prefix={prefix}
           suffix={suffix}
           placeholder={placeholder}

@@ -3,15 +3,10 @@ import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/config"
 import { ProfileDesktop, ProfileMobile } from "@/profile"
 
-export enum OrganizationType {
-  GoogleLLC = "Google LLC",
-  Xiaomi = "Xiaomi",
-  LG = "LG",
-}
-
 export const ProfileContainer = () => {
   const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
-  const [userOrganization, setUserOrganization] = useState("")
+  // TODO: fix it after BE changes with available organizations
+  const [userOrganization, setUserOrganization] = useState<string>("1")
 
   if (isSmallAndAbove)
     return (
@@ -20,11 +15,8 @@ export const ProfileContainer = () => {
         setUserOrganization={setUserOrganization}
       />
     )
-  else
-    return (
-      <ProfileMobile
-        userOrganization={userOrganization}
-        setUserOrganization={setUserOrganization}
-      />
-    )
+
+  return (
+    <ProfileMobile userOrganization={userOrganization} setUserOrganization={setUserOrganization} />
+  )
 }

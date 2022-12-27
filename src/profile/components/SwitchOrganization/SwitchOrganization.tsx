@@ -1,12 +1,11 @@
 import { Flex, FormSelect, Copy, Spacer } from "@/shared/components"
-import { OrganizationType } from "@/profile"
 
 interface ISwitchOrganizationProps {
   setUserOrganization: Function
-  userOrganization: OrganizationType | string
+  userOrganization: string
 }
 
-const organizationTypeList: OrganizationType[] = Object.values(OrganizationType)
+const organizationTypeList: string[] = ["1", "2", "3"]
 
 export const SwitchOrganization: React.FC<ISwitchOrganizationProps> = ({
   setUserOrganization,
@@ -22,11 +21,10 @@ export const SwitchOrganization: React.FC<ISwitchOrganizationProps> = ({
         <FormSelect
           name="selectOrganization"
           label="Select organization*"
-          labelProps={{ hidden: true }}
+          labelProps={{ hidden: true, required: true }}
           description="Select organization"
           value={userOrganization}
-          onValueChange={(val: OrganizationType) => {
-            console.log("onValueChange ", val)
+          onValueChange={(val: string) => {
             setUserOrganization(val)
           }}
           options={organizationTypeList}

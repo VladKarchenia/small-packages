@@ -5,7 +5,7 @@ import { ProfileContainer } from "@/profile"
 export const Profile = () => {
   return (
     <CommonLayout>
-      <MainLayout mobileFullBleed={false}>
+      <MainLayout fullContentSize={false} mobileFullBleed={false}>
         <ProfileContainer />
       </MainLayout>
     </CommonLayout>
