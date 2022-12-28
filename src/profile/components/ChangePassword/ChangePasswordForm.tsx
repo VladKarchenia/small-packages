@@ -20,8 +20,10 @@ export const ChangePasswordForm = ({
   } = useFormContext<ChangeInput>()
   const [passwordShown, setPasswordShown] = useState(false)
   const [confirmPasswordShown, setConfirmPasswordShown] = useState(false)
+  const [currentPasswordShown, setCurrentPasswordShown] = useState(false)
   const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
   const toggleConfirmPasswordVisibility = () => setConfirmPasswordShown(!confirmPasswordShown)
+  const toggleCurrentPasswordVisibility = () => setCurrentPasswordShown(!currentPasswordShown)
   const { password } = watch()
 
   return (
@@ -50,32 +52,19 @@ export const ChangePasswordForm = ({
                     value: /^[A-Za-z0-9]+$/,
                     message: "Only alphanumeric characters allowed",
                   },
-                  validate: {
-                    notOnlyNumbers: (v: string) =>
-                      /^(?=.*\d)/.test(v) || "Alphanumeric characters required",
-                    notOnlyLetters: (v: string) =>
-                      /^(?=.*[a-zA-Z])/.test(v) || "Alphanumeric characters required",
-                    oneUppercaseLetter: (v: string) =>
-                      /^(?=.*[A-Z])/.test(v) || "Minimum 1 uppercase letter required",
-                  },
-                  minLength: {
-                    value: 7,
-                    message: "Password min length not met",
-                  },
-                  maxLength: {
-                    value: 30,
-                    message: "Password max length exceeded",
-                  },
                 })}
                 id="Current password"
                 label="Current password"
                 labelProps={{ hidden: true, required: true }}
                 description="Current password"
-                type={passwordShown ? "text" : "password"}
+                type={currentPasswordShown ? "text" : "password"}
                 error={errors[field.name]?.message}
                 placeholder="Enter current password"
                 suffix={
-                  <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
+                  <SShowPasswordButton
+                    type="button"
+                    onClick={() => toggleCurrentPasswordVisibility()}
+                  >
                     <IconClarityEye height={20} width={20} fixedSize />
                   </SShowPasswordButton>
                 }
@@ -107,6 +96,14 @@ export const ChangePasswordForm = ({
                       /^(?=.*[a-zA-Z])/.test(v) || "Alphanumeric characters required",
                     oneUppercaseLetter: (v: string) =>
                       /^(?=.*[A-Z])/.test(v) || "Minimum 1 uppercase letter required",
+                  },
+                  minLength: {
+                    value: 7,
+                    message: "Password min length not met",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Password max length exceeded",
                   },
                 })}
                 id="New password"
