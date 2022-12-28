@@ -87,11 +87,11 @@ export const ShipmentDetails = () => {
                       open("shipmentDetails")
                     }}
                   >
-                    <Flex>
+                    <Flex align="center">
                       <Copy scale={{ "@initial": 9, "@sm": 8 }} color={"system-black"}>
                         View more
                       </Copy>
-                      <IconChevronRight css={{ color: "$system-black" }} />
+                      <IconChevronRight size="xs" css={{ color: "$system-black" }} />
                     </Flex>
                   </Link>
                 </Flex>
