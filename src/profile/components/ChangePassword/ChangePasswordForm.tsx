@@ -48,10 +48,6 @@ export const ChangePasswordForm = ({
                     value: true,
                     message: "Required field",
                   },
-                  pattern: {
-                    value: /^[A-Za-z0-9]+$/,
-                    message: "Only alphanumeric characters allowed",
-                  },
                 })}
                 id="Current password"
                 label="Current password"

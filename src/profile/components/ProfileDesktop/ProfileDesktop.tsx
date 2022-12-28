@@ -1,4 +1,4 @@
-import { Copy, Spacer, Flex, Stack } from "@/shared/components"
+import { Copy, Spacer, Stack } from "@/shared/components"
 import { SwitchOrganization, ChangePassword } from "@/profile"
 
 interface IProfileDesktopProps {
@@ -8,7 +8,7 @@ interface IProfileDesktopProps {
 
 export const ProfileDesktop = ({ setUserOrganization, userOrganization }: IProfileDesktopProps) => {
   return (
-    <Flex direction="column" css={{ maxWidth: "896px" }}>
+    <>
       {/* TODO: it should be Title, so need to fix it later */}
       <Copy scale={5} color="system-black" bold>
         User Profile
@@ -21,6 +21,6 @@ export const ProfileDesktop = ({ setUserOrganization, userOrganization }: IProfi
         />
         <ChangePassword />
       </Stack>
-    </Flex>
+    </>
   )
 }

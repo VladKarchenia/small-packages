@@ -46,6 +46,20 @@ export const SLink = styled("a", {
         },
       },
     },
+
+    blue: {
+      true: {
+        color: "blue",
+
+        focus: {
+          color: "$brand-blue-primary",
+        },
+
+        hover: {
+          color: "$brand-blue-primary",
+        },
+      },
+    },
   },
 })
 
