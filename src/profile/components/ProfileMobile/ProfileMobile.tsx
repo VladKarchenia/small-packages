@@ -12,26 +12,26 @@ interface IProfileMobileProps {
 }
 
 export const ProfileMobile = ({ setUserOrganization, userOrganization }: IProfileMobileProps) => {
+  const refreshToken = window.localStorage.getItem("refreshToken") || ""
   const navigate = useNavigate()
 
-  //TODO: move logoutUser function into separate file/module
-  const { mutate: logoutUser, isLoading } = useMutation(async () => await logoutUserFn(), {
-    onSuccess: (data) => {
-      window.location.href = "/login"
+  const { isLoading, mutate: logoutUser } = useMutation(() => logoutUserFn(refreshToken), {
+    onSuccess: () => {
+      navigate("/login")
     },
-    onError: (error: any) => {
-      if (Array.isArray(error.response.data.error)) {
-        error.data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        )
-      } else {
-        toast.error(error.response.data.message, {
-          position: "top-right",
-        })
-      }
-    },
+    // onError: (error: any) => {
+    //   if (Array.isArray(error.response.data.error)) {
+    //     error.data.error.forEach((el: any) =>
+    //       toast.error(el.message, {
+    //         position: "top-right",
+    //       }),
+    //     )
+    //   } else {
+    //     toast.error(error.response.data.message, {
+    //       position: "top-right",
+    //     })
+    //   }
+    // },
   })
 
   const handleLogoutClick = () => {
