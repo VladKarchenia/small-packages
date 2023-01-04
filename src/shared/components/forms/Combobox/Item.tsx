@@ -1,13 +1,12 @@
 import React, { memo } from "react"
 
-import { ComboboxItemFormat, useComboboxContext } from "./Combobox"
+import { useComboboxContext } from "./Combobox"
 
 interface IComboboxItemProps {
   className?: string
   children: React.ReactNode
-
   index: number
-  item: ComboboxItemFormat
+  item: any
 }
 
 export const ComboboxItem = memo(function ({

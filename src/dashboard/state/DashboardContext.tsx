@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useMemo, useState } from "react"
 import { PAGED_LIMIT } from "@/constants"
-import { ShipmentStatus } from "@/shared/types"
-import { IAddress } from "@/shared/state"
+import { ShipmentStatus, IAddress } from "@/shared/types"
 
 export enum ShipmentsPagedOrderBy {
   CreationDateAsc = "Creation date (ASC)",
@@ -13,8 +12,8 @@ export enum ShipmentsPagedOrderBy {
 }
 
 export enum SortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
+  ASC = "asc",
+  DESC = "desc",
 }
 
 export interface DashboardState {
@@ -25,8 +24,8 @@ export interface DashboardState {
   direction: SortDirection
   status: ShipmentStatus[]
   recipientName: string[]
-  originalAddress: IAddress[]
-  destinationAddress: IAddress[]
+  originalAddress: string[]
+  destinationAddress: string[]
 }
 
 const initialDashboardState: DashboardState = {
@@ -35,35 +34,10 @@ const initialDashboardState: DashboardState = {
   searchTerm: "",
   sortOrder: ShipmentsPagedOrderBy.CreationDateAsc,
   direction: SortDirection.ASC,
-  // status: [],
-  status: [ShipmentStatus.Eliminated, ShipmentStatus.Draft],
-  // recipientName: [],
-  recipientName: ["James Bond"],
-  // originalAddress: [],
-  originalAddress: [
-    {
-      location: "USA, New York",
-      country: "",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
-      address2: "",
-    },
-  ],
-  // destinationAddress: [],
-  destinationAddress: [
-    {
-      location: "USA, New York",
-      country: "",
-      zipCode: "",
-      state: "",
-      city: "",
-      address1: "",
-      address2: "",
-      isResidential: false,
-    },
-  ],
+  status: [],
+  recipientName: [],
+  originalAddress: [],
+  destinationAddress: [],
 }
 
 type DashboardActions = {
@@ -73,8 +47,8 @@ type DashboardActions = {
   setSortDirection: (value: SortDirection) => void
   setStatusFilter: (array: ShipmentStatus[]) => void
   setRecipientNameFilter: (value: string[]) => void
-  setOriginalAddressFilter: (value: IAddress[]) => void
-  setDestinationAddressFilter: (value: IAddress[]) => void
+  setOriginalAddressFilter: (value: string[]) => void
+  setDestinationAddressFilter: (value: string[]) => void
 }
 
 export const DashboardStateContext = createContext<DashboardState>({} as DashboardState)

@@ -1,7 +1,6 @@
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import {
-  Box,
   ButtonIcon,
   Flex,
   GlobalSearch,

@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   TableRow,
@@ -21,16 +21,22 @@ import { DashboardTableStatusFilter } from "../DashboardTableStatusFilter"
 import { DashboardTableNameFilter } from "../DashboardTableNameFilter"
 import { DashboardTableOriginAddressFilter } from "../DashboardTableOriginAddressFilter"
 import { DashboardTableDestinationAddressFilter } from "../DashboardTableDestinationAddressFilter"
+import { IShipmentResponse } from "@/api/types"
+import { useQuery } from "react-query"
+import { getAllShipmentsFn } from "@/api/shipmentApi"
+import { createFilterString, createSortString } from "@/shared/utils"
+import format from "date-fns/format"
+import { ShipmentStatus } from "@/shared/types"
 
 interface ITableProps {
-  isLoading: boolean
-  bookings: any[]
   shippingType: ShippingType
 }
 
-export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITableProps) => {
+export const DashboardTable = ({ shippingType }: ITableProps) => {
   const { t } = useTranslation()
-  const { status, recipientName, originalAddress, destinationAddress } = useDashboardStateContext()
+  const [shipments, setShipments] = useState<IShipmentResponse[]>([])
+  const { status, recipientName, originalAddress, destinationAddress, sortOrder, direction } =
+    useDashboardStateContext()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
@@ -48,11 +54,51 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
     resetFilterField("destinationAddress")
   }
 
-  if (isLoading) {
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const { isLoading, isFetching, refetch } = useQuery(
+    // TODO: check how not to call this all the time!
+    ["getShipments"],
+    () =>
+      getAllShipmentsFn({
+        organizationId: user?.activeOrganizationId,
+        // TODO: sort and filters should be placed also in zustand and be used here
+        filter: createFilterString(
+          shippingType,
+          status,
+          recipientName,
+          originalAddress,
+          destinationAddress,
+        ),
+        sort: `${createSortString(sortOrder)},${direction}`,
+      }),
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setShipments(data.content)
+        // maybe we also need to set shipments into zustand as a cache?
+        // return setShipmentContext(formatShipmentResponseData(shipment.data))
+      },
+    },
+  )
+
+  useEffect(() => {
+    refetch()
+  }, [
+    shippingType,
+    status,
+    recipientName,
+    originalAddress,
+    destinationAddress,
+    sortOrder,
+    direction,
+    refetch,
+  ])
+
+  if (isLoading || isFetching) {
     return <DashboardTablePlaceholder shippingType={shippingType} />
   }
 
-  if (!isLoading && !bookings.length) {
+  if (!isLoading && !isFetching && !shipments.length) {
     return (
       <Table caption="Dashboard table">
         <DashboardTableHead shippingType={shippingType} />
@@ -81,6 +127,7 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
       <CreateButton />
       <Flex align="center" justify="between">
         <Flex align="center" wrap css={{ gap: "$12" }}>
+          {/* TODO: need to clear filters after tab switching */}
           {shippingType === ShippingType.Shipment ? (
             <>
               <DashboardTableStatusFilter />
@@ -112,7 +159,7 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
             Found:
           </Copy>
           <Copy scale={9} color="system-black" bold>
-            12/{bookings.length}
+            12/{shipments.length}
           </Copy>
         </Flex>
       </Flex>
@@ -120,37 +167,47 @@ export const DashboardTable = ({ isLoading, bookings = [], shippingType }: ITabl
       <Table caption="Dashboard table">
         <DashboardTableHead shippingType={shippingType} />
         <TableBody>
-          {bookings.map((booking) => {
+          {shipments.map((shipment) => {
+            const href = `/tracking/${shipment.id}`
+
             return (
-              <TableRow key={booking?.id}>
-                <TabularDataLink href={"/tracking"} text={booking?.id} />
+              <TableRow key={shipment?.id}>
+                <TabularDataLink href={href} text={shipment?.id} />
                 {shippingType === ShippingType.Shipment ? (
                   <>
-                    <TabularDataLink href={"/tracking"} text={booking?.sender?.name} />
-                    <TabularDataLink href={"/tracking"} text={booking?.recipient?.name} />
+                    {/* <TabularDataLink href={href} text={shipment?.sender?.name} />
+                    <TabularDataLink href={href} text={shipment?.recipient?.name} /> */}
+                    <TabularDataLink href={href} text={shipment?.data.ORIGIN_CONTACT || "-"} />
+                    <TabularDataLink href={href} text={shipment?.data.CONSIGNEE_CONTACT || "-"} />
                   </>
                 ) : (
                   <TabularDataLink
-                    href={"/tracking"}
+                    href={href}
                     tdCss={{ maxWidth: 200 }}
                     linkCss={{ "@lg": { paddingRight: "$80" } }}
-                    text={booking?.sender?.fullAddress?.location}
+                    // text={shipment?.sender?.fullAddress?.displayName}
+                    text={shipment?.data.ORIGIN_ADDRESS1 || "-"}
                     showTitle
                   />
                 )}
                 <TabularDataLink
-                  href={"/tracking"}
+                  href={href}
                   tdCss={{ maxWidth: 200 }}
                   linkCss={{ "@lg": { paddingRight: "$80" } }}
-                  text={booking?.recipient?.fullAddress?.location}
+                  // text={shipment?.recipient?.fullAddress?.displayName}
+                  text={shipment?.data.CONSIGNEE_ADDRESS1 || "-"}
                   showTitle
                 />
-                <TabularDataLink href={"/tracking"} text={booking?.creationDate} />
-                <TabularDataLink href={"/tracking"} linkCss={{ paddingRight: "$0" }}>
+                {/* <TabularDataLink href={href} text={shipment?.creationDate} /> */}
+                <TabularDataLink
+                  href={href}
+                  text={format(new Date(shipment?.createdAt), "MMM d, yyyy")}
+                />
+                <TabularDataLink href={href} linkCss={{ paddingRight: "$0" }}>
                   <Flex align="center" justify="between" css={{ width: "100%" }}>
-                    <StatusLabel status={booking?.status} />
+                    <StatusLabel status={ShipmentStatus[shipment?.data.SHIPMENT_STATUS]} />
                     <Spacer size={8} horizontal />
-                    <ActionDetailsButton shippingType={shippingType} />
+                    <ActionDetailsButton shippingType={shippingType} shipmentId={shipment.id} />
                   </Flex>
                 </TabularDataLink>
               </TableRow>

@@ -8,8 +8,8 @@ export const AddressInfoCollapsed = () => {
 
   return (
     <AddressInfoShort
-      fromAddress={sender.fullAddress.location}
-      toAddress={recipient.fullAddress.location}
+      fromAddress={sender.fullAddress.displayName}
+      toAddress={recipient.fullAddress.displayName}
     />
   )
 }

@@ -1,6 +1,6 @@
 import { Copy, Flex, Stack } from "@/shared/components"
 import { IconLocationPin } from "@/shared/icons"
-import { IPerson } from "@/shared/state"
+import { IPerson } from "@/shared/types"
 
 interface IPersonInfoShortProps {
   person: "sender" | "recipient"
@@ -52,7 +52,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          {person === "sender" ? sender.fullAddress.location : recipient.fullAddress.location}
+          {person === "sender" ? sender.fullAddress.displayName : recipient.fullAddress.displayName}
         </Copy>
       </Flex>
     </Stack>

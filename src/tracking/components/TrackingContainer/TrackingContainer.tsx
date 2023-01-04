@@ -1,6 +1,14 @@
-import { useStateContext } from "@/shared/state"
-import { ICost, Role, ShipmentStatus } from "@/shared/types"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { useQuery } from "react-query"
+
+import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
 import { ShippingType } from "@/shipment"
+import { ICost, Role } from "@/shared/types"
+import { TrackingRouteParams } from "@/tracking/types"
+import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
+import { formatShipmentResponseData } from "@/shared/utils"
+
 import {
   ShipmentDetailsUnauthorized,
   ShipmentDetails,
@@ -34,9 +42,8 @@ export const costs: ICost[] = [
     value: 50,
   },
 ]
+
 export const SHIPMENT_DETAILS = {
-  shipmentID: "20214-5Z",
-  shipmentDate: "Oct 30, 2022, 7:29 PM",
   trackingNumber: "204-5Z87",
   shipmentURL: "https//www.gulfrelay/shipment/204-5Z87",
   arrivalDate: "18.10.2022",
@@ -62,42 +69,60 @@ export const SHIPMENT_DETAILS = {
     //   date: "22.10.2022 by 7:19 PM",
     // },
     // {
-    //   status: "Delivered",
+    //   status: "DELIVERED",
     //   date: "23.10.2022 by 3:59 AM",
     // },
     // {
-    //   status: "Eliminated",
+    //   status: "CANCELLED",
     //   date: "18.10.2022 by 6:46 PM",
     // },
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
-  //shippingType: ShippingType.Quote,
-  shippingType: ShippingType.Shipment,
-  status: ShipmentStatus.Confirmed,
-  //status: ShipmentStatus.Eliminated,
 }
 
-//TODO: "edit shipment" functionality
 export const TrackingContainer = () => {
-  const data = SHIPMENT_DETAILS
-  // TODO: replace shippingType with the context later
-  // TODO: replace status with the context later
-  const { shippingType, status } = data
+  const { shipmentStatus, shippingType } = useShipmentStateContext()
+  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const setShipmentContext = useShipmentActionContext()
 
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
+  const { isLoading, isFetching, refetch } = useQuery(
+    // TODO: check how not to call this all the time!
+    ["getShipmentById"],
+    () => getShipmentByIdFn(shipmentId),
+    {
+      enabled: false,
+      // enabled: !!shipmentId,
+      onSuccess: (shipment) => {
+        return setShipmentContext(formatShipmentResponseData(shipment.data))
+      },
+    },
+  )
+
+  // TODO: use Zustand
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
+  const accessToken = window.localStorage.getItem("accessToken") || ""
+
+  useEffect(() => {
+    if (accessToken) {
+      if (!shipmentApi.defaults.headers.common["Authorization"]) {
+        shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+      }
+
+      refetch()
+    }
+  }, [accessToken, refetch])
 
   if (shippingType === ShippingType.Quote) {
     return (
       <TrackingMain
         headerTitle="Quote detail"
-        shipmentID={data.shipmentID}
-        shipmentDate={new Date(data.shipmentDate)}
-        shippingType={shippingType as ShippingType}
-        status={status}
+        shipmentDate={new Date()}
+        shippingType={shippingType}
+        status={shipmentStatus}
       >
-        <QuoteDetails shippingType={data.shippingType} status={data.status} />
+        <QuoteDetails shippingType={shippingType} status={shipmentStatus} />
       </TrackingMain>
     )
   }
@@ -106,10 +131,9 @@ export const TrackingContainer = () => {
     return (
       <TrackingMain
         headerTitle="Shipment details"
-        shipmentID={data.shipmentID}
-        shipmentDate={new Date(data.shipmentDate)}
-        shippingType={shippingType as ShippingType}
-        status={status}
+        shipmentDate={new Date()}
+        shippingType={shippingType}
+        status={shipmentStatus}
       >
         <ShipmentDetails />
       </TrackingMain>
@@ -119,10 +143,9 @@ export const TrackingContainer = () => {
   return (
     <TrackingMain
       headerTitle="Shipment details"
-      shipmentID={data.shipmentID}
-      shipmentDate={new Date(data.shipmentDate)}
-      shippingType={shippingType as ShippingType}
-      status={status}
+      shipmentDate={new Date()}
+      shippingType={shippingType}
+      status={shipmentStatus}
     >
       <ShipmentDetailsUnauthorized />
     </TrackingMain>

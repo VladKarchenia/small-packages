@@ -1,68 +1,70 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import debounce from "just-debounce-it"
 import { useTranslation } from "react-i18next"
 import { useCombobox } from "downshift"
 import { useQuery } from "react-query"
-import {
-  Box,
-  Combobox,
-  ComboboxInput,
-  ComboboxItemFormat,
-  Divider,
-  FormCheckbox,
-  FormInput,
-} from "@/shared/components"
-import { IconCross, IconSearch } from "@/shared/icons"
-import { getSuggestionsFn } from "@/api/postApi"
-import { ISuggestionsResponse } from "@/api/types"
+
+import { IFoundShipmentResponse } from "@/api/types"
+import { searchShipmentsFn } from "@/api/shipmentApi"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+
+import { Box, Combobox, ComboboxInput, Copy, Flex, FormInput } from "@/shared/components"
+import { IconCross, IconSearch } from "@/shared/icons"
+
 import { SSearchFilterComboboxMenu, SComboboxClearButton } from "./SearchTermCombobox.styles"
-
-const namesMockList = [
-  "James Bond",
-  "Harry Brown",
-  "Oviler Calhoun",
-  "Jack Donaldson",
-  "Thomas Roger",
-  "Jacob Lamberts",
-]
-
-// interface ISearchFilterComboboxProps {
-//   onSelect: (value: string, label: string) => void
-//   initialValue?: string
-//   placeholder: string
-// }
 
 export const SearchTermCombobox = () => {
   const { t } = useTranslation()
-
+  const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
   const { searchTerm } = useDashboardStateContext()
   const { setSearchTerm, resetFilterField } = useDashboardActionContext()
-  const [inputValue, setInputValue] = useState("")
+  const [inputValue, setInputValue] = useState<string>(searchTerm)
 
-  // const { data: suggestedDestinations, refetch: getSuggestions } = useQuery(
-  //   ["getSuggestions"],
-  //   async () => await getSuggestionsFn(inputValue),
-  //   {
-  //     enabled: false,
-  //     select: (data: ISuggestionsResponse) =>
-  //       data.data.suggestionsByTerm.places.map(mapDestinationToComboboxItem) || [],
-  //   },
-  // )
+  const [results, setResults] = useState<IFoundShipmentResponse[]>([])
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const { isLoading, isFetching, refetch } = useQuery(
+    // TODO: check how not to call this all the time!
+    ["searchShipments"],
+    () =>
+      searchShipmentsFn({
+        keyword: inputValue,
+        organizationId: user?.activeOrganizationId,
+        sort: "createdAt,asc",
+        page: 0,
+        size: 50,
+      }),
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setResults(data.content)
+      },
+    },
+  )
+
+  const debouncedRefetch = useCallback(
+    debounce(() => {
+      refetch()
+    }, 800),
+    [],
+  )
 
   const comboboxProps = useCombobox({
     isOpen: true,
     inputValue,
-    // items: suggestedDestinations || [],
-    items: [] as ComboboxItemFormat[],
-    itemToString: (item) => item?.label || "",
+    items: results,
 
     onInputValueChange: ({ inputValue }) => {
       setInputValue(inputValue || "")
+      setSearchTerm(inputValue || "")
+      setResults([])
 
-      if (!inputValue || inputValue.trim().length < 2) return
+      if (!inputValue || inputValue.length < 3 || inputValue.trim().length === 0) return
 
-      // getSuggestions()
+      if (inputValue.length > 3) {
+        debouncedRefetch()
+      }
     },
 
     onSelectedItemChange: ({ selectedItem }) => {
@@ -73,12 +75,73 @@ export const SearchTermCombobox = () => {
 
   const clearDestination = useCallback(() => {
     comboboxProps.selectItem(null)
+    resetFilterField("searchTerm")
+    setResults([])
     inputRef.current?.focus()
-  }, [comboboxProps])
+  }, [comboboxProps, resetFilterField])
 
-  const handleClick = (value: string) => {
-    console.log(value)
+  const Content = () => {
+    if (isLoading || isFetching) {
+      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
+    }
+
+    if (!isLoading && !isFetching && results.length === 0) {
+      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    }
+
+    return (
+      <>
+        {results.map((shipment: IFoundShipmentResponse) => (
+          <Box
+            key={`${shipment.id}`}
+            css={{
+              "> div": {
+                padding: "$12 $16",
+                cursor: "pointer",
+                hover: {
+                  backgroundColor: "$neutrals-3",
+                },
+              },
+              firstChild: {
+                "> div": {
+                  borderRadius: "$8 $8 0 0",
+                },
+              },
+              lastChild: {
+                "> div": {
+                  borderRadius: "0 0 $8 $8",
+                },
+              },
+            }}
+          >
+            <Box
+              css={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+              }}
+              onClick={() => navigate(`/tracking/${shipment.id}`)}
+            >
+              <Flex direction="column">
+                <Copy scale={9} color="system-black" bold>
+                  {shipment.id}
+                </Copy>
+                <Copy scale={10} color="system-black">
+                  {shipment.origin_ADDRESS}
+                </Copy>
+              </Flex>
+            </Box>
+          </Box>
+        ))}
+      </>
+    )
   }
+
+  useEffect(() => {
+    if (inputValue.length > 3) {
+      refetch()
+    }
+  }, [])
 
   return (
     <Combobox {...comboboxProps}>
@@ -91,7 +154,7 @@ export const SearchTermCombobox = () => {
             labelProps={{ hidden: true }}
             autoCorrect="off"
             autoComplete="off"
-            data-testid="location-input"
+            data-testid="displayName-input"
             prefix={<IconSearch size="xs" />}
             suffix={
               inputValue && (
@@ -108,25 +171,7 @@ export const SearchTermCombobox = () => {
         </ComboboxInput>
       </Box>
       <SSearchFilterComboboxMenu>
-        {namesMockList.map((item) => (
-          <>
-            <Box
-              key={item}
-              css={{
-                "> div": {
-                  padding: "$12 $16",
-                  cursor: "pointer",
-                  focusWithin: {
-                    backgroundColor: "$neutrals-3",
-                  },
-                },
-              }}
-            >
-              <Box onClick={() => handleClick(item)}>{item}</Box>
-            </Box>
-            <Divider />
-          </>
-        ))}
+        <Content />
       </SSearchFilterComboboxMenu>
     </Combobox>
   )

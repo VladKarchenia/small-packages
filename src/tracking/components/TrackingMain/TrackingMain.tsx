@@ -6,16 +6,14 @@ import { TrackingHeader } from "@/tracking"
 
 interface ITrackingDetailsItemProps {
   headerTitle: string
-  shipmentID: string
   shipmentDate: Date | null
-  shippingType: ShippingType
-  status: ShipmentStatus
+  shippingType: ShippingType | null
+  status: ShipmentStatus | null
 }
 
 export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItemProps>> = ({
   children,
   headerTitle,
-  shipmentID,
   shipmentDate,
   shippingType,
   status,
@@ -27,12 +25,7 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
       <Hidden above="sm">
         <HeaderBar title={headerTitle} onClick={() => navigate("/")} />
       </Hidden>
-      <TrackingHeader
-        shipmentID={shipmentID}
-        shipmentDate={shipmentDate}
-        shippingType={shippingType as ShippingType}
-        status={status}
-      />
+      <TrackingHeader shipmentDate={shipmentDate} shippingType={shippingType} status={status} />
       <Spacer size={{ "@initial": 16, "@sm": 24 }} />
       {children}
       <Spacer size={{ "@initial": 24, "@sm": 0 }} />
