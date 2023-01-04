@@ -1,4 +1,8 @@
 import { format } from "date-fns"
+
+import { useShipmentStateContext } from "@/shared/state"
+import { useModalActions } from "@/shared/hooks"
+
 import {
   AddressInfoShort,
   Copy,
@@ -12,9 +16,9 @@ import {
   Title,
   Hidden,
   GridContainer,
+  Link,
 } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
+import { IconCalendar, IconChevronRight } from "@/shared/icons"
 import {
   SHIPMENT_DETAILS,
   costs,
@@ -30,34 +34,34 @@ import {
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 export const ShipmentDetails = () => {
-  const data = SHIPMENT_DETAILS
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
+  const { open } = useModalActions()
 
   return (
     <STrackingGrid
-      columns={{ "@initial": "1fr", "@sm": "1fr 1fr 1fr 1fr" }}
-      gap={{ "@initial": 16, "@sm": 24 }}
+      columns={{ "@initial": "1fr", "@md": "1fr 1fr 1fr 1fr" }}
+      gap={{ "@initial": 16, "@md": 24 }}
       rows={"auto auto"}
     >
-      <Hidden below="sm" css={{ gridArea: "main" }}>
+      <Hidden below="md" css={{ gridArea: "main" }}>
         <STrackingGridItem>
-          <Title as="h3" scale={{ "@initial": 8, "@sm": 7 }}>
-            Main Info
-          </Title>
           <Stack space={24}>
+            <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
+              Main Info
+            </Title>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
-                fromAddress={sender.fullAddress.location}
-                toAddress={recipient.fullAddress.location}
+                fromAddress={sender.fullAddress.displayName}
+                toAddress={recipient.fullAddress.displayName}
               />
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
               <Stack space={12}>
-                <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                   Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
                 </Copy>
-                <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {data.arrivalDate}
+                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
               </Stack>
@@ -65,78 +69,79 @@ export const ShipmentDetails = () => {
 
             <TrackingDetailsItem title="Shipment Details">
               <Stack space={12}>
-                {parcels.map((parcel, index) => (
-                  <Stack space={8} key={index}>
-                    {parcels.length > 1 ? (
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black" bold>
-                        Parcel {index + 1}
-                      </Copy>
-                    ) : null}
-                    <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                      {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                      {parcel.pickupType}
-                    </Copy>
-                    <Flex align="center">
-                      <Flex align="center" justify="center">
-                        <IconCalendar size="xs" />
-                      </Flex>
-                      <Spacer size={8} horizontal />
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                        {parcel.dimensions.length}x{parcel.dimensions.width}x
-                        {parcel.dimensions.height} in;
-                      </Copy>
-                      <Spacer size={8} horizontal />
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                        {parcel.weight} lb
-                      </Copy>
+                <Flex align="center" justify="between">
+                  <Flex>
+                    <Flex align="center" justify="center">
+                      <IconCalendar size="xs" />
                     </Flex>
-                  </Stack>
-                ))}
+                    <Spacer size={8} horizontal />
+                    <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                      {parcels.length} package(s)
+                    </Copy>
+                  </Flex>
+                  <Spacer size={8} horizontal />
+                  <Link
+                    as="button"
+                    onClick={() => {
+                      open("shipmentDetails")
+                    }}
+                  >
+                    <Flex align="center">
+                      <Copy scale={{ "@initial": 9, "@md": 8 }} color={"system-black"}>
+                        View more
+                      </Copy>
+                      <IconChevronRight size="xs" css={{ color: "$system-black" }} />
+                    </Flex>
+                  </Link>
+                </Flex>
               </Stack>
             </TrackingDetailsItem>
           </Stack>
         </STrackingGridItem>
       </Hidden>
 
-      <Hidden above="sm">
+      <Hidden above="md">
         <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
           <STrackingGridItem css={{ gridArea: "main" }}>
             <Stack space={24} dividers>
               <>
                 <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
-                  <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
+                  <ShipmentURL
+                    url={SHIPMENT_DETAILS.shipmentURL}
+                    value={SHIPMENT_DETAILS.trackingNumber}
+                  />
                 </TrackingDetailsItem>
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where" titleScale={11}>
                   <AddressInfoShort
-                    fromAddress={sender.fullAddress.location}
-                    toAddress={recipient.fullAddress.location}
+                    fromAddress={sender.fullAddress.displayName}
+                    toAddress={recipient.fullAddress.displayName}
                   />
                 </TrackingDetailsItem>
               </>
 
               <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                 <Stack space={12}>
-                  <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                     Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
                   </Copy>
 
-                  <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                    Arrival date: {data.arrivalDate}
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                   </Copy>
                   <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 </Stack>
               </TrackingDetailsItem>
               <TrackingDetailsItem title="Shipment Details" titleScale={11}>
                 <Stack space={12}>
-                  {parcels.map((parcel, index) => (
+                  {parcels.map((parcel: any, index: number) => (
                     <Stack space={8} key={index}>
                       {parcels.length > 1 ? (
-                        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black" bold>
+                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
                           Parcel {index + 1}
                         </Copy>
                       ) : null}
-                      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                      <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                         {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
                         {parcel.pickupType}
                       </Copy>
@@ -145,12 +150,12 @@ export const ShipmentDetails = () => {
                           <IconCalendar size="xs" />
                         </Flex>
                         <Spacer size={8} horizontal />
-                        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                           {parcel.dimensions.length}x{parcel.dimensions.width}x
                           {parcel.dimensions.height} in;
                         </Copy>
                         <Spacer size={8} horizontal />
-                        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                           {parcel.weight} lb
                         </Copy>
                       </Flex>
@@ -161,7 +166,7 @@ export const ShipmentDetails = () => {
 
               <TrackingDetailsItem title="Route" titleScale={11}>
                 {/* TODO: Fix Route block after BE data and final design */}
-                <ShipmentRoute routes={data.routes} />
+                <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Sender’s info" titleScale={11}>
@@ -176,11 +181,11 @@ export const ShipmentDetails = () => {
         </GridContainer>
       </Hidden>
 
-      <GridItem column={{ "@sm": "span 3" }} css={{ gridArea: "map" }}>
+      <GridItem column={{ "@md": "span 3" }} css={{ gridArea: "map" }}>
         <Map />
       </GridItem>
 
-      <Hidden below="sm">
+      <Hidden below="md">
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"
@@ -189,12 +194,12 @@ export const ShipmentDetails = () => {
             titleIndent={24}
           >
             {/* TODO: Fix Route block after BE data and final design */}
-            <ShipmentRoute routes={data.routes} />
+            <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
           </TrackingDetailsItem>
         </STrackingGridItem>
       </Hidden>
 
-      <Hidden below="sm">
+      <Hidden below="md">
         <STrackingGridItem css={{ gridArea: "usersInfo" }}>
           <Stack space={12}>
             <TrackingDetailsItem
@@ -225,29 +230,32 @@ export const ShipmentDetails = () => {
 
       <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
         <STrackingGridItem css={{ gridArea: "labels" }}>
-          <Hidden below="sm">
+          <Hidden below="md">
             <TrackingDetailsItem
               title="Tracking number"
               titleIndent={20}
               titleScale={7}
               titleColor={"system-black"}
             >
-              <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
+              <ShipmentURL
+                url={SHIPMENT_DETAILS.shipmentURL}
+                value={SHIPMENT_DETAILS.trackingNumber}
+              />
             </TrackingDetailsItem>
             <Spacer size={32} />
           </Hidden>
 
-          <Title as="h3" scale={{ "@initial": 8, "@sm": 7 }}>
+          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
             Shipment label
           </Title>
-          <Spacer size={{ "@initial": 16, "@sm": 24 }} />
-          <Copy scale={{ "@initial": 9, "@sm": 8 }}>
+          <Spacer size={{ "@initial": 16, "@md": 24 }} />
+          <Copy scale={{ "@initial": 9, "@md": 8 }}>
             Shipment label must be printed and attached to a package before it is picked up
           </Copy>
-          <Spacer size={{ "@initial": 24, "@sm": 32 }} />
+          <Spacer size={{ "@initial": 24, "@md": 32 }} />
           <ShipmentLabelContainer
-            pdfLabel={data.shipmentLabelPDFLink}
-            zplLabel={data.shipmentLabelZPLLink}
+            pdfLabel={SHIPMENT_DETAILS.shipmentLabelPDFLink}
+            zplLabel={SHIPMENT_DETAILS.shipmentLabelZPLLink}
           />
         </STrackingGridItem>
       </GridContainer>

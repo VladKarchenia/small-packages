@@ -1,6 +1,14 @@
 import React from "react"
 import Select, { components } from "react-select"
-import { Copy, Flex, FormLabel, IFormLabelProps, Spacer } from "@/shared/components"
+import {
+  Box,
+  Copy,
+  ErrorLabel,
+  Flex,
+  FormLabel,
+  IFormLabelProps,
+  Spacer,
+} from "@/shared/components"
 import { IconChevronDown, IconTick } from "@/shared/icons"
 import { boxShadows, rgba } from "@/utils"
 import { SSelectIcon } from "./FormSelect.styles"
@@ -13,10 +21,15 @@ interface ISelectProps {
   labelProps?: IFormLabelProps
   description: string
   name: string
+  disabled?: boolean
+  error?: string
 }
 
 export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
-  ({ label, labelProps, description, value, onValueChange, options, ...props }, forwardedRef) => {
+  (
+    { label, labelProps, description, value, onValueChange, options, disabled, error, ...props },
+    forwardedRef,
+  ) => {
     return (
       <>
         <Flex justify="between">
@@ -42,6 +55,7 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
           onChange={(value) => onValueChange(value?.value)}
           options={options.map((i) => ({ value: i, label: i }))}
           isSearchable={false}
+          isDisabled={disabled}
           components={{
             IndicatorSeparator: () => null,
             DropdownIndicator: () => (
@@ -130,6 +144,14 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
             }),
           }}
         />
+
+        {error && (
+          <Box css={{ position: "absolute" }}>
+            <Flex justify="between">
+              <ErrorLabel id={label}>{error}</ErrorLabel>
+            </Flex>
+          </Box>
+        )}
       </>
     )
   },

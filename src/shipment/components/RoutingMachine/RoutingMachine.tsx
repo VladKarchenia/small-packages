@@ -1,8 +1,18 @@
 import * as L from "leaflet"
 import "leaflet-routing-machine"
 import { createControlComponent } from "@react-leaflet/core"
+import { useShipmentStateContext } from "@/shared/state"
+
+// interface IRoutingProps {
+//   senderLat: string
+//   senderLong: string
+//   recipientLat: string
+//   recipientLong: string
+// }
 
 const Routing = () => {
+  const { recipient, sender } = useShipmentStateContext()
+
   const routingControl = L.Routing.control({
     show: false,
     fitSelectedRoutes: true,
@@ -18,10 +28,20 @@ const Routing = () => {
       ],
       addWaypoints: false,
     },
-    plan: new L.Routing.Plan([L.latLng(57.74, 11.94), L.latLng(57.6792, 11.949)], {
-      addWaypoints: false,
-      draggableWaypoints: false,
-    }),
+    plan: new L.Routing.Plan(
+      [
+        L.latLng(parseFloat(sender.fullAddress.latitude), parseFloat(sender.fullAddress.longitude)),
+        // TODO: add here current point if it exists
+        L.latLng(
+          parseFloat(recipient.fullAddress.latitude),
+          parseFloat(recipient.fullAddress.longitude),
+        ),
+      ],
+      {
+        addWaypoints: false,
+        draggableWaypoints: false,
+      },
+    ),
   })
 
   return routingControl

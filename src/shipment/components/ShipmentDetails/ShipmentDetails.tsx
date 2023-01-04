@@ -18,7 +18,7 @@ import {
 } from "@/shared/components"
 import { ShippingType, StepActionsBar, StepInputGroup, StepName } from "@/shipment"
 import { ShipmentState } from "@/shared/state"
-import { PackageType, ParcelContentType, PickupType } from "@/shared/state/ShipmentContext"
+import { PickupType, PackageType, ParcelContentType } from "@/shared/types"
 import { IconBin, IconPlus } from "@/shared/icons"
 import { PARCEL_LIMIT } from "@/constants"
 
@@ -61,7 +61,7 @@ export const ShipmentDetails = ({
           width: "1",
           height: "1",
         },
-        packageType: PackageType.Own,
+        packageType: PackageType.CUSTOM,
         content: ParcelContentType.Gift,
         totalPrice: "20.00",
         totalCurrency: "USD",

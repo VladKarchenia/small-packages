@@ -9,7 +9,7 @@ import {
   useStepperContext,
 } from "@/shared/components"
 import { ShipmentState } from "@/shared/state"
-import { StepName, LocationInput, ShippingType, StepActionsBar } from "@/shipment"
+import { StepName, LocationInput, ShippingType, StepActionsBar, LocationPopover } from "@/shipment"
 
 export const AddressInfo = ({
   handleContinueClick,
@@ -29,23 +29,27 @@ export const AddressInfo = ({
     <GridContainer fullBleed>
       <Hidden below="sm">
         <Stack space={24}>
-          <LocationInput
-            initialValue={sender.fullAddress}
-            onChange={(destination) => {
-              setValue("sender.fullAddress", destination)
+          <LocationPopover
+            value={sender.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("sender.fullAddress", locationDetails)
             }}
-            placeholder="From"
+            label="From"
+            labelProps={{ hidden: true, required: true }}
             description="From"
-            labelProps={{ required: true }}
+            placeholder="From"
+            country={"United States"}
           />
-          <LocationInput
-            initialValue={recipient.fullAddress}
-            onChange={(destination) => {
-              setValue("recipient.fullAddress", destination)
+          <LocationPopover
+            value={recipient.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("recipient.fullAddress", locationDetails)
             }}
-            placeholder="To"
+            label="To"
+            labelProps={{ hidden: true, required: true }}
             description="To"
-            labelProps={{ required: true }}
+            placeholder="To"
+            country={"United States,Canada"}
           />
         </Stack>
       </Hidden>
@@ -53,21 +57,23 @@ export const AddressInfo = ({
         <Stack space={24}>
           <LocationInput
             initialValue={sender.fullAddress}
-            onChange={(destination) => {
-              setValue("sender.fullAddress", destination)
+            onChange={(locationDetails) => {
+              setValue("sender.fullAddress", locationDetails)
             }}
             placeholder="From"
             description="From"
             labelProps={{ required: true }}
+            country={"United States"}
           />
           <LocationInput
             initialValue={recipient.fullAddress}
-            onChange={(destination) => {
-              setValue("recipient.fullAddress", destination)
+            onChange={(locationDetails) => {
+              setValue("recipient.fullAddress", locationDetails)
             }}
             placeholder="To"
             description="To"
             labelProps={{ required: true }}
+            country={"United States,Canada"}
           />
         </Stack>
       </Hidden>
@@ -77,10 +83,10 @@ export const AddressInfo = ({
           onClick={onContinueHandler}
           full
           disabled={
-            !sender.fullAddress.location ||
-            !recipient.fullAddress.location ||
+            !sender.fullAddress.displayName ||
+            !recipient.fullAddress.displayName ||
             // TODO: do we need a better condition to prevent same from and to addresses using ID or some field?
-            sender.fullAddress.location === recipient.fullAddress.location
+            sender.fullAddress.displayName === recipient.fullAddress.displayName
           }
         >
           {/* TODO: fix default button copy */}

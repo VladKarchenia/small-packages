@@ -89,7 +89,12 @@ export const FormField = ({
 
       {(!labelProps?.hidden || description) && <Spacer size={8} />}
 
-      <SFormFieldContainer hasError={!!error || hasError} isFocused={isFocused}>
+      <SFormFieldContainer
+        hasError={!!error || hasError}
+        isFocused={isFocused}
+        // fix this
+        // isDisabled={true}
+      >
         {prefix && <SFormFieldPrefix>{prefix}</SFormFieldPrefix>}
 
         {children}

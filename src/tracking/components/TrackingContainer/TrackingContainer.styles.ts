@@ -13,7 +13,7 @@ export const STrackingGridItem = styled(GridItem, {
   borderRadius: "$8",
   padding: "$16",
 
-  "@sm": {
+  "@md": {
     padding: "$24",
   },
 })
@@ -26,7 +26,7 @@ export const STrackingGrid = styled(Grid, {
   alignItems: "stretch",
   alignContent: "stretch",
 
-  "@sm": {
+  "@md": {
     gridTemplateAreas: `"main  map       map   map   " 
                         "route usersInfo costs labels"`,
     alignItems: "stretch",

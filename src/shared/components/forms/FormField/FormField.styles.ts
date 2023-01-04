@@ -2,6 +2,7 @@ import { styled } from "@/config"
 import { boxShadows } from "@/utils/styles"
 
 export const SFormField = styled("div", {
+  width: "100%",
   variants: {
     disabled: {
       true: { cursor: "not-allowed" },
@@ -48,6 +49,19 @@ export const SFormFieldContainer = styled("label", {
       true: {
         boxShadow: boxShadows.input.focus,
         zIndex: "$1",
+      },
+    },
+
+    isDisabled: {
+      false: {},
+      true: {
+        "&:hover": {
+          boxShadow: boxShadows.input.initial,
+        },
+
+        "&:focus-within": {
+          boxShadow: boxShadows.input.initial,
+        },
       },
     },
   },

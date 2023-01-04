@@ -33,8 +33,8 @@ export const LoginForm = ({
       <Stack space={24}>
         <Controller
           control={control}
-          defaultValue={defaultValues.email}
-          name="email"
+          defaultValue={defaultValues.username}
+          name="username"
           render={({ field }) => {
             return (
               <FormInput
@@ -49,7 +49,7 @@ export const LoginForm = ({
                     message: "Invalid email",
                   },
                 })}
-                id="email"
+                id="username"
                 label="Email"
                 type="email"
                 error={errors[field.name]?.message}

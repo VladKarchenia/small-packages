@@ -1,4 +1,7 @@
 import { Controller, useFormContext } from "react-hook-form"
+
+import { ShipmentState } from "@/shared/state"
+
 import {
   Button,
   Copy,
@@ -12,10 +15,17 @@ import {
   Stack,
   useStepperContext,
 } from "@/shared/components"
-import { ShippingType, StepActionsBar, StepInputGroup, StepName } from "@/shipment"
-import { ShipmentState } from "@/shared/state"
-
-const countriesList = ["USA"]
+import {
+  AddressFieldPopover,
+  ShippingType,
+  StepActionsBar,
+  StepInputGroup,
+  StepName,
+} from "@/shipment"
+import { useEffect, useState } from "react"
+import { useQuery } from "react-query"
+import { searchCitiesByZipFn } from "@/api/placeApi"
+import { ICitiesByZipResponse } from "@/api/types"
 
 export const PersonInfo = ({
   handleContinueClick,
@@ -27,11 +37,19 @@ export const PersonInfo = ({
   ) => void
   person: "sender" | "recipient"
 }) => {
+  const countriesList = person === "sender" ? ["United States"] : ["United States", "Canada"]
+  const [statesList, setStatesList] = useState<ICitiesByZipResponse[]>([])
+  const [citiesList, setCitiesList] = useState<string[]>([])
+
   const {
     watch,
     control,
     register,
     trigger,
+    resetField,
+    setValue,
+    getValues,
+    setError,
     formState: { errors },
   } = useFormContext<ShipmentState>()
 
@@ -61,6 +79,10 @@ export const PersonInfo = ({
     },
   } = recipient
 
+  const country = getValues(`${person}.fullAddress.country`)
+  const zipCode = getValues(`${person}.fullAddress.zipCode`)
+  const state = getValues(`${person}.fullAddress.state`)
+
   const { setSelected } = useStepperContext("PersonInfo")
 
   const onContinueHandler = () => {
@@ -72,6 +94,35 @@ export const PersonInfo = ({
       handleContinueClick(StepName.TO, StepName.SHIPMENT)
     }
   }
+
+  const { isLoading, isFetching, refetch } = useQuery(
+    ["searchCitiesByZip"],
+    () =>
+      searchCitiesByZipFn({
+        country,
+        zipCode,
+      }),
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        if (data.length !== 0) {
+          const states = data.map((item) => item.state)
+
+          setStatesList(data)
+          setValue(`${person}.fullAddress.state`, state ? state : states[0])
+          setCitiesList(data[0].cities)
+        } else {
+          setError(`${person}.fullAddress.zipCode`, { message: "Zip code not found" })
+        }
+      },
+    },
+  )
+
+  useEffect(() => {
+    if (zipCode) {
+      refetch()
+    }
+  }, [])
 
   return (
     <GridContainer fullBleed>
@@ -273,7 +324,25 @@ export const PersonInfo = ({
                   <FormSelect
                     {...field}
                     {...register(field.name, {})}
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      if (value !== field.value) {
+                        resetField(`${person}.fullAddress.zipCode`)
+                        resetField(`${person}.fullAddress.state`)
+                        resetField(`${person}.fullAddress.city`)
+                        resetField(`${person}.fullAddress.address1`)
+                        resetField(`${person}.fullAddress.address2`)
+                        resetField(`${person}.fullAddress.displayName`)
+                        resetField(`${person}.fullAddress.latitude`)
+                        resetField(`${person}.fullAddress.longitude`)
+                        if (person === "recipient") {
+                          resetField(`${person}.fullAddress.isResidential`)
+                        }
+                        setStatesList([])
+                        setCitiesList([])
+                      }
+
+                      return field.onChange(value)
+                    }}
                     label="Country"
                     labelProps={{ hidden: true, required: true }}
                     description="Country"
@@ -296,23 +365,54 @@ export const PersonInfo = ({
                         value: true,
                         message: "Required field",
                       },
-                      // TODO: add not found error after query
                       pattern: {
-                        value: /^([0-9]{5}|([0-9]{5}-[0-9]{4}))?$/,
-                        message: "Not match the format: XXXXX or XXXXX-XXXX",
+                        value:
+                          country === "United States"
+                            ? /^([0-9]{5}|([0-9]{5}-[0-9]{4}))?$/
+                            : /^([A-Za-z0-9]{3} [A-Za-z0-9]{3})?$/,
+                        message:
+                          country === "United States"
+                            ? "Not match the format: XXXXX or XXXXX-XXXX"
+                            : "Not match the format: A1A 1A1",
                       },
                       minLength: {
-                        value: 5,
+                        value: country === "United States" ? 5 : 7,
                         message: "Zip code min length not met",
                       },
                       maxLength: {
-                        value: 10,
+                        value: country === "United States" ? 10 : 7,
                         message: "Zip code max length exceeded",
                       },
                     })}
-                    onBlur={(event: any) => {
-                      field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
-                      trigger(`${person}.fullAddress.zipCode`)
+                    onChange={(e: any) => {
+                      let formattedValue = e?.target?.value.replaceAll(" ", "").toUpperCase()
+
+                      if (country === "Canada" && e?.target?.value.replaceAll(" ", "").length > 3) {
+                        formattedValue = formattedValue.replace(/^(.{3})(.*)$/, "$1 $2")
+                      }
+
+                      if (formattedValue !== zipCode) {
+                        field.onChange(formattedValue)
+
+                        resetField(`${person}.fullAddress.state`)
+                        resetField(`${person}.fullAddress.city`)
+                        resetField(`${person}.fullAddress.address1`)
+                        resetField(`${person}.fullAddress.address2`)
+                        resetField(`${person}.fullAddress.displayName`)
+                        resetField(`${person}.fullAddress.latitude`)
+                        resetField(`${person}.fullAddress.longitude`)
+                        if (person === "recipient") {
+                          resetField(`${person}.fullAddress.isResidential`)
+                        }
+                        setStatesList([])
+                        setCitiesList([])
+
+                        return trigger(`${person}.fullAddress.zipCode`).then((isValid: boolean) => {
+                          if (isValid) {
+                            refetch()
+                          }
+                        })
+                      }
                     }}
                     id={`${person}.fullAddress.zipCode`}
                     label="Zip Code"
@@ -329,20 +429,36 @@ export const PersonInfo = ({
 
         <StepInputGroup
           start={
-            // TODO: make it as as Select and disable before zipcode was found
             <Controller
               name={`${person}.fullAddress.state`}
               control={control}
               render={({ field }) => {
                 return (
-                  <FormInput
+                  <FormSelect
                     {...field}
-                    {...register(field.name)}
-                    id={`${person}.fullAddress.state`}
+                    {...register(field.name, {})}
+                    onValueChange={(value) => {
+                      if (value !== field.value) {
+                        resetField(`${person}.fullAddress.city`)
+                        resetField(`${person}.fullAddress.address1`)
+                        resetField(`${person}.fullAddress.address2`)
+                        resetField(`${person}.fullAddress.displayName`)
+                        resetField(`${person}.fullAddress.latitude`)
+                        resetField(`${person}.fullAddress.longitude`)
+                        if (person === "recipient") {
+                          resetField(`${person}.fullAddress.isResidential`)
+                        }
+
+                        setCitiesList(statesList.find((item) => item.state === value)?.cities || [])
+                      }
+
+                      return field.onChange(value)
+                    }}
                     label="State"
                     labelProps={{ hidden: true, required: true }}
                     description="State"
-                    type="text"
+                    options={statesList.map((item) => item.state)}
+                    disabled={statesList.length === 0}
                     error={errors[person]?.fullAddress?.state?.message}
                   />
                 )
@@ -350,21 +466,39 @@ export const PersonInfo = ({
             />
           }
           end={
-            // TODO: make it as as Select and disable before zipcode was found
             <Controller
               name={`${person}.fullAddress.city`}
               control={control}
-              render={({ field }) => {
+              rules={{
+                required: {
+                  value: true,
+                  message: "Required field",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "City max length exceeded",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value, name } }) => {
                 return (
-                  <FormInput
-                    {...field}
-                    {...register(field.name)}
+                  <AddressFieldPopover
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    fieldName="city"
                     id={`${person}.fullAddress.city`}
                     label="City"
                     labelProps={{ hidden: true, required: true }}
                     description="City"
-                    type="text"
+                    disabled={citiesList.length === 0}
                     error={errors[person]?.fullAddress?.city?.message}
+                    onBlur={(event: any) => {
+                      onBlur()
+                      onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
+                      trigger(`${person}.fullAddress.city`)
+                    }}
+                    defaultSuggestions={citiesList}
+                    person={person}
                   />
                 )
               }}
@@ -374,34 +508,40 @@ export const PersonInfo = ({
 
         <StepInputGroup
           start={
+            // TODO: add validation if address wasn't selected from the list (lat, lng, displayName weren't set)
             <Controller
               name={`${person}.fullAddress.address1`}
               control={control}
-              render={({ field }) => {
+              rules={{
+                required: {
+                  value: true,
+                  message: "Required field",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "Address max length exceeded",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value, name } }) => {
                 return (
-                  <FormInput
-                    {...field}
-                    {...register(field.name, {
-                      required: {
-                        value: true,
-                        message: "Required field",
-                      },
-                      maxLength: {
-                        value: 40,
-                        message: "Address max length exceeded",
-                      },
-                    })}
-                    onBlur={(event: any) => {
-                      field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
-                      trigger(`${person}.fullAddress.address1`)
-                    }}
+                  <AddressFieldPopover
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    fieldName="address1"
                     id={`${person}.fullAddress.address1`}
                     label="Address line 1"
                     labelProps={{ hidden: true, required: true }}
                     description="Address line 1"
                     placeholder="Street, apartment"
-                    type="text"
+                    disabled={statesList.length === 0 || citiesList.length === 0}
                     error={errors[person]?.fullAddress?.address1?.message}
+                    onBlur={(event: any) => {
+                      onBlur()
+                      onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
+                      trigger(`${person}.fullAddress.address1`)
+                    }}
+                    person={person}
                   />
                 )
               }}

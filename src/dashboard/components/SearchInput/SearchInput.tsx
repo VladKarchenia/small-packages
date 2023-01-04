@@ -1,43 +1,28 @@
-import { useState } from "react"
-import { SearchFilterDrawer, SearchFilterDrawerForm, useDrawerActions } from "@/shared/components"
+import { SearchFilterDrawer, SearchFilterDrawerForm } from "@/shared/components"
 import { IconArrowLeft, IconSearch } from "@/shared/icons"
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { useDashboardStateContext } from "@/dashboard/state"
+import { ShippingType } from "@/shipment"
 
 interface ISearchInputProps {
-  placeholder: string
+  shippingType: ShippingType
 }
 
-export const SearchInput: React.FC<ISearchInputProps> = ({ placeholder }) => {
+export const SearchInput: React.FC<ISearchInputProps> = ({ shippingType }) => {
   const { searchTerm } = useDashboardStateContext()
-  // const { setSearchTerm } = useDashboardActionContext()
-  // const { close } = useDrawerActions()
-
-  // const [searchValue, setSearchValue] = useState<string>(searchTerm)
-
-  // const handleChange = (value: string) => {
-  //   setSearchTerm(value)
-  //   setSearchValue(value)
-
-  //   close("searchInput")
-  // }
 
   return (
     <SearchFilterDrawer
       drawerName="searchInput"
-      drawerTitle="Find destination"
-      // value={searchValue}
+      drawerTitle={shippingType === ShippingType.Quote ? "Find a quote" : "Find a shipment"}
       value={searchTerm}
-      placeholder={placeholder}
+      placeholder={
+        shippingType === ShippingType.Quote
+          ? "Search for ID, address..."
+          : "Search for ID, tracking number, address..."
+      }
       closeIcon={<IconArrowLeft />}
       prefix={<IconSearch fixedSize width={20} height={20} />}
-      drawerForm={
-        <SearchFilterDrawerForm
-          // initialValue={searchValue}
-          // onSelect={handleChange}
-          // placeholder={placeholder}
-          comboboxType="searchTerm"
-        />
-      }
+      drawerForm={<SearchFilterDrawerForm comboboxType="searchTerm" />}
     />
   )
 }

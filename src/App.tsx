@@ -31,14 +31,19 @@ const App: React.FC = (): JSX.Element => {
   }
 
   const mainRoutes = {
-    path: "*",
+    path: "/",
     children: [
-      { index: true, element: <Home /> },
+      {
+        path: "/",
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        children: [{ path: "", element: <Home /> }],
+      },
       {
         path: "profile",
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
         children: [{ path: "", element: <Profile /> }],
       },
+      // TODO: maybe change it to quote/create or quote/id/edit?
       {
         path: "create",
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
@@ -48,7 +53,16 @@ const App: React.FC = (): JSX.Element => {
         ],
       },
       {
-        path: "tracking",
+        path: "edit",
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        children: [
+          { path: "quote/:shipmentId", element: <CreateShipment shippingType={ShippingType.Quote} /> },
+          { path: "shipment/:shipmentId", element: <CreateShipment shippingType={ShippingType.Shipment} /> },
+        ],
+      },
+      {
+        path: "tracking/:shipmentId",
+        // path: "tracking/*",
         element: <Tracking />,
       },
       { path: "unauthorized", element: <Unauthorize /> },
