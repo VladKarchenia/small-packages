@@ -1,6 +1,6 @@
 import { Copy, Flex, Spacer, Stack } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
-import { IParcel } from "@/shared/state"
+import { IParcel } from "@/shared/types"
 
 interface IParcelInfoProps {
   parcel: IParcel
