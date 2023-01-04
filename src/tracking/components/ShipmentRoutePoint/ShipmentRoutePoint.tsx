@@ -16,12 +16,12 @@ export const ShipmentRoutePoint = ({
   isStepCompleted = false,
   isStepInProgress = false,
 }: IShipmentRoutePointProps) => {
-  const isLastStep = status === ShipmentStatus.Eliminated || status === ShipmentStatus.Delivered
+  const isLastStep = status === ShipmentStatus.CANCELLED || status === ShipmentStatus.DELIVERED
 
   return (
     <SRoutePointWrapper align="start" last={isLastStep}>
       <SRoutePointIcon align="center" justify="center" active={isStepCompleted || isStepInProgress}>
-        {status === ShipmentStatus.Eliminated ? (
+        {status === ShipmentStatus.CANCELLED ? (
           <IconCross size="xs" />
         ) : isStepCompleted ? (
           <IconTick size="xs" />

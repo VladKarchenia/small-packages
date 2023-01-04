@@ -8,17 +8,17 @@ interface ICostsProps {
 export const Costs = ({ costs }: ICostsProps) => {
   return (
     <GridContainer fullBleed>
-      <Stack space={{ "@initial": 12, "@sm": 16 }} css={{ paddingTop: "$16" }}>
+      <Stack space={{ "@initial": 12, "@md": 16 }} css={{ paddingTop: "$16" }}>
         {costs.map((cost) => {
           return (
             <Flex justify="between" key={cost.name}>
               <Copy
-                scale={{ "@initial": 9, "@sm": 8 }}
-                color={{ "@initial": "system-black", "@sm": "neutrals-7" }}
+                scale={{ "@initial": 9, "@md": 8 }}
+                color={{ "@initial": "system-black", "@md": "neutrals-7" }}
               >
                 {cost.name}
               </Copy>
-              <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black" bold>
+              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
                 ${cost.value.toFixed(2)}
               </Copy>
             </Flex>

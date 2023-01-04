@@ -24,6 +24,7 @@ export const DeleteShipmentModal = () => {
     if (!isReasonsOpen) {
       setReasonsOpen(true)
     } else {
+      // deleteShipmentFn(id)
       close("deleteShipment")
       // TODO: need to async this setReasonsOpen
       setReasonsOpen(false)

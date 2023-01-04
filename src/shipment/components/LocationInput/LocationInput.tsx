@@ -1,7 +1,7 @@
+import { useState } from "react"
 import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/components"
 import { IconArrowLeft } from "@/shared/icons"
-import { IAddress } from "@/shared/state"
-import { useState } from "react"
+import { IAddress } from "@/shared/types"
 import { LocationInputForm } from "./LocationInputForm"
 
 interface ILocationInputProps {
@@ -10,6 +10,7 @@ interface ILocationInputProps {
   placeholder: string
   description?: string
   labelProps?: IFormLabelProps
+  country: string,
 }
 
 export const LocationInput: React.FC<ILocationInputProps> = ({
@@ -18,42 +19,24 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
   placeholder,
   description,
   labelProps,
+  country,
 }) => {
   const { close } = useDrawerActions()
 
   const [locationDetails, setLocationDetails] = useState<IAddress>(initialValue)
 
-  const handleChange = (location: string) => {
-    // TODO: FIX this
-    onChange({
-      location,
-      address1: "",
-      address2: "",
-      city: "",
-      country: "",
-      isResidential: false,
-      zipCode: "",
-      state: "",
-    })
-    setLocationDetails({
-      location,
-      address1: "",
-      address2: "",
-      city: "",
-      country: "",
-      isResidential: false,
-      zipCode: "",
-      state: "",
-    })
+  const handleChange = (locationDetails: IAddress) => {
+    onChange(locationDetails)
+    setLocationDetails(locationDetails)
 
-    close("locationInput")
+    close(`location${placeholder}Input`)
   }
 
   return (
     <SearchFilterDrawer
-      drawerName="locationInput"
+      drawerName={`location${placeholder}Input`}
       drawerTitle="Find destination"
-      value={locationDetails.location}
+      value={locationDetails.displayName}
       placeholder={placeholder}
       hidePlaceholder
       description={description}
@@ -64,9 +47,10 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
           initialValue={locationDetails}
           onSelect={handleChange}
           placeholder={placeholder}
+          country={country}
         />
       }
-      dataTestid="location-button-filter"
+      dataTestid="displayName-button-filter"
     />
   )
 }

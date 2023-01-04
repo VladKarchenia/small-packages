@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react"
+import { Navigate, useLocation } from "react-router-dom"
+import { useMutation } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
+import { parseUrl } from "query-string"
+import { resetPasswordFn } from "@/api/authApi"
 import { ResetInput } from "@/api/types"
 import { ResetForm } from "./ResetForm"
 
 const defaultValues: ResetInput = {
-  password: "",
-  confirmPassword: "",
+  newPassword: "",
+  confirmNewPassword: "",
 }
 
 export const ResetFormContainer = () => {
   const [isPasswordChanged, setIsPasswordChanged] = useState(false)
+  const location = useLocation()
+  const token = parseUrl(location.search).query.token as string
+
   const methods = useForm<ResetInput>({
     mode: "onChange",
     defaultValues,
@@ -28,12 +35,36 @@ export const ResetFormContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful])
 
-  const onSubmitHandler: SubmitHandler<ResetInput> = (values) => {
-    console.log(values)
-    // TODO: call request to the BE with new password
+  const { mutate: resetPassword } = useMutation(
+    (data: { newPassword: string; token: string }) => resetPasswordFn(data),
+    {
+      onSuccess: () => {
+        setIsPasswordChanged(true)
+      },
+      // onError: (error: any) => {
+      //   if (Array.isArray((error as any).response.data.error)) {
+      //     ;(error as any).response.data.error.forEach((el: any) =>
+      //       toast.error(el.message, {
+      //         position: "top-right",
+      //       }),
+      //     )
+      //   } else {
+      //     toast.error((error as any).response.data.message, {
+      //       position: "top-right",
+      //     })
+      //   }
+      // },
+    },
+  )
 
-    // TODO: add this call after successful password change
-    setIsPasswordChanged(true)
+  const onSubmitHandler: SubmitHandler<ResetInput> = ({ newPassword }) => {
+    if (token) {
+      resetPassword({ newPassword, token })
+    }
+  }
+
+  if (!token) {
+    return <Navigate to="/" replace />
   }
 
   return (

@@ -20,15 +20,30 @@ import {
   useDashboardActionContext,
   useDashboardStateContext,
 } from "@/dashboard/state"
-import { ShipmentStatus } from "@/shared/types"
-import { IAddress } from "@/shared/state"
+import { ShipmentStatus, IAddress } from "@/shared/types"
 import { ShippingType } from "@/shipment"
 
 export interface ISortFiltertFormProps {
   shippingType: ShippingType
 }
 
-const shipmentStatusesList: ShipmentStatus[] = Object.values(ShipmentStatus)
+const getEnumKey = (value: any) =>
+  Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(value)]
+
+const shipmentStatuses = [
+  ShipmentStatus.COMPLETED,
+  ShipmentStatus.CONFIRMED,
+  ShipmentStatus.DELIVERED,
+  ShipmentStatus.DRAFT,
+  ShipmentStatus.IN_DELIVERY,
+  ShipmentStatus.SUBMIT_READY,
+  ShipmentStatus.CANCELLED,
+]
+
+const shipmentStatusesList: ShipmentStatus[] = Object.values(ShipmentStatus).filter((status) =>
+  shipmentStatuses.includes(status),
+)
+
 const sortingShipmentList: ShipmentsPagedOrderBy[] = Object.values(ShipmentsPagedOrderBy)
 
 export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType }) => {
@@ -47,11 +62,11 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     if (!event.currentTarget.checked) {
-      const newArray = status.filter((status) => status !== event.currentTarget.value)
+      const newArray = status.filter((status) => status !== getEnumKey(event.currentTarget.value))
       return setStatusFilter(newArray)
     }
 
-    const newArray = [...status, event.currentTarget.value as ShipmentStatus]
+    const newArray = [...status, getEnumKey(event.currentTarget.value) as ShipmentStatus]
     setStatusFilter(newArray)
   }
 
@@ -125,7 +140,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
                           name={item}
                           id={item}
                           label={item}
-                          checked={status.includes(item)}
+                          checked={status.includes(getEnumKey(item) as ShipmentStatus)}
                         />
                       </Box>
                     ))}
@@ -184,7 +199,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
               closeIcon={<IconChevronLeft />}
               drawerForm={
                 <SearchFilterDrawerForm
-                  // initialValue={originalAddress?.location || ""}
+                  // initialValue={originalAddress?.displayName || ""}
                   // onSelect={(address: IAddress) => setOriginalAddressFilter(address)}
                   // placeholder="Original address"
                   comboboxType="originalAddress"
@@ -202,7 +217,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
             closeIcon={<IconChevronLeft />}
             drawerForm={
               <SearchFilterDrawerForm
-                // initialValue={destinationAddress?.location || ""}
+                // initialValue={destinationAddress?.displayName || ""}
                 // onSelect={(address: IAddress) => setDestinationAddressFilter(address)}
                 // placeholder="Destination address"
                 comboboxType="destinationAddress"

@@ -1,16 +1,10 @@
 import React from "react"
 import { UseComboboxReturnValue } from "downshift"
-
 import { createContext } from "@/utils"
 
-export type ComboboxItemFormat = {
-  value: string
-  label: string
-}
+type ComboboxContextValue = UseComboboxReturnValue<any> & {}
 
-type ComboboxContextValue = UseComboboxReturnValue<ComboboxItemFormat> & {}
-
-type ComboboxProps = UseComboboxReturnValue<ComboboxItemFormat> & {
+type ComboboxProps = UseComboboxReturnValue<any> & {
   className?: string
   children: React.ReactNode
 }

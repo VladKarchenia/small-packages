@@ -42,15 +42,15 @@ export const CreateShipmentModal = () => {
     <Modal {...createShipment} {...modalProps}>
       <Stack space={20} css={{ display: "flex", flexDirection: "column", alignItems: "end" }}>
         <CreateRoundedButton
-          label="Creare a quote"
+          label="Create a quote"
           iconSize="sm"
-          ariaLabel="Creare a quote"
+          ariaLabel="Create a quote"
           onClick={() => handleClick(ShippingType.Quote)}
         />
         <CreateRoundedButton
-          label="Creare a shipment"
+          label="Create a shipment"
           iconSize="sm"
-          ariaLabel="Creare a shipment"
+          ariaLabel="Create a shipment"
           onClick={() => handleClick(ShippingType.Shipment)}
         />
       </Stack>

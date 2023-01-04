@@ -1,54 +1,59 @@
+import { useNavigate, useParams } from "react-router-dom"
 import format from "date-fns/format"
-import { ButtonIcon, Copy, Flex, GridContainer, Stack } from "@/shared/components"
-import { StatusLabel } from "@/shared/components/app"
-import { IconPencil } from "@/shared/icons"
-import { useStateContext } from "@/shared/state"
-import { Role, ShipmentStatus } from "@/shared/types"
+
 import { ShippingType } from "@/shipment"
+import { Role, ShipmentStatus } from "@/shared/types"
+import { TrackingRouteParams } from "@/tracking/types"
+
+import { ButtonIcon, Copy, Flex, GridContainer, Stack, StatusLabel } from "@/shared/components"
+import { IconPencil } from "@/shared/icons"
 
 interface ITrackingHeaderProps {
-  shipmentID: string
   shipmentDate: Date | null
   role?: Role
-  shippingType: ShippingType
-  status: ShipmentStatus
+  shippingType: ShippingType | null
+  status: ShipmentStatus | null
 }
 
-export const TrackingHeader = ({
-  shipmentID,
-  shipmentDate,
-  shippingType,
-  status,
-}: ITrackingHeaderProps) => {
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
+export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITrackingHeaderProps) => {
+  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const navigate = useNavigate()
+  // TODO: use Zustand
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
+
+  const handleEditClick = () => {
+    shippingType === ShippingType.Quote
+      ? navigate(`/edit/quote/${shipmentId}`)
+      : navigate(`/edit/shipment/${shipmentId}`)
+  }
 
   return (
     <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-      <Stack space={{ "@initial": 8, "@sm": 12 }}>
-        <Flex align="center" justify={{ "@initial": "between", "@sm": "start" }}>
+      <Stack space={{ "@initial": 8, "@md": 12 }}>
+        <Flex align="center" justify={{ "@initial": "between", "@md": "start" }}>
           <Flex align="center" css={{ marginRight: "$16" }}>
             <Copy
-              scale={{ "@initial": 8, "@sm": 5 }}
+              scale={{ "@initial": 8, "@md": 5 }}
               color="system-black"
               bold
               css={{ paddingRight: "$12" }}
             >
-              {shippingType === ShippingType.Shipment ? "Ship" : "Quote"} #{shipmentID}
+              {shippingType === ShippingType.Shipment ? "Ship" : "Quote"} #{shipmentId}
             </Copy>
             <StatusLabel status={status} />
           </Flex>
-          {/* TODO: navigate to Stepper by shipment ID */}
-          {role === Role.Admin && status !== ShipmentStatus.Eliminated ? (
+          {role === Role.Admin && status !== ShipmentStatus.CANCELLED ? (
             <ButtonIcon
+              type="button"
               ariaLabel="Edit shipment"
               icon={<IconPencil />}
-              onClick={() => console.log("Clicked edit button")}
+              onClick={handleEditClick}
             />
           ) : null}
         </Flex>
         {role === Role.Admin ? (
-          <Copy scale={{ "@initial": 10, "@sm": 8 }}>
+          <Copy scale={{ "@initial": 10, "@md": 8 }}>
             {shipmentDate ? format(shipmentDate, "dd.MM.yyyy") : ""}
           </Copy>
         ) : null}
