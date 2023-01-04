@@ -21,7 +21,7 @@ export const Map = () => {
   return (
     <Box css={{ height: "100%" }}>
       <MapContainer
-        style={{ minHeight: "260px", height: "inherit" }}
+        style={{ minHeight: "260px", height: "inherit", zIndex: "var(--zIndices-2)" }}
         center={[
           Math.abs(
             parseFloat(sender.fullAddress.latitude) - parseFloat(recipient.fullAddress.latitude),
