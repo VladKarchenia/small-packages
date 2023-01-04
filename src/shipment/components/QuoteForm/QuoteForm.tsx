@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
+
 import {
   IStep,
   StepName,
@@ -51,6 +53,8 @@ const initialState: StepperState = {
 
 export const QuoteForm = () => {
   const [stepperState, setStepperState] = useState(initialState)
+  const location = useLocation()
+  const isEditMode = location.pathname.includes("edit")
 
   const handleContinueClick = (step: QuoteStep, nextStep: QuoteStep) => {
     setStepperState((prevState) => {
@@ -112,7 +116,7 @@ export const QuoteForm = () => {
   return (
     <StepperForm
       shippingType={ShippingType.Quote}
-      title="Create a quote"
+      title={isEditMode ? "Edit a quote" : "Create a quote"}
       defaultStep={StepName.INFO}
       stepsData={stepsData}
     />

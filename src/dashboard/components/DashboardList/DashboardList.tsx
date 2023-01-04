@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   SortDirection,
   useDashboardActionContext,
@@ -22,10 +22,12 @@ import { SearchInput } from "../SearchInput"
 import { ShippingCard } from "../ShippingCard"
 import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
 import { SortFilterBar } from "../SortFilterBar"
+import { useQuery } from "react-query"
+import { getAllShipmentsFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
+import { createFilterString, createSortString } from "@/shared/utils"
 
 interface IDashboardListProps {
-  isLoading: boolean
-  bookings: any[]
   shippingType: ShippingType
 }
 
@@ -42,10 +44,12 @@ const DashboardListPlaceholder = () => (
   </>
 )
 
-export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
+export const DashboardList = ({ shippingType }: IDashboardListProps) => {
+  const [shipments, setShipments] = useState<IShipmentResponse[]>([])
   const { open } = useModalActions()
   const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
     useDashboardStateContext()
+
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
@@ -56,11 +60,45 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
 
-  if (isLoading) {
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const { isLoading, isFetching, refetch } = useQuery(
+    // TODO: check how not to call this all the time!
+    ["getShipments"],
+    () =>
+      getAllShipmentsFn({
+        organizationId: user?.activeOrganizationId,
+        // TODO: sort and filters should be placed also in zustand and be used here
+        filter: createFilterString(shippingType, status, recipientName, originalAddress, destinationAddress),
+        sort: `${createSortString(sortOrder)},${direction}`,
+      }),
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setShipments(data.content)
+        // maybe we also need to set shipments into zustand as a cache?
+        // return setShipmentContext(formatShipmentResponseData(shipment.data))
+      },
+    },
+  )
+
+  useEffect(() => {
+    refetch()
+  }, [
+    shippingType,
+    status,
+    recipientName,
+    originalAddress,
+    destinationAddress,
+    sortOrder,
+    direction,
+    refetch,
+  ])
+
+  if (isLoading || isFetching) {
     return <DashboardListPlaceholder />
   }
 
-  if (!isLoading && !bookings.length) {
+  if (!isLoading && !isFetching && !shipments.length) {
     return (
       <Box css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, paddingTop: "$80" }}>
         Empty
@@ -71,13 +109,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
 
   return (
     <>
-      <SearchInput
-        placeholder={
-          shippingType === ShippingType.Quote
-            ? "Search for ID, address..."
-            : "Search for ID, tracking number, address..."
-        }
-      />
+      <SearchInput shippingType={shippingType} />
       <SortFilterBar isFilterApplied={isFilterApplied} shippingType={shippingType} />
       <Spacer size={20} />
       {isFilterApplied ? (
@@ -139,7 +171,7 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
             Found:
           </Copy>
           <Copy scale={9} color="system-black" bold>
-            12/{bookings.length}
+            12/{shipments.length}
           </Copy>
         </Flex>
         <Flex align="center">
@@ -158,12 +190,12 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
       </Flex>
       <Spacer size={12} />
       <Stack as="ul" space={12}>
-        {bookings.map((booking) => (
-          <ShippingCard key={booking?.id} booking={booking} shippingType={shippingType} />
+        {shipments.map((shipment) => (
+          <ShippingCard key={shipment?.id} shipment={shipment} shippingType={shippingType} />
         ))}
       </Stack>
-      {bookings.length > 0 ? (
-        // {loading || data?.bookings.total > 0 ? (
+      {shipments.length > 0 ? (
+        // {loading || data?.shipments.total > 0 ? (
         <>
           <Spacer size={24} />
           <DashboardPagination
@@ -171,8 +203,8 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
             paginatedTerm={"shipping"}
             loading={false}
             // loading={loading}
-            total={bookings.length + 100}
-            // total={data?.bookings.total}
+            total={shipments.length + 100}
+            // total={data?.shipments.total}
             limit={20}
             // limit={state.limit}
             offset={0}

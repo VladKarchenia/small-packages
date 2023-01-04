@@ -1,4 +1,11 @@
 import { format } from "date-fns"
+
+import { mediaQueries } from "@/config"
+import { ShippingType } from "@/shipment"
+import { ShipmentStatus } from "@/shared/types"
+import { useShipmentStateContext } from "@/shared/state"
+import { useMedia } from "@/shared/hooks"
+
 import {
   AddressInfoShort,
   Button,
@@ -11,20 +18,15 @@ import {
   Title,
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
-import { mediaQueries } from "@/config"
-import { useMedia } from "@/shared/hooks"
-import { ShipmentStatus } from "@/shared/types"
 import { TrackingDetailsItem } from "@/tracking"
-import { ShippingType } from "@/shipment"
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 interface IQuoteDetailsProps {
   shippingType?: ShippingType
-  status: ShipmentStatus
+  status: ShipmentStatus | null
 }
 
-export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
+export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
   const { date, parcels, recipient, sender } = useShipmentStateContext()
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
 
@@ -55,8 +57,8 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
             titleScale={{ "@initial": 11, "@md": 9 }}
           >
             <AddressInfoShort
-              fromAddress={sender.fullAddress.location}
-              toAddress={recipient.fullAddress.location}
+              fromAddress={sender.fullAddress.displayName}
+              toAddress={recipient.fullAddress.displayName}
             />
           </TrackingDetailsItem>
 
@@ -71,7 +73,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
 
           <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Stack space={12}>
-              {parcels.map((parcel, index) => (
+              {parcels.map((parcel: any, index: number) => (
                 <Stack space={8} key={index}>
                   {parcels.length > 1 ? (
                     <Copy scale={9} color="system-black" bold>
@@ -102,7 +104,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
           </TrackingDetailsItem>
         </Stack>
       </STrackingSection>
-      {status !== ShipmentStatus.Eliminated ? (
+      {status !== ShipmentStatus.CANCELLED ? (
         <>
           <Spacer size={32} />
           <Button

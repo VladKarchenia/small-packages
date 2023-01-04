@@ -48,7 +48,7 @@ export const CancelShipmentModal = () => {
         ) : (
           <Stack space={8} css={{ textAlign: "center" }}>
             <Title as="h3" scale={6}>
-              Do you want to eliminate the shipment?
+              Do you want to cancel the shipment?
             </Title>
             <Copy scale={9} css={{ paddingBottom: "$8" }}>
               In case of elimination, the shipment will be cancelled without being deleted from the

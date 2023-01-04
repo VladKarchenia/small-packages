@@ -24,6 +24,7 @@ export const DashboardTableHead = ({ shippingType }: IDashboardTableHeadProps) =
     ShipmentsPagedOrderBy.RecipientNameAsc | ShipmentsPagedOrderBy.RecipientNameDesc
   >(ShipmentsPagedOrderBy.RecipientNameAsc)
 
+  // TODO: need to implement sort on FE side? (paginated response...)
   const { sortOrder } = useDashboardStateContext()
   const { setSortOrder, setSortDirection } = useDashboardActionContext()
 
@@ -60,7 +61,7 @@ export const DashboardTableHead = ({ shippingType }: IDashboardTableHeadProps) =
           }}
         >
           <Copy as="span" scale={8} color="system-black" bold>
-            {"ID"}
+            ID
           </Copy>
           <Spacer size={12} horizontal />
           {shipmentId === ShipmentsPagedOrderBy.IdAsc ? (

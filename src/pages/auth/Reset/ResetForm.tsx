@@ -27,7 +27,7 @@ export const ResetForm = ({
   const [confirmPasswordShown, setConfirmPasswordShown] = useState(false)
   const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
   const toggleConfirmPasswordVisibility = () => setConfirmPasswordShown(!confirmPasswordShown)
-  const { password } = watch()
+  const { newPassword } = watch()
 
   if (isPasswordChanged) {
     return (
@@ -56,8 +56,8 @@ export const ResetForm = ({
       <Stack space={24}>
         <Controller
           control={control}
-          defaultValue={defaultValues.password}
-          name="password"
+          defaultValue={defaultValues.newPassword}
+          name="newPassword"
           render={({ field }) => {
             return (
               <FormInput
@@ -104,8 +104,8 @@ export const ResetForm = ({
         />
         <Controller
           control={control}
-          defaultValue={defaultValues.confirmPassword}
-          name="confirmPassword"
+          defaultValue={defaultValues.confirmNewPassword}
+          name="confirmNewPassword"
           render={({ field }) => {
             return (
               <FormInput
@@ -120,7 +120,7 @@ export const ResetForm = ({
                     message: "Only alphanumeric characters allowed",
                   },
                   validate: {
-                    matching: (v: string) => v === password || "Passwords not match",
+                    matching: (v: string) => v === newPassword || "Passwords not match",
                   },
                   minLength: {
                     value: 7,
@@ -150,7 +150,7 @@ export const ResetForm = ({
         />
       </Stack>
       <Spacer size={32} />
-      <Button type="submit" full loading={isLoading} disabled={!!errors.confirmPassword?.message}>
+      <Button type="submit" full loading={isLoading} disabled={!!errors.confirmNewPassword?.message}>
         <Copy as="span" scale={8} color="system-white" bold>
           OK
         </Copy>

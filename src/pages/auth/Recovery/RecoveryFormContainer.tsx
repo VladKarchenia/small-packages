@@ -1,10 +1,12 @@
 import { useEffect } from "react"
+import { useMutation } from "react-query"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { Copy, Flex, Grid } from "@/shared/components"
 import { IconTick } from "@/shared/icons"
 import { RecoveryInput } from "@/api/types"
+import { forgotPasswordFn } from "@/api/authApi"
 import { RecoveryForm } from "./RecoveryForm"
 
 // TODO: Invalid email error after request
@@ -33,17 +35,37 @@ export const RecoveryFormContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful])
 
-  const onSubmitHandler: SubmitHandler<RecoveryInput> = (values) => {
-    console.log(values)
-    // TODO: call request to the BE with email
-    navigate("/login")
-    toast.success(<ToastMessage />, {
-      icon: false,
-      position: "bottom-right",
-      progressStyle: {
-        backgroundColor: "black",
+  const { mutate: forgotPassword } = useMutation(
+    ({ email }: RecoveryInput) => forgotPasswordFn(email),
+    {
+      onSuccess: () => {
+        navigate("/login")
+        toast.success(<ToastMessage />, {
+          icon: false,
+          position: "bottom-right",
+          progressStyle: {
+            backgroundColor: "black",
+          },
+        })
       },
-    })
+      // onError: (error: any) => {
+      //   if (Array.isArray((error as any).response.data.error)) {
+      //     ;(error as any).response.data.error.forEach((el: any) =>
+      //       toast.error(el.message, {
+      //         position: "top-right",
+      //       }),
+      //     )
+      //   } else {
+      //     toast.error((error as any).response.data.message, {
+      //       position: "top-right",
+      //     })
+      //   }
+      // },
+    },
+  )
+
+  const onSubmitHandler: SubmitHandler<RecoveryInput> = (values) => {
+    forgotPassword(values)
   }
 
   return (

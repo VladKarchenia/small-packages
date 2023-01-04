@@ -2,38 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useCombobox } from "downshift"
 import { useQuery } from "react-query"
-import {
-  Box,
-  Combobox,
-  ComboboxInput,
-  ComboboxItemFormat,
-  Divider,
-  FormCheckbox,
-  FormInput,
-} from "@/shared/components"
+import { Box, Combobox, ComboboxInput, Divider, FormCheckbox, FormInput } from "@/shared/components"
 import { IconCross, IconSearch } from "@/shared/icons"
-import { getSuggestionsFn } from "@/api/postApi"
-import { ISuggestionsResponse } from "@/api/types"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
 import {
   SSearchFilterComboboxMenu,
   SComboboxClearButton,
 } from "./RecipientNameFilterCombobox.styles"
-
-const namesMockList = [
-  "James Bond",
-  "Harry Brown",
-  "Oviler Calhoun",
-  "Jack Donaldson",
-  "Thomas Roger",
-  "Jacob Lamberts",
-]
-
-// interface ISearchFilterComboboxProps {
-//   onSelect: (value: string, label: string) => void
-//   initialValue?: string
-//   placeholder: string
-// }
+import debounce from "just-debounce-it"
+import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
 
 export const RecipientNameFilterCombobox = () => {
   const { t } = useTranslation()
@@ -44,29 +21,46 @@ export const RecipientNameFilterCombobox = () => {
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [inputValue, setInputValue] = useState("")
 
-  // const { data: suggestedDestinations, refetch: getSuggestions } = useQuery(
-  //   ["getSuggestions"],
-  //   async () => await getSuggestionsFn(inputValue),
-  //   {
-  //     enabled: false,
-  //     select: (data: ISuggestionsResponse) =>
-  //       data.data.suggestionsByTerm.places.map(mapDestinationToComboboxItem) || [],
-  //   },
-  // )
+  const [results, setResults] = useState<string[]>([])
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const { isLoading, isFetching, refetch } = useQuery(
+    // TODO: check how not to call this all the time!
+    ["searchRecipientNames"],
+    () =>
+      getShipmentsFieldValuesFn({
+        // field: `data.CONSIGNEE_CONTACT${inputValue ? `:${inputValue}` : ""}`,
+        field: `data.CONSIGNEE_CONTACT`,
+        status: "SHIPMENT",
+        organizationId: user?.activeOrganizationId,
+      }),
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setResults(data.content)
+      },
+    },
+  )
+
+  const debouncedRefetch = useCallback(
+    debounce(() => {
+      refetch()
+    }, 800),
+    [],
+  )
 
   const comboboxProps = useCombobox({
     isOpen: true,
     inputValue,
-    // items: suggestedDestinations || [],
-    items: [] as ComboboxItemFormat[],
-    itemToString: (item) => item?.label || "",
-
+    items: results,
     onInputValueChange: ({ inputValue }) => {
       setInputValue(inputValue || "")
 
-      if (!inputValue || inputValue.trim().length < 2) return
-
-      // getSuggestions()
+      if (
+        typeof inputValue !== "undefined" &&
+        (inputValue.length > 3 || inputValue.trim().length === 0)
+      ) {
+        debouncedRefetch()
+      }
     },
 
     onSelectedItemChange: ({ selectedItem }) => {
@@ -77,8 +71,9 @@ export const RecipientNameFilterCombobox = () => {
 
   const clearDestination = useCallback(() => {
     comboboxProps.selectItem(null)
+    resetFilterField("recipientName")
     inputRef.current?.focus()
-  }, [comboboxProps])
+  }, [comboboxProps, resetFilterField])
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     if (!event.currentTarget.checked) {
@@ -95,45 +90,20 @@ export const RecipientNameFilterCombobox = () => {
       return resetFilterField("recipientName")
     }
 
-    return setRecipientNameFilter(namesMockList)
+    return setRecipientNameFilter(results)
   }
 
-  useEffect(() => {
-    if (recipientName.length === namesMockList.length) {
-      setIsCheckAll(true)
-    } else {
-      setIsCheckAll(false)
+  const Content = () => {
+    if (isLoading || isFetching) {
+      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
     }
-  }, [recipientName])
 
-  return (
-    <Combobox {...comboboxProps}>
-      <Box css={{ paddingX: "$16" }}>
-        <ComboboxInput ref={inputRef}>
-          <FormInput
-            id={t("filters.destination")}
-            label={t("filters.destination")}
-            placeholder={"Search for recipient's name"}
-            labelProps={{ hidden: true }}
-            autoCorrect="off"
-            autoComplete="off"
-            data-testid="location-input"
-            prefix={<IconSearch size="xs" />}
-            suffix={
-              inputValue && (
-                <SComboboxClearButton
-                  type="button"
-                  aria-label={t("filters.destinationClear")}
-                  onClick={clearDestination}
-                >
-                  <IconCross size="xs" />
-                </SComboboxClearButton>
-              )
-            }
-          />
-        </ComboboxInput>
-      </Box>
-      <SSearchFilterComboboxMenu>
+    if (!isLoading && !isFetching && results.length === 0) {
+      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    }
+
+    return (
+      <>
         <Box
           css={{
             "> label": {
@@ -155,7 +125,7 @@ export const RecipientNameFilterCombobox = () => {
           />
         </Box>
 
-        {namesMockList.map((item) => (
+        {results.map((item: string) => (
           <>
             <Box
               key={item}
@@ -181,6 +151,51 @@ export const RecipientNameFilterCombobox = () => {
             <Divider />
           </>
         ))}
+      </>
+    )
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [])
+
+  useEffect(() => {
+    if (recipientName.length === results.length) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
+  }, [recipientName, results])
+
+  return (
+    <Combobox {...comboboxProps}>
+      <Box css={{ paddingX: "$16" }}>
+        <ComboboxInput ref={inputRef}>
+          <FormInput
+            id={t("filters.destination")}
+            label={t("filters.destination")}
+            placeholder={"Search for recipient's name"}
+            labelProps={{ hidden: true }}
+            autoCorrect="off"
+            autoComplete="off"
+            data-testid="displayName-input"
+            prefix={<IconSearch size="xs" />}
+            suffix={
+              inputValue && (
+                <SComboboxClearButton
+                  type="button"
+                  aria-label={t("filters.destinationClear")}
+                  onClick={clearDestination}
+                >
+                  <IconCross size="xs" />
+                </SComboboxClearButton>
+              )
+            }
+          />
+        </ComboboxInput>
+      </Box>
+      <SSearchFilterComboboxMenu>
+        <Content />
       </SSearchFilterComboboxMenu>
     </Combobox>
   )

@@ -6,7 +6,6 @@ import {
   OriginalAddressFilterCombobox,
   DestinationAddressFilterCombobox,
 } from "@/shared/components"
-// import { DestinationCombobox } from "@/shipment"
 
 type ComboboxType = "searchTerm" | "recipientName" | "originalAddress" | "destinationAddress"
 
