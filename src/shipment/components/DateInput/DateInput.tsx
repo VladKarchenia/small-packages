@@ -63,14 +63,14 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
             align="start"
             css={{ padding: "$0", border: "none", borderRadius: "$8", zIndex: "$2" }}
             alignOffset={-1}
-            onInteractOutside={(e) => {
+            onInteractOutside={(e: any) => {
               if (isTriggerClick(e)) {
                 return
               }
 
               return setIsOpen(false)
             }}
-            onOpenAutoFocus={(e) => {
+            onOpenAutoFocus={(e: any) => {
               e.preventDefault()
             }}
           >

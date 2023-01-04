@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useMutation } from "react-query"
 import { toast } from "react-toastify"
 import { ButtonIcon, Dropdown, DropdownItem, Stack } from "@/shared/components"
 import { IconAccount } from "@/shared/icons"
-import { useMutation } from "react-query"
 import { logoutUserFn } from "@/api/authApi"
 
 export interface ILoggedOutLabelProps {
@@ -12,30 +12,31 @@ export interface ILoggedOutLabelProps {
 
 export const LoggedOutLabel: React.FC<ILoggedOutLabelProps> = ({ isTransparent }) => {
   const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
+  // TODO: use Zustand
+  const refreshToken = window.localStorage.getItem("refreshToken") || ""
   const navigate = useNavigate()
 
-  const { mutate: logoutUser, isLoading } = useMutation(async () => await logoutUserFn(), {
-    onSuccess: (data) => {
-      window.location.href = "/login"
+  const { isLoading, mutate: logoutUser } = useMutation(() => logoutUserFn(refreshToken), {
+    onSuccess: () => {
+      navigate("/login")
     },
-    onError: (error: any) => {
-      if (Array.isArray(error.response.data.error)) {
-        error.data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          }),
-        )
-      } else {
-        toast.error(error.response.data.message, {
-          position: "top-right",
-        })
-      }
-    },
+    // onError: (error: any) => {
+    //   if (Array.isArray(error.response.data.error)) {
+    //     error.data.error.forEach((el: any) =>
+    //       toast.error(el.message, {
+    //         position: "top-right",
+    //       }),
+    //     )
+    //   } else {
+    //     toast.error(error.response.data.message, {
+    //       position: "top-right",
+    //     })
+    //   }
+    // },
   })
 
   const handleLogoutClick = () => {
     logoutUser()
-    navigate("/login")
   }
 
   return (

@@ -1,3 +1,5 @@
+import { useShipmentStateContext } from "@/shared/state"
+
 import {
   AddressInfoShort,
   Copy,
@@ -10,7 +12,6 @@ import {
   Title,
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
 import { ShipmentRoute, TrackingDetailsItem, SHIPMENT_DETAILS } from "@/tracking"
 import {
   STrackingGrid,
@@ -18,7 +19,6 @@ import {
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 export const ShipmentDetailsUnauthorized = () => {
-  const data = SHIPMENT_DETAILS
   const { rate, recipient, sender } = useShipmentStateContext()
 
   return (
@@ -50,15 +50,15 @@ export const ShipmentDetailsUnauthorized = () => {
           <Stack space={32}>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
-                fromAddress={sender.fullAddress.location}
-                toAddress={recipient.fullAddress.location}
+                fromAddress={sender.fullAddress.displayName}
+                toAddress={recipient.fullAddress.displayName}
               />
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
               <Stack space={16}>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {data.arrivalDate}
+                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
               </Stack>
             </TrackingDetailsItem>
@@ -69,8 +69,8 @@ export const ShipmentDetailsUnauthorized = () => {
             <>
               <TrackingDetailsItem title="From where to where" titleScale={11}>
                 <AddressInfoShort
-                  fromAddress={sender.fullAddress.location}
-                  toAddress={recipient.fullAddress.location}
+                  fromAddress={sender.fullAddress.displayName}
+                  toAddress={recipient.fullAddress.displayName}
                 />
               </TrackingDetailsItem>
             </>
@@ -78,7 +78,7 @@ export const ShipmentDetailsUnauthorized = () => {
             <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {data.arrivalDate}
+                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
               </Stack>
@@ -86,7 +86,7 @@ export const ShipmentDetailsUnauthorized = () => {
 
             <TrackingDetailsItem title="Route" titleScale={11}>
               {/* TODO: Fix Route block after BE data and final design */}
-              <ShipmentRoute routes={data.routes} />
+              <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
             </TrackingDetailsItem>
           </Stack>
         </Hidden>
@@ -108,7 +108,7 @@ export const ShipmentDetailsUnauthorized = () => {
             titleIndent={24}
           >
             {/* TODO: Fix Route block after BE data and final design */}
-            <ShipmentRoute routes={data.routes} />
+            <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
           </TrackingDetailsItem>
         </STrackingGridItem>
       </Hidden>

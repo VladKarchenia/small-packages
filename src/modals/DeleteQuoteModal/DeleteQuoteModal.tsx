@@ -7,6 +7,7 @@ export const DeleteQuoteModal = () => {
   const { close } = useModalActions()
 
   const handleContinueClick = () => {
+    // deleteShipmentFn(id)
     close("deleteQuote")
     // TODO: need to call some request to send the reason and change data
   }

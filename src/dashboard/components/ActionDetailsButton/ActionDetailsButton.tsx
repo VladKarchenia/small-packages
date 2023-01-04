@@ -5,26 +5,28 @@ import { IconMore } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
 import { useModalActions } from "@/shared/hooks"
 import { Role } from "@/shared/types"
-import { useStateContext } from "@/shared/state"
 
 interface IActionDetailsButtonProps {
   shippingType: ShippingType
+  shipmentId: string
 }
 
-export const ActionDetailsButton = ({ shippingType }: IActionDetailsButtonProps) => {
+export const ActionDetailsButton = ({ shippingType, shipmentId }: IActionDetailsButtonProps) => {
   const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
   const { open } = useModalActions()
   const navigate = useNavigate()
 
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
+  // TODO: use Zustand
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
 
   const handleEditClick = () => {
-    // TODO: navigate to edit shipment/quote stepper page
-    shippingType === ShippingType.Quote ? navigate("/tracking") : navigate("/tracking")
+    shippingType === ShippingType.Quote
+      ? navigate(`edit/quote/${shipmentId}`)
+      : navigate(`edit/shipment/${shipmentId}`)
   }
 
-  const handleEliminateClick = (event: Event) => {
+  const handleCancelClick = (event: Event) => {
     event.stopPropagation()
     // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
     shippingType === ShippingType.Quote ? open("cancelQuote") : open("cancelShipment")
@@ -60,7 +62,7 @@ export const ActionDetailsButton = ({ shippingType }: IActionDetailsButtonProps)
     >
       <Stack space={0} dividers>
         <DropdownItem key={"Edit"} label={"Edit"} onSelect={handleEditClick} />
-        <DropdownItem key={"Eliminate"} label={"Eliminate"} onSelect={handleEliminateClick} />
+        <DropdownItem key={"Cancel"} label={"Cancel"} onSelect={handleCancelClick} />
         {role === Role.Admin ? (
           <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
         ) : null}

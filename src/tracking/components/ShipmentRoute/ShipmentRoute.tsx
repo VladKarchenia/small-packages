@@ -11,8 +11,8 @@ interface IShipmentRouteProps {
 }
 
 export const ShipmentRoute = ({ routes }: IShipmentRouteProps) => {
-  const fullRoutesList = routes.find((route) => route.status === ShipmentStatus.Eliminated)
-    ? ["Confirmed", "Booked", "Eliminated"]
+  const fullRoutesList = routes.find((route) => route.status === ShipmentStatus.CANCELLED)
+    ? ["Confirmed", "Booked", "Cancelled"]
     : ["Confirmed", "Booked", "Picked up", "In delivery", "Delivered"]
 
   const restRoutesList = fullRoutesList.filter(

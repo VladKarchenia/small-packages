@@ -4,17 +4,13 @@ import { ShipmentStatus } from "@/shared/types"
 import { ActionDetailsButton } from "../ActionDetailsButton"
 import { SShippingCard } from "./ShippingCard.styles"
 
-interface IShipping {
-  code: string
-}
-
 interface IShippingCardProps {
-  booking: IShipping
+  shipment: any
   shippingType: ShippingType
 }
 
-export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
-  const { code } = booking
+export const ShippingCard = ({ shipment, shippingType }: IShippingCardProps) => {
+  const { id } = shipment
 
   return (
     <SShippingCard href={"/tracking"}>
@@ -22,20 +18,20 @@ export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
         <Box>
           <Flex align="baseline">
             <Copy scale={9} color="system-black" bold>
-              #{code}-5Z
+              #{id}-5Z
             </Copy>
             {shippingType === ShippingType.Shipment ? (
               <>
                 <Spacer size={16} horizontal />
-                <StatusLabel status={ShipmentStatus.Confirmed} />
+                <StatusLabel status={ShipmentStatus.CONFIRMED} />
               </>
             ) : null}
           </Flex>
           <Spacer size={4} />
           <Copy scale={9}>18.10.2022</Copy>
-          {/* <Copy scale={9}>{booking.date}</Copy> */}
+          {/* <Copy scale={9}>{shipment.date}</Copy> */}
         </Box>
-        <ActionDetailsButton shippingType={shippingType} />
+        <ActionDetailsButton shippingType={shippingType} shipmentId={id} />
       </Flex>
       <Divider />
       <ShippingCardInfo shippingType={shippingType} />

@@ -1,4 +1,9 @@
 import { format } from "date-fns"
+
+import { ShippingType } from "@/shipment"
+import { ShipmentStatus } from "@/shared/types"
+import { useShipmentStateContext } from "@/shared/state"
+
 import {
   AddressInfoShort,
   Button,
@@ -9,18 +14,15 @@ import {
   Stack,
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
-import { ShipmentStatus } from "@/shared/types"
 import { TrackingDetailsItem } from "@/tracking"
-import { ShippingType } from "@/shipment"
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 interface IQuoteDetailsProps {
   shippingType?: ShippingType
-  status: ShipmentStatus
+  status: ShipmentStatus | null
 }
 
-export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
+export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
   const { date, parcels, recipient, sender } = useShipmentStateContext()
 
   return (
@@ -39,10 +41,13 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
     >
       <STrackingSection>
         <Stack space={24} dividers>
-          <TrackingDetailsItem title="From where to where" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem
+            title="From where to where"
+            titleScale={{ "@initial": 11, "@sm": 9 }}
+          >
             <AddressInfoShort
-              fromAddress={sender.fullAddress.location}
-              toAddress={recipient.fullAddress.location}
+              fromAddress={sender.fullAddress.displayName}
+              toAddress={recipient.fullAddress.displayName}
             />
           </TrackingDetailsItem>
 
@@ -88,7 +93,7 @@ export const QuoteDetails = ({ status, shippingType }: IQuoteDetailsProps) => {
           </TrackingDetailsItem>
         </Stack>
       </STrackingSection>
-      {status !== ShipmentStatus.Eliminated ? (
+      {status !== ShipmentStatus.CANCELLED ? (
         <>
           <Spacer size={32} />
           <Button

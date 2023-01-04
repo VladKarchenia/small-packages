@@ -1,4 +1,7 @@
 import { format } from "date-fns"
+
+import { useShipmentStateContext } from "@/shared/state"
+
 import {
   AddressInfoShort,
   Copy,
@@ -14,7 +17,6 @@ import {
   GridContainer,
 } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
 import {
   SHIPMENT_DETAILS,
   costs,
@@ -30,7 +32,6 @@ import {
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 export const ShipmentDetails = () => {
-  const data = SHIPMENT_DETAILS
   const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
 
   return (
@@ -47,8 +48,8 @@ export const ShipmentDetails = () => {
           <Stack space={24}>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
-                fromAddress={sender.fullAddress.location}
-                toAddress={recipient.fullAddress.location}
+                fromAddress={sender.fullAddress.displayName}
+                toAddress={recipient.fullAddress.displayName}
               />
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
@@ -57,7 +58,7 @@ export const ShipmentDetails = () => {
                   Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
                 </Copy>
                 <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {data.arrivalDate}
+                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
               </Stack>
@@ -104,13 +105,16 @@ export const ShipmentDetails = () => {
             <Stack space={24} dividers>
               <>
                 <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
-                  <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
+                  <ShipmentURL
+                    url={SHIPMENT_DETAILS.shipmentURL}
+                    value={SHIPMENT_DETAILS.trackingNumber}
+                  />
                 </TrackingDetailsItem>
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where" titleScale={11}>
                   <AddressInfoShort
-                    fromAddress={sender.fullAddress.location}
-                    toAddress={recipient.fullAddress.location}
+                    fromAddress={sender.fullAddress.displayName}
+                    toAddress={recipient.fullAddress.displayName}
                   />
                 </TrackingDetailsItem>
               </>
@@ -122,7 +126,7 @@ export const ShipmentDetails = () => {
                   </Copy>
 
                   <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                    Arrival date: {data.arrivalDate}
+                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                   </Copy>
                   <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 </Stack>
@@ -161,7 +165,7 @@ export const ShipmentDetails = () => {
 
               <TrackingDetailsItem title="Route" titleScale={11}>
                 {/* TODO: Fix Route block after BE data and final design */}
-                <ShipmentRoute routes={data.routes} />
+                <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Sender’s info" titleScale={11}>
@@ -189,7 +193,7 @@ export const ShipmentDetails = () => {
             titleIndent={24}
           >
             {/* TODO: Fix Route block after BE data and final design */}
-            <ShipmentRoute routes={data.routes} />
+            <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
           </TrackingDetailsItem>
         </STrackingGridItem>
       </Hidden>
@@ -232,7 +236,10 @@ export const ShipmentDetails = () => {
               titleScale={7}
               titleColor={"system-black"}
             >
-              <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
+              <ShipmentURL
+                url={SHIPMENT_DETAILS.shipmentURL}
+                value={SHIPMENT_DETAILS.trackingNumber}
+              />
             </TrackingDetailsItem>
             <Spacer size={32} />
           </Hidden>
@@ -246,8 +253,8 @@ export const ShipmentDetails = () => {
           </Copy>
           <Spacer size={{ "@initial": 24, "@sm": 32 }} />
           <ShipmentLabelContainer
-            pdfLabel={data.shipmentLabelPDFLink}
-            zplLabel={data.shipmentLabelZPLLink}
+            pdfLabel={SHIPMENT_DETAILS.shipmentLabelPDFLink}
+            zplLabel={SHIPMENT_DETAILS.shipmentLabelZPLLink}
           />
         </STrackingGridItem>
       </GridContainer>
