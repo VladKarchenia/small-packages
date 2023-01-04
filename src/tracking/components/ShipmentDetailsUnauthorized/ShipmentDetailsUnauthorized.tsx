@@ -4,6 +4,7 @@ import {
   AddressInfoShort,
   Copy,
   GridItem,
+  GridContainer,
   Hidden,
   Map,
   ShortInfoLine,
@@ -23,83 +24,88 @@ export const ShipmentDetailsUnauthorized = () => {
 
   return (
     <STrackingGrid
-      columns={{ "@initial": "1fr", "@sm": "1fr 1fr 1fr 1fr" }}
-      gap={{ "@initial": 16, "@sm": 24 }}
+      columns={{ "@initial": "1fr", "@md": "1fr 1fr 1fr 1fr" }}
+      gap={{ "@initial": 16, "@md": 24 }}
       rows={"auto auto"}
       css={{
         "@initial": {
           gridTemplateAreas: `"map"
                               "main"`,
         },
-        "@sm": {
+        "@md": {
           gridTemplateAreas: `"main  map " 
                               "route map "`,
         },
       }}
     >
-      <STrackingGridItem css={{ gridArea: "main" }}>
-        <Hidden below="sm">
+      <Hidden below="md" css={{ gridArea: "main" }}>
+        <STrackingGridItem>
           <Title as="h3" scale={7} color="system-black">
             Main Info
           </Title>
-        </Hidden>
-        <Hidden below="sm">
+
           <Spacer size={24} />
-        </Hidden>
-        <Hidden below="sm">
-          <Stack space={32}>
-            <TrackingDetailsItem title="From where to where">
-              <AddressInfoShort
-                fromAddress={sender.fullAddress.displayName}
-                toAddress={recipient.fullAddress.displayName}
-              />
-            </TrackingDetailsItem>
-            <TrackingDetailsItem title="Date and delivery service">
-              <Stack space={16}>
-                <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
-                <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
-                </Copy>
-              </Stack>
-            </TrackingDetailsItem>
-          </Stack>
-        </Hidden>
-        <Hidden above="sm">
-          <Stack space={24} dividers>
-            <>
-              <TrackingDetailsItem title="From where to where" titleScale={11}>
+
+          <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
+            <Stack space={32}>
+              <TrackingDetailsItem title="From where to where">
                 <AddressInfoShort
                   fromAddress={sender.fullAddress.displayName}
                   toAddress={recipient.fullAddress.displayName}
                 />
               </TrackingDetailsItem>
-            </>
+              <TrackingDetailsItem title="Date and delivery service">
+                <Stack space={16}>
+                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
+                  </Copy>
+                </Stack>
+              </TrackingDetailsItem>
+            </Stack>
+          </GridContainer>
+        </STrackingGridItem>
+      </Hidden>
 
-            <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
-              <Stack space={12}>
-                <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-                  Arrival date: {SHIPMENT_DETAILS.arrivalDate}
-                </Copy>
-                <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
-              </Stack>
-            </TrackingDetailsItem>
+      <Hidden above="md">
+        <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
+          <STrackingGridItem css={{ gridArea: "main" }}>
+            <Stack space={24} dividers>
+              <>
+                <TrackingDetailsItem title="From where to where" titleScale={11}>
+                  <AddressInfoShort
+                    fromAddress={sender.fullAddress.displayName}
+                    toAddress={recipient.fullAddress.displayName}
+                  />
+                </TrackingDetailsItem>
+              </>
 
-            <TrackingDetailsItem title="Route" titleScale={11}>
-              {/* TODO: Fix Route block after BE data and final design */}
-              <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
-            </TrackingDetailsItem>
-          </Stack>
-        </Hidden>
-      </STrackingGridItem>
+              <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
+                <Stack space={12}>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
+                  </Copy>
+                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
+                </Stack>
+              </TrackingDetailsItem>
+
+              <TrackingDetailsItem title="Route" titleScale={11}>
+                {/* TODO: Fix Route block after BE data and final design */}
+                <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
+              </TrackingDetailsItem>
+            </Stack>
+          </STrackingGridItem>
+        </GridContainer>
+      </Hidden>
 
       <GridItem
-        column={{ "@sm": "span 3" }}
+        column={{ "@md": "span 3" }}
         css={{ gridArea: "map", margin: "0 -$16", "@sm": { margin: "0" } }}
       >
         <Map />
       </GridItem>
 
-      <Hidden below="sm">
+      <Hidden below="md">
         <STrackingGridItem css={{ gridArea: "route" }}>
           <TrackingDetailsItem
             title="Route"

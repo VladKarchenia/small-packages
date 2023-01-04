@@ -28,7 +28,7 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
       <TrackingHeader shipmentDate={shipmentDate} shippingType={shippingType} status={status} />
       <Spacer size={{ "@initial": 16, "@sm": 24 }} />
       {children}
-      <Spacer size={{ "@initial": 24, "@sm": 0 }} />
+      <Spacer size={{ "@initial": 24, "@md": 0 }} />
     </>
   )
 }

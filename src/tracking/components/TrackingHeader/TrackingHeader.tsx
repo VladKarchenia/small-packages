@@ -30,11 +30,11 @@ export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITracking
 
   return (
     <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-      <Stack space={{ "@initial": 8, "@sm": 12 }}>
-        <Flex align="center" justify={{ "@initial": "between", "@sm": "start" }}>
+      <Stack space={{ "@initial": 8, "@md": 12 }}>
+        <Flex align="center" justify={{ "@initial": "between", "@md": "start" }}>
           <Flex align="center" css={{ marginRight: "$16" }}>
             <Copy
-              scale={{ "@initial": 8, "@sm": 5 }}
+              scale={{ "@initial": 8, "@md": 5 }}
               color="system-black"
               bold
               css={{ paddingRight: "$12" }}
@@ -53,7 +53,7 @@ export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITracking
           ) : null}
         </Flex>
         {role === Role.Admin ? (
-          <Copy scale={{ "@initial": 10, "@sm": 8 }}>
+          <Copy scale={{ "@initial": 10, "@md": 8 }}>
             {shipmentDate ? format(shipmentDate, "dd.MM.yyyy") : ""}
           </Copy>
         ) : null}

@@ -1,8 +1,10 @@
 import { format } from "date-fns"
 
+import { mediaQueries } from "@/config"
 import { ShippingType } from "@/shipment"
 import { ShipmentStatus } from "@/shared/types"
 import { useShipmentStateContext } from "@/shared/state"
+import { useMedia } from "@/shared/hooks"
 
 import {
   AddressInfoShort,
@@ -10,8 +12,10 @@ import {
   Copy,
   Flex,
   GridContainer,
+  Hidden,
   Spacer,
   Stack,
+  Title,
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
 import { TrackingDetailsItem } from "@/tracking"
@@ -24,26 +28,33 @@ interface IQuoteDetailsProps {
 
 export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
   const { date, parcels, recipient, sender } = useShipmentStateContext()
+  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
 
   return (
     <GridContainer
-      fullBleed
+      fullBleed={{ "@initial": false, "@sm": true }}
       css={{
         "@initial": {
           maxWidth: "100%",
           paddingBottom: "$48",
         },
-        "@sm": {
+        "@md": {
           maxWidth: "565px",
           marginLeft: "initial",
         },
       }}
     >
       <STrackingSection>
-        <Stack space={24} dividers>
+        <Hidden below="md">
+          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
+            Main Info
+          </Title>
+          <Spacer size={24} />
+        </Hidden>
+        <Stack space={24} dividers={isMediumAndAbove ? false : true}>
           <TrackingDetailsItem
             title="From where to where"
-            titleScale={{ "@initial": 11, "@sm": 9 }}
+            titleScale={{ "@initial": 11, "@md": 9 }}
           >
             <AddressInfoShort
               fromAddress={sender.fullAddress.displayName}
@@ -51,7 +62,7 @@ export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
             />
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Flex align="center">
               <IconClock size="xs" css={{ paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
@@ -60,9 +71,9 @@ export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
             </Flex>
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@sm": 9 }}>
+          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Stack space={12}>
-              {parcels.map((parcel, index) => (
+              {parcels.map((parcel: any, index: number) => (
                 <Stack space={8} key={index}>
                   {parcels.length > 1 ? (
                     <Copy scale={9} color="system-black" bold>
