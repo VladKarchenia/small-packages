@@ -232,7 +232,7 @@ export const ShipmentDetails = () => {
         <STrackingGridItem css={{ gridArea: "labels" }}>
           <Hidden below="md">
             <TrackingDetailsItem
-              title="Tracking number"
+              title="Tracking & Labels"
               titleIndent={20}
               titleScale={7}
               titleColor={"system-black"}
@@ -242,21 +242,33 @@ export const ShipmentDetails = () => {
                 value={SHIPMENT_DETAILS.trackingNumber}
               />
             </TrackingDetailsItem>
-            <Spacer size={32} />
+            {/*<Spacer size={32} />*/}
           </Hidden>
 
-          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-            Shipment label
-          </Title>
-          <Spacer size={{ "@initial": 16, "@md": 24 }} />
-          <Copy scale={{ "@initial": 9, "@md": 8 }}>
-            Shipment label must be printed and attached to a package before it is picked up
-          </Copy>
+          <Hidden above="md">
+            <Title as="h3" scale={7}>
+              Labels
+            </Title>
+            <Spacer size={24} />
+          </Hidden>
+          <Hidden above="md">
+            <Copy scale={{ "@initial": 9, "@md": 8 }}>
+              Shipment label must be printed and attached to a package before it is picked up
+            </Copy>
+          </Hidden>
           <Spacer size={{ "@initial": 24, "@md": 32 }} />
           <ShipmentLabelContainer
             pdfLabel={SHIPMENT_DETAILS.shipmentLabelPDFLink}
             zplLabel={SHIPMENT_DETAILS.shipmentLabelZPLLink}
+            pdfReturnLabel={SHIPMENT_DETAILS.shipmentLabelPDFReturn}
+            zplReturnLabel={SHIPMENT_DETAILS.shipmentLabelZPLReturn}
           />
+          <Hidden below="md">
+            <Spacer size={20} />
+            <Copy scale={8}>
+              * Shipment label must be printed and attached to a package before it is picked up
+            </Copy>
+          </Hidden>
         </STrackingGridItem>
       </GridContainer>
     </STrackingGrid>
