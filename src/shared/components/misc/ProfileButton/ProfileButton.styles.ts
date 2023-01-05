@@ -1,6 +1,6 @@
 import { styled } from "@/config"
 
-export const SLoggedOutButton = styled("button", {
+export const SProfileButton = styled("button", {
   reset: true,
   borderRadius: "50%",
   backgroundColor: "$neutrals-5",

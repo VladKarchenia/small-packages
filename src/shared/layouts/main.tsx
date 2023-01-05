@@ -7,7 +7,8 @@ import {
   Grid,
   GridContainer,
   GridItem,
-  LoggedOutLabel,
+  LogoutButton,
+  ProfileButton,
   Spacer,
   Stack,
 } from "@/shared/components"
@@ -44,30 +45,35 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
           }}
         >
           <Flex align="center" justify="between">
-            <a
-              aria-haspopup="false"
-              aria-label="Logo name"
-              role="button"
-              tabIndex={0}
-              href={"/"}
-              style={{ textDecoration: "none" }}
-            >
-              <Flex css={{ height: "$40" }}>
-                <img
-                  alt="logo"
-                  src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                />
-              </Flex>
-            </a>
-
-            <Flex align="center">
+            <Flex>
+              <a
+                aria-haspopup="false"
+                aria-label="Logo name"
+                role="button"
+                tabIndex={0}
+                href={"/"}
+                style={{ textDecoration: "none" }}
+              >
+                <Flex css={{ height: "$40" }}>
+                  <img
+                    alt="logo"
+                    src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
+                  />
+                </Flex>
+              </a>
+              <Spacer size={32} horizontal />
               {withGlobalSearch ? (
                 <>
                   <GlobalSearch />
                   <Spacer size={24} horizontal />
                 </>
               ) : null}
-              <LoggedOutLabel />
+            </Flex>
+
+            <Flex align="center">
+              <ProfileButton />
+              <Spacer size={20} horizontal />
+              <LogoutButton />
             </Flex>
           </Flex>
         </GridItem>
