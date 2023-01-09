@@ -16,6 +16,7 @@ import {
   IStepsDataItem,
   ShipmentDateDetails,
   ShipmentDateDetailsShort,
+  SummaryInfo,
 } from "@/shipment"
 
 type StepperState = {
@@ -123,6 +124,12 @@ export const ShipmentForm = () => {
       title: "Delivery Rates",
       data: stepperState.rates,
       mainContent: <DeliveryRates shippingType={ShippingType.Shipment} />,
+      shortContent: <DeliveryRatesShort />,
+    },
+    {
+      title: "Summary ",
+      data: stepperState.rates,
+      mainContent: <SummaryInfo />,
       shortContent: <DeliveryRatesShort />,
     },
   ]
