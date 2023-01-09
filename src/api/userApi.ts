@@ -23,6 +23,15 @@ export const getMeFn = async (username: string) => {
   return formattedData
 }
 
+export const updateUserPasswordFn = async (oldPassword: string, newPassword: string) => {
+  const response = await userApi.post<unknown>("users/update_password", {
+    oldPassword,
+    newPassword,
+  })
+
+  return response.data
+}
+
 userApi.interceptors.response.use(
   (response) => {
     return response
