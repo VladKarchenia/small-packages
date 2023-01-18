@@ -1,4 +1,4 @@
-import { Redacted, Spacer, Stack } from "@/shared/components"
+import { Redacted, Spacer, Stack, Box } from "@/shared/components"
 import { Spaces } from "@/config/theme/spacing"
 import { ResponsiveProp } from "@/utils"
 type RowsProps = {
@@ -21,12 +21,12 @@ export const Rows = ({ count, width, height, stackSpace = 12 }: RowsProps) => {
 export const LabelRows = ({ count }: { count: number }) => {
   return (
     <Stack space={16}>
-      {Array.from(new Array(count), (_, index) => index).map(() => (
-        <>
+      {Array.from(new Array(count), (_, index) => index).map((v) => (
+        <Box key={`placeholder-row-${v}`}>
           <Redacted height="$16" width="79px" text animated />
           <Spacer size={4} />
           <Redacted height="$20" width="200px" text animated />
-        </>
+        </Box>
       ))}
     </Stack>
   )
