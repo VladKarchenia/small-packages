@@ -14,6 +14,9 @@ import {
   ShipmentDetails,
   QuoteDetails,
   TrackingMain,
+  TrackingPlaceholderShipment,
+  TrackingPlaceholderQuote,
+  TrackingPlaceholderShipmentUnauthorized,
 } from "@/tracking"
 
 export const costs: ICost[] = [
@@ -115,31 +118,40 @@ export const TrackingContainer = () => {
   }, [accessToken, refetch])
 
   if (shippingType === ShippingType.Quote) {
-    return (
-      <TrackingMain
-        headerTitle="Quote detail"
-        shipmentDate={new Date()}
-        shippingType={shippingType}
-        status={shipmentStatus}
-      >
-        <QuoteDetails shippingType={shippingType} status={shipmentStatus} />
-      </TrackingMain>
-    )
+    if (isLoading || isFetching) {
+      return <TrackingPlaceholderQuote />
+    } else
+      return (
+        <TrackingMain
+          headerTitle="Quote detail"
+          shipmentDate={new Date()}
+          shippingType={shippingType}
+          status={shipmentStatus}
+        >
+          <QuoteDetails shippingType={shippingType} status={shipmentStatus} />
+        </TrackingMain>
+      )
   }
 
   if (role === Role.Admin) {
-    return (
-      <TrackingMain
-        headerTitle="Shipment details"
-        shipmentDate={new Date()}
-        shippingType={shippingType}
-        status={shipmentStatus}
-      >
-        <ShipmentDetails />
-      </TrackingMain>
-    )
+    if (isLoading || isFetching) {
+      return <TrackingPlaceholderShipment />
+    } else
+      return (
+        <TrackingMain
+          headerTitle="Shipment details"
+          shipmentDate={new Date()}
+          shippingType={shippingType}
+          status={shipmentStatus}
+        >
+          <ShipmentDetails />
+        </TrackingMain>
+      )
   }
 
+  if (isLoading || isFetching) {
+    return <TrackingPlaceholderShipmentUnauthorized />
+  }
   return (
     <TrackingMain
       headerTitle="Shipment details"

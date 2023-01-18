@@ -11,6 +11,7 @@ export const SRedacted = styled("div", {
   backgroundColor: "$neutrals-3",
   maxWidth: "100%",
   overflow: "hidden",
+  borderRadius: "25px",
 
   variants: {
     animated: {

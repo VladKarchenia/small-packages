@@ -15,7 +15,24 @@ export const Map = () => {
     !recipient.fullAddress.latitude ||
     !recipient.fullAddress.longitude
   ) {
-    return <Box css={{ height: "100%" }}>No map</Box>
+    return (
+      <Box
+        css={{
+          height: "100%",
+          backgroundColor: "$neutrals-4",
+          padding: "$20",
+          textAlign: "center",
+          verticalAlign: "middle",
+          lineHeight: "260px",
+          "@md": {
+            lineHeight: "400px",
+            borderRadius: "$8",
+          },
+        }}
+      >
+        No map
+      </Box>
+    )
   }
 
   return (
