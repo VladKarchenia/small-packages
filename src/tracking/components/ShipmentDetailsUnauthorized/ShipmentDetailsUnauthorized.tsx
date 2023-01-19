@@ -50,8 +50,8 @@ export const ShipmentDetailsUnauthorized = () => {
             <Stack space={32}>
               <TrackingDetailsItem title="From where to where">
                 <AddressInfoShort
-                  fromAddress={sender.fullAddress.displayName}
-                  toAddress={recipient.fullAddress.displayName}
+                  fromAddress={sender.fullAddress}
+                  toAddress={recipient.fullAddress}
                 />
               </TrackingDetailsItem>
               <TrackingDetailsItem title="Date and delivery service">
@@ -74,8 +74,8 @@ export const ShipmentDetailsUnauthorized = () => {
               <>
                 <TrackingDetailsItem title="From where to where" titleScale={11}>
                   <AddressInfoShort
-                    fromAddress={sender.fullAddress.displayName}
-                    toAddress={recipient.fullAddress.displayName}
+                    fromAddress={sender.fullAddress}
+                    toAddress={recipient.fullAddress}
                   />
                 </TrackingDetailsItem>
               </>

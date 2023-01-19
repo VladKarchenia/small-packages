@@ -1,6 +1,7 @@
+import { ShipmentStatus } from "@/shared/types"
+
 import { Copy } from "@/shared/components"
 import { STrackerLabel } from "./StatusLabel.styles"
-import { ShipmentStatus } from "@/shared/types"
 
 export const StatusLabel = ({ status }: { status: ShipmentStatus | null }) => {
   if (!status) return null

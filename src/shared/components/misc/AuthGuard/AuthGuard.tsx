@@ -3,8 +3,8 @@ import { Role } from "@/shared/types"
 
 export const AuthGuard = ({ allowedRoles }: { allowedRoles: Role[] }) => {
   // TODO: use Zustand
-  const accessToken = window.localStorage.getItem("accessToken") || ""
-  const username = window.localStorage.getItem("username") || ""
+  const accessToken = localStorage.getItem("accessToken") || ""
+  const username = localStorage.getItem("username") || ""
   const user = JSON.parse(localStorage.getItem("user") || "{}")
   const role = user?.authorities?.[0]?.authority
   const location = useLocation()

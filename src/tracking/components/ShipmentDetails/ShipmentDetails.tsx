@@ -51,16 +51,17 @@ export const ShipmentDetails = () => {
             </Title>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
-                fromAddress={sender.fullAddress.displayName}
-                toAddress={recipient.fullAddress.displayName}
+                fromAddress={sender.fullAddress}
+                toAddress={recipient.fullAddress}
               />
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+                  Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
                 </Copy>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  {/* TODO: add time zone */}
                   Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
@@ -114,8 +115,8 @@ export const ShipmentDetails = () => {
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where" titleScale={11}>
                   <AddressInfoShort
-                    fromAddress={sender.fullAddress.displayName}
-                    toAddress={recipient.fullAddress.displayName}
+                    fromAddress={sender.fullAddress}
+                    toAddress={recipient.fullAddress}
                   />
                 </TrackingDetailsItem>
               </>
@@ -123,7 +124,7 @@ export const ShipmentDetails = () => {
               <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                 <Stack space={12}>
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+                    Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
                   </Copy>
 
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">

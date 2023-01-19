@@ -5,6 +5,7 @@ import { ShipmentState } from "@/shared/state"
 import {
   Button,
   Copy,
+  Flex,
   FormCheckbox,
   FormInput,
   FormSelect,
@@ -13,10 +14,14 @@ import {
   GridItem,
   Spacer,
   Stack,
+  Switch,
+  SwitchOption,
   useStepperContext,
+  useSwitch,
 } from "@/shared/components"
 import {
   AddressFieldPopover,
+  ReturnAddressSection,
   ShippingType,
   StepActionsBar,
   StepInputGroup,
@@ -30,12 +35,14 @@ import { ICitiesByZipResponse } from "@/api/types"
 export const PersonInfo = ({
   handleContinueClick,
   person,
+  setStepperState,
 }: {
   handleContinueClick: (
     step: StepName.FROM | StepName.TO,
     nextStep: StepName.TO | StepName.SHIPMENT,
   ) => void
   person: "sender" | "recipient"
+  setStepperState: (value: any) => void
 }) => {
   const countriesList = person === "sender" ? ["United States"] : ["United States", "Canada"]
   const [statesList, setStatesList] = useState<ICitiesByZipResponse[]>([])
@@ -46,14 +53,14 @@ export const PersonInfo = ({
     control,
     register,
     trigger,
-    resetField,
     setValue,
     getValues,
     setError,
     formState: { errors },
   } = useFormContext<ShipmentState>()
 
-  const { sender, recipient } = watch()
+  const { sender, senderReturn, recipient, hasReturnAddress } = watch()
+
   const {
     name: sendersName,
     phone: sendersPhone,
@@ -64,8 +71,24 @@ export const PersonInfo = ({
       state: sendersState,
       city: sendersCity,
       address1: sendersAddress1,
+      displayName: sendersDisplayName,
     },
   } = sender
+
+  const {
+    name: sendersReturnName,
+    phone: sendersReturnPhone,
+    email: sendersReturnEmail,
+    fullAddress: {
+      country: sendersReturnCountry,
+      zipCode: sendersReturnZipCode,
+      state: sendersReturnState,
+      city: sendersReturnCity,
+      address1: sendersReturnAddress1,
+      displayName: sendersReturnDisplayName,
+    },
+  } = senderReturn
+
   const {
     name: recipientsName,
     phone: recipientsPhone,
@@ -76,6 +99,7 @@ export const PersonInfo = ({
       state: recipientsState,
       city: recipientsCity,
       address1: recipientsAddress1,
+      displayName: recipientsDisplayName,
     },
   } = recipient
 
@@ -84,6 +108,11 @@ export const PersonInfo = ({
   const state = getValues(`${person}.fullAddress.state`)
 
   const { setSelected } = useStepperContext("PersonInfo")
+
+  const switchProps = useSwitch<"similar" | "new">(
+    "returnAddress",
+    hasReturnAddress ? "new" : "similar",
+  )
 
   const onContinueHandler = () => {
     if (person === "sender") {
@@ -117,6 +146,63 @@ export const PersonInfo = ({
       },
     },
   )
+
+  // TODO: add useCallback here
+  // TODO: add similar condition to click on step title
+  const checkButtonDisability = () => {
+    if (!!errors.sender || !!errors.senderReturn || !!errors.recipient) {
+      return true
+    }
+
+    if (person === "sender") {
+      if (hasReturnAddress) {
+        return (
+          !sendersName ||
+          !sendersPhone ||
+          !sendersEmail ||
+          !sendersCountry ||
+          !sendersZipCode ||
+          !sendersState ||
+          !sendersCity ||
+          !sendersAddress1 ||
+          !sendersDisplayName ||
+          !sendersReturnName ||
+          !sendersReturnPhone ||
+          !sendersReturnEmail ||
+          !sendersReturnCountry ||
+          !sendersReturnZipCode ||
+          !sendersReturnState ||
+          !sendersReturnCity ||
+          !sendersReturnAddress1 ||
+          !sendersReturnDisplayName
+        )
+      } else {
+        return (
+          !sendersName ||
+          !sendersPhone ||
+          !sendersEmail ||
+          !sendersCountry ||
+          !sendersZipCode ||
+          !sendersState ||
+          !sendersCity ||
+          !sendersAddress1 ||
+          !sendersDisplayName
+        )
+      }
+    } else {
+      return (
+        !recipientsName ||
+        !recipientsPhone ||
+        !recipientsEmail ||
+        !recipientsCountry ||
+        !recipientsZipCode ||
+        !recipientsState ||
+        !recipientsCity ||
+        !recipientsAddress1 ||
+        !recipientsDisplayName
+      )
+    }
+  }
 
   useEffect(() => {
     if (zipCode) {
@@ -326,16 +412,16 @@ export const PersonInfo = ({
                     {...register(field.name, {})}
                     onValueChange={(value) => {
                       if (value !== field.value) {
-                        resetField(`${person}.fullAddress.zipCode`)
-                        resetField(`${person}.fullAddress.state`)
-                        resetField(`${person}.fullAddress.city`)
-                        resetField(`${person}.fullAddress.address1`)
-                        resetField(`${person}.fullAddress.address2`)
-                        resetField(`${person}.fullAddress.displayName`)
-                        resetField(`${person}.fullAddress.latitude`)
-                        resetField(`${person}.fullAddress.longitude`)
+                        setValue(`${person}.fullAddress.zipCode`, "")
+                        setValue(`${person}.fullAddress.state`, "")
+                        setValue(`${person}.fullAddress.city`, "")
+                        setValue(`${person}.fullAddress.address1`, "")
+                        setValue(`${person}.fullAddress.address2`, "")
+                        setValue(`${person}.fullAddress.displayName`, "")
+                        setValue(`${person}.fullAddress.latitude`, "")
+                        setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          resetField(`${person}.fullAddress.isResidential`)
+                          setValue(`${person}.fullAddress.isResidential`, false)
                         }
                         setStatesList([])
                         setCitiesList([])
@@ -394,15 +480,15 @@ export const PersonInfo = ({
                       if (formattedValue !== zipCode) {
                         field.onChange(formattedValue)
 
-                        resetField(`${person}.fullAddress.state`)
-                        resetField(`${person}.fullAddress.city`)
-                        resetField(`${person}.fullAddress.address1`)
-                        resetField(`${person}.fullAddress.address2`)
-                        resetField(`${person}.fullAddress.displayName`)
-                        resetField(`${person}.fullAddress.latitude`)
-                        resetField(`${person}.fullAddress.longitude`)
+                        setValue(`${person}.fullAddress.state`, "")
+                        setValue(`${person}.fullAddress.city`, "")
+                        setValue(`${person}.fullAddress.address1`, "")
+                        setValue(`${person}.fullAddress.address2`, "")
+                        setValue(`${person}.fullAddress.displayName`, "")
+                        setValue(`${person}.fullAddress.latitude`, "")
+                        setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          resetField(`${person}.fullAddress.isResidential`)
+                          setValue(`${person}.fullAddress.isResidential`, false)
                         }
                         setStatesList([])
                         setCitiesList([])
@@ -415,10 +501,11 @@ export const PersonInfo = ({
                       }
                     }}
                     id={`${person}.fullAddress.zipCode`}
-                    label="Zip Code"
+                    label="Zip code / Postal code"
                     labelProps={{ hidden: true, required: true }}
-                    description="Zip Code"
+                    description="Zip code / Postal code"
                     type="text"
+                    autoComplete="new-password"
                     error={errors[person]?.fullAddress?.zipCode?.message}
                   />
                 )
@@ -439,14 +526,14 @@ export const PersonInfo = ({
                     {...register(field.name, {})}
                     onValueChange={(value) => {
                       if (value !== field.value) {
-                        resetField(`${person}.fullAddress.city`)
-                        resetField(`${person}.fullAddress.address1`)
-                        resetField(`${person}.fullAddress.address2`)
-                        resetField(`${person}.fullAddress.displayName`)
-                        resetField(`${person}.fullAddress.latitude`)
-                        resetField(`${person}.fullAddress.longitude`)
+                        setValue(`${person}.fullAddress.city`, "")
+                        setValue(`${person}.fullAddress.address1`, "")
+                        setValue(`${person}.fullAddress.address2`, "")
+                        setValue(`${person}.fullAddress.displayName`, "")
+                        setValue(`${person}.fullAddress.latitude`, "")
+                        setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          resetField(`${person}.fullAddress.isResidential`)
+                          setValue(`${person}.fullAddress.isResidential`, false)
                         }
 
                         setCitiesList(statesList.find((item) => item.state === value)?.cities || [])
@@ -454,9 +541,9 @@ export const PersonInfo = ({
 
                       return field.onChange(value)
                     }}
-                    label="State"
+                    label="State / Province"
                     labelProps={{ hidden: true, required: true }}
-                    description="State"
+                    description="State / Province"
                     options={statesList.map((item) => item.state)}
                     disabled={statesList.length === 0}
                     error={errors[person]?.fullAddress?.state?.message}
@@ -508,7 +595,6 @@ export const PersonInfo = ({
 
         <StepInputGroup
           start={
-            // TODO: add validation if address wasn't selected from the list (lat, lng, displayName weren't set)
             <Controller
               name={`${person}.fullAddress.address1`}
               control={control}
@@ -520,6 +606,11 @@ export const PersonInfo = ({
                 maxLength: {
                   value: 40,
                   message: "Address max length exceeded",
+                },
+                validate: {
+                  selected: (v: string) =>
+                    (v.length > 0 && !!getValues(`${person}.fullAddress.displayName`)) ||
+                    "Address not selected",
                 },
               }}
               render={({ field: { onChange, onBlur, value, name } }) => {
@@ -571,6 +662,7 @@ export const PersonInfo = ({
                     description="Address line 2"
                     placeholder="House, suite, etc."
                     type="text"
+                    autoComplete="new-password"
                     error={errors[person]?.fullAddress?.address2?.message}
                   />
                 )
@@ -588,35 +680,68 @@ export const PersonInfo = ({
             error={errors[person]?.fullAddress?.isResidential?.message}
           />
         ) : null}
+
+        {person === "sender" ? (
+          <>
+            <Flex
+              align="center"
+              justify={{ "@initial": "between", "@sm": "start" }}
+              css={{ gap: "$24" }}
+            >
+              <Copy scale={{ "@initial": 8, "@sm": 7 }} color="system-black" bold>
+                Use a different return address?
+              </Copy>
+              <Switch
+                {...switchProps}
+                onValueChange={(value) => {
+                  setValue("hasReturnAddress", value === "new")
+                  setValue(
+                    "senderReturn.fullAddress.country",
+                    value === "new" ? "United States" : "",
+                  )
+                  switchProps.onValueChange(value)
+                }}
+                checked={switchProps.value === "new"}
+              >
+                <SwitchOption value="similar" />
+                <SwitchOption value="new" />
+              </Switch>
+            </Flex>
+            <ReturnAddressSection switchValue={switchProps.value} />
+          </>
+        ) : null}
       </Stack>
 
-      <Spacer size={{ "@initial": 24, "@sm": 32 }} />
+      <Spacer size={32} />
 
-      <StepActionsBar shippingType={ShippingType.Shipment}>
+      <StepActionsBar>
         <Button
           onClick={onContinueHandler}
           full
-          disabled={
-            !!errors.sender ||
-            !!errors.recipient ||
-            (person === "sender"
-              ? !sendersName ||
-                !sendersPhone ||
-                !sendersEmail ||
-                !sendersCountry ||
-                !sendersZipCode ||
-                !sendersState ||
-                !sendersCity ||
-                !sendersAddress1
-              : !recipientsName ||
-                !recipientsPhone ||
-                !recipientsEmail ||
-                !recipientsCountry ||
-                !recipientsZipCode ||
-                !recipientsState ||
-                !recipientsCity ||
-                !recipientsAddress1)
-          }
+          disabled={checkButtonDisability()}
+          // TODO: add senderReturn to the condition
+          // disabled={
+          //   !!errors.sender ||
+          //   !!errors.senderReturn ||
+          //   !!errors.recipient ||
+          //   (person === "sender"
+          //     ? !sendersName ||
+          //       !sendersPhone ||
+          //       !sendersEmail ||
+          //       !sendersCountry ||
+          //       !sendersZipCode ||
+          //       !sendersState ||
+          //       !sendersCity ||
+          //       !sendersAddress1
+          //     : !recipientsName ||
+          //       !recipientsPhone ||
+          //       !recipientsEmail ||
+          //       !recipientsCountry ||
+          //       !recipientsZipCode ||
+          //       !recipientsState ||
+          //       !recipientsCity ||
+          //       !recipientsAddress1)
+          // }
         >
           <Copy as="span" scale={8} color="system-white" bold>
             Continue
