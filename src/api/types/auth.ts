@@ -12,8 +12,6 @@ export interface IUser {
   authorities: IAuthority[]
   // need to fix this, move to the contextType, Admin is able to choose this ID, User have only 1 id in the array
   organizationIds: number[]
-  // TODO: fix activeOrganizationId to make it required
-  activeOrganizationId: number
 }
 
 export interface ILoginResponse {

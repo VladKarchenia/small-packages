@@ -1,30 +1,43 @@
 import axios from "axios"
-import urljoin from "url-join"
-import { IUser } from "./types"
+import { IUser, IUserOrganizationResponse } from "./types"
 import { USER_BASE_URI } from "@/config"
 import { refreshTokenFn } from "./authApi"
 
 export const userApi = axios.create({
-  baseURL: urljoin(USER_BASE_URI, "api"),
+  baseURL: USER_BASE_URI,
 })
 
 userApi.defaults.headers.common["Content-Type"] = "application/json"
 
+// TODO: this is query with enabled condition
 export const getMeFn = async (username: string) => {
   const response = await userApi.get<IUser>(`users/info?username=${username}`)
-  const formattedData = {
-    ...response.data,
-    activeOrganizationId: response.data.organizationIds[0],
-  }
 
   // TODO: use Zustand
-  window.localStorage.setItem("user", JSON.stringify(formattedData))
+  localStorage.setItem("user", JSON.stringify(response.data))
 
-  return formattedData
+  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
+  const id = organization?.id ? organization?.id : response.data.organizationIds[0]
+
+  const responseList = await getUserOrganizationsFn()
+
+  if (responseList.length > 0) {
+    localStorage.setItem("organization", JSON.stringify(responseList.find((i) => i.id === id)))
+  }
+
+  return response.data
 }
 
+// TODO: this is query
+export const getUserOrganizationsFn = async () => {
+  const response = await userApi.get<IUserOrganizationResponse[]>("users/organizations")
+
+  return response.data
+}
+
+// TODO: this is mutation
 export const updateUserPasswordFn = async (oldPassword: string, newPassword: string) => {
-  const response = await userApi.post<unknown>("users/update_password", {
+  const response = await userApi.post("users/update_password", {
     oldPassword,
     newPassword,
   })
@@ -42,11 +55,13 @@ userApi.interceptors.response.use(
 
     if (errMessage.includes("Unauthorized") && !originalRequest._retry) {
       // TODO: use Zustand
-      const refreshToken = window.localStorage.getItem("refreshToken") || ""
+      const refreshToken = localStorage.getItem("refreshToken") || ""
       originalRequest._retry = true
 
       if (refreshToken) {
-        await refreshTokenFn(refreshToken)
+        const { accessToken } = await refreshTokenFn(refreshToken)
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
+
         return userApi(originalRequest)
       }
     }

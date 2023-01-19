@@ -1,24 +1,24 @@
 import { CSS } from "@stitches/react"
 import { ComponentProps } from "@/utils"
+
+import { Box } from "@/shared/components"
+
 import { useStepperItemContext } from "./StepperItem"
 import { SStepperPanel, SStepperContent } from "./Stepper.styles"
-import { Box } from "../../core"
 
 export interface IStepperPanelProps extends ComponentProps<typeof SStepperPanel> {
   mainContent: React.ReactNode
-  shortContent: React.ReactNode
   contentCss?: CSS
   isStepLast: boolean
 }
 
 export const StepperPanel = ({
   mainContent,
-  shortContent,
   contentCss,
   isStepLast,
   ...props
 }: IStepperPanelProps) => {
-  const { id, open, completed, disabled } = useStepperItemContext("StepperPanel")
+  const { id, open, disabled } = useStepperItemContext("StepperPanel")
 
   const state = open ? "open" : "closed"
 
@@ -53,13 +53,16 @@ export const StepperPanel = ({
             {mainContent}
           </SStepperContent>
         ) : null}
-        {!open && (completed || (isStepLast && !disabled)) ? (
+        {!open && !isStepLast ? (
+          <SStepperContent css={{ paddingY: "$12" }}></SStepperContent>
+        ) : null}
+        {/* {!open && (completed || (isStepLast && !disabled)) ? (
           <SStepperContent css={{ padding: "$12 $12 $12 $48" }}>{shortContent}</SStepperContent>
-        ) : null}
+        ) : null} */}
         {/* TODO: need to add also condition if rate was choosen */}
-        {!open && !completed && !isStepLast ? (
-          <SStepperContent css={{ paddingY: "$20" }}></SStepperContent>
-        ) : null}
+        {/* {!open && !completed && !isStepLast ? (
+          <SStepperContent css={{ paddingY: "$12" }}></SStepperContent>
+        ) : null} */}
       </SStepperPanel>
     </Box>
   )

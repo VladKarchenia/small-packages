@@ -9,10 +9,6 @@ import {
 
 type ComboboxType = "searchTerm" | "recipientName" | "originalAddress" | "destinationAddress"
 
-export interface ISearchFilterDrawerFormProps {
-  comboboxType: ComboboxType
-}
-
 function getComboboxComponent(type: ComboboxType) {
   switch (type) {
     case "recipientName":
@@ -26,11 +22,15 @@ function getComboboxComponent(type: ComboboxType) {
   }
 }
 
+export interface ISearchFilterDrawerFormProps {
+  comboboxType: ComboboxType
+}
+
 export const SearchFilterDrawerForm: React.FC<ISearchFilterDrawerFormProps> = ({
   comboboxType,
 }) => {
   return (
-    <Grid rows="calc(100% - $80) $80" css={{ height: "100%" }}>
+    <Grid rows="calc(100% - $40) $40" css={{ height: "100%" }}>
       <Flex direction="column" css={{ paddingY: "$16" }}>
         {getComboboxComponent(comboboxType)}
       </Flex>

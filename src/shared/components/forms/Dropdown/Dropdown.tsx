@@ -10,6 +10,7 @@ export interface IDropdownProps {
   disabled?: boolean
   asChild?: boolean
   contentCss?: CSS
+  triggerCss?: CSS
 }
 
 export const Dropdown: React.FC<React.PropsWithChildren<IDropdownProps>> = ({
@@ -20,10 +21,11 @@ export const Dropdown: React.FC<React.PropsWithChildren<IDropdownProps>> = ({
   disabled,
   asChild = false,
   contentCss,
+  triggerCss,
 }) => {
   return (
     <Root open={open} onOpenChange={onOpenChange} modal={false}>
-      <SDropdownMenuTrigger asChild={asChild} disabled={disabled}>
+      <SDropdownMenuTrigger asChild={asChild} disabled={disabled} css={triggerCss}>
         {trigger}
       </SDropdownMenuTrigger>
       <Portal>

@@ -1,18 +1,16 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useMutation } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { useDrawerActions } from "@/shared/components"
-import { ChangeInput } from "@/api/types"
+
 import { updateUserPasswordFn } from "@/api/userApi"
+import { ChangeInput } from "@/api/types"
 import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/config"
-import { ChangePasswordForm } from "./ChangePasswordForm"
 
-export interface IChangePasswordProps {
-  closeDrawer?: Function
-}
+import { useDrawerActions } from "@/shared/components"
+
+import { ChangePasswordForm } from "./ChangePasswordForm"
 
 const defaultValues: ChangeInput = {
   oldPassword: "",
@@ -20,9 +18,7 @@ const defaultValues: ChangeInput = {
   confirmPassword: "",
 }
 
-export const ChangePassword: React.FC<IChangePasswordProps> = ({
-  closeDrawer,
-}: IChangePasswordProps) => {
+export const ChangePassword = () => {
   const methods = useForm<ChangeInput>({
     mode: "onChange",
     defaultValues,
@@ -32,7 +28,6 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
     handleSubmit,
     formState: { isSubmitSuccessful },
   } = methods
-  const navigate = useNavigate()
   const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
   const { close } = useDrawerActions()
 
@@ -40,7 +35,6 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
     ({ oldPassword, newPassword }: ChangeInput) => updateUserPasswordFn(oldPassword, newPassword),
     {
       onSuccess: () => {
-        navigate("/login")
         toast.success("Your password was successfully changed", {
           icon: false,
           position: "bottom-right",
@@ -49,19 +43,6 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
           },
         })
       },
-      // onError: (error: any) => {
-      //   if (Array.isArray((error as any).response.data.error)) {
-      //     ;(error as any).response.data.error.forEach((el: any) =>
-      //       toast.error(el.message, {
-      //         position: "top-right",
-      //       }),
-      //     )
-      //   } else {
-      //     toast.error((error as any).response.data.message, {
-      //       position: "top-right",
-      //     })
-      //   }
-      // },
     },
   )
 
@@ -69,12 +50,10 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
     if (isSubmitSuccessful) {
       reset()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful])
+  }, [isSubmitSuccessful, reset])
 
   const onSubmitHandler: SubmitHandler<ChangeInput> = (values) => {
     updatePassword(values)
-    // TODO: add this call after successful password change
 
     if (!isSmallAndAbove) {
       close("changePasswordDrawer")

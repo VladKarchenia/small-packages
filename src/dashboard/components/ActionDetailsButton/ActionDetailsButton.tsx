@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ButtonIcon, Dropdown, DropdownItem, Stack } from "@/shared/components"
-import { IconMore } from "@/shared/icons"
+import { IconChevronHorizontal, IconMore } from "@/shared/icons"
 import { ShippingType } from "@/shipment"
 import { useModalActions } from "@/shared/hooks"
 import { Role } from "@/shared/types"
@@ -9,9 +9,14 @@ import { Role } from "@/shared/types"
 interface IActionDetailsButtonProps {
   shippingType: ShippingType
   shipmentId: string
+  horizontal?: boolean
 }
 
-export const ActionDetailsButton = ({ shippingType, shipmentId }: IActionDetailsButtonProps) => {
+export const ActionDetailsButton = ({
+  shippingType,
+  shipmentId,
+  horizontal,
+}: IActionDetailsButtonProps) => {
   const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
   const { open } = useModalActions()
   const navigate = useNavigate()
@@ -44,8 +49,14 @@ export const ActionDetailsButton = ({ shippingType, shipmentId }: IActionDetails
         <ButtonIcon
           type="button"
           ariaLabel="Show more button"
-          icon={<IconMore fixedSize width={20} height={20} />}
-          css={{ cursor: "pointer" }}
+          icon={
+            horizontal ? (
+              <IconChevronHorizontal fixedSize width={20} height={20} />
+            ) : (
+              <IconMore fixedSize width={20} height={20} />
+            )
+          }
+          css={{ height: "100%", cursor: "pointer" }}
           onClick={(e: React.SyntheticEvent) => {
             e.preventDefault()
             e.stopPropagation()
@@ -63,7 +74,7 @@ export const ActionDetailsButton = ({ shippingType, shipmentId }: IActionDetails
       <Stack space={0} dividers>
         <DropdownItem key={"Edit"} label={"Edit"} onSelect={handleEditClick} />
         <DropdownItem key={"Cancel"} label={"Cancel"} onSelect={handleCancelClick} />
-        {role === Role.Admin ? (
+        {role === Role.Admin || role === Role.Ops ? (
           <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
         ) : null}
       </Stack>

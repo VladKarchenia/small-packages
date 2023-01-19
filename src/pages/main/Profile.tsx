@@ -1,8 +1,11 @@
 import { useEffect } from "react"
+
+import { userApi } from "@/api/userApi"
+
+import { GridItem } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 import { MainLayout } from "@/shared/layouts/main"
 import { ProfileContainer } from "@/profile"
-import { userApi } from "@/api/userApi"
 
 export const Profile = () => {
   const accessToken = window.localStorage.getItem("accessToken") || ""
@@ -14,10 +17,19 @@ export const Profile = () => {
       }
     }
   }, [accessToken])
+
   return (
     <CommonLayout>
-      <MainLayout fullContentSize={false} mobileFullBleed={false}>
-        <ProfileContainer />
+      <MainLayout>
+        <GridItem
+          column={{
+            "@initial": "1 / span 6",
+            "@sm": "1 / span 12",
+            "@lg": "1 / span 16",
+          }}
+        >
+          <ProfileContainer />
+        </GridItem>
       </MainLayout>
     </CommonLayout>
   )

@@ -1,42 +1,51 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form"
 import { useMutation } from "react-query"
+
+import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
 import { scrollTo } from "@/utils"
-import { createShipmentFn } from "@/api/shipmentApi"
 import { formatShipmentRequestData } from "@/shared/utils"
 import { ShipmentState, useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
+
 import { Stepper } from "@/shared/components"
 import {
   StepName,
   StepperFooter,
   StepItem,
-  ShippingType,
   StepperHeader,
   IStepsDataItem,
+  ShippingType,
 } from "@/shipment"
-import { IShipmentResponse } from "@/api/types"
+import { TrackingRouteParams } from "@/tracking/types"
+import { ShipmentStatus } from "@/shared/types"
 
 interface IStepperFormProps {
-  shippingType: ShippingType
   title: string
   defaultStep: StepName
   stepsData: IStepsDataItem[]
 }
 
-export const StepperForm = ({ shippingType, title, defaultStep, stepsData }: IStepperFormProps) => {
+export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps) => {
+  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
   const navigate = useNavigate()
-  const setShipmentContext = useShipmentActionContext()
-  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
+  const { setShipmentData, setShippingType } = useShipmentActionContext()
+  const { date, parcels, rate, recipient, sender, senderReturn, hasReturnAddress, shippingType } =
+    useShipmentStateContext()
+  const location = useLocation()
+  const isEditMode = location.pathname.includes("edit")
 
   const methods = useForm<ShipmentState>({
     mode: "onChange",
     defaultValues: {
       sender: sender,
+      senderReturn: senderReturn,
       recipient: recipient,
       parcels: parcels,
       date: date,
       rate: rate,
+      hasReturnAddress: hasReturnAddress,
     },
   })
 
@@ -44,42 +53,58 @@ export const StepperForm = ({ shippingType, title, defaultStep, stepsData }: ISt
     (data: ShipmentState) => createShipmentFn(formatShipmentRequestData(data, shippingType)),
     {
       onSuccess: ({ id }: IShipmentResponse) => {
-        shippingType === ShippingType.Quote
-          ? navigate(`/edit/shipment/${id}`)
-          : navigate(`/tracking/${id}`)
+        // navigate(`/edit/shipment/${id}`)
+
+        if (shippingType === ShippingType.Quote) {
+          setShippingType(ShippingType.Shipment)
+          navigate(`/edit/shipment/${id}`)
+        } else {
+          navigate(`/tracking/${id}`)
+        }
       },
-      // onError: (error: any) => {
-      //   if (Array.isArray((error as any).response.data.error)) {
-      //     ;(error as any).response.data.error.forEach((el: any) =>
-      //       toast.error(el.message, {
-      //         position: "top-right",
-      //       }),
-      //     )
-      //   } else {
-      //     toast.error((error as any).response.data.message, {
-      //       position: "top-right",
-      //     })
-      //   }
-      // },
+    },
+  )
+
+  const { mutate: updateShipment } = useMutation(
+    (data: ShipmentState) =>
+      updateShipmentFn(
+        shipmentId,
+        formatShipmentRequestData(
+          data,
+          shippingType,
+          shippingType === ShippingType.Quote ? ShipmentStatus.DRAFT : ShipmentStatus.CONFIRMED,
+        ),
+      ),
+    {
+      onSuccess: ({ id }: IShipmentResponse) => {
+        if (shippingType === ShippingType.Quote) {
+          setShippingType(ShippingType.Shipment)
+          navigate(`/edit/shipment/${id}`)
+        } else {
+          navigate(`/tracking/${id}`)
+        }
+      },
     },
   )
 
   const onSubmitHandler = (data: ShipmentState) => {
-    setShipmentContext({
+    setShipmentData({
       sender: data.sender,
+      senderReturn: data.senderReturn,
       recipient: data.recipient,
       parcels: data.parcels,
       date: data.date,
       rate: data.rate,
-      shippingType: shippingType,
-      shipmentStatus: null,
+      shippingType: data.shippingType,
+      shipmentStatus: data.shipmentStatus,
       currentLocation: {
         displayName: "",
         latitude: "",
         longitude: "",
       },
-    })
-    createShipment(data)
+      hasReturnAddress: data.hasReturnAddress,
+    } as ShipmentState)
+    isEditMode ? updateShipment(data) : createShipment(data)
   }
 
   useEffect(() => {
@@ -89,9 +114,9 @@ export const StepperForm = ({ shippingType, title, defaultStep, stepsData }: ISt
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmitHandler)}>
+      <form onSubmit={methods.handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
         <Stepper defaultSelected={[defaultStep]}>
-          <StepperHeader shippingType={shippingType} title={title} />
+          <StepperHeader title={title} />
 
           {stepsData.map((step) => (
             <StepItem
@@ -99,12 +124,11 @@ export const StepperForm = ({ shippingType, title, defaultStep, stepsData }: ISt
               title={step.title}
               data={step.data}
               mainContent={step.mainContent}
-              shortContent={step.shortContent}
               totalSteps={stepsData.length}
             />
           ))}
 
-          <StepperFooter shippingType={shippingType} />
+          <StepperFooter />
         </Stepper>
       </form>
     </FormProvider>
