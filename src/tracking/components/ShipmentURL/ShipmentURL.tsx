@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 
-import { Copy, Flex, Spacer, Hidden } from "@/shared/components"
+import { Copy, Flex, Hidden, Spacer } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
 import { SShipmentURLButton, SShipmentURLMessage } from "./ShipmentURL.styles"
 
@@ -25,7 +25,8 @@ export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
   return (
     <>
       <Hidden below="md">
-        <Copy scale={9}>Tracking number</Copy>
+        <Copy scale={11} bold>Tracking number link</Copy>
+        <Spacer size={4} />
       </Hidden>
       <CopyToClipboard text={url}>
         <SShipmentURLButton type="button" onClick={handleButtonClick}>

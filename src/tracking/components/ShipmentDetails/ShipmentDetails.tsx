@@ -106,7 +106,7 @@ export const ShipmentDetails = () => {
           <STrackingGridItem css={{ gridArea: "main" }}>
             <Stack space={24} dividers>
               <>
-                <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
+                <TrackingDetailsItem title="Tracking number link" titleIndent={4} titleScale={11}>
                   <ShipmentURL
                     url={SHIPMENT_DETAILS.shipmentURL}
                     value={SHIPMENT_DETAILS.trackingNumber}
@@ -233,8 +233,8 @@ export const ShipmentDetails = () => {
         <STrackingGridItem css={{ gridArea: "labels" }}>
           <Hidden below="md">
             <TrackingDetailsItem
-              title="Tracking & Labels"
-              titleIndent={20}
+              title="Tracking & Label Links"
+              titleIndent={16}
               titleScale={7}
               titleColor={"system-black"}
             >
@@ -243,17 +243,14 @@ export const ShipmentDetails = () => {
                 value={SHIPMENT_DETAILS.trackingNumber}
               />
             </TrackingDetailsItem>
-            {/*<Spacer size={32} />*/}
           </Hidden>
 
           <Hidden above="md">
             <Title as="h3" scale={7}>
-              Labels
+              Label links
             </Title>
-            <Spacer size={24} />
-          </Hidden>
-          <Hidden above="md">
-            <Copy scale={{ "@initial": 9, "@md": 8 }}>
+            <Spacer size={16} />
+            <Copy scale={9}>
               Shipment label must be printed and attached to a package before it is picked up
             </Copy>
           </Hidden>
@@ -261,12 +258,13 @@ export const ShipmentDetails = () => {
           <ShipmentLabelContainer
             pdfLabel={SHIPMENT_DETAILS.shipmentLabelPDFLink}
             zplLabel={SHIPMENT_DETAILS.shipmentLabelZPLLink}
-            pdfReturnLabel={SHIPMENT_DETAILS.shipmentLabelPDFReturn}
-            zplReturnLabel={SHIPMENT_DETAILS.shipmentLabelZPLReturn}
+            pdfReturnLabel={SHIPMENT_DETAILS.shipmentReturnLabelPDFLink}
+            zplReturnLabel={SHIPMENT_DETAILS.shipmentReturnLabelZPLLink}
           />
+          <Spacer size={{ "@initial": 8, "@md": 0 }} />
           <Hidden below="md">
             <Spacer size={20} />
-            <Copy scale={8}>
+            <Copy scale={9}>
               * Shipment label must be printed and attached to a package before it is picked up
             </Copy>
           </Hidden>
