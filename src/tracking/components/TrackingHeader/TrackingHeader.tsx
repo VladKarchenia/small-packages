@@ -7,15 +7,15 @@ import { TrackingRouteParams } from "@/tracking/types"
 
 import { ButtonIcon, Copy, Flex, GridContainer, Stack, StatusLabel } from "@/shared/components"
 import { IconPencil } from "@/shared/icons"
+import { useShipmentStateContext } from "@/shared/state"
 
 interface ITrackingHeaderProps {
   shipmentDate: Date | null
   role?: Role
-  shippingType: ShippingType | null
-  status: ShipmentStatus | null
 }
 
-export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITrackingHeaderProps) => {
+export const TrackingHeader = ({ shipmentDate }: ITrackingHeaderProps) => {
+  const { shippingType, shipmentStatus } = useShipmentStateContext()
   const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
   const navigate = useNavigate()
   // TODO: use Zustand
@@ -41,9 +41,10 @@ export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITracking
             >
               {shippingType === ShippingType.Shipment ? "Ship" : "Quote"} #{shipmentId}
             </Copy>
-            <StatusLabel status={status} />
+            <StatusLabel status={shipmentStatus} />
           </Flex>
-          {role === Role.Admin && status !== ShipmentStatus.CANCELLED ? (
+          {(role === Role.Admin || role === Role.Ops) &&
+          shipmentStatus !== ShipmentStatus.CANCELLED ? (
             <ButtonIcon
               type="button"
               ariaLabel="Edit shipment"
@@ -52,9 +53,10 @@ export const TrackingHeader = ({ shipmentDate, shippingType, status }: ITracking
             />
           ) : null}
         </Flex>
-        {role === Role.Admin ? (
+        {role === Role.Admin || role === Role.Ops ? (
           <Copy scale={{ "@initial": 10, "@md": 8 }}>
-            {shipmentDate ? format(shipmentDate, "dd.MM.yyyy") : ""}
+            {/* TODO: this is create date, with time and time zone */}
+            {shipmentDate ? format(shipmentDate, "dd.MM.yyyy (OOO)") : ""}
           </Copy>
         ) : null}
       </Stack>

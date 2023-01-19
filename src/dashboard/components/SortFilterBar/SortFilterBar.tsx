@@ -1,15 +1,15 @@
 import React from "react"
+
 import { SearchFilterDrawer } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
-import { ShippingType } from "@/shipment"
+
 import { SortFiltertForm } from "./SortFilterForm"
 
 export interface ISortFilterBarProps {
   isFilterApplied: boolean
-  shippingType: ShippingType
 }
 
-export const SortFilterBar: React.FC<ISortFilterBarProps> = ({ isFilterApplied, shippingType }) => {
+export const SortFilterBar: React.FC<ISortFilterBarProps> = ({ isFilterApplied }) => {
   return (
     <SearchFilterDrawer
       drawerName="sortFilterBar"
@@ -17,7 +17,7 @@ export const SortFilterBar: React.FC<ISortFilterBarProps> = ({ isFilterApplied, 
       closeIcon={<IconCross />}
       triggerIcon
       isFilterApplied={isFilterApplied}
-      drawerForm={<SortFiltertForm shippingType={shippingType} />}
+      drawerForm={<SortFiltertForm />}
     />
   )
 }

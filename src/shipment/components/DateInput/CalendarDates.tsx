@@ -234,7 +234,7 @@ export const CalendarDates = () => {
                 {format(date, "EEE, MMM d")}
               </Copy>
               <Copy scale={8} color="system-black">
-                {format(date, "hh:mm aa")}
+                {format(date, "hh:mm aa (OOO)")}
               </Copy>
             </Box>
           ) : null}

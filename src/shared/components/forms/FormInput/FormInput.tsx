@@ -14,7 +14,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
 
     return (
       <FormField id={id} {...fieldProps}>
-        <SFormInput ref={ref} {...props} />
+        <SFormInput ref={ref} hasSuffix={!!suffix} hasPrefix={!!prefix} {...props} />
       </FormField>
     )
   },

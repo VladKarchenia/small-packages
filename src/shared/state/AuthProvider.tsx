@@ -5,6 +5,7 @@ import { useUserActionContext } from "@/shared/state"
 import { FullScreenLoader } from "@/pages"
 import { shipmentApi } from "@/api/shipmentApi"
 import { placeApi } from "@/api/placeApi"
+import { organizationApi } from "@/api/organizationApi"
 
 type AuthProviderProps = {
   children: React.ReactElement
@@ -12,8 +13,8 @@ type AuthProviderProps = {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // TODO: use Zustand
-  const accessToken = window.localStorage.getItem("accessToken") || ""
-  const username = window.localStorage.getItem("username") || ""
+  const accessToken = localStorage.getItem("accessToken") || ""
+  const username = localStorage.getItem("username") || ""
   const user = JSON.parse(localStorage.getItem("user") || "{}")
   const setUserContext = useUserActionContext()
 
@@ -34,6 +35,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       if (!placeApi.defaults.headers.common["Authorization"]) {
         placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+      }
+      if (!organizationApi.defaults.headers.common["Authorization"]) {
+        organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
       }
     }
   }, [accessToken])

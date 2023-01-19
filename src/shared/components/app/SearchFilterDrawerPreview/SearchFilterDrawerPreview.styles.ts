@@ -6,6 +6,7 @@ export const SSearchFilterDrawerPreview = styled("button", {
   textAlign: "left",
   gap: "$8",
   width: "100%",
+  height: "$48",
   alignItems: "center",
   border: "1px solid $neutrals-3",
   paddingX: "$12",

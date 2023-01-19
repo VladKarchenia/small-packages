@@ -2,7 +2,6 @@ import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useMutation } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { toast } from "react-toastify"
 import { loginUserFn } from "@/api/authApi"
 import { LoginInput } from "@/api/types"
 import { LoginForm } from "./LoginForm"
@@ -35,22 +34,9 @@ export const LoginFormContainer = () => {
     (userData: LoginInput) => loginUserFn(userData),
     {
       onSuccess: () => {
-        toast.success("You successfully logged in")
+        // toast.success("You successfully logged in")
         navigate(from)
       },
-      // onError: (error: any) => {
-      //   if (Array.isArray((error as any).response.data.error)) {
-      //     ;(error as any).response.data.error.forEach((el: any) =>
-      //       toast.error(el.message, {
-      //         position: "top-right",
-      //       }),
-      //     )
-      //   } else {
-      //     toast.error((error as any).response.data.message, {
-      //       position: "top-right",
-      //     })
-      //   }
-      // },
     },
   )
 

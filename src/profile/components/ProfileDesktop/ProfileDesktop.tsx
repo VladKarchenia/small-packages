@@ -1,12 +1,11 @@
 import { Copy, Spacer, Stack } from "@/shared/components"
 import { SwitchOrganization, ChangePassword } from "@/profile"
+import { Role } from "@/shared/types"
 
-interface IProfileDesktopProps {
-  setUserOrganization: Function
-  userOrganization: string
-}
+export const ProfileDesktop = () => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
 
-export const ProfileDesktop = ({ setUserOrganization, userOrganization }: IProfileDesktopProps) => {
   return (
     <>
       {/* TODO: it should be Title, so need to fix it later */}
@@ -15,10 +14,7 @@ export const ProfileDesktop = ({ setUserOrganization, userOrganization }: IProfi
       </Copy>
       <Spacer size={40} />
       <Stack space={40}>
-        <SwitchOrganization
-          userOrganization={userOrganization}
-          setUserOrganization={setUserOrganization}
-        />
+        {role === Role.Admin || role === Role.Ops ? <SwitchOrganization /> : null}
         <ChangePassword />
       </Stack>
     </>

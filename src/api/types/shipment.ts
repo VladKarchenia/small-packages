@@ -5,7 +5,7 @@ export interface ShipmentPackageInput {
   DIMENSION: string
   PACKAGING: keyof typeof PackageType
   TRACKING_NUMBER?: string
-  WEIGHT: number
+  WEIGHT: string
 }
 
 export interface ShipmentGeolocation {
@@ -22,12 +22,14 @@ export interface ShipmentInput {
   CONSIGNEE_CONTACT: string
   CONSIGNEE_COUNTRY: string
   CONSIGNEE_EMAIL: string
+  CONSIGNEE_GEOLOC: ShipmentGeolocation
   CONSIGNEE_PHONE: string
   CONSIGNEE_PHONE_EXTENSION?: string
   CONSIGNEE_POSTALCODE: string
   CONSIGNEE_RESIDENTIAL: string
   CONSIGNEE_STATE: string
-  CONSIGNEE_GEOLOC: ShipmentGeolocation
+
+  CURRENT_GEOLOC: ShipmentGeolocation
 
   ORIGIN_ADDRESS1: string
   ORIGIN_ADDRESS2?: string
@@ -36,15 +38,29 @@ export interface ShipmentInput {
   ORIGIN_CONTACT: string
   ORIGIN_COUNTRY: string
   ORIGIN_EMAIL: string
+  ORIGIN_GEOLOC: ShipmentGeolocation
   ORIGIN_PHONE: string
   ORIGIN_PHONE_EXTENSION?: string
   ORIGIN_POSTALCODE: string
   ORIGIN_STATE: string
-  ORIGIN_GEOLOC: ShipmentGeolocation
+
+  RETURN_ADDRESS_ADDRESS1: string
+  RETURN_ADDRESS_ADDRESS2?: string
+  RETURN_ADDRESS_CITY: string
+  RETURN_ADDRESS_COMPANY?: string
+  RETURN_ADDRESS_CONTACT: string
+  RETURN_ADDRESS_COUNTRY: string
+  RETURN_ADDRESS_EMAIL: string
+  RETURN_ADDRESS_PHONE: string
+  RETURN_ADDRESS_PHONE_EXTENSION?: string
+  RETURN_ADDRESS_POSTALCODE: string
+  RETURN_ADDRESS_STATE: string
 
   PACKAGE: ShipmentPackageInput[]
+  // PACKAGING_TYPE: keyof typeof PackageType
 
-  CURRENT_GEOLOC: ShipmentGeolocation
+  PICKUP_READY_DATE: string
+  PICKUP_READY_TIME: string
 
   ORGANIZATION_ID: number
   PROSHIP_ID?: string

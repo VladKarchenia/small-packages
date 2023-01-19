@@ -1,5 +1,13 @@
 import { useCallback, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
+import debounce from "just-debounce-it"
+import { useQuery } from "react-query"
+
+import { searchShipmentsFn } from "@/api/shipmentApi"
+import { IFoundShipmentResponse } from "@/api/types"
+import { useClearButton, useElementDimensions } from "@/shared/hooks"
+
 import {
   Box,
   Copy,
@@ -10,17 +18,15 @@ import {
   PopoverContent,
 } from "@/shared/components"
 import { IconCross, IconSearch } from "@/shared/icons"
-import { useClearButton } from "@/shared/hooks"
+import { IllustrationSpinner } from "@/shared/illustrations"
+
 import { SComboboxClearButton } from "./GlobalSearch.styles"
-import { useQuery } from "react-query"
-import { searchShipmentsFn } from "@/api/shipmentApi"
-import { IFoundShipmentResponse } from "@/api/types"
-import { useNavigate } from "react-router-dom"
-import debounce from "just-debounce-it"
 
 export const GlobalSearch = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { dimensions } = useElementDimensions(containerRef)
   const { clearRef, isClearButtonClick } = useClearButton()
   const triggerRef = useRef<any>()
   const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
@@ -28,14 +34,13 @@ export const GlobalSearch = () => {
   const [inputValue, setInputValue] = useState<string>("")
 
   const [results, setResults] = useState<IFoundShipmentResponse[]>([])
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [notFound, setNotFound] = useState(false)
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["searchShipments"],
     () =>
       searchShipmentsFn({
         keyword: inputValue,
-        organizationId: user?.activeOrganizationId,
         sort: "createdAt,asc",
         page: 0,
         size: 50,
@@ -44,6 +49,7 @@ export const GlobalSearch = () => {
       enabled: false,
       onSuccess: (data) => {
         setResults(data.content)
+        setNotFound(data.content.length === 0)
       },
     },
   )
@@ -51,10 +57,11 @@ export const GlobalSearch = () => {
   const handleClearButton = () => {
     setInputValue("")
     setIsOpen(false)
-    // onChange({ displayName: "", placeId: "" })
-    if (triggerRef.current) {
-      ;(triggerRef.current as HTMLInputElement).focus()
-    }
+    setResults([])
+    setNotFound(false)
+    // if (triggerRef.current) {
+    //   ;(triggerRef.current as HTMLInputElement).focus()
+    // }
   }
 
   const debouncedRefetch = useCallback(
@@ -66,11 +73,21 @@ export const GlobalSearch = () => {
 
   const Content = () => {
     if (isLoading || isFetching) {
-      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
+      return (
+        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
+          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        </Flex>
+      )
     }
 
-    if (!isLoading && !isFetching && results.length === 0) {
-      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    if (notFound) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
+      )
     }
 
     return (
@@ -78,43 +95,24 @@ export const GlobalSearch = () => {
         {results.map((shipment: IFoundShipmentResponse) => (
           <Box
             key={`${shipment.id}`}
+            onClick={() => navigate(`/tracking/${shipment.id}`)}
             css={{
-              "> div": {
-                padding: "$12 $16",
-                cursor: "pointer",
-                hover: {
-                  backgroundColor: "$neutrals-3",
-                },
-              },
-              firstChild: {
-                "> div": {
-                  borderRadius: "$8 $8 0 0",
-                },
-              },
-              lastChild: {
-                "> div": {
-                  borderRadius: "0 0 $8 $8",
-                },
+              padding: "$12 $16",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              cursor: "pointer",
+              hover: {
+                backgroundColor: "$neutrals-3",
               },
             }}
           >
-            <Box
-              css={{
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-              }}
-              onClick={() => navigate(`/tracking/${shipment.id}`)}
-            >
-              <Flex direction="column">
-                <Copy scale={9} color="system-black" bold>
-                  {shipment.id}
-                </Copy>
-                <Copy scale={10} color="system-black">
-                  {shipment.origin_ADDRESS}
-                </Copy>
-              </Flex>
-            </Box>
+            <Copy scale={9} color="system-black" bold>
+              #{shipment.id}
+            </Copy>
+            <Copy scale={10} color="system-black">
+              {shipment.origin_ADDRESS}
+            </Copy>
           </Box>
         ))}
       </>
@@ -124,7 +122,7 @@ export const GlobalSearch = () => {
   return (
     <Popover open={isOpen}>
       <PopoverAnchor asChild={true}>
-        <Flex align="center" css={{ position: "relative" }}>
+        <Flex align="center" css={{ position: "relative" }} ref={containerRef}>
           <FormInput
             ref={triggerRef}
             value={inputValue}
@@ -148,6 +146,7 @@ export const GlobalSearch = () => {
             onChange={(e: any) => {
               setInputValue(e.target.value)
               setResults([])
+              setNotFound(false)
 
               if (e.target.value.length > 3) {
                 debouncedRefetch()
@@ -160,7 +159,7 @@ export const GlobalSearch = () => {
               }
             }}
             prefix={<IconSearch height={20} width={20} fixedSize />}
-            css={{ width: "410px", height: "$40", minHeight: "$40", paddingRight: "$56" }}
+            css={{ width: "410px", height: "$40", minHeight: "$40" }}
           />
           {inputValue?.length > 0 && (
             <SComboboxClearButton
@@ -178,10 +177,13 @@ export const GlobalSearch = () => {
       <PopoverContent
         align="start"
         css={{
-          width: "438px",
+          width: dimensions.clientWidth,
+          height: "max-content",
+          maxHeight: "330px",
+          overflow: "auto",
           padding: "$0",
           border: "none",
-          borderRadius: "$8",
+          borderRadius: "$0",
         }}
         onInteractOutside={(e: any) => {
           if (isClearButtonClick(e)) {
@@ -190,6 +192,7 @@ export const GlobalSearch = () => {
             }
             return
           }
+
           if (isTriggerClick(e)) {
             return
           }

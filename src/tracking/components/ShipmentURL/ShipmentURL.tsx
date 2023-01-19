@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
-// import { toast } from "react-toastify"
 
 import { Copy, Flex, Spacer } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"

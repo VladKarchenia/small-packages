@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useMemo, useState } from "react"
+
 import { PAGED_LIMIT } from "@/constants"
-import { ShipmentStatus, IAddress } from "@/shared/types"
+import { ShipmentStatus } from "@/shared/types"
+import { ShippingType } from "@/shipment/types"
 
 export enum ShipmentsPagedOrderBy {
   CreationDateAsc = "Creation date (ASC)",
@@ -26,6 +28,7 @@ export interface DashboardState {
   recipientName: string[]
   originalAddress: string[]
   destinationAddress: string[]
+  shippingType: ShippingType
 }
 
 const initialDashboardState: DashboardState = {
@@ -38,6 +41,7 @@ const initialDashboardState: DashboardState = {
   recipientName: [],
   originalAddress: [],
   destinationAddress: [],
+  shippingType: ShippingType.Shipment,
 }
 
 type DashboardActions = {
@@ -49,6 +53,7 @@ type DashboardActions = {
   setRecipientNameFilter: (value: string[]) => void
   setOriginalAddressFilter: (value: string[]) => void
   setDestinationAddressFilter: (value: string[]) => void
+  setDashboardShippingType: (value: ShippingType) => void
 }
 
 export const DashboardStateContext = createContext<DashboardState>({} as DashboardState)
@@ -116,9 +121,16 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
           destinationAddress: array,
         }))
       },
+      setDashboardShippingType: (value) => {
+        setState((prevState) => ({
+          ...prevState,
+          shippingType: value,
+        }))
+      },
     }),
     [state],
   )
+
   return (
     <DashboardStateContext.Provider value={state}>
       <DashboardActionContext.Provider value={actions}>{children}</DashboardActionContext.Provider>

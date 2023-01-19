@@ -1,4 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useQuery } from "react-query"
+import debounce from "just-debounce-it"
+
+import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
+import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+
 import {
   Box,
   Copy,
@@ -12,11 +18,9 @@ import {
   Spacer,
 } from "@/shared/components"
 import { IconChevronDown, IconSearch } from "@/shared/icons"
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { IllustrationSpinner } from "@/shared/illustrations"
+
 import { SStatusFilterButton } from "./DashboardTableOriginAddressFilter.styles"
-import debounce from "just-debounce-it"
-import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
-import { useQuery } from "react-query"
 
 export const DashboardTableOriginAddressFilter = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,22 +32,21 @@ export const DashboardTableOriginAddressFilter = () => {
   const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
   const [results, setResults] = useState<string[]>([])
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [notFound, setNotFound] = useState(false)
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["searchOriginAddresses"],
     () =>
       getShipmentsFieldValuesFn({
-        // field: `data.ORIGIN_GEOLOC.DISPLAY_NAME${inputValue ? `:${inputValue}` : ""}`,
         field: `data.ORIGIN_GEOLOC.DISPLAY_NAME`,
-        // TODO: add shippingType condition "QUOTE" || "SHIPMENT"
+        keyword: inputValue,
         status: "QUOTE",
-        organizationId: user?.activeOrganizationId,
       }),
     {
       enabled: false,
       onSuccess: (data) => {
         setResults(data.content)
+        setNotFound(data.content.length === 0)
       },
     },
   )
@@ -79,81 +82,83 @@ export const DashboardTableOriginAddressFilter = () => {
 
   const Content = () => {
     if (isLoading || isFetching) {
-      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
+      return (
+        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
+          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        </Flex>
+      )
     }
 
-    if (!isLoading && !isFetching && results.length === 0) {
-      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    if (notFound) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
+      )
     }
 
     return (
       <>
-        <Box
-          css={{
-            "> label": {
-              padding: "$12 $16",
-              cursor: "pointer",
-              hover: {
-                backgroundColor: "$neutrals-3",
-              },
-            },
-          }}
-        >
-          <FormCheckbox
-            value={"All"}
-            onChange={handleCheckAllClick}
-            name={"Select all"}
-            id={"Select all"}
-            label={"Select all"}
-            checked={isCheckAll}
-          />
-        </Box>
-        <Divider />
-        {results.map((item) => (
-          <Box
-            key={item}
-            css={{
-              "> label": {
-                padding: "$12 $16",
-                cursor: "pointer",
-                hover: {
-                  backgroundColor: "$neutrals-3",
+        {results.length > 0 ? (
+          <>
+            <Box
+              css={{
+                "> label": {
+                  padding: "$12 $16",
+                  cursor: "pointer",
+                  hover: {
+                    backgroundColor: "$neutrals-3",
+                  },
                 },
+              }}
+            >
+              <FormCheckbox
+                value={"All"}
+                onChange={handleCheckAllClick}
+                name={"Select all"}
+                id={"Select all"}
+                label={"Select all"}
+                checked={isCheckAll}
+              />
+            </Box>
+            <Divider />
+            <Box css={{ height: "max-content", maxHeight: "240px", overflow: "auto" }}>
+              {results.map((item) => (
+                <Box
+                  key={item}
+                  css={{
+                    "> label": {
+                      padding: "$12 $16",
+                      cursor: "pointer",
+                      hover: {
+                        backgroundColor: "$neutrals-3",
+                      },
 
-                "> p": {
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  overflow: "hidden",
-                },
-              },
-            }}
-          >
-            <FormCheckbox
-              value={item}
-              onChange={handleChange}
-              name={item}
-              id={item}
-              label={item}
-              checked={originalAddress.some((address) => address === item)}
-            />
-          </Box>
-        ))}
-        {/* TODO: Add logic to fix the Show more button */}
-        <Box css={{ padding: "$12 $16" }}>
-          <Copy
-            scale={8}
-            color="system-black"
-            bold
-            css={{ cursor: "pointer" }}
-            onClick={() => console.log("show more")}
-          >
-            Show more
-          </Copy>
-        </Box>
-        <Divider />
-        <Flex align="center" justify="end" css={{ padding: "$12 $16" }}>
-          <Copy scale={9}>10 of 55</Copy>
-        </Flex>
+                      "> p": {
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                      },
+                    },
+                  }}
+                >
+                  <FormCheckbox
+                    value={item}
+                    onChange={handleChange}
+                    name={item}
+                    id={item}
+                    label={item}
+                    checked={originalAddress.some((address) => address === item)}
+                  />
+                </Box>
+              ))}
+            </Box>
+          </>
+        ) : (
+          <Flex css={{ padding: "$16", height: "$56" }} />
+        )}
       </>
     )
   }
@@ -201,7 +206,7 @@ export const DashboardTableOriginAddressFilter = () => {
       </PopoverAnchor>
       <PopoverContent
         align="start"
-        css={{ width: "360px", padding: "$0", border: "none", borderRadius: "$8" }}
+        css={{ width: "360px", padding: "$0", border: "none", borderRadius: "$0" }}
         alignOffset={-1}
         onInteractOutside={(e: any) => {
           // if (isClearButtonClick(e: any)) {
@@ -228,6 +233,7 @@ export const DashboardTableOriginAddressFilter = () => {
             onChange={(e: any) => {
               setInputValue(e.target.value)
               setResults([])
+              setNotFound(false)
 
               if (e.target.value === "" || e.target.value.length > 3) {
                 debouncedRefetch()

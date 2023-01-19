@@ -1,12 +1,17 @@
 import { useTranslation } from "react-i18next"
-import { Box, TabList, TabListItem, TabPanel, TabPanels, Tabs } from "@/shared/components"
-import { useMedia } from "@/shared/hooks"
+
 import { mediaQueries } from "@/config"
-import { DashboardList, DashboardTable } from "@/dashboard"
+import { useMedia } from "@/shared/hooks"
+import { useDashboardActionContext } from "@/dashboard/state"
 import { ShippingType } from "@/shipment"
+
+import { Box, TabList, TabListItem, TabPanel, TabPanels, Tabs } from "@/shared/components"
+import { DashboardList, DashboardTable } from "@/dashboard"
 
 export const DashboardTabs = () => {
   const { t } = useTranslation()
+  const { setDashboardShippingType, resetFilterField } = useDashboardActionContext()
+
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
   // TODO: put active tab value in Zustand store
 
@@ -17,27 +22,37 @@ export const DashboardTabs = () => {
       css={{ paddingBottom: "$40", "@sm": { paddingBottom: "$0" } }}
     >
       <TabList label="dashboard-tabs">
-        <TabListItem id="shipments">Shipments</TabListItem>
-        <TabListItem id="quotes">Quotes</TabListItem>
+        <TabListItem
+          id="shipments"
+          onChange={() => {
+            setDashboardShippingType(ShippingType.Shipment)
+            resetFilterField("status")
+            resetFilterField("recipientName")
+            resetFilterField("originalAddress")
+            resetFilterField("destinationAddress")
+          }}
+        >
+          Shipments
+        </TabListItem>
+        <TabListItem
+          id="quotes"
+          onChange={() => {
+            setDashboardShippingType(ShippingType.Quote)
+            resetFilterField("status")
+            resetFilterField("recipientName")
+            resetFilterField("originalAddress")
+            resetFilterField("destinationAddress")
+          }}
+        >
+          Quotes
+        </TabListItem>
       </TabList>
       <TabPanels>
         <TabPanel id="shipments">
-          <Box>
-            {isMediumAndAbove ? (
-              <DashboardTable shippingType={ShippingType.Shipment} />
-            ) : (
-              <DashboardList shippingType={ShippingType.Shipment} />
-            )}
-          </Box>
+          <Box>{isMediumAndAbove ? <DashboardTable /> : <DashboardList />}</Box>
         </TabPanel>
         <TabPanel id="quotes">
-          <Box>
-            {isMediumAndAbove ? (
-              <DashboardTable shippingType={ShippingType.Quote} />
-            ) : (
-              <DashboardList shippingType={ShippingType.Quote} />
-            )}
-          </Box>
+          <Box>{isMediumAndAbove ? <DashboardTable /> : <DashboardList />}</Box>
         </TabPanel>
       </TabPanels>
     </Tabs>

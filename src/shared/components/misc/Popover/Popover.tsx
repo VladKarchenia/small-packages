@@ -22,7 +22,7 @@ export const PopoverContent = React.forwardRef<HTMLInputElement, IPopoverContent
     return (
       <SPopoverContent
         avoidCollisions
-        collisionPadding={24}
+        collisionPadding={12}
         sideOffset={8}
         ref={forwardedRef}
         {...props}

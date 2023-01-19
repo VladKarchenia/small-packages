@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { toast } from "react-toastify"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { ChangeInput } from "@/api/types"
 import { ChangePasswordForm } from "./ChangePasswordForm"
@@ -40,12 +39,11 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful])
   const onSubmitHandler: SubmitHandler<ChangeInput> = (values) => {
-    console.log(values)
     // TODO: call request to the BE with new password
 
     // TODO: add this call after successful password change
 
-    toast.success("Your password was successfully changed")
+    // toast.success("Your password was successfully changed")
     // if (closeDrawer) closeDrawer()
     if (!isSmallAndAbove) {
       close("changePasswordDrawer")

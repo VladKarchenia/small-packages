@@ -10,9 +10,14 @@ export enum StepName {
   SHIPMENT = "shipment",
   DATE = "date",
   RATES = "rates",
+  SUMMARY = "summary",
+  RECEIPT = "receipt",
 }
 
-export type QuoteStep = Exclude<StepName, StepName.FROM | StepName.TO>
+export type QuoteStep = Exclude<
+  StepName,
+  StepName.FROM | StepName.TO | StepName.SUMMARY | StepName.RECEIPT
+>
 
 export type ShipmentStep = Exclude<StepName, StepName.INFO>
 
@@ -20,7 +25,6 @@ export interface IStepsDataItem {
   title: string
   data: IStep
   mainContent: React.ReactNode
-  shortContent: React.ReactNode
 }
 
 export interface IStep {

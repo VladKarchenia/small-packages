@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react"
+import React, { createContext, useContext, useMemo, useState } from "react"
 
 import { DATE_CEIL_INTERVAL } from "@/constants"
 import {
@@ -15,6 +15,7 @@ import { ShippingType } from "@/shipment"
 
 export interface ShipmentState {
   sender: IPerson
+  senderReturn: IPerson
   recipient: IPerson
   parcels: IParcel[]
   date: Date
@@ -22,6 +23,7 @@ export interface ShipmentState {
   shippingType: ShippingType | null
   shipmentStatus: ShipmentStatus | null
   currentLocation: IGeolocation
+  hasReturnAddress: boolean
 }
 
 const initialShipmentState: ShipmentState = {
@@ -37,6 +39,24 @@ const initialShipmentState: ShipmentState = {
     fullAddress: {
       displayName: "",
       country: "United States",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+      latitude: "",
+      longitude: "",
+    },
+  },
+  senderReturn: {
+    name: "",
+    phone: "",
+    extension: "",
+    email: "",
+    company: "",
+    fullAddress: {
+      displayName: "",
+      country: "",
       zipCode: "",
       state: "",
       city: "",
@@ -82,32 +102,6 @@ const initialShipmentState: ShipmentState = {
       totalPrice: "20.00",
       totalCurrency: "USD",
     },
-    {
-      pickupType: PickupType.Schedule,
-      weight: "1.25",
-      dimensions: {
-        length: "0.8",
-        width: "1.1",
-        height: "0.75",
-      },
-      packageType: PackageType.CUSTOM,
-      content: ParcelContentType.Gift,
-      totalPrice: "12.00",
-      totalCurrency: "USD",
-    },
-    {
-      pickupType: PickupType.Schedule,
-      weight: "1.33",
-      dimensions: {
-        length: "1.3",
-        width: "1.2",
-        height: "1",
-      },
-      packageType: PackageType.CUSTOM,
-      content: ParcelContentType.Documents,
-      totalPrice: "120.00",
-      totalCurrency: "USD",
-    },
   ],
   // date: null,
   // date: new Date(),
@@ -128,14 +122,18 @@ const initialShipmentState: ShipmentState = {
   },
   shippingType: null,
   shipmentStatus: null,
+  hasReturnAddress: false,
 }
 
-type ShipmentAction = ({ sender, recipient, parcels, date, rate }: ShipmentState) => void
+type ShipmentActions = {
+  setShipmentData: (value: ShipmentState) => void
+  setShippingType: (value: ShippingType) => void
+}
 
 export const ShipmentStateContext = createContext<ShipmentState>({} as ShipmentState)
 ShipmentStateContext.displayName = "ShipmentStateContext"
 
-export const ShipmentActionContext = createContext<ShipmentAction>({} as ShipmentAction)
+export const ShipmentActionContext = createContext<ShipmentActions>({} as ShipmentActions)
 ShipmentActionContext.displayName = "ShipmentActionContext"
 
 export const useShipmentStateContext = () => useContext(ShipmentStateContext)
@@ -147,9 +145,27 @@ type StateContextProviderProps = { children: React.ReactNode }
 export const ShipmentProvider = ({ children }: StateContextProviderProps) => {
   const [state, setState] = useState<ShipmentState>(initialShipmentState)
 
+  const actions = useMemo<ShipmentActions>(
+    () => ({
+      setShipmentData: (value) => {
+        setState((prevState) => ({
+          ...prevState,
+          ...value,
+        }))
+      },
+      setShippingType: (value) => {
+        setState((prevState) => ({
+          ...prevState,
+          shippingType: value,
+        }))
+      },
+    }),
+    [state],
+  )
+
   return (
     <ShipmentStateContext.Provider value={state}>
-      <ShipmentActionContext.Provider value={setState}>{children}</ShipmentActionContext.Provider>
+      <ShipmentActionContext.Provider value={actions}>{children}</ShipmentActionContext.Provider>
     </ShipmentStateContext.Provider>
   )
 }

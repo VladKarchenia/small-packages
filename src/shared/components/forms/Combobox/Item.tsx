@@ -15,17 +15,10 @@ export const ComboboxItem = memo(function ({
   index,
   item,
 }: IComboboxItemProps) {
-  const { getItemProps, highlightedIndex } = useComboboxContext("ComboboxItem")
-
-  const isHighlighted = highlightedIndex === index
+  const { getItemProps } = useComboboxContext("ComboboxItem")
 
   return (
-    <li
-      className={className}
-      data-ui="combobox-item"
-      data-state={isHighlighted ? "highlighted" : ""}
-      {...getItemProps({ index, item })}
-    >
+    <li className={className} data-ui="combobox-item" {...getItemProps({ index, item })}>
       {children}
     </li>
   )

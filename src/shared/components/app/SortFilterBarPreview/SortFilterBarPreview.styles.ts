@@ -11,7 +11,6 @@ export const SFilterIconBox = styled("button", {
   top: "$0",
   right: "$0",
   border: "1px solid transparent",
-  boxSizing: "content-box",
 
   variants: {
     selected: {
