@@ -14,7 +14,6 @@ import {
   Recovery,
 } from "@/pages"
 import { Role } from "@/shared/types"
-import { ShippingType } from "@/shipment"
 
 import "react-toastify/dist/ReactToastify.css"
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
@@ -35,29 +34,29 @@ const App: React.FC = (): JSX.Element => {
     children: [
       {
         path: "/",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [{ path: "", element: <Home /> }],
       },
       {
         path: "profile",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [{ path: "", element: <Profile /> }],
       },
       // TODO: maybe change it to quote/create or quote/id/edit?
       {
         path: "create",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [
-          { path: "quote", element: <CreateShipment shippingType={ShippingType.Quote} /> },
-          { path: "shipment", element: <CreateShipment shippingType={ShippingType.Shipment} /> },
+          { path: "quote", element: <CreateShipment /> },
+          { path: "shipment", element: <CreateShipment /> },
         ],
       },
       {
         path: "edit",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [
-          { path: "quote/:shipmentId", element: <CreateShipment shippingType={ShippingType.Quote} /> },
-          { path: "shipment/:shipmentId", element: <CreateShipment shippingType={ShippingType.Shipment} /> },
+          { path: "quote/:shipmentId", element: <CreateShipment /> },
+          { path: "shipment/:shipmentId", element: <CreateShipment /> },
         ],
       },
       {

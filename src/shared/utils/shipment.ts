@@ -1,3 +1,5 @@
+import format from "date-fns/format"
+
 import { ShippingType } from "@/shipment"
 import { ShipmentInput } from "@/api/types"
 import { ShipmentState } from "@/shared/state"
@@ -6,20 +8,24 @@ import { IParcel, PackageType, ParcelContentType, PickupType, ShipmentStatus } f
 const replaceFalsyProps = (key: string, value: unknown) => {
   // TODO: Should we remove empty string as well?
   // should create and patch use different helpers?
-  // if (value === "" || value === null || value === undefined) {
-  if (value === null || value === undefined) {
+  if (value === "" || value === null || value === undefined) {
+    // if (value === null || value === undefined) {
     return undefined
   }
 
   return value
 }
 
-export const formatShipmentRequestData = (data: ShipmentState, shippingType: ShippingType) => {
+export const formatShipmentRequestData = (
+  data: ShipmentState,
+  shippingType: ShippingType | null,
+  status?: ShipmentStatus,
+) => {
   // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
   const packages = data.parcels.map((item) => ({
     DIMENSION: `${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}`,
-    WEIGHT: parseFloat(item.weight),
+    WEIGHT: item.weight,
     DECLARED_VALUE_AMOUNT: item.totalPrice,
     PACKAGING: Object.keys(PackageType)[Object.values(PackageType).indexOf(item.packageType)],
   }))
@@ -62,15 +68,33 @@ export const formatShipmentRequestData = (data: ShipmentState, shippingType: Shi
       LONGITUDE: data.sender.fullAddress.longitude,
     },
 
-    PACKAGE: packages,
+    RETURN_ADDRESS_ADDRESS1: data.senderReturn.fullAddress.address1,
+    RETURN_ADDRESS_ADDRESS2: data.senderReturn.fullAddress.address2,
+    RETURN_ADDRESS_CITY: data.senderReturn.fullAddress.city,
+    RETURN_ADDRESS_COMPANY: data.senderReturn.company,
+    RETURN_ADDRESS_CONTACT: data.senderReturn.name,
+    RETURN_ADDRESS_COUNTRY: data.senderReturn.fullAddress.country,
+    RETURN_ADDRESS_EMAIL: data.senderReturn.email,
+    RETURN_ADDRESS_PHONE: data.senderReturn.phone,
+    RETURN_ADDRESS_PHONE_EXTENSION: data.senderReturn.extension,
+    RETURN_ADDRESS_POSTALCODE: data.senderReturn.fullAddress.zipCode,
+    RETURN_ADDRESS_STATE: data.senderReturn.fullAddress.state,
 
-    ORGANIZATION_ID: user?.activeOrganizationId,
-    SHIPMENT_STATUS:
+    PACKAGE: packages,
+    // PACKAGING_TYPE: ,
+
+    PICKUP_READY_DATE: format(data.date, "MM/dd/yyyy"),
+    PICKUP_READY_TIME: format(data.date, "HH:mm"),
+
+    ORGANIZATION_ID: organization?.id,
+    SHIPMENT_STATUS: status
+      ? Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(status)]
+      : // TODO: fix this statuses
       shippingType === ShippingType.Quote
-        ? Object.keys(ShipmentStatus)[
-            Object.values(ShipmentStatus).indexOf(ShipmentStatus.QUOTE_DRAFT)
-          ]
-        : Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(ShipmentStatus.DRAFT)],
+      ? Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(ShipmentStatus.DRAFT)]
+      : Object.keys(ShipmentStatus)[
+          Object.values(ShipmentStatus).indexOf(ShipmentStatus.CONFIRMED)
+        ],
   }
 
   const formattedData = JSON.stringify(initialData, replaceFalsyProps)
@@ -84,14 +108,14 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
 
     return {
       pickupType: PickupType.Schedule,
-      weight: `${item.WEIGHT}`,
+      weight: parseFloat(item.WEIGHT).toFixed(1),
       dimensions: {
         length,
         width,
         height,
       },
       packageType: PackageType[item.PACKAGING],
-      content: ParcelContentType.Documents,
+      content: ParcelContentType.Gift,
       totalPrice: item.DECLARED_VALUE_AMOUNT || "",
       totalCurrency: "USD",
 
@@ -108,15 +132,33 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
       email: data.ORIGIN_EMAIL,
       company: data.ORIGIN_COMPANY,
       fullAddress: {
-        displayName: data.ORIGIN_GEOLOC.DISPLAY_NAME,
-        country: data.ORIGIN_COUNTRY,
-        zipCode: data.ORIGIN_POSTALCODE,
-        state: data.ORIGIN_STATE,
-        city: data.ORIGIN_CITY,
-        address1: data.ORIGIN_ADDRESS1,
-        address2: data.ORIGIN_ADDRESS2,
-        latitude: data.ORIGIN_GEOLOC.LATITUDE,
-        longitude: data.ORIGIN_GEOLOC.LONGITUDE,
+        displayName: data.ORIGIN_GEOLOC.DISPLAY_NAME || "",
+        country: data.ORIGIN_COUNTRY || "",
+        zipCode: data.ORIGIN_POSTALCODE || "",
+        state: data.ORIGIN_STATE || "",
+        city: data.ORIGIN_CITY || "",
+        address1: data.ORIGIN_ADDRESS1 || "",
+        address2: data.ORIGIN_ADDRESS2 || "",
+        latitude: data.ORIGIN_GEOLOC.LATITUDE || "",
+        longitude: data.ORIGIN_GEOLOC.LONGITUDE || "",
+      },
+    },
+    senderReturn: {
+      name: data.RETURN_ADDRESS_CONTACT || "",
+      phone: data.RETURN_ADDRESS_PHONE || "",
+      extension: data.RETURN_ADDRESS_PHONE_EXTENSION || "",
+      email: data.RETURN_ADDRESS_EMAIL || "",
+      company: data.RETURN_ADDRESS_COMPANY || "",
+      fullAddress: {
+        displayName: "",
+        country: data.RETURN_ADDRESS_COUNTRY || "",
+        zipCode: data.RETURN_ADDRESS_POSTALCODE || "",
+        state: data.RETURN_ADDRESS_STATE || "",
+        city: data.RETURN_ADDRESS_CITY || "",
+        address1: data.RETURN_ADDRESS_ADDRESS1 || "",
+        address2: data.RETURN_ADDRESS_ADDRESS2 || "",
+        latitude: "",
+        longitude: "",
       },
     },
     recipient: {
@@ -126,20 +168,20 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
       email: data.CONSIGNEE_EMAIL,
       company: data.CONSIGNEE_COMPANY,
       fullAddress: {
-        displayName: data.CONSIGNEE_GEOLOC.DISPLAY_NAME,
-        country: data.CONSIGNEE_COUNTRY,
-        zipCode: data.CONSIGNEE_POSTALCODE,
-        state: data.CONSIGNEE_STATE,
-        city: data.CONSIGNEE_CITY,
-        address1: data.CONSIGNEE_ADDRESS1,
-        address2: data.CONSIGNEE_ADDRESS2,
-        latitude: data.CONSIGNEE_GEOLOC.LATITUDE,
-        longitude: data.CONSIGNEE_GEOLOC.LONGITUDE,
-        isResidential: JSON.parse(data.CONSIGNEE_RESIDENTIAL),
+        displayName: data.CONSIGNEE_GEOLOC.DISPLAY_NAME || "",
+        country: data.CONSIGNEE_COUNTRY || "",
+        zipCode: data.CONSIGNEE_POSTALCODE || "",
+        state: data.CONSIGNEE_STATE || "",
+        city: data.CONSIGNEE_CITY || "",
+        address1: data.CONSIGNEE_ADDRESS1 || "",
+        address2: data.CONSIGNEE_ADDRESS2 || "",
+        latitude: data.CONSIGNEE_GEOLOC.LATITUDE || "",
+        longitude: data.CONSIGNEE_GEOLOC.LONGITUDE || "",
+        isResidential: JSON.parse(data.CONSIGNEE_RESIDENTIAL) || false,
       },
     },
     parcels,
-    date: new Date(),
+    date: new Date(`${data.PICKUP_READY_DATE} ${data.PICKUP_READY_TIME}`),
     rate: {
       rateType: "",
       name: "",
@@ -156,5 +198,6 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
       latitude: data?.CURRENT_GEOLOC?.LATITUDE || "",
       longitude: data?.CURRENT_GEOLOC?.LONGITUDE || "",
     },
+    hasReturnAddress: !!data?.RETURN_ADDRESS_CONTACT || false,
   }
 }

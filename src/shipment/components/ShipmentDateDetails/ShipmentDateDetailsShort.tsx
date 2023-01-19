@@ -16,7 +16,7 @@ export const ShipmentDateDetailsShort = () => {
             <IconLocationPin size="xs" />
           </Flex>
           <Copy scale={8} color="system-black">
-            {format(date, "MMM d, yyyy hh:mm aa")}
+            {format(date, "MMM d, yyyy hh:mm aa (OOO)")}
           </Copy>
         </Flex>
       ) : null}

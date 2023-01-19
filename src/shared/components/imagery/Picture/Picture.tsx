@@ -170,7 +170,7 @@ export const Picture: React.FC<IPictureProps> = ({
         setLazyload(true)
       }
 
-      // Save the new src
+      // Store the new src
       srcRef.current = src
     }
   }, [src, lazyload])

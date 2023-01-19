@@ -1,55 +1,55 @@
-import { Box, Copy, Divider, Flex, Spacer, Stack, StatusLabel } from "@/shared/components"
-import { ShippingType } from "@/shipment"
+import format from "date-fns/format"
+
+import { IShipmentResponse } from "@/api/types"
 import { ShipmentStatus } from "@/shared/types"
+import { ShippingType } from "@/shipment"
+
+import { Copy, Divider, Flex, Spacer, Stack, StatusLabel } from "@/shared/components"
+
 import { ActionDetailsButton } from "../ActionDetailsButton"
 import { SShippingCard } from "./ShippingCard.styles"
 
 interface IShippingCardProps {
-  shipment: any
+  shipment: IShipmentResponse
   shippingType: ShippingType
 }
 
 export const ShippingCard = ({ shipment, shippingType }: IShippingCardProps) => {
-  const { id } = shipment
-
   return (
-    <SShippingCard href={"/tracking"}>
+    <SShippingCard href={`/tracking/${shipment.id}`}>
       <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
-        <Box>
-          <Flex align="baseline">
-            <Copy scale={9} color="system-black" bold>
-              #{id}-5Z
-            </Copy>
-            {shippingType === ShippingType.Shipment ? (
-              <>
-                <Spacer size={16} horizontal />
-                <StatusLabel status={ShipmentStatus.CONFIRMED} />
-              </>
-            ) : null}
-          </Flex>
-          <Spacer size={4} />
-          <Copy scale={9}>18.10.2022</Copy>
-          {/* <Copy scale={9}>{shipment.date}</Copy> */}
-        </Box>
-        <ActionDetailsButton shippingType={shippingType} shipmentId={id} />
+        <Stack space={8}>
+          <StatusLabel status={ShipmentStatus[shipment.data.SHIPMENT_STATUS]} />
+          <Copy scale={9} color="system-black" bold>
+            #{shipment.id}
+          </Copy>
+          <Copy scale={9}>{format(new Date(shipment.createdAt), "MMM d, yyyy (OOO)")}</Copy>
+        </Stack>
+        <ActionDetailsButton shippingType={shippingType} shipmentId={shipment.id} horizontal />
       </Flex>
       <Divider />
-      <ShippingCardInfo shippingType={shippingType} />
+      <ShippingCardInfo shippingType={shippingType} shipment={shipment} />
     </SShippingCard>
   )
 }
 
-const ShippingCardInfo = ({ shippingType }: { shippingType: ShippingType }) => {
+const ShippingCardInfo = ({
+  shipment,
+  shippingType,
+}: {
+  shipment: IShipmentResponse
+  shippingType: ShippingType
+}) => {
   if (shippingType === ShippingType.Quote) {
     return (
       <Stack space={12} css={{ marginTop: "$16" }}>
         <ShippingCardInfoLine
           title="Origin address"
-          value="3376 San Diego Ave. Larnor, Dallaver, USA"
+          value={shipment.data?.ORIGIN_GEOLOC?.DISPLAY_NAME || "-"}
         />
         <ShippingCardInfoLine
           title="Destination address"
-          value="4517 Washington Ave. Manor, Dallaver, USA"
+          value={shipment.data?.CONSIGNEE_GEOLOC?.DISPLAY_NAME || "-"}
         />
       </Stack>
     )
@@ -57,14 +57,11 @@ const ShippingCardInfo = ({ shippingType }: { shippingType: ShippingType }) => {
 
   return (
     <Stack space={12} css={{ marginTop: "$16" }}>
-      <ShippingCardInfoLine title="Sender's name" value="Pablo Diego José Francisco Picasso" />
-      <ShippingCardInfoLine
-        title="Recipient's name"
-        value="Juan Nepomuceno María de los Remedios"
-      />
+      <ShippingCardInfoLine title="Sender's name" value={shipment.data.ORIGIN_CONTACT} />
+      <ShippingCardInfoLine title="Recipient's name" value={shipment.data.CONSIGNEE_CONTACT} />
       <ShippingCardInfoLine
         title="Destination address"
-        value="4517 Washington Ave. Manor, Dallaver, USA"
+        value={shipment.data?.CONSIGNEE_GEOLOC?.DISPLAY_NAME || "-"}
       />
     </Stack>
   )

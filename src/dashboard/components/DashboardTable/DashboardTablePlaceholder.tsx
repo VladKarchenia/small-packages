@@ -1,10 +1,8 @@
 import { useTranslation } from "react-i18next"
 import {
-  Box,
+  CreateButton,
   Flex,
-  Hidden,
   Redacted,
-  Spacer,
   Table,
   TableBody,
   TableRow,
@@ -13,82 +11,91 @@ import {
 import { DashboardTableHead } from "./DashboardTableHead"
 import { ShippingType } from "@/shipment"
 
-const PlaceholderRow = () => (
+const PlaceholderRow = ({ shippingType }: { shippingType: ShippingType }) => (
   <TableRow>
-    <TabularData>
-      <Flex align="center">
-        <Hidden below="lg">
-          <Flex>
-            <Redacted height="$40" width="$40" animated css={{ borderRadius: "$rounded" }} />
-            <Spacer horizontal size={16} />
-          </Flex>
-        </Hidden>
-        <Box>
-          <Flex>
-            <Redacted height="$24" width="100px" text animated />
-            <Spacer horizontal size={16} />
-            <Redacted height="$24" width="64px" text animated />
-          </Flex>
-          <Flex css={{ marginTop: "$2" }}>
-            <Redacted height="$24" width="64px" text animated />
-            <Spacer size={24} horizontal />
-            <Redacted height="$24" width="160px" text animated />
-          </Flex>
-        </Box>
-      </Flex>
-    </TabularData>
-    <TabularData align="end">
-      <Box css={{ display: "inline-block" }}>
-        <Redacted height="$24" width="100px" text animated />
-      </Box>
-    </TabularData>
     <TabularData
-      align="start"
       css={{
-        width: 152,
-        paddingLeft: "$48",
-        "@lg": { width: 168, paddingLeft: "$64" },
+        paddingLeft: "$24",
       }}
     >
-      <Box css={{ display: "inline-block" }}>
-        <Redacted height="$24" width="92px" text animated />
-      </Box>
+      <Redacted height="$24" text animated />
     </TabularData>
     <TabularData
-      align="start"
       css={{
-        width: 152,
-        paddingLeft: "$48",
-        "@lg": { width: 168, paddingLeft: "$64" },
+        paddingLeft: "$16",
       }}
     >
-      <Box css={{ display: "inline-block" }}>
-        <Redacted height="$24" width="$64" text animated />
-      </Box>
+      <Redacted height="$24" text animated />
     </TabularData>
-    <TabularData align="end">
-      <Box css={{ display: "inline-block" }}>
-        <Redacted height="$24" width="$24" text animated />
-      </Box>
+    {shippingType === ShippingType.Shipment ? (
+      <TabularData
+        css={{
+          paddingLeft: `calc($16 + $12)`,
+        }}
+      >
+        <Redacted height="$24" text animated />
+      </TabularData>
+    ) : null}
+    <TabularData
+      css={{
+        paddingLeft: "$16",
+      }}
+    >
+      <Redacted height="$24" text animated />
+    </TabularData>
+    <TabularData
+      css={{
+        paddingLeft: "$16",
+      }}
+    >
+      <Redacted height="$24" text animated />
+    </TabularData>
+    <TabularData
+      css={{
+        paddingX: "$16",
+      }}
+    >
+      <Redacted height="$24" text animated />
     </TabularData>
   </TableRow>
 )
 
 interface IDashboardTablePlaceholderProps {
   shippingType: ShippingType
+  isFilterApplied: boolean
 }
 
-export const DashboardTablePlaceholder = ({ shippingType }: IDashboardTablePlaceholderProps) => {
+export const DashboardTablePlaceholder = ({
+  shippingType,
+  isFilterApplied,
+}: IDashboardTablePlaceholderProps) => {
   const { t } = useTranslation()
 
   return (
-    <Table caption="Dashboard table">
-      <DashboardTableHead shippingType={shippingType} />
-      <TableBody>
-        {Array.from(new Array(20), (_, index) => index).map((v) => (
-          <PlaceholderRow key={`placeholder-row-${v}`} />
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <CreateButton />
+      <Flex align="center" justify="between">
+        <Flex align="center" wrap css={{ gap: "$12" }}>
+          {shippingType === ShippingType.Shipment ? (
+            <>
+              <Redacted height="$40" width="108px" text animated />
+              <Redacted height="$40" width="172px" text animated />
+            </>
+          ) : (
+            <Redacted height="$40" width="204px" text animated />
+          )}
+          <Redacted height="$40" width="204px" text animated />
+          {isFilterApplied ? <Redacted height="$24" width="100px" text animated /> : null}
+        </Flex>
+      </Flex>
+      <Table caption="Dashboard table">
+        <DashboardTableHead />
+        <TableBody>
+          {Array.from(new Array(20), (_, index) => index).map((v) => (
+            <PlaceholderRow key={`placeholder-row-${v}`} shippingType={shippingType} />
+          ))}
+        </TableBody>
+      </Table>
+    </>
   )
 }

@@ -9,10 +9,15 @@ import { IFoundShipmentResponse } from "@/api/types"
 import { searchShipmentsFn } from "@/api/shipmentApi"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
 
-import { Box, Combobox, ComboboxInput, Copy, Flex, FormInput } from "@/shared/components"
+import { Box, ComboboxInput, Copy, Flex, FormInput, Stack } from "@/shared/components"
 import { IconCross, IconSearch } from "@/shared/icons"
+import { IllustrationSpinner } from "@/shared/illustrations"
 
-import { SSearchFilterComboboxMenu, SComboboxClearButton } from "./SearchTermCombobox.styles"
+import {
+  SCombobox,
+  SComboboxClearButton,
+  SSearchFilterComboboxMenu,
+} from "./SearchTermCombobox.styles"
 
 export const SearchTermCombobox = () => {
   const { t } = useTranslation()
@@ -23,14 +28,13 @@ export const SearchTermCombobox = () => {
   const [inputValue, setInputValue] = useState<string>(searchTerm)
 
   const [results, setResults] = useState<IFoundShipmentResponse[]>([])
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [notFound, setNotFound] = useState(false)
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["searchShipments"],
     () =>
       searchShipmentsFn({
         keyword: inputValue,
-        organizationId: user?.activeOrganizationId,
         sort: "createdAt,asc",
         page: 0,
         size: 50,
@@ -39,6 +43,7 @@ export const SearchTermCombobox = () => {
       enabled: false,
       onSuccess: (data) => {
         setResults(data.content)
+        setNotFound(data.content.length === 0)
       },
     },
   )
@@ -59,6 +64,7 @@ export const SearchTermCombobox = () => {
       setInputValue(inputValue || "")
       setSearchTerm(inputValue || "")
       setResults([])
+      setNotFound(false)
 
       if (!inputValue || inputValue.length < 3 || inputValue.trim().length === 0) return
 
@@ -77,26 +83,45 @@ export const SearchTermCombobox = () => {
     comboboxProps.selectItem(null)
     resetFilterField("searchTerm")
     setResults([])
+    setNotFound(false)
     inputRef.current?.focus()
   }, [comboboxProps, resetFilterField])
 
   const Content = () => {
     if (isLoading || isFetching) {
-      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
+      return (
+        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
+          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        </Flex>
+      )
     }
 
-    if (!isLoading && !isFetching && results.length === 0) {
-      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    if (notFound) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
+      )
     }
 
     return (
-      <>
+      <Stack
+        space={0}
+        dividers
+        css={{
+          height: "100%",
+          paddingX: "$16",
+          "@md": { marginTop: 0 },
+        }}
+      >
         {results.map((shipment: IFoundShipmentResponse) => (
           <Box
             key={`${shipment.id}`}
             css={{
               "> div": {
-                padding: "$12 $16",
+                paddingY: "$12",
                 cursor: "pointer",
                 hover: {
                   backgroundColor: "$neutrals-3",
@@ -104,12 +129,7 @@ export const SearchTermCombobox = () => {
               },
               firstChild: {
                 "> div": {
-                  borderRadius: "$8 $8 0 0",
-                },
-              },
-              lastChild: {
-                "> div": {
-                  borderRadius: "0 0 $8 $8",
+                  paddingTop: "$0",
                 },
               },
             }}
@@ -124,7 +144,7 @@ export const SearchTermCombobox = () => {
             >
               <Flex direction="column">
                 <Copy scale={9} color="system-black" bold>
-                  {shipment.id}
+                  #{shipment.id}
                 </Copy>
                 <Copy scale={10} color="system-black">
                   {shipment.origin_ADDRESS}
@@ -133,7 +153,7 @@ export const SearchTermCombobox = () => {
             </Box>
           </Box>
         ))}
-      </>
+      </Stack>
     )
   }
 
@@ -144,7 +164,7 @@ export const SearchTermCombobox = () => {
   }, [])
 
   return (
-    <Combobox {...comboboxProps}>
+    <SCombobox {...comboboxProps}>
       <Box css={{ paddingX: "$16" }}>
         <ComboboxInput ref={inputRef}>
           <FormInput
@@ -155,7 +175,7 @@ export const SearchTermCombobox = () => {
             autoCorrect="off"
             autoComplete="off"
             data-testid="displayName-input"
-            prefix={<IconSearch size="xs" />}
+            prefix={<IconSearch fixedSize width={20} height={20} />}
             suffix={
               inputValue && (
                 <SComboboxClearButton
@@ -173,6 +193,6 @@ export const SearchTermCombobox = () => {
       <SSearchFilterComboboxMenu>
         <Content />
       </SSearchFilterComboboxMenu>
-    </Combobox>
+    </SCombobox>
   )
 }

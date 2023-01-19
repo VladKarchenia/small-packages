@@ -3,19 +3,24 @@ import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/
 import { IconArrowLeft } from "@/shared/icons"
 import { IAddress } from "@/shared/types"
 import { LocationInputForm } from "./LocationInputForm"
+import { id } from "date-fns/locale"
 
 interface ILocationInputProps {
   initialValue: IAddress
   onChange: (locationDetails: IAddress) => void
+  id: string
+  label: string
   placeholder: string
   description?: string
   labelProps?: IFormLabelProps
-  country: string,
+  country: string
 }
 
 export const LocationInput: React.FC<ILocationInputProps> = ({
   initialValue,
   onChange,
+  id,
+  label,
   placeholder,
   description,
   labelProps,
@@ -46,7 +51,9 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
         <LocationInputForm
           initialValue={locationDetails}
           onSelect={handleChange}
-          placeholder={placeholder}
+          id={id}
+          label={label}
+          placeholder={`${placeholder}: Country, state, city, zip code`}
           country={country}
         />
       }

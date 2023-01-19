@@ -1,3 +1,4 @@
+import { GridItem } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 import { MainLayout } from "@/shared/layouts/main"
 import { TrackingContainer } from "@/tracking"
@@ -6,7 +7,9 @@ export const Tracking = () => {
   return (
     <CommonLayout>
       <MainLayout>
-        <TrackingContainer />
+        <GridItem column={{ "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }}>
+          <TrackingContainer />
+        </GridItem>
       </MainLayout>
     </CommonLayout>
   )

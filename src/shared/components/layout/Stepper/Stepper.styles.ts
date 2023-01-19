@@ -12,7 +12,8 @@ export const SStepper = styled("div", {
 export const SStepperHeader = styled("div", {
   paddingX: "$16",
   position: "relative",
-  zIndex: 1,
+  // TODO: do we need this zIndex?
+  // zIndex: 1,
 })
 
 export const SStepperPanel = styled(motion.div, {

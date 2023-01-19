@@ -10,15 +10,17 @@ export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
    * ID of the Tab List Item
    */
   id: string
+  onChange: () => void
 }
 
-export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
+export const TabListItem = ({ children, id, onChange, ...props }: ITabListItemProps) => {
   const ref = useRef<HTMLButtonElement>(null)
   const { selected, setSelected } = useTabsContext("TabListItem")
 
   const handleOnClick = useCallback(() => {
     setSelected(id)
-  }, [id, setSelected])
+    onChange()
+  }, [id, setSelected, onChange])
 
   const isSelected = selected === id
 

@@ -1,22 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useQuery } from "react-query"
 import { useTranslation } from "react-i18next"
 import { useCombobox } from "downshift"
-import { Combobox, ComboboxGroup, ComboboxInput, Copy, FormInput, Stack } from "@/shared/components"
+import debounce from "just-debounce-it"
+
+import { searchPlacesFn } from "@/api/placeApi"
+import { IAddress } from "@/shared/types"
+import { IPlaceResponse } from "@/api/types"
+
+import { Box, ComboboxGroup, ComboboxInput, Copy, Flex, FormInput } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
+import { IllustrationSpinner } from "@/shared/illustrations"
+
 import {
   SDestinationComboboxItem,
-  SDestinationComboboxMenu,
+  SComboboxMenu,
   SComboboxClearButton,
+  SCombobox,
 } from "./DestinationCombobox.styles"
-import { useQuery } from "react-query"
-import { IAddress } from "@/shared/types"
-import debounce from "just-debounce-it"
-import { searchPlacesFn } from "@/api/placeApi"
-import { IPlaceResponse } from "@/api/types"
 
 export interface DestinationComboboxProps {
   onSelect: (locationDetails: IAddress) => void
   initialValue: IAddress
+  id: string
+  label: string
   placeholder?: string
   country: string
 }
@@ -24,22 +31,23 @@ export interface DestinationComboboxProps {
 export const DestinationCombobox = ({
   onSelect,
   initialValue,
+  id,
+  label,
   placeholder,
   country,
 }: DestinationComboboxProps) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [inputValue, setInputValue] = useState<string>(initialValue.displayName)
-  const [locations, setLocations] = useState<IPlaceResponse[]>([])
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [inputValue, setInputValue] = useState<string>("")
 
+  const [results, setResults] = useState<IPlaceResponse[]>([])
+  const [notFound, setNotFound] = useState(false)
   const { isLoading, isFetching, refetch } = useQuery(
     ["searchPlaces"],
     () =>
       searchPlacesFn({
         country: country,
         keyword: inputValue,
-        organizationId: user?.activeOrganizationId,
       }),
     {
       enabled: false,
@@ -56,7 +64,8 @@ export const DestinationCombobox = ({
             .map((item: IPlaceResponse) => result.push(item))
         }
 
-        setLocations(result)
+        setResults(result)
+        setNotFound(result.length === 0)
       },
     },
   )
@@ -71,23 +80,23 @@ export const DestinationCombobox = ({
   const comboboxProps = useCombobox({
     isOpen: true,
     inputValue,
-    items: locations,
+    items: results,
     itemToString: (item: IPlaceResponse | null) => item?.displayName || "",
 
     onInputValueChange: ({ inputValue }) => {
       setInputValue(inputValue || "")
-      setLocations([])
+      setResults([])
+      setNotFound(false)
 
-      if (!inputValue || inputValue.length < 3 || inputValue.trim().length === 0) return
-
-      if (inputValue.length > 3) {
+      if (typeof inputValue !== "undefined" && inputValue.length > 3) {
         debouncedRefetch()
       }
+
+      return
     },
 
     onSelectedItemChange: ({ selectedItem }) => {
       if (!selectedItem) return
-
       onSelect(selectedItem)
       setTimeout(clearDestination, 400)
     },
@@ -95,9 +104,46 @@ export const DestinationCombobox = ({
 
   const clearDestination = useCallback(() => {
     comboboxProps.selectItem(null)
-    setLocations([])
+    setResults([])
+    setNotFound(false)
     inputRef.current?.focus()
   }, [comboboxProps])
+
+  const Content = () => {
+    if (isLoading || isFetching) {
+      return (
+        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
+          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        </Flex>
+      )
+    }
+
+    if (notFound) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
+      )
+    }
+
+    return (
+      <Box
+        css={{
+          height: "100%",
+          paddingX: "$16",
+          "@md": { marginTop: 0 },
+        }}
+      >
+        {results.length > 0 ? (
+          <DestinationSection items={results} />
+        ) : (
+          <Flex css={{ padding: "$16", height: "$56" }} />
+        )}
+      </Box>
+    )
+  }
 
   useEffect(() => {
     setInputValue(initialValue.displayName)
@@ -108,39 +154,34 @@ export const DestinationCombobox = ({
   }, [initialValue.displayName, refetch])
 
   return (
-    <Combobox {...comboboxProps}>
-      <ComboboxInput ref={inputRef}>
-        <FormInput
-          id={placeholder}
-          label={placeholder}
-          placeholder={placeholder}
-          labelProps={{ hidden: true }}
-          autoCorrect="off"
-          autoComplete="off"
-          data-testid="displayName-input"
-          suffix={
-            inputValue && (
-              <SComboboxClearButton
-                type="button"
-                aria-label={t("filters.destinationClear")}
-                onClick={clearDestination}
-              >
-                <IconCross size="xs" />
-              </SComboboxClearButton>
-            )
-          }
-        />
-      </ComboboxInput>
-      <SDestinationComboboxMenu>
-        {isLoading || isFetching ? (
-          <div>loading</div>
-        ) : (
-          <Stack space={24}>
-            <DestinationSection items={locations} />
-          </Stack>
-        )}
-      </SDestinationComboboxMenu>
-    </Combobox>
+    <SCombobox {...comboboxProps}>
+      <Box css={{ paddingX: "$16" }}>
+        <ComboboxInput ref={inputRef}>
+          <FormInput
+            id={id}
+            label={label}
+            placeholder={placeholder}
+            labelProps={{ hidden: true }}
+            autoCorrect="off"
+            autoComplete="off"
+            suffix={
+              inputValue && (
+                <SComboboxClearButton
+                  type="button"
+                  aria-label={t("filters.destinationClear")}
+                  onClick={clearDestination}
+                >
+                  <IconCross size="xs" />
+                </SComboboxClearButton>
+              )
+            }
+          />
+        </ComboboxInput>
+      </Box>
+      <SComboboxMenu>
+        <Content />
+      </SComboboxMenu>
+    </SCombobox>
   )
 }
 
@@ -149,23 +190,19 @@ interface IDestinationSectionProps {
 }
 
 function DestinationSection({ items }: IDestinationSectionProps) {
-  if (!items.length) return null
-
   return (
-    <ComboboxGroup labelledBy={"destination-group"}>
-      {items.map((item, index) => {
-        return <DestinationBox item={item} index={index} key={`recent-destination-${index}`} />
-      })}
+    <ComboboxGroup labelledBy={"combobox-group"}>
+      {items.map((item, index) => (
+        <DestinationBox item={item} index={index} key={`combobox-${index}`} />
+      ))}
     </ComboboxGroup>
   )
 }
 
-const DestinationBox = ({ item, index }: { item: IPlaceResponse; index: number }) => {
-  return (
-    <SDestinationComboboxItem key={`${item.displayName}-${index}`} index={index} item={item}>
-      <Copy color="neutrals-9" intent="detail">
-        {item.displayName}
-      </Copy>
-    </SDestinationComboboxItem>
-  )
-}
+const DestinationBox = ({ item, index }: { item: IPlaceResponse; index: number }) => (
+  <SDestinationComboboxItem key={`${item.displayName}-${index}`} index={index} item={item}>
+    <Copy color="neutrals-9" intent="detail">
+      {item.displayName}
+    </Copy>
+  </SDestinationComboboxItem>
+)

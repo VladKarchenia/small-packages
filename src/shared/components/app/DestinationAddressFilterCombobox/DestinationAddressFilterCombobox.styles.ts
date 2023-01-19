@@ -1,44 +1,14 @@
 import { styled } from "@/config"
-import { ComboboxMenu, ComboboxItem } from "@/shared/components"
+import { ComboboxMenu, ComboboxItem, Combobox } from "@/shared/components"
 
-export const SSearchFilterComboboxMenu = styled(ComboboxMenu, {
-  marginTop: "$8",
-
-  "@md": {
-    marginTop: 0,
-  },
+export const SCombobox = styled(Combobox, {
+  height: "100%",
 })
 
-export const SSearchFilterComboboxItem = styled(ComboboxItem, {
-  display: "flex",
-  alignItems: "center",
-  cursor: "pointer",
-  paddingY: "$16",
-  borderBottom: "1px solid $neutrals-4",
-  position: "relative",
-  zIndex: "0",
-
-  "@md": {
-    paddingY: "$8",
-    borderBottom: "none",
-    before: {
-      content: "",
-      position: "absolute",
-      zIndex: "-$1",
-      top: 0,
-      right: "0",
-      height: "100%",
-      backgroundColor: "$brand-yellow-lighter",
-      opacity: 0,
-      transition: "100ms opacity",
-      left: "-$24",
-      marginRight: "-$24",
-    },
-  },
-
-  "&[data-state='highlighted']::before": {
-    opacity: 1,
-  },
+export const SSearchFilterComboboxMenu = styled(ComboboxMenu, {
+  height: `calc(100% - $48)`,
+  marginTop: "$20",
+  overflow: "auto",
 })
 
 export const SComboboxClearButton = styled("button", {

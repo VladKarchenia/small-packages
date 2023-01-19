@@ -101,7 +101,8 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
             }),
             indicatorsContainer: (styles) => ({
               ...styles,
-              paddingRight: "var(--space-12)",
+              justifyContent: "center",
+              width: "var(--sizes-48)",
             }),
             menu: (styles) => ({
               ...styles,

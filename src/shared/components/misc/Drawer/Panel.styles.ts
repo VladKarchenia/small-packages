@@ -66,7 +66,7 @@ export const SDrawerPanel = styled(DialogContent, {
 
   defaultVariants: {
     nested: false,
-    scrollable: true,
+    scrollable: false,
     direction: "right",
   },
 })

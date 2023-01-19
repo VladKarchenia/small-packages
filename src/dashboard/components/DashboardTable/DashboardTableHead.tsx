@@ -9,11 +9,7 @@ import {
 } from "@/dashboard/state"
 import { ShippingType } from "@/shipment"
 
-interface IDashboardTableHeadProps {
-  shippingType: ShippingType
-}
-
-export const DashboardTableHead = ({ shippingType }: IDashboardTableHeadProps) => {
+export const DashboardTableHead = () => {
   const [shipmentId, setShipmentId] = useState<
     ShipmentsPagedOrderBy.IdAsc | ShipmentsPagedOrderBy.IdDesc
   >(ShipmentsPagedOrderBy.IdAsc)
@@ -25,7 +21,7 @@ export const DashboardTableHead = ({ shippingType }: IDashboardTableHeadProps) =
   >(ShipmentsPagedOrderBy.RecipientNameAsc)
 
   // TODO: need to implement sort on FE side? (paginated response...)
-  const { sortOrder } = useDashboardStateContext()
+  const { sortOrder, shippingType } = useDashboardStateContext()
   const { setSortOrder, setSortDirection } = useDashboardActionContext()
 
   return (

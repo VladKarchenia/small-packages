@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from "react"
+
+import { shipmentStatusesList } from "@/constants"
+import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { ShipmentStatus } from "@/shared/types"
+
 import {
   Box,
   Copy,
@@ -10,31 +15,17 @@ import {
   Spacer,
 } from "@/shared/components"
 import { IconChevronDown } from "@/shared/icons"
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
-import { ShipmentStatus } from "@/shared/types"
+
 import { SStatusFilterButton } from "./DashboardTableStatusFilter.styles"
 
 const getEnumKey = (value: any) =>
   Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(value)]
 
-const shipmentStatuses = [
-  ShipmentStatus.COMPLETED,
-  ShipmentStatus.CONFIRMED,
-  ShipmentStatus.DELIVERED,
-  ShipmentStatus.DRAFT,
-  ShipmentStatus.IN_DELIVERY,
-  ShipmentStatus.SUBMIT_READY,
-  ShipmentStatus.CANCELLED,
-]
-
-const shipmentStatusesList: ShipmentStatus[] = Object.values(ShipmentStatus).filter((status) =>
-  shipmentStatuses.includes(status),
-)
-
 export const DashboardTableStatusFilter = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { status } = useDashboardStateContext()
-  const { setStatusFilter } = useDashboardActionContext()
+  const { setStatusFilter, resetFilterField } = useDashboardActionContext()
+  const [isCheckAll, setIsCheckAll] = useState(false)
   const triggerRef = useRef<any>()
   const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
@@ -47,6 +38,22 @@ export const DashboardTableStatusFilter = () => {
     const newArray = [...status, getEnumKey(event.currentTarget.value) as ShipmentStatus]
     return setStatusFilter(newArray)
   }
+
+  const handleCheckAllClick = (event: React.FormEvent<HTMLInputElement>) => {
+    if (!event.currentTarget.checked) {
+      return resetFilterField("status")
+    }
+
+    return setStatusFilter(shipmentStatusesList.map((i) => getEnumKey(i) as ShipmentStatus))
+  }
+
+  useEffect(() => {
+    if (status.length === shipmentStatusesList.length) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
+  }, [status])
 
   return (
     <Popover open={isOpen}>
@@ -73,7 +80,7 @@ export const DashboardTableStatusFilter = () => {
       </PopoverAnchor>
       <PopoverContent
         align="start"
-        css={{ width: "220px", padding: "$0", border: "none", borderRadius: "$8" }}
+        css={{ width: "220px", padding: "$0", border: "none", borderRadius: "$0" }}
         alignOffset={-1}
         onInteractOutside={(e: any) => {
           // if (isClearButtonClick(e: any)) {
@@ -91,29 +98,52 @@ export const DashboardTableStatusFilter = () => {
           e.preventDefault()
         }}
       >
-        {shipmentStatusesList.map((item) => (
-          <Box
-            key={item}
-            css={{
-              "> label": {
-                padding: "$12 $16",
-                cursor: "pointer",
-                hover: {
-                  backgroundColor: "$neutrals-3",
-                },
+        <Box
+          css={{
+            "> label": {
+              padding: "$12 $16",
+              cursor: "pointer",
+              hover: {
+                backgroundColor: "$neutrals-3",
               },
-            }}
-          >
-            <FormCheckbox
-              value={item}
-              onChange={handleChange}
-              name={item}
-              id={item}
-              label={item}
-              checked={status.includes(getEnumKey(item) as ShipmentStatus)}
-            />
-          </Box>
-        ))}
+            },
+          }}
+        >
+          <FormCheckbox
+            value={"All"}
+            onChange={handleCheckAllClick}
+            name={"Select all"}
+            id={"Select all"}
+            label={"Select all"}
+            checked={isCheckAll}
+          />
+        </Box>
+        <Divider />
+        <Box css={{ height: "max-content", maxHeight: "240px", overflow: "auto" }}>
+          {shipmentStatusesList.map((item) => (
+            <Box
+              key={item}
+              css={{
+                "> label": {
+                  padding: "$12 $16",
+                  cursor: "pointer",
+                  hover: {
+                    backgroundColor: "$neutrals-3",
+                  },
+                },
+              }}
+            >
+              <FormCheckbox
+                value={item}
+                onChange={handleChange}
+                name={item}
+                id={item}
+                label={item}
+                checked={status.includes(getEnumKey(item) as ShipmentStatus)}
+              />
+            </Box>
+          ))}
+        </Box>
       </PopoverContent>
     </Popover>
   )

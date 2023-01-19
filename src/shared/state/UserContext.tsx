@@ -13,7 +13,6 @@ const initialUserState: UserState = {
     lastName: "",
     authorities: [],
     organizationIds: [],
-    activeOrganizationId: 0,
   },
 }
 

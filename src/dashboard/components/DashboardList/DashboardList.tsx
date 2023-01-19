@@ -1,9 +1,17 @@
 import { useEffect, useMemo, useState } from "react"
+import { useQuery } from "react-query"
+
+import { getAllShipmentsFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
+import { ShippingType } from "@/shipment"
+import { createFilterString, createSortString } from "@/shared/utils"
+import { useModalActions } from "@/shared/hooks"
 import {
   SortDirection,
   useDashboardActionContext,
   useDashboardStateContext,
 } from "@/dashboard/state"
+
 import {
   Box,
   Copy,
@@ -15,40 +23,24 @@ import {
   Stack,
 } from "@/shared/components"
 import { IconArrowDown, IconArrowTop, IconCross } from "@/shared/icons"
-import { ShippingType } from "@/shipment"
-import { useModalActions } from "@/shared/hooks"
-import { DashboardPagination } from "../DashboardPagination"
+
 import { SearchInput } from "../SearchInput"
 import { ShippingCard } from "../ShippingCard"
 import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
 import { SortFilterBar } from "../SortFilterBar"
-import { useQuery } from "react-query"
-import { getAllShipmentsFn } from "@/api/shipmentApi"
-import { IShipmentResponse } from "@/api/types"
-import { createFilterString, createSortString } from "@/shared/utils"
 
-interface IDashboardListProps {
-  shippingType: ShippingType
-}
-
-const DashboardListPlaceholder = () => (
-  <>
-    <Spacer size={8} />
-    <Redacted height="$24" width="144px" text animated />
-    <Spacer size={24} />
-    <Stack as="ul" space={24} dividers outerDividers="bottom">
-      {Array.from(new Array(20), (_, index) => index).map((v) => (
-        <ShippingCardPlaceholder key={`placeholder-row-${v}`} />
-      ))}
-    </Stack>
-  </>
-)
-
-export const DashboardList = ({ shippingType }: IDashboardListProps) => {
+export const DashboardList = () => {
   const [shipments, setShipments] = useState<IShipmentResponse[]>([])
   const { open } = useModalActions()
-  const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
-    useDashboardStateContext()
+  const {
+    sortOrder,
+    direction,
+    status,
+    recipientName,
+    originalAddress,
+    destinationAddress,
+    shippingType,
+  } = useDashboardStateContext()
 
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
@@ -60,23 +52,27 @@ export const DashboardList = ({ shippingType }: IDashboardListProps) => {
     )
   }, [shippingType, status, recipientName, originalAddress, destinationAddress])
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  // TODO: probably we need to use only isLoading to show skeleton
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["getShipments"],
     () =>
       getAllShipmentsFn({
-        organizationId: user?.activeOrganizationId,
         // TODO: sort and filters should be placed also in zustand and be used here
-        filter: createFilterString(shippingType, status, recipientName, originalAddress, destinationAddress),
+        filter: createFilterString(
+          shippingType,
+          status,
+          recipientName,
+          originalAddress,
+          destinationAddress,
+        ),
         sort: `${createSortString(sortOrder)},${direction}`,
       }),
     {
       enabled: false,
       onSuccess: (data) => {
-        setShipments(data.content)
         // maybe we also need to set shipments into zustand as a cache?
-        // return setShipmentContext(formatShipmentResponseData(shipment.data))
+        setShipments(data.content)
       },
     },
   )
@@ -95,22 +91,13 @@ export const DashboardList = ({ shippingType }: IDashboardListProps) => {
   ])
 
   if (isLoading || isFetching) {
-    return <DashboardListPlaceholder />
-  }
-
-  if (!isLoading && !isFetching && !shipments.length) {
-    return (
-      <Box css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, paddingTop: "$80" }}>
-        Empty
-        {/* <ResetYourFiltersMessage /> */}
-      </Box>
-    )
+    return <DashboardListPlaceholder isFilterApplied={isFilterApplied} />
   }
 
   return (
     <>
-      <SearchInput shippingType={shippingType} />
-      <SortFilterBar isFilterApplied={isFilterApplied} shippingType={shippingType} />
+      <SearchInput />
+      <SortFilterBar isFilterApplied={isFilterApplied} />
       <Spacer size={20} />
       {isFilterApplied ? (
         <>
@@ -165,36 +152,48 @@ export const DashboardList = ({ shippingType }: IDashboardListProps) => {
         </>
       ) : null}
 
-      <Flex align="center" justify="between">
-        <Flex align="center">
-          <Copy scale={9} css={{ paddingRight: "$4" }}>
-            Found:
+      {!isLoading && !isFetching && shipments.length > 0 ? (
+        <>
+          <Flex align="center" justify="between">
+            <Copy scale={9}>
+              Found:
+              <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$4" }}>
+                {shipments.length}
+              </Copy>
+            </Copy>
+            <Flex align="center">
+              {direction === SortDirection.ASC ? (
+                <IconArrowDown size="xs" />
+              ) : (
+                <IconArrowTop size="xs" />
+              )}
+              <Copy scale={9} css={{ paddingX: "$4" }}>
+                Sort by:
+              </Copy>
+              <Copy scale={9} color="system-black" bold>
+                {sortOrder}
+              </Copy>
+            </Flex>
+          </Flex>
+          <Spacer size={12} />
+          <Stack as="ul" space={12}>
+            {shipments.map((shipment) => (
+              <ShippingCard key={shipment.id} shipment={shipment} shippingType={shippingType} />
+            ))}
+          </Stack>
+        </>
+      ) : (
+        <Box css={{ height: `calc((var(--vh) * 100) - $128 - $96 - $8)`, textAlign: "center" }}>
+          <Copy as="span" scale={8} color="system-black">
+            {isFilterApplied
+              ? "There are no issues that match your filter"
+              : "There is no data yet"}
           </Copy>
-          <Copy scale={9} color="system-black" bold>
-            12/{shipments.length}
-          </Copy>
-        </Flex>
-        <Flex align="center">
-          {direction === SortDirection.ASC ? (
-            <IconArrowDown size="xs" />
-          ) : (
-            <IconArrowTop size="xs" />
-          )}
-          <Copy scale={9} css={{ paddingX: "$4" }}>
-            Sort by:
-          </Copy>
-          <Copy scale={9} color="system-black" bold>
-            {sortOrder}
-          </Copy>
-        </Flex>
-      </Flex>
-      <Spacer size={12} />
-      <Stack as="ul" space={12}>
-        {shipments.map((shipment) => (
-          <ShippingCard key={shipment?.id} shipment={shipment} shippingType={shippingType} />
-        ))}
-      </Stack>
-      {shipments.length > 0 ? (
+          {/* <ResetYourFiltersMessage /> */}
+        </Box>
+      )}
+
+      {/* {shipments.length > 0 ? (
         // {loading || data?.shipments.total > 0 ? (
         <>
           <Spacer size={24} />
@@ -209,13 +208,11 @@ export const DashboardList = ({ shippingType }: IDashboardListProps) => {
             // limit={state.limit}
             offset={0}
             // offset={state.offset}
-            getNext={() => console.log("getNext")}
-            // getNext={getNext}
-            getPrevious={() => console.log("getPrevious")}
-            // getPrevious={getPrevious}
+            getNext={getNext}
+            getPrevious={getPrevious}
           />
         </>
-      ) : null}
+      ) : null} */}
 
       <CreateRoundedButton
         size="lg"
@@ -228,3 +225,26 @@ export const DashboardList = ({ shippingType }: IDashboardListProps) => {
     </>
   )
 }
+
+const DashboardListPlaceholder = ({ isFilterApplied }: { isFilterApplied: boolean }) => (
+  <>
+    <Redacted height="$48" text animated />
+    <Spacer size={20} />
+    {isFilterApplied ? (
+      <>
+        <Redacted height="$32" text animated />
+        <Spacer size={20} />
+      </>
+    ) : null}
+    <Flex justify="between">
+      <Redacted height="$24" width="70px" text animated />
+      <Redacted height="$24" width="200px" text animated />
+    </Flex>
+    <Spacer size={12} />
+    <Stack as="ul" space={12}>
+      {Array.from(new Array(10), (_, index) => index).map((v) => (
+        <ShippingCardPlaceholder key={`placeholder-row-${v}`} />
+      ))}
+    </Stack>
+  </>
+)
