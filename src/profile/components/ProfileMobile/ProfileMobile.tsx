@@ -1,37 +1,22 @@
 import { useNavigate } from "react-router-dom"
 import { useMutation } from "react-query"
-import { toast } from "react-toastify"
-import { HeaderBar, Spacer, Stack, Grid, Link, Copy } from "@/shared/components"
-import { IconChevronLeft, IconChevronRight } from "@/shared/icons"
+
 import { logoutUserFn } from "@/api/authApi"
+import { Role } from "@/shared/types"
+
+import { HeaderBar, Spacer, Stack, Grid, Link, Copy, GridContainer } from "@/shared/components"
+import { IconChevronLeft, IconChevronRight } from "@/shared/icons"
 import { ProfileDrawer, SwitchOrganization, ChangePassword } from "@/profile"
 
-interface IProfileMobileProps {
-  setUserOrganization: Function
-  userOrganization: string
-}
-
-export const ProfileMobile = ({ setUserOrganization, userOrganization }: IProfileMobileProps) => {
-  const refreshToken = window.localStorage.getItem("refreshToken") || ""
+export const ProfileMobile = () => {
   const navigate = useNavigate()
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
 
-  const { isLoading, mutate: logoutUser } = useMutation(() => logoutUserFn(refreshToken), {
+  const { isLoading, mutate: logoutUser } = useMutation(() => logoutUserFn(), {
     onSuccess: () => {
       navigate("/login")
     },
-    // onError: (error: any) => {
-    //   if (Array.isArray(error.response.data.error)) {
-    //     error.data.error.forEach((el: any) =>
-    //       toast.error(el.message, {
-    //         position: "top-right",
-    //       }),
-    //     )
-    //   } else {
-    //     toast.error(error.response.data.message, {
-    //       position: "top-right",
-    //     })
-    //   }
-    // },
   })
 
   const handleLogoutClick = () => {
@@ -41,43 +26,42 @@ export const ProfileMobile = ({ setUserOrganization, userOrganization }: IProfil
 
   return (
     <>
-      <HeaderBar title="User profile" onClick={() => navigate("/")} />
+      <HeaderBar title="User profile" onClick={() => navigate("/")} css={{ paddingRight: "$40" }} />
       <Spacer size={{ "@initial": 8, "@sm": 0 }} />
-      <Grid>
-        <Stack space={16}>
-          <ProfileDrawer
-            drawerTitle="User profile"
-            placeholder="Switch organization"
-            closeIcon={<IconChevronLeft />}
-            suffix={<IconChevronRight />}
-            drawerForm={
-              <SwitchOrganization
-                userOrganization={userOrganization}
-                setUserOrganization={setUserOrganization}
+      <GridContainer>
+        <Grid>
+          <Stack space={16}>
+            {role === Role.Admin || role === Role.Ops ? (
+              <ProfileDrawer
+                drawerTitle="User profile"
+                placeholder="Switch organization"
+                closeIcon={<IconChevronLeft />}
+                suffix={<IconChevronRight />}
+                drawerForm={<SwitchOrganization />}
               />
-            }
-          />
-          <ProfileDrawer
-            drawerTitle="User profile"
-            placeholder="Change password"
-            closeIcon={<IconChevronLeft />}
-            suffix={<IconChevronRight />}
-            drawerForm={<ChangePassword />}
-          />
-          <Link
-            onClick={handleLogoutClick}
-            css={{
-              width: "100%",
-              justifyContent: "start",
-              paddingBottom: "$16",
-            }}
-          >
-            <Copy scale={{ "@initial": 8, "@sm": 8 }} color={"system-black"} bold>
-              Logout
-            </Copy>
-          </Link>
-        </Stack>
-      </Grid>
+            ) : null}
+            <ProfileDrawer
+              drawerTitle="User profile"
+              placeholder="Change password"
+              closeIcon={<IconChevronLeft />}
+              suffix={<IconChevronRight />}
+              drawerForm={<ChangePassword />}
+            />
+            <Link
+              onClick={handleLogoutClick}
+              css={{
+                width: "100%",
+                justifyContent: "start",
+                paddingBottom: "$16",
+              }}
+            >
+              <Copy scale={{ "@initial": 8, "@sm": 8 }} color={"system-black"} bold>
+                Logout
+              </Copy>
+            </Link>
+          </Stack>
+        </Grid>
+      </GridContainer>
     </>
   )
 }

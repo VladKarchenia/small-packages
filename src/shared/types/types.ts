@@ -8,7 +8,6 @@ export enum ShipmentStatus {
   QUOTE = "Quote",
   SUBMIT_READY = "Submit ready",
 
-  QUOTE_DRAFT = "Draft quote",
   QUOTE_READY = "Ready quote",
   QUOTE_QUOTED = "Quoted quote",
   QUOTE_CANCELLED = "Cancelled quote",
@@ -19,6 +18,7 @@ export enum ShipmentStatus {
 export enum Role {
   Admin = "ROLE_ADMIN",
   User = "ROLE_USER",
+  Ops = "ROLE_OPS",
 }
 
 export interface ICost {

@@ -51,16 +51,17 @@ export const ShipmentDetails = () => {
             </Title>
             <TrackingDetailsItem title="From where to where">
               <AddressInfoShort
-                fromAddress={sender.fullAddress.displayName}
-                toAddress={recipient.fullAddress.displayName}
+                fromAddress={sender.fullAddress}
+                toAddress={recipient.fullAddress}
               />
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
               <Stack space={12}>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+                  Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
                 </Copy>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  {/* TODO: add time zone */}
                   Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
                 <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
@@ -105,7 +106,7 @@ export const ShipmentDetails = () => {
           <STrackingGridItem css={{ gridArea: "main" }}>
             <Stack space={24} dividers>
               <>
-                <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
+                <TrackingDetailsItem title="Tracking number link" titleIndent={4} titleScale={11}>
                   <ShipmentURL
                     url={SHIPMENT_DETAILS.shipmentURL}
                     value={SHIPMENT_DETAILS.trackingNumber}
@@ -114,8 +115,8 @@ export const ShipmentDetails = () => {
                 <Spacer size={24} />
                 <TrackingDetailsItem title="From where to where" titleScale={11}>
                   <AddressInfoShort
-                    fromAddress={sender.fullAddress.displayName}
-                    toAddress={recipient.fullAddress.displayName}
+                    fromAddress={sender.fullAddress}
+                    toAddress={recipient.fullAddress}
                   />
                 </TrackingDetailsItem>
               </>
@@ -123,7 +124,7 @@ export const ShipmentDetails = () => {
               <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                 <Stack space={12}>
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+                    Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
                   </Copy>
 
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
@@ -232,8 +233,8 @@ export const ShipmentDetails = () => {
         <STrackingGridItem css={{ gridArea: "labels" }}>
           <Hidden below="md">
             <TrackingDetailsItem
-              title="Tracking number"
-              titleIndent={20}
+              title="Tracking & Label Links"
+              titleIndent={16}
               titleScale={7}
               titleColor={"system-black"}
             >
@@ -242,21 +243,31 @@ export const ShipmentDetails = () => {
                 value={SHIPMENT_DETAILS.trackingNumber}
               />
             </TrackingDetailsItem>
-            <Spacer size={32} />
           </Hidden>
 
-          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-            Shipment label
-          </Title>
-          <Spacer size={{ "@initial": 16, "@md": 24 }} />
-          <Copy scale={{ "@initial": 9, "@md": 8 }}>
-            Shipment label must be printed and attached to a package before it is picked up
-          </Copy>
+          <Hidden above="md">
+            <Title as="h3" scale={7}>
+              Label links
+            </Title>
+            <Spacer size={16} />
+            <Copy scale={9}>
+              Shipment label must be printed and attached to a package before it is picked up
+            </Copy>
+          </Hidden>
           <Spacer size={{ "@initial": 24, "@md": 32 }} />
           <ShipmentLabelContainer
             pdfLabel={SHIPMENT_DETAILS.shipmentLabelPDFLink}
             zplLabel={SHIPMENT_DETAILS.shipmentLabelZPLLink}
+            pdfReturnLabel={SHIPMENT_DETAILS.shipmentReturnLabelPDFLink}
+            zplReturnLabel={SHIPMENT_DETAILS.shipmentReturnLabelZPLLink}
           />
+          <Spacer size={{ "@initial": 8, "@md": 0 }} />
+          <Hidden below="md">
+            <Spacer size={20} />
+            <Copy scale={9}>
+              * Shipment label must be printed and attached to a package before it is picked up
+            </Copy>
+          </Hidden>
         </STrackingGridItem>
       </GridContainer>
     </STrackingGrid>

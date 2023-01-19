@@ -48,19 +48,6 @@ export const RecoveryFormContainer = () => {
           },
         })
       },
-      // onError: (error: any) => {
-      //   if (Array.isArray((error as any).response.data.error)) {
-      //     ;(error as any).response.data.error.forEach((el: any) =>
-      //       toast.error(el.message, {
-      //         position: "top-right",
-      //       }),
-      //     )
-      //   } else {
-      //     toast.error((error as any).response.data.message, {
-      //       position: "top-right",
-      //     })
-      //   }
-      // },
     },
   )
 
@@ -91,7 +78,7 @@ const ToastMessage = () => (
       <IconTick />
     </Flex>
     <Copy scale={8} color="system-black" css={{ lineHeight: 1.2 }}>
-      Please, check your e-mail for further instructions
+      Please check your e-mail for further instructions
     </Copy>
   </Grid>
 )

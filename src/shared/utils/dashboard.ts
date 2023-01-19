@@ -20,7 +20,7 @@ export const createSortString = (sortOrder: ShipmentsPagedOrderBy) => {
 }
 
 export const createFilterString = (
-  shippingType: ShippingType,
+  shippingType: ShippingType | null,
   status: ShipmentStatus[],
   recipientName: string[],
   originalAddress: string[],
@@ -30,24 +30,30 @@ export const createFilterString = (
 
   if (status.length > 0) {
     filterString += `data.SHIPMENT_STATUS:${status.join(",")}`
+  } else {
+    filterString +=
+      shippingType === ShippingType.Quote
+        ? "data.SHIPMENT_STATUS:QUOTE_READY,QUOTE_QUOTED"
+        : "data.SHIPMENT_STATUS:COMPLETED,CONFIRMED,DELIVERED,DRAFT,IN_DELIVERY,SUBMIT_READY"
   }
 
   if (originalAddress.length > 0) {
-    filterString += `;data.ORIGIN_ADDRESS:${originalAddress.join(",")}`
+    filterString += `;data.ORIGIN_GEOLOC.DISPLAY_NAME:${originalAddress
+      .map((i) => encodeURIComponent(encodeURIComponent(i)))
+      .join(",")}`
   }
 
   if (destinationAddress.length > 0) {
-    filterString += `;data.CONSIGNEE_ADDRESS:${destinationAddress.join(",")}`
+    filterString += `;data.CONSIGNEE_GEOLOC.DISPLAY_NAME:${destinationAddress
+      .map((i) => encodeURIComponent(encodeURIComponent(i)))
+      .join(",")}`
   }
 
   if (recipientName.length > 0) {
-    filterString += `;data.CONSIGNEE_CONTACT:${recipientName.join(",")}`
+    filterString += `;data.CONSIGNEE_CONTACT:${recipientName
+      .map((i) => encodeURIComponent(encodeURIComponent(i)))
+      .join(",")}`
   }
 
-  console.log(filterString)
-  // return filterString
-
-  return shippingType === ShippingType.Quote
-    ? "data.SHIPMENT_STATUS:QUOTE_DRAFT,QUOTE_READY,QUOTE_QUOTED"
-    : "data.SHIPMENT_STATUS:COMPLETED,CONFIRMED,DELIVERED,DRAFT,IN_DELIVERY,SUBMIT_READY"
+  return filterString
 }

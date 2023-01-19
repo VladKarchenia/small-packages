@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { Copy, FormRadioGroup, RateRadioInput, GridContainer, Stack } from "@/shared/components"
-import { ShippingType } from "@/shipment"
-import { ShipmentState } from "@/shared/state"
+import {
+  Copy,
+  FormRadioGroup,
+  RateRadioInput,
+  GridContainer,
+  Stack,
+  Spacer,
+  Button,
+  useStepperContext,
+} from "@/shared/components"
+import { ShippingType, StepActionsBar, StepName } from "@/shipment"
+import { ShipmentState, useShipmentStateContext } from "@/shared/state"
 import { useModalActions } from "@/shared/hooks"
 
 const rates = [
@@ -29,9 +38,16 @@ const rates = [
   },
 ]
 
-export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) => {
+export const DeliveryRates = ({
+  handleContinueClick,
+}: {
+  handleContinueClick?: (step: StepName.RATES, nextStep: StepName.SUMMARY) => void
+}) => {
+  const { shippingType } = useShipmentStateContext()
   const { setValue, watch } = useFormContext<ShipmentState>()
   const { rate } = watch()
+
+  const { setSelected } = useStepperContext("ShipmentRateDetails")
 
   const { open } = useModalActions()
   // TODO: get this expiredRates from shipment data
@@ -40,6 +56,13 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
   const [checkedOption, setCheckedOption] = useState(rate.id)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setCheckedOption(e.target.value)
+
+  const onContinueHandler = () => {
+    setSelected([StepName.SUMMARY])
+    if (handleContinueClick) {
+      handleContinueClick(StepName.RATES, StepName.SUMMARY)
+    }
+  }
 
   // useEffect(() => {
   //   // TODO: need to refetch getRates request with new date
@@ -87,6 +110,19 @@ export const DeliveryRates = ({ shippingType }: { shippingType: ShippingType }) 
         </FormRadioGroup>
         );
       </Stack>
+
+      {shippingType === ShippingType.Shipment ? (
+        <>
+          <Spacer size={{ "@initial": 24, "@sm": 32 }} />
+          <StepActionsBar>
+            <Button onClick={onContinueHandler} full disabled={!rate.name}>
+              <Copy as="span" scale={8} color="system-white" bold>
+                Continue
+              </Copy>
+            </Button>
+          </StepActionsBar>
+        </>
+      ) : null}
     </GridContainer>
   )
 }

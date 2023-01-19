@@ -7,8 +7,8 @@ import {
   Grid,
   GridContainer,
   GridItem,
-  LogoutButton,
   ProfileButton,
+  LogoutButton,
   Spacer,
   Stack,
 } from "@/shared/components"
@@ -16,13 +16,11 @@ import { IconBin, IconCalendar } from "@/shared/icons"
 import { HOME, USER_MANAGEMENT } from "@/constants"
 
 interface IMainLayoutProps {
-  fullContentSize?: boolean
   withGlobalSearch?: boolean
   mobileFullBleed?: boolean
 }
 
 export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = ({
-  fullContentSize = true,
   withGlobalSearch = false,
   mobileFullBleed = true,
   children,
@@ -128,19 +126,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
               columnGap={32}
               css={{ "@sm": { padding: "$32" } }}
             >
-              <GridItem
-                column={
-                  fullContentSize
-                    ? { "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }
-                    : {
-                        "@initial": "1 / span 6",
-                        "@sm": "1 / span 12",
-                        "@lg": "1 / span 16",
-                      }
-                }
-              >
-                {children}
-              </GridItem>
+              {children}
             </Grid>
           </GridItem>
         </Grid>
