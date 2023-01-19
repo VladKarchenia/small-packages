@@ -41,7 +41,7 @@ export interface ResetInput {
 }
 
 export interface ChangeInput {
-  currentPassword: string
-  password: string
+  oldPassword: string
+  newPassword: string
   confirmPassword: string
 }

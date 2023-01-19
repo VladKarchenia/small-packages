@@ -1,24 +1,24 @@
 import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { useMutation } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
+
+import { updateUserPasswordFn } from "@/api/userApi"
 import { ChangeInput } from "@/api/types"
-import { ChangePasswordForm } from "./ChangePasswordForm"
 import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/config"
+
 import { useDrawerActions } from "@/shared/components"
 
-export interface IChangePasswordProps {
-  closeDrawer?: Function
-}
+import { ChangePasswordForm } from "./ChangePasswordForm"
 
 const defaultValues: ChangeInput = {
-  currentPassword: "",
-  password: "",
+  oldPassword: "",
+  newPassword: "",
   confirmPassword: "",
 }
 
-export const ChangePassword: React.FC<IChangePasswordProps> = ({
-  closeDrawer,
-}: IChangePasswordProps) => {
+export const ChangePassword = () => {
   const methods = useForm<ChangeInput>({
     mode: "onChange",
     defaultValues,
@@ -28,23 +28,33 @@ export const ChangePassword: React.FC<IChangePasswordProps> = ({
     handleSubmit,
     formState: { isSubmitSuccessful },
   } = methods
-
   const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
   const { close } = useDrawerActions()
+
+  const { mutate: updatePassword } = useMutation(
+    ({ oldPassword, newPassword }: ChangeInput) => updateUserPasswordFn(oldPassword, newPassword),
+    {
+      onSuccess: () => {
+        toast.success("Your password was successfully changed", {
+          icon: false,
+          position: "bottom-right",
+          progressStyle: {
+            backgroundColor: "black",
+          },
+        })
+      },
+    },
+  )
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful])
+  }, [isSubmitSuccessful, reset])
+
   const onSubmitHandler: SubmitHandler<ChangeInput> = (values) => {
-    // TODO: call request to the BE with new password
+    updatePassword(values)
 
-    // TODO: add this call after successful password change
-
-    // toast.success("Your password was successfully changed")
-    // if (closeDrawer) closeDrawer()
     if (!isSmallAndAbove) {
       close("changePasswordDrawer")
     }

@@ -35,6 +35,16 @@ export const getUserOrganizationsFn = async () => {
   return response.data
 }
 
+// TODO: this is mutation
+export const updateUserPasswordFn = async (oldPassword: string, newPassword: string) => {
+  const response = await userApi.post("users/update_password", {
+    oldPassword,
+    newPassword,
+  })
+
+  return response.data
+}
+
 userApi.interceptors.response.use(
   (response) => {
     return response
