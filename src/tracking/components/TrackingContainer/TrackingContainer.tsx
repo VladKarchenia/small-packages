@@ -81,6 +81,8 @@ export const SHIPMENT_DETAILS = {
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
+  shipmentReturnLabelPDFLink: "https//www.google.ru/PDFReturnLink",
+  shipmentReturnLabelZPLLink: "https//www.google.ru/ZPLReturnLink",
 }
 
 export const TrackingContainer = () => {
