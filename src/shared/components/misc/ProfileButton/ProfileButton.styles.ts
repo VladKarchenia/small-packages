@@ -2,12 +2,9 @@ import { styled } from "@/config"
 
 export const SProfileButton = styled("button", {
   reset: true,
-  borderRadius: "50%",
+  width: "$40",
+  height: "$40",
   backgroundColor: "$neutrals-5",
-  color: "$system-black",
+  borderRadius: "$rounded",
   cursor: "pointer",
-  height: "40px",
-  lineHeight: "40px",
-  textAlign: "center",
-  width: "40px",
 })

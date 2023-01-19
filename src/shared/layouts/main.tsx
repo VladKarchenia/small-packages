@@ -11,6 +11,7 @@ import {
   LogoutButton,
   Spacer,
   Stack,
+  Hidden,
 } from "@/shared/components"
 import { IconBin, IconCalendar } from "@/shared/icons"
 import { HOME, USER_MANAGEMENT } from "@/constants"
@@ -61,10 +62,10 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
               </a>
               <Spacer size={32} horizontal />
               {withGlobalSearch ? (
-                <>
+                <Hidden below="md">
                   <GlobalSearch />
                   <Spacer size={24} horizontal />
-                </>
+                </Hidden>
               ) : null}
             </Flex>
 
