@@ -25,3 +25,7 @@ export interface ICost {
   name: string
   value: number
 }
+
+export interface RouteParams {
+  shipmentId: string
+}

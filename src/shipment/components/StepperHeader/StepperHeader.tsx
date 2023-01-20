@@ -1,20 +1,19 @@
 import { useMutation } from "react-query"
+import { useFormContext } from "react-hook-form"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 
+import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
+import { Role, RouteParams, ShipmentStatus } from "@/shared/types"
 import { ShipmentState, useShipmentStateContext } from "@/shared/state"
 import { useModalActions } from "@/shared/hooks"
-import { Role, ShipmentStatus } from "@/shared/types"
+import { formatShipmentRequestData } from "@/shared/utils"
 
 import { Box, Button, Copy, Flex, HeaderBar, Hidden, useStepperContext } from "@/shared/components"
 import { StepName, getPrevStep, ShippingType, EditActionsButton } from "@/shipment"
-import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
-import { formatShipmentRequestData } from "@/shared/utils"
-import { IShipmentResponse } from "@/api/types"
-import { useFormContext } from "react-hook-form"
-import { TrackingRouteParams } from "@/tracking/types"
 
 export const StepperHeader = ({ title }: { title: string }) => {
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const { shippingType } = useShipmentStateContext()
   const navigate = useNavigate()
   const { selected, setSelected } = useStepperContext("StepperHeader")

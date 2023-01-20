@@ -171,11 +171,11 @@ export const ShipmentDetails = () => {
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Sender’s info" titleScale={11}>
-                <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
+                <PersonInfoShort person={"sender"} sender={sender} />
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Recipient’s info" titleScale={11}>
-                <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
+                <PersonInfoShort person={"recipient"} recipient={recipient} />
               </TrackingDetailsItem>
             </Stack>
           </STrackingGridItem>
@@ -209,7 +209,7 @@ export const ShipmentDetails = () => {
               titleColor={"system-black"}
               titleIndent={24}
             >
-              <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
+              <PersonInfoShort person={"sender"} sender={sender} />
             </TrackingDetailsItem>
             <TrackingDetailsItem
               title="Recipient’s info"
@@ -217,7 +217,7 @@ export const ShipmentDetails = () => {
               titleColor={"system-black"}
               titleIndent={24}
             >
-              <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
+              <PersonInfoShort person={"recipient"} recipient={recipient} />
             </TrackingDetailsItem>
           </Stack>
         </STrackingGridItem>

@@ -4,7 +4,7 @@ import { useQuery } from "react-query"
 
 import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
 import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
-import { TrackingRouteParams } from "@/tracking/types"
+import { RouteParams } from "@/shared/types"
 import { formatShipmentResponseData } from "@/shared/utils"
 
 import { Flex, GridItem } from "@/shared/components"
@@ -12,7 +12,7 @@ import { QuoteForm, ShipmentForm, ShippingType } from "@/shipment"
 import { IllustrationSpinner } from "@/shared/illustrations"
 
 export const StepperContainer = () => {
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const location = useLocation()
   const { shippingType } = useShipmentStateContext()
 

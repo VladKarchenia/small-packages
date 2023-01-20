@@ -203,8 +203,10 @@ export const ShipmentForm = () => {
           // TODO: depends on if it was created in Proship
           receipt: {
             ...prevState.receipt,
-            completed: false,
-            disabled: true,
+            // completed: false,
+            completed: true,
+            // disabled: true,
+            disabled: false,
           },
         }
       })

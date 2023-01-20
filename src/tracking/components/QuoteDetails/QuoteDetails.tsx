@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { format } from "date-fns"
 
 import { mediaQueries } from "@/config"
-import { ShipmentStatus } from "@/shared/types"
+import { RouteParams, ShipmentStatus } from "@/shared/types"
 import { useShipmentStateContext } from "@/shared/state"
 import { useMedia } from "@/shared/hooks"
 import { updateShipmentStatusFn } from "@/api/shipmentApi"
@@ -24,12 +24,11 @@ import { IconCalendar, IconClock } from "@/shared/icons"
 import { TrackingDetailsItem } from "@/tracking"
 
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
-import { TrackingRouteParams } from "@/tracking/types"
 
 export const QuoteDetails = () => {
   const { date, parcels, recipient, sender, shipmentStatus } = useShipmentStateContext()
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
 
   const { mutate: updateShipmentStatus, isLoading } = useMutation(

@@ -18,8 +18,7 @@ import {
   IStepsDataItem,
   ShippingType,
 } from "@/shipment"
-import { TrackingRouteParams } from "@/tracking/types"
-import { ShipmentStatus } from "@/shared/types"
+import { RouteParams, ShipmentStatus } from "@/shared/types"
 
 interface IStepperFormProps {
   title: string
@@ -28,7 +27,7 @@ interface IStepperFormProps {
 }
 
 export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps) => {
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
   const { setShipmentData, setShippingType } = useShipmentActionContext()
   const { date, parcels, rate, recipient, sender, senderReturn, hasReturnAddress, shippingType } =

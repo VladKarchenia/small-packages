@@ -4,8 +4,7 @@ import { useQuery } from "react-query"
 
 import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
 import { ShippingType } from "@/shipment"
-import { ICost, Role } from "@/shared/types"
-import { TrackingRouteParams } from "@/tracking/types"
+import { ICost, Role, RouteParams } from "@/shared/types"
 import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
 import { formatShipmentResponseData } from "@/shared/utils"
 
@@ -87,7 +86,7 @@ export const SHIPMENT_DETAILS = {
 
 export const TrackingContainer = () => {
   const { shippingType } = useShipmentStateContext()
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const { setShipmentData } = useShipmentActionContext()
 
   const { isLoading, isFetching, refetch } = useQuery(

@@ -2,8 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import format from "date-fns/format"
 
 import { ShippingType } from "@/shipment"
-import { Role, ShipmentStatus } from "@/shared/types"
-import { TrackingRouteParams } from "@/tracking/types"
+import { Role, RouteParams, ShipmentStatus } from "@/shared/types"
 
 import { ButtonIcon, Copy, Flex, GridContainer, Stack, StatusLabel } from "@/shared/components"
 import { IconPencil } from "@/shared/icons"
@@ -16,7 +15,7 @@ interface ITrackingHeaderProps {
 
 export const TrackingHeader = ({ shipmentDate }: ITrackingHeaderProps) => {
   const { shippingType, shipmentStatus } = useShipmentStateContext()
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
   // TODO: use Zustand
   const user = JSON.parse(localStorage.getItem("user") || "{}")

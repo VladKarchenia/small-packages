@@ -3,17 +3,16 @@ import { useFormContext } from "react-hook-form"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 
 import { ShipmentState, useShipmentStateContext } from "@/shared/state"
-import { TrackingRouteParams } from "@/tracking/types"
 import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
 import { formatShipmentRequestData } from "@/shared/utils"
-import { ShipmentStatus } from "@/shared/types"
+import { RouteParams, ShipmentStatus } from "@/shared/types"
 import { IShipmentResponse } from "@/api/types"
 
 import { Button, Copy, Flex, Hidden, Link, Spacer, useStepperContext } from "@/shared/components"
 import { StepName, ShippingType, StepActionsBar } from "@/shipment"
 
 export const StepperFooter = () => {
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const { shippingType } = useShipmentStateContext()
   const navigate = useNavigate()
   const { watch, getValues } = useFormContext<ShipmentState>()
