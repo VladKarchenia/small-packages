@@ -9,7 +9,7 @@ export function useDrawer(name: string, defaultOpen?: boolean) {
   const [dialogProps, { container, setContainer }] = useDialog(name, "drawers", defaultOpen)
 
   const [offset, setOffset] = useState<number>(0)
-  const [scrollable, setScrollable] = useState<boolean>(true)
+  const [scrollable, setScrollable] = useState<boolean>(false)
 
   const drawerProps = useMemo<Omit<DrawerProps, "trigger" | "children">>(
     () => ({

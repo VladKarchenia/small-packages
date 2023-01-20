@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useQuery } from "react-query"
+import format from "date-fns/format"
+
+import { CSS, styled } from "@/config"
+import { getAllShipmentsFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
+import { ShippingType } from "@/shipment"
+import { ShipmentStatus } from "@/shared/types"
+import { createFilterString, createSortString } from "@/shared/utils"
+import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+
 import {
   TableRow,
   Table,
@@ -11,32 +22,27 @@ import {
   Copy,
   CreateButton,
 } from "@/shared/components"
-import { ShippingType } from "@/shipment"
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+
 import { DashboardTableHead } from "./DashboardTableHead"
 import { DashboardTablePlaceholder } from "./DashboardTablePlaceholder"
 import { ActionDetailsButton } from "../ActionDetailsButton"
-import { CSS, styled } from "@/config"
 import { DashboardTableStatusFilter } from "../DashboardTableStatusFilter"
 import { DashboardTableNameFilter } from "../DashboardTableNameFilter"
 import { DashboardTableOriginAddressFilter } from "../DashboardTableOriginAddressFilter"
 import { DashboardTableDestinationAddressFilter } from "../DashboardTableDestinationAddressFilter"
-import { IShipmentResponse } from "@/api/types"
-import { useQuery } from "react-query"
-import { getAllShipmentsFn } from "@/api/shipmentApi"
-import { createFilterString, createSortString } from "@/shared/utils"
-import format from "date-fns/format"
-import { ShipmentStatus } from "@/shared/types"
 
-interface ITableProps {
-  shippingType: ShippingType
-}
-
-export const DashboardTable = ({ shippingType }: ITableProps) => {
+export const DashboardTable = () => {
   const { t } = useTranslation()
   const [shipments, setShipments] = useState<IShipmentResponse[]>([])
-  const { status, recipientName, originalAddress, destinationAddress, sortOrder, direction } =
-    useDashboardStateContext()
+  const {
+    status,
+    recipientName,
+    originalAddress,
+    destinationAddress,
+    sortOrder,
+    direction,
+    shippingType,
+  } = useDashboardStateContext()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
@@ -54,13 +60,12 @@ export const DashboardTable = ({ shippingType }: ITableProps) => {
     resetFilterField("destinationAddress")
   }
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  // TODO: probably we need to use only isLoading to show skeleton
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["getShipments"],
     () =>
       getAllShipmentsFn({
-        organizationId: user?.activeOrganizationId,
         // TODO: sort and filters should be placed also in zustand and be used here
         filter: createFilterString(
           shippingType,
@@ -74,9 +79,8 @@ export const DashboardTable = ({ shippingType }: ITableProps) => {
     {
       enabled: false,
       onSuccess: (data) => {
-        setShipments(data.content)
         // maybe we also need to set shipments into zustand as a cache?
-        // return setShipmentContext(formatShipmentResponseData(shipment.data))
+        setShipments(data.content)
       },
     },
   )
@@ -95,30 +99,8 @@ export const DashboardTable = ({ shippingType }: ITableProps) => {
   ])
 
   if (isLoading || isFetching) {
-    return <DashboardTablePlaceholder shippingType={shippingType} />
-  }
-
-  if (!isLoading && !isFetching && !shipments.length) {
     return (
-      <Table caption="Dashboard table">
-        <DashboardTableHead shippingType={shippingType} />
-        <TableBody>
-          <TableRow>
-            <TabularData
-              colSpan={5}
-              css={{
-                padding: "$0",
-                borderBottom: "1px solid $neutrals-0",
-                firstChild: { padding: "$0" },
-                height: `calc((var(--vh) * 100) - $192 - $128 - $48)`,
-              }}
-            >
-              Empty
-              {/* <ResetYourFiltersMessage /> */}
-            </TabularData>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <DashboardTablePlaceholder shippingType={shippingType} isFilterApplied={isFilterApplied} />
     )
   }
 
@@ -153,66 +135,79 @@ export const DashboardTable = ({ shippingType }: ITableProps) => {
             </Copy>
           ) : null}
         </Flex>
-        <Spacer size={24} horizontal />
-        <Flex align="center">
-          <Copy scale={9} css={{ paddingRight: "$4" }}>
-            Found:
+        <Copy scale={9}>
+          Found:
+          <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$4" }}>
+            {shipments.length}
           </Copy>
-          <Copy scale={9} color="system-black" bold>
-            12/{shipments.length}
-          </Copy>
-        </Flex>
+        </Copy>
       </Flex>
 
       <Table caption="Dashboard table">
-        <DashboardTableHead shippingType={shippingType} />
+        <DashboardTableHead />
         <TableBody>
-          {shipments.map((shipment) => {
-            const href = `/tracking/${shipment.id}`
+          {!isLoading && !isFetching && shipments.length > 0 ? (
+            shipments.map((shipment) => {
+              const href = `/tracking/${shipment.id}`
 
-            return (
-              <TableRow key={shipment?.id}>
-                <TabularDataLink href={href} text={shipment?.id} />
-                {shippingType === ShippingType.Shipment ? (
-                  <>
-                    {/* <TabularDataLink href={href} text={shipment?.sender?.name} />
-                    <TabularDataLink href={href} text={shipment?.recipient?.name} /> */}
-                    <TabularDataLink href={href} text={shipment?.data.ORIGIN_CONTACT || "-"} />
-                    <TabularDataLink href={href} text={shipment?.data.CONSIGNEE_CONTACT || "-"} />
-                  </>
-                ) : (
+              return (
+                <TableRow key={shipment.id}>
+                  <TabularDataLink href={href} text={shipment.id} />
+                  {shippingType === ShippingType.Shipment ? (
+                    <>
+                      <TabularDataLink href={href} text={shipment.data.ORIGIN_CONTACT || "-"} />
+                      <TabularDataLink href={href} text={shipment.data.CONSIGNEE_CONTACT || "-"} />
+                    </>
+                  ) : (
+                    <TabularDataLink
+                      href={href}
+                      tdCss={{ maxWidth: 200 }}
+                      linkCss={{ "@lg": { paddingRight: "$80" } }}
+                      // text={shipment.sender?.fullAddress?.displayName}
+                      text={shipment.data.ORIGIN_ADDRESS1 || "-"}
+                      showTitle
+                    />
+                  )}
                   <TabularDataLink
                     href={href}
                     tdCss={{ maxWidth: 200 }}
                     linkCss={{ "@lg": { paddingRight: "$80" } }}
-                    // text={shipment?.sender?.fullAddress?.displayName}
-                    text={shipment?.data.ORIGIN_ADDRESS1 || "-"}
+                    // text={shipment.recipient?.fullAddress?.displayName}
+                    text={shipment.data.CONSIGNEE_ADDRESS1 || "-"}
                     showTitle
                   />
-                )}
-                <TabularDataLink
-                  href={href}
-                  tdCss={{ maxWidth: 200 }}
-                  linkCss={{ "@lg": { paddingRight: "$80" } }}
-                  // text={shipment?.recipient?.fullAddress?.displayName}
-                  text={shipment?.data.CONSIGNEE_ADDRESS1 || "-"}
-                  showTitle
-                />
-                {/* <TabularDataLink href={href} text={shipment?.creationDate} /> */}
-                <TabularDataLink
-                  href={href}
-                  text={format(new Date(shipment?.createdAt), "MMM d, yyyy")}
-                />
-                <TabularDataLink href={href} linkCss={{ paddingRight: "$0" }}>
-                  <Flex align="center" justify="between" css={{ width: "100%" }}>
-                    <StatusLabel status={ShipmentStatus[shipment?.data.SHIPMENT_STATUS]} />
-                    <Spacer size={8} horizontal />
-                    <ActionDetailsButton shippingType={shippingType} shipmentId={shipment.id} />
-                  </Flex>
-                </TabularDataLink>
-              </TableRow>
-            )
-          })}
+                  <TabularDataLink
+                    href={href}
+                    text={format(new Date(shipment.createdAt), "MMM d, yyyy (OOO)")}
+                  />
+                  <TabularDataLink href={href} linkCss={{ paddingRight: "$0" }}>
+                    <Flex align="center" justify="between" css={{ width: "100%", height: "100%" }}>
+                      <StatusLabel status={ShipmentStatus[shipment.data.SHIPMENT_STATUS]} />
+                      <Spacer size={8} horizontal />
+                      <ActionDetailsButton shippingType={shippingType} shipmentId={shipment.id} />
+                    </Flex>
+                  </TabularDataLink>
+                </TableRow>
+              )
+            })
+          ) : (
+            <TableRow
+              css={{
+                hover: {
+                  backgroundColor: "inherit",
+                },
+              }}
+            >
+              <TabularData colSpan={6} css={{ textAlign: "center", cursor: "default" }}>
+                <Copy as="span" scale={8} color="system-black">
+                  {isFilterApplied
+                    ? "There are no issues that match your filter"
+                    : "There is no data yet"}
+                </Copy>
+                {/* <ResetYourFiltersMessage /> */}
+              </TabularData>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </>

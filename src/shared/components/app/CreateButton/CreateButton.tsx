@@ -10,9 +10,8 @@ export const CreateButton = () => {
 
   return (
     <Dropdown
-      asChild
       trigger={
-        <SCreateButton type="button">
+        <SCreateButton>
           <Copy as="span" scale={8} color="system-white" bold>
             Create
           </Copy>
@@ -22,6 +21,11 @@ export const CreateButton = () => {
       }
       open={isCreateDropdownOpen}
       onOpenChange={() => setCreateDropdownOpen(!isCreateDropdownOpen)}
+      triggerCss={{
+        position: "absolute",
+        top: "-82px",
+        right: "$0",
+      }}
       contentCss={{
         paddingY: "$0",
         borderRadius: "$8",

@@ -26,7 +26,7 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
         <SearchFilterDrawer
           drawerName="dateInput"
           drawerTitle="Date and Time"
-          value={date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+          value={date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
           placeholder={"Select date and time"}
           hidePlaceholder
           closeIcon={<IconArrowLeft />}
@@ -41,7 +41,7 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
           <PopoverAnchor asChild>
             <SearchFilterDrawerPreview
               ref={triggerRef}
-              value={date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+              value={date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
               suffix={<IconCalendar />}
               placeholder={"Select date and time"}
               hidePlaceholder

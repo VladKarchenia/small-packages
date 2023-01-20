@@ -1,10 +1,13 @@
+import { useMutation } from "react-query"
+import { useNavigate, useParams } from "react-router-dom"
 import { format } from "date-fns"
 
 import { mediaQueries } from "@/config"
-import { ShippingType } from "@/shipment"
-import { ShipmentStatus } from "@/shared/types"
+import { RouteParams, ShipmentStatus } from "@/shared/types"
 import { useShipmentStateContext } from "@/shared/state"
 import { useMedia } from "@/shared/hooks"
+import { updateShipmentStatusFn } from "@/api/shipmentApi"
+import { IShipmentResponse } from "@/api/types"
 
 import {
   AddressInfoShort,
@@ -19,16 +22,27 @@ import {
 } from "@/shared/components"
 import { IconCalendar, IconClock } from "@/shared/icons"
 import { TrackingDetailsItem } from "@/tracking"
+
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
-interface IQuoteDetailsProps {
-  shippingType?: ShippingType
-  status: ShipmentStatus | null
-}
-
-export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
-  const { date, parcels, recipient, sender } = useShipmentStateContext()
+export const QuoteDetails = () => {
+  const { date, parcels, recipient, sender, shipmentStatus } = useShipmentStateContext()
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const navigate = useNavigate()
+
+  const { mutate: updateShipmentStatus, isLoading } = useMutation(
+    () =>
+      updateShipmentStatusFn(
+        shipmentId,
+        Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(ShipmentStatus.DRAFT)],
+      ),
+    {
+      onSuccess: ({ id }: IShipmentResponse) => {
+        navigate(`/edit/shipment/${id}`)
+      },
+    },
+  )
 
   return (
     <GridContainer
@@ -56,17 +70,14 @@ export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
             title="From where to where"
             titleScale={{ "@initial": 11, "@md": 9 }}
           >
-            <AddressInfoShort
-              fromAddress={sender.fullAddress.displayName}
-              toAddress={recipient.fullAddress.displayName}
-            />
+            <AddressInfoShort fromAddress={sender.fullAddress} toAddress={recipient.fullAddress} />
           </TrackingDetailsItem>
 
           <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Flex align="center">
               <IconClock size="xs" css={{ paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
-                {date ? format(date, "MMM d, yyyy hh:mm aa") : ""}
+                {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
               </Copy>
             </Flex>
           </TrackingDetailsItem>
@@ -104,7 +115,7 @@ export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
           </TrackingDetailsItem>
         </Stack>
       </STrackingSection>
-      {status !== ShipmentStatus.CANCELLED ? (
+      {shipmentStatus !== ShipmentStatus.CANCELLED ? (
         <>
           <Spacer size={32} />
           <Button
@@ -116,8 +127,7 @@ export const QuoteDetails = ({ status }: IQuoteDetailsProps) => {
             //   (shippingType === ShippingType.Shipment && !rate.name)
             // }
 
-            // TODO: add click handler
-            onClick={() => console.log("Create a shipment click")}
+            onClick={() => updateShipmentStatus()}
           >
             <Copy as="span" scale={8} color="system-white" bold>
               Create a shipment

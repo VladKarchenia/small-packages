@@ -1,22 +1,29 @@
-import { Flex, Redacted, Spacer } from "@/shared/components"
+import { Divider, Flex, Redacted, Stack } from "@/shared/components"
+
+import { SShippingCard } from "./ShippingCardPlaceholder.styles"
 
 export const ShippingCardPlaceholder = () => (
-  <>
-    <Flex>
-      <Redacted height="$24" width="100px" text animated />
-      <Spacer horizontal size={16} />
-      <Redacted height="$24" width="64px" text animated />
+  <SShippingCard>
+    <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
+      <Stack space={4}>
+        <Redacted height="$32" width="200px" text animated />
+        <Redacted height="$24" width="80px" text animated />
+      </Stack>
     </Flex>
-    <Flex css={{ marginTop: "$2" }}>
-      <Redacted height="$24" width="64px" text animated />
-      <Spacer size={24} horizontal />
-      <Redacted height="$24" width="160px" text animated />
-    </Flex>
-    <Spacer size={16} />
-    <Redacted height="$24" width="120px" text animated />
-    <Flex justify="between">
-      <Redacted height="$24" width="80px" text animated />
-      <Redacted height="$24" width="64px" text animated />
-    </Flex>
-  </>
+    <Divider />
+    <Stack space={12} css={{ marginTop: "$16" }}>
+      <Flex justify="between">
+        <Redacted height="$24" width="80px" text animated />
+        <Redacted height="$24" width="80px" text animated />
+      </Flex>
+      <Flex justify="between">
+        <Redacted height="$24" width="100px" text animated />
+        <Redacted height="$24" width="80px" text animated />
+      </Flex>
+      <Flex justify="between">
+        <Redacted height="$24" width="120px" text animated />
+        <Redacted height="$24" width="80px" text animated />
+      </Flex>
+    </Stack>
+  </SShippingCard>
 )

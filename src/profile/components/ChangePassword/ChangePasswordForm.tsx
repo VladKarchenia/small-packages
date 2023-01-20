@@ -24,7 +24,7 @@ export const ChangePasswordForm = ({
   const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
   const toggleConfirmPasswordVisibility = () => setConfirmPasswordShown(!confirmPasswordShown)
   const toggleCurrentPasswordVisibility = () => setCurrentPasswordShown(!currentPasswordShown)
-  const { password } = watch()
+  const { newPassword } = watch()
 
   return (
     <Flex justify="center" direction="column">
@@ -37,8 +37,8 @@ export const ChangePasswordForm = ({
         {/*TODO: maybe need add some component for input passwords*/}
         <Controller
           control={control}
-          defaultValue={defaultValues.currentPassword}
-          name="currentPassword"
+          defaultValue={defaultValues.oldPassword}
+          name="oldPassword"
           render={({ field }) => {
             return (
               <FormInput
@@ -49,7 +49,7 @@ export const ChangePasswordForm = ({
                     message: "Required field",
                   },
                 })}
-                id="Current password"
+                id="Old password"
                 label="Current password"
                 labelProps={{ hidden: true, required: true }}
                 description="Current password"
@@ -70,8 +70,8 @@ export const ChangePasswordForm = ({
         />
         <Controller
           control={control}
-          defaultValue={defaultValues.password}
-          name="password"
+          defaultValue={defaultValues.newPassword}
+          name="newPassword"
           render={({ field }) => {
             return (
               <FormInput
@@ -136,7 +136,7 @@ export const ChangePasswordForm = ({
                     message: "Only alphanumeric characters allowed",
                   },
                   validate: {
-                    matching: (v: string) => v === password || "Passwords not match",
+                    matching: (v: string) => v === newPassword || "Passwords not match",
                   },
                   minLength: {
                     value: 7,

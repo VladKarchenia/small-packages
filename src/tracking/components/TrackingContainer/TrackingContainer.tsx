@@ -4,8 +4,7 @@ import { useQuery } from "react-query"
 
 import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
 import { ShippingType } from "@/shipment"
-import { ICost, Role } from "@/shared/types"
-import { TrackingRouteParams } from "@/tracking/types"
+import { ICost, Role, RouteParams } from "@/shared/types"
 import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
 import { formatShipmentResponseData } from "@/shared/utils"
 
@@ -15,6 +14,8 @@ import {
   QuoteDetails,
   TrackingMain,
 } from "@/tracking"
+import { Flex } from "@/shared/components"
+import { IllustrationSpinner } from "@/shared/illustrations"
 
 export const costs: ICost[] = [
   {
@@ -79,12 +80,14 @@ export const SHIPMENT_DETAILS = {
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
+  shipmentReturnLabelPDFLink: "https//www.google.ru/PDFReturnLink",
+  shipmentReturnLabelZPLLink: "https//www.google.ru/ZPLReturnLink",
 }
 
 export const TrackingContainer = () => {
-  const { shipmentStatus, shippingType } = useShipmentStateContext()
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
-  const setShipmentContext = useShipmentActionContext()
+  const { shippingType } = useShipmentStateContext()
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const { setShipmentData } = useShipmentActionContext()
 
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
@@ -94,7 +97,7 @@ export const TrackingContainer = () => {
       enabled: false,
       // enabled: !!shipmentId,
       onSuccess: (shipment) => {
-        return setShipmentContext(formatShipmentResponseData(shipment.data))
+        return setShipmentData(formatShipmentResponseData(shipment.data))
       },
     },
   )
@@ -102,7 +105,7 @@ export const TrackingContainer = () => {
   // TODO: use Zustand
   const user = JSON.parse(localStorage.getItem("user") || "{}")
   const role = user?.authorities?.[0]?.authority
-  const accessToken = window.localStorage.getItem("accessToken") || ""
+  const accessToken = localStorage.getItem("accessToken") || ""
 
   useEffect(() => {
     if (accessToken) {
@@ -114,40 +117,36 @@ export const TrackingContainer = () => {
     }
   }, [accessToken, refetch])
 
-  if (shippingType === ShippingType.Quote) {
+  if (isLoading || isFetching || !shippingType) {
     return (
-      <TrackingMain
-        headerTitle="Quote detail"
-        shipmentDate={new Date()}
-        shippingType={shippingType}
-        status={shipmentStatus}
+      <Flex
+        align="center"
+        justify="center"
+        css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, textAlign: "center" }}
       >
-        <QuoteDetails shippingType={shippingType} status={shipmentStatus} />
-      </TrackingMain>
+        <IllustrationSpinner css={{ display: "block", height: "$32", width: "$32" }} />
+      </Flex>
     )
   }
 
-  if (role === Role.Admin) {
+  // TODO: need to add condition to show this component
+  // return (
+  //   <TrackingMain headerTitle="Shipment details" shipmentDate={new Date()}>
+  //     <ShipmentDetailsUnauthorized />
+  //   </TrackingMain>
+  // )
+
+  if (shippingType === ShippingType.Quote) {
     return (
-      <TrackingMain
-        headerTitle="Shipment details"
-        shipmentDate={new Date()}
-        shippingType={shippingType}
-        status={shipmentStatus}
-      >
-        <ShipmentDetails />
+      <TrackingMain headerTitle="Quote detail" shipmentDate={new Date()}>
+        <QuoteDetails />
       </TrackingMain>
     )
   }
 
   return (
-    <TrackingMain
-      headerTitle="Shipment details"
-      shipmentDate={new Date()}
-      shippingType={shippingType}
-      status={shipmentStatus}
-    >
-      <ShipmentDetailsUnauthorized />
+    <TrackingMain headerTitle="Shipment details" shipmentDate={new Date()}>
+      <ShipmentDetails />
     </TrackingMain>
   )
 }

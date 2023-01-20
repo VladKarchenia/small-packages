@@ -1,22 +1,18 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
 import {
   IStep,
   StepName,
   ShipmentDetails,
-  ShipmentDetailsShort,
   DeliveryRates,
-  DeliveryRatesShort,
   ShipmentStep,
-  PersonInfoCollapsed,
   PersonInfo,
-  ShippingType,
   StepperForm,
   IStepsDataItem,
   ShipmentDateDetails,
-  ShipmentDateDetailsShort,
-  SummaryInfo,
+  Summary,
+  Receipt,
 } from "@/shipment"
 
 type StepperState = {
@@ -25,6 +21,8 @@ type StepperState = {
   shipment: IStep
   date: IStep
   rates: IStep
+  summary: IStep
+  receipt: IStep
 }
 
 const initialState: StepperState = {
@@ -58,10 +56,23 @@ const initialState: StepperState = {
     disabled: true,
     stepNumber: 5,
   },
+  summary: {
+    name: "summary",
+    completed: false,
+    disabled: true,
+    stepNumber: 6,
+  },
+  receipt: {
+    name: "receipt",
+    completed: false,
+    disabled: true,
+    stepNumber: 7,
+  },
 }
 
 export const ShipmentForm = () => {
   const [stepperState, setStepperState] = useState(initialState)
+  const [defaultStep, setDefaultStep] = useState<StepName | null>(null)
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
 
@@ -89,14 +100,26 @@ export const ShipmentForm = () => {
     {
       title: "Ship From",
       data: stepperState.from,
-      mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="sender" />,
-      shortContent: <PersonInfoCollapsed person="sender" />,
+      mainContent: (
+        <PersonInfo
+          handleContinueClick={handleContinueClick}
+          person="sender"
+          setStepperState={setStepperState}
+        />
+      ),
+      // shortContent: <PersonInfoCollapsed person="sender" />,
     },
     {
       title: "Ship To",
       data: stepperState.to,
-      mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="recipient" />,
-      shortContent: <PersonInfoCollapsed person="recipient" />,
+      mainContent: (
+        <PersonInfo
+          handleContinueClick={handleContinueClick}
+          person="recipient"
+          setStepperState={setStepperState}
+        />
+      ),
+      // shortContent: <PersonInfoCollapsed person="recipient" />,
     },
     {
       title: "Shipment Details",
@@ -104,41 +127,98 @@ export const ShipmentForm = () => {
       mainContent: (
         <ShipmentDetails
           handleContinueClick={handleContinueClick}
-          shippingType={ShippingType.Shipment}
+          setStepperState={setStepperState}
         />
       ),
-      shortContent: <ShipmentDetailsShort shippingType={ShippingType.Shipment} />,
+      // shortContent: <ShipmentDetailsShort />,
     },
     {
       title: "Ready Date",
       data: stepperState.date,
       mainContent: (
         <ShipmentDateDetails
-          shippingType={ShippingType.Shipment}
           handleContinueClick={handleContinueClick}
+          setStepperState={setStepperState}
         />
       ),
-      shortContent: <ShipmentDateDetailsShort />,
+      // shortContent: <ShipmentDateDetailsShort />,
     },
     {
       title: "Delivery Rates",
       data: stepperState.rates,
-      mainContent: <DeliveryRates shippingType={ShippingType.Shipment} />,
-      shortContent: <DeliveryRatesShort />,
+      mainContent: <DeliveryRates handleContinueClick={handleContinueClick} />,
+      // shortContent: <DeliveryRatesShort />,
     },
     {
-      title: "Summary ",
-      data: stepperState.rates,
-      mainContent: <SummaryInfo />,
-      shortContent: <DeliveryRatesShort />,
+      title: "Summary",
+      data: stepperState.summary,
+      mainContent: <Summary handleContinueClick={handleContinueClick} />,
+    },
+    {
+      title: "Receipt",
+      data: stepperState.receipt,
+      mainContent: <Receipt />,
     },
   ]
 
+  useEffect(() => {
+    // set active step
+    setDefaultStep(StepName.FROM)
+    // check expired date and time ->
+    // set stepper state
+    if (isEditMode) {
+      setStepperState((prevState) => {
+        return {
+          ...prevState,
+          from: {
+            ...prevState.from,
+            completed: true,
+            disabled: false,
+          },
+          to: {
+            ...prevState.to,
+            completed: true,
+            disabled: false,
+          },
+          shipment: {
+            ...prevState.shipment,
+            completed: true,
+            disabled: false,
+          },
+          date: {
+            ...prevState.date,
+            completed: true,
+            disabled: false,
+          },
+          rates: {
+            ...prevState.rates,
+            completed: true,
+            disabled: false,
+          },
+          summary: {
+            ...prevState.summary,
+            completed: true,
+            disabled: false,
+          },
+          // TODO: depends on if it was created in Proship
+          receipt: {
+            ...prevState.receipt,
+            // completed: false,
+            completed: true,
+            // disabled: true,
+            disabled: false,
+          },
+        }
+      })
+    }
+  }, [])
+
+  if (!defaultStep) return null
+
   return (
     <StepperForm
-      shippingType={ShippingType.Shipment}
       title={isEditMode ? "Edit a shipment" : "Create a shipment"}
-      defaultStep={StepName.FROM}
+      defaultStep={defaultStep}
       stepsData={stepsData}
     />
   )

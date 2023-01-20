@@ -21,7 +21,7 @@ export const SRateRadioInput = styled("input", {
 
   disabled: {
     [`+ ${SRateRadioInputBox}`]: {
-      opacity: 0.5,
+      cursor: "default",
     },
   },
 

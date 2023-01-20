@@ -1,3 +1,5 @@
+import { IStep } from "@/shipment"
+
 import {
   Copy,
   Flex,
@@ -8,17 +10,15 @@ import {
   StepperPanel,
 } from "@/shared/components"
 import { IconTick } from "@/shared/icons"
-import { IStep } from "@/shipment"
 
 interface IStepperItemProps {
   title: string
   data: IStep
   mainContent: React.ReactNode
-  shortContent: React.ReactNode
   totalSteps: number
 }
 
-export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }: IStepperItemProps) => {
+export const StepItem = ({ title, data, mainContent, totalSteps }: IStepperItemProps) => {
   const { name, disabled, stepNumber, completed } = data
   const isStepLast = data.stepNumber === totalSteps
 
@@ -62,7 +62,7 @@ export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }:
           </Flex>
         </StepperButton>
       </StepperHeader>
-      <StepperPanel mainContent={mainContent} shortContent={shortContent} isStepLast={isStepLast} />
+      <StepperPanel mainContent={mainContent} isStepLast={isStepLast} />
     </StepperItem>
   )
 }

@@ -58,7 +58,9 @@ export const TableBody: React.FC<React.PropsWithChildren<unknown>> = ({ children
   <STableBody {...props}>{children}</STableBody>
 )
 
-export const TableRow: React.FC<IRow> = ({ children }) => <STableRow>{children}</STableRow>
+export const TableRow: React.FC<React.PropsWithChildren<IRow>> = ({ children, ...props }) => (
+  <STableRow {...props}>{children}</STableRow>
+)
 
 /**
  * A tabular head element with a Copy component already configured

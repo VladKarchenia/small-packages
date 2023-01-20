@@ -1,3 +1,13 @@
+import { shipmentStatusesList } from "@/constants"
+import {
+  ShipmentsPagedOrderBy,
+  SortDirection,
+  useDashboardActionContext,
+  useDashboardStateContext,
+} from "@/dashboard/state"
+import { ShipmentStatus } from "@/shared/types"
+import { ShippingType } from "@/shipment"
+
 import {
   Grid,
   Flex,
@@ -14,40 +24,14 @@ import {
   Box,
 } from "@/shared/components"
 import { IconChevronLeft } from "@/shared/icons"
-import {
-  ShipmentsPagedOrderBy,
-  SortDirection,
-  useDashboardActionContext,
-  useDashboardStateContext,
-} from "@/dashboard/state"
-import { ShipmentStatus, IAddress } from "@/shared/types"
-import { ShippingType } from "@/shipment"
-
-export interface ISortFiltertFormProps {
-  shippingType: ShippingType
-}
 
 const getEnumKey = (value: any) =>
   Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(value)]
 
-const shipmentStatuses = [
-  ShipmentStatus.COMPLETED,
-  ShipmentStatus.CONFIRMED,
-  ShipmentStatus.DELIVERED,
-  ShipmentStatus.DRAFT,
-  ShipmentStatus.IN_DELIVERY,
-  ShipmentStatus.SUBMIT_READY,
-  ShipmentStatus.CANCELLED,
-]
-
-const shipmentStatusesList: ShipmentStatus[] = Object.values(ShipmentStatus).filter((status) =>
-  shipmentStatuses.includes(status),
-)
-
 const sortingShipmentList: ShipmentsPagedOrderBy[] = Object.values(ShipmentsPagedOrderBy)
 
-export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType }) => {
-  const { sortOrder, status, recipientName, originalAddress, destinationAddress } =
+export const SortFiltertForm = () => {
+  const { sortOrder, status, recipientName, originalAddress, destinationAddress, shippingType } =
     useDashboardStateContext()
   const {
     setSortOrder,
@@ -178,14 +162,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
               description="Recipient's name"
               placeholder="Recipient's name"
               closeIcon={<IconChevronLeft />}
-              drawerForm={
-                <SearchFilterDrawerForm
-                  // initialValue={recipientName || ""}
-                  // onSelect={(name: string) => setRecipientNameFilter(name)}
-                  // placeholder="Search for recipient's name"
-                  comboboxType="recipientName"
-                />
-              }
+              drawerForm={<SearchFilterDrawerForm comboboxType="recipientName" />}
             />
           ) : null}
 
@@ -197,14 +174,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
               description="Origin address"
               placeholder="Origin address"
               closeIcon={<IconChevronLeft />}
-              drawerForm={
-                <SearchFilterDrawerForm
-                  // initialValue={originalAddress?.displayName || ""}
-                  // onSelect={(address: IAddress) => setOriginalAddressFilter(address)}
-                  // placeholder="Original address"
-                  comboboxType="originalAddress"
-                />
-              }
+              drawerForm={<SearchFilterDrawerForm comboboxType="originalAddress" />}
             />
           ) : null}
 
@@ -215,14 +185,7 @@ export const SortFiltertForm: React.FC<ISortFiltertFormProps> = ({ shippingType 
             description="Destination address"
             placeholder="Destination address"
             closeIcon={<IconChevronLeft />}
-            drawerForm={
-              <SearchFilterDrawerForm
-                // initialValue={destinationAddress?.displayName || ""}
-                // onSelect={(address: IAddress) => setDestinationAddressFilter(address)}
-                // placeholder="Destination address"
-                comboboxType="destinationAddress"
-              />
-            }
+            drawerForm={<SearchFilterDrawerForm comboboxType="destinationAddress" />}
           />
         </Stack>
       </Flex>
