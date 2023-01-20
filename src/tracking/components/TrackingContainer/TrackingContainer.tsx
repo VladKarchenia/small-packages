@@ -8,14 +8,17 @@ import { ICost, Role, RouteParams } from "@/shared/types"
 import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
 import { formatShipmentResponseData } from "@/shared/utils"
 
+import { Flex } from "@/shared/components"
+import { IllustrationSpinner } from "@/shared/illustrations"
 import {
   ShipmentDetailsUnauthorized,
   ShipmentDetails,
   QuoteDetails,
   TrackingMain,
+  TrackingPlaceholderShipment,
+  TrackingPlaceholderQuote,
+  TrackingPlaceholderShipmentUnauthorized,
 } from "@/tracking"
-import { Flex } from "@/shared/components"
-import { IllustrationSpinner } from "@/shared/illustrations"
 
 export const costs: ICost[] = [
   {
@@ -118,6 +121,17 @@ export const TrackingContainer = () => {
   }, [accessToken, refetch])
 
   if (isLoading || isFetching || !shippingType) {
+    if (shippingType === ShippingType.Quote) {
+      return <TrackingPlaceholderQuote />
+    }
+
+    if (shippingType === ShippingType.Shipment) {
+      return <TrackingPlaceholderShipment />
+
+      // TODO: need to add condition to show this component
+      // return <TrackingPlaceholderShipmentUnauthorized />
+    }
+
     return (
       <Flex
         align="center"

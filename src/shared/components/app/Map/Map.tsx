@@ -1,9 +1,13 @@
 import { useRef } from "react"
 import { Routing } from "leaflet"
-import { MapContainer, TileLayer } from "react-leaflet"
-import { Box } from "@/shared/components"
-import { RoutingMachine } from "@/shipment"
+import { TileLayer } from "react-leaflet"
+
 import { useShipmentStateContext } from "@/shared/state"
+
+import { Box, Copy } from "@/shared/components"
+import { RoutingMachine } from "@/shipment"
+
+import { SEmptyMapContainer, SMapContainer } from "./Map.styles"
 
 export const Map = () => {
   const { recipient, sender } = useShipmentStateContext()
@@ -15,13 +19,18 @@ export const Map = () => {
     !recipient.fullAddress.latitude ||
     !recipient.fullAddress.longitude
   ) {
-    return <Box css={{ height: "100%" }}>No map</Box>
+    return (
+      <SEmptyMapContainer align="center" justify="center">
+        <Copy scale={7} color="system-black">
+          No map
+        </Copy>
+      </SEmptyMapContainer>
+    )
   }
 
   return (
     <Box css={{ height: "100%" }}>
-      <MapContainer
-        style={{ minHeight: "260px", height: "inherit", zIndex: "var(--zIndices-2)" }}
+      <SMapContainer
         center={[
           Math.abs(
             parseFloat(sender.fullAddress.latitude) - parseFloat(recipient.fullAddress.latitude),
@@ -44,7 +53,7 @@ export const Map = () => {
           // recipientLat={recipient.fullAddress.latitude}
           // recipientLong={recipient.fullAddress.longitude}
         />
-      </MapContainer>
+      </SMapContainer>
     </Box>
   )
 }

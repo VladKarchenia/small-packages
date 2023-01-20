@@ -55,7 +55,7 @@ export const ShipmentDetailsUnauthorized = () => {
                 />
               </TrackingDetailsItem>
               <TrackingDetailsItem title="Date and delivery service">
-                <Stack space={16}>
+                <Stack space={12}>
                   <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                     Arrival date: {SHIPMENT_DETAILS.arrivalDate}
@@ -71,14 +71,12 @@ export const ShipmentDetailsUnauthorized = () => {
         <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
           <STrackingGridItem css={{ gridArea: "main" }}>
             <Stack space={24} dividers>
-              <>
-                <TrackingDetailsItem title="From where to where" titleScale={11}>
-                  <AddressInfoShort
-                    fromAddress={sender.fullAddress}
-                    toAddress={recipient.fullAddress}
-                  />
-                </TrackingDetailsItem>
-              </>
+              <TrackingDetailsItem title="From where to where" titleScale={11}>
+                <AddressInfoShort
+                  fromAddress={sender.fullAddress}
+                  toAddress={recipient.fullAddress}
+                />
+              </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                 <Stack space={12}>
@@ -98,10 +96,7 @@ export const ShipmentDetailsUnauthorized = () => {
         </GridContainer>
       </Hidden>
 
-      <GridItem
-        column={{ "@md": "span 3" }}
-        css={{ gridArea: "map", margin: "0 -$16", "@sm": { margin: "0" } }}
-      >
+      <GridItem column={{ "@md": "span 3" }} css={{ gridArea: "map" }}>
         <Map />
       </GridItem>
 

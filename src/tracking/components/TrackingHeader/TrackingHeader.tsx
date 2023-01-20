@@ -49,6 +49,7 @@ export const TrackingHeader = ({ shipmentDate }: ITrackingHeaderProps) => {
               ariaLabel="Edit shipment"
               icon={<IconPencil />}
               onClick={handleEditClick}
+              css={{ height: "$32" }}
             />
           ) : null}
         </Flex>

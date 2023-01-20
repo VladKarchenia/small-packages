@@ -33,6 +33,7 @@ export const SRoutePointWrapper = styled(Flex, {
 
 export const SRoutePointIcon = styled(Flex, {
   width: "$24",
+  minWidth: "$24",
   height: "$24",
   backgroundColor: "$neutrals-5",
   borderRadius: "$rounded",
