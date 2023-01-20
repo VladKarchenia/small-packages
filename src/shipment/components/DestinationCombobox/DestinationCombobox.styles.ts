@@ -1,12 +1,14 @@
 import { styled } from "@/config"
-import { ComboboxMenu, ComboboxItem } from "@/shared/components"
+import { ComboboxMenu, ComboboxItem, Combobox } from "@/shared/components"
 
-export const SDestinationComboboxMenu = styled(ComboboxMenu, {
-  marginTop: "$16",
+export const SCombobox = styled(Combobox, {
+  height: "100%",
+})
 
-  "@md": {
-    marginTop: 0,
-  },
+export const SComboboxMenu = styled(ComboboxMenu, {
+  height: `calc(100% - $48)`,
+  marginTop: "$20",
+  overflow: "auto",
 })
 
 export const SDestinationComboboxItem = styled(ComboboxItem, {
@@ -21,23 +23,10 @@ export const SDestinationComboboxItem = styled(ComboboxItem, {
   "@md": {
     paddingY: "$8",
     borderBottom: "none",
-    before: {
-      content: "",
-      position: "absolute",
-      zIndex: "-$1",
-      top: 0,
-      right: "0",
-      height: "100%",
-      backgroundColor: "$brand-yellow-lighter",
-      opacity: 0,
-      transition: "100ms opacity",
-      left: "-$24",
-      marginRight: "-$24",
-    },
   },
 
-  "&[data-state='highlighted']::before": {
-    opacity: 1,
+  lastOfType: {
+    borderBottom: "none",
   },
 })
 

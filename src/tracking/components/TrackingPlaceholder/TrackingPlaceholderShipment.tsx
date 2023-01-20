@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom"
+
+import { Role } from "@/shared/types"
+
 import {
   Box,
   Copy,
@@ -11,34 +15,52 @@ import {
   Stack,
   Title,
 } from "@/shared/components"
+import { TrackingDetailsItem } from "@/tracking"
+
 import {
   STrackingGrid,
   STrackingGridItem,
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
-import { TrackingDetailsItem } from "@/tracking"
 import {
   SRoutePointIcon,
   SRoutePointWrapper,
 } from "@/tracking/components/ShipmentRoutePoint/ShipmentRoutePoint.styles"
-import { useNavigate } from "react-router-dom"
-import { Rows, LabelRows } from "./helpers"
 
 export const TrackingPlaceholderShipment = () => {
-  const routes = [1, 2, 3, 4, 5]
+  const routes = [1, 2, 3]
   const navigate = useNavigate()
+  // TODO: use Zustand
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const role = user?.authorities?.[0]?.authority
 
   return (
     <>
       <Hidden above="sm">
-        <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
+        <HeaderBar
+          title="Shipment details"
+          onClick={() => navigate("/")}
+          css={{ paddingRight: "$40" }}
+        />
       </Hidden>
       <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-        <Spacer size={8} />
-        <Redacted height="$32" width="299px" text animated />
-        <Spacer size={12} />
-        <Redacted height="$20" width="173px" text animated />
-        <Spacer size={20} />
+        <Hidden below="md">
+          <Redacted height="$32" width="565px" text animated />
+          <Spacer size={12} />
+          {role === Role.Admin || role === Role.Ops ? (
+            <Redacted height="$24" width="180px" text animated />
+          ) : null}
+        </Hidden>
+        <Hidden above="md">
+          <Redacted height="$24" text animated />
+          <Spacer size={8} />
+          {role === Role.Admin || role === Role.Ops ? (
+            <Redacted height="$20" width="180px" text animated />
+          ) : null}
+        </Hidden>
       </GridContainer>
+
+      <Spacer size={{ "@initial": 16, "@sm": 24 }} />
+
       <STrackingGrid
         columns={{ "@initial": "1fr", "@md": "1fr 1fr 1fr 1fr" }}
         gap={{ "@initial": 16, "@md": 24 }}
@@ -51,16 +73,18 @@ export const TrackingPlaceholderShipment = () => {
                 Main Info
               </Title>
               <TrackingDetailsItem title="From where to where">
-                <Redacted height="$20" width="261px" text animated />
+                <Redacted height="$20" text animated />
               </TrackingDetailsItem>
               <TrackingDetailsItem title="Date and delivery service">
-                <Rows count={3} height="$20" width="261px" />
+                <Stack space={12}>
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
+                </Stack>
               </TrackingDetailsItem>
-
               <TrackingDetailsItem title="Shipment Details">
                 <Stack space={12}>
-                  <Redacted height="$20" width="261px" text animated />
-                  <Redacted height="$20" width="235px" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
                 </Stack>
               </TrackingDetailsItem>
             </Stack>
@@ -72,41 +96,27 @@ export const TrackingPlaceholderShipment = () => {
             <STrackingGridItem css={{ gridArea: "main" }}>
               <Stack space={24} dividers>
                 <>
-                  <TrackingDetailsItem title="Tracking number" titleIndent={4} titleScale={11}>
-                    <Redacted height="$40" width="311px" text animated />
+                  <TrackingDetailsItem title="Tracking number link" titleIndent={4} titleScale={11}>
+                    <Redacted height="$40" text animated />
                   </TrackingDetailsItem>
                   <Spacer size={24} />
                   <TrackingDetailsItem title="From where to where" titleScale={11}>
-                    <Redacted height="$20" width="261px" text animated />
+                    <Redacted height="$20" text animated />
                   </TrackingDetailsItem>
                 </>
 
                 <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                   <Stack space={12}>
-                    <Rows count={3} height="$20" width="261px" />
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
                   </Stack>
                 </TrackingDetailsItem>
+
                 <TrackingDetailsItem title="Shipment Details" titleScale={11}>
                   <Stack space={12}>
-                    <Rows count={3} height="$20" width="261px" />
-                  </Stack>
-                  <Spacer size={24} />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
-                    Parcel 1
-                  </Copy>
-                  <Divider />
-                  <Spacer size={16} />
-                  <Stack space={12}>
-                    <Rows count={3} height="$20" width="261px" />
-                  </Stack>
-                  <Spacer size={32} />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
-                    Parcel 2
-                  </Copy>
-                  <Divider />
-                  <Spacer size={16} />
-                  <Stack space={12}>
-                    <Rows count={3} height="$20" width="261px" />
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
                   </Stack>
                 </TrackingDetailsItem>
 
@@ -116,35 +126,32 @@ export const TrackingPlaceholderShipment = () => {
                       <SRoutePointWrapper
                         align="start"
                         last={routes.length - 1 === index}
-                        key={index}
+                        key={route}
                       >
-                        <SRoutePointIcon
-                          align="center"
-                          justify="center"
-                          active={false}
-                        ></SRoutePointIcon>
-                        {index == 3 || index == 4 ? (
-                          <Box>
-                            <Redacted height="$20" width="53px" text animated />
-                            <Spacer size={8} />
-                            <Redacted height="$20" width="189px" text animated />
-                          </Box>
-                        ) : (
-                          <Box>
-                            <Redacted height="$20" width="66px" text animated />
-                          </Box>
-                        )}
+                        <SRoutePointIcon align="center" justify="center" />
+                        <Box css={{ width: "100%" }}>
+                          <Redacted height="$20" width="50%" text animated />
+                          <Redacted height="$20" text animated />
+                        </Box>
                       </SRoutePointWrapper>
                     )
                   })}
                 </TrackingDetailsItem>
 
                 <TrackingDetailsItem title="Sender’s info" titleScale={11}>
-                  <Rows count={5} height="$20" width="261px" />
+                  <Stack space={12}>
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
+                  </Stack>
                 </TrackingDetailsItem>
 
                 <TrackingDetailsItem title="Recipient’s info" titleScale={11}>
-                  <Rows count={5} height="$20" width="261px" />
+                  <Stack space={12}>
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
+                    <Redacted height="$20" text animated />
+                  </Stack>
                 </TrackingDetailsItem>
               </Stack>
             </STrackingGridItem>
@@ -156,8 +163,8 @@ export const TrackingPlaceholderShipment = () => {
             css={{
               backgroundColor: "$neutrals-3",
               minHeight: "260px",
-              "@initials": { borderRadius: 0 },
-              "@md": { borderRadius: "20px", minHeight: "420px" },
+
+              "@md": { borderRadius: "$8", minHeight: "100%" },
             }}
           />
         </GridItem>
@@ -172,19 +179,12 @@ export const TrackingPlaceholderShipment = () => {
             >
               {routes.map((route, index) => {
                 return (
-                  <SRoutePointWrapper align="start" last={routes.length - 1 === index} key={index}>
-                    <SRoutePointIcon align="center" justify="center" active={false} />
-                    {index == 3 || index == 4 ? (
-                      <Box>
-                        <Redacted height="$20" width="53px" text animated />
-                        <Spacer size={8} />
-                        <Redacted height="$20" width="189px" text animated />
-                      </Box>
-                    ) : (
-                      <Box>
-                        <Redacted height="$20" width="66px" text animated />
-                      </Box>
-                    )}
+                  <SRoutePointWrapper align="start" last={routes.length - 1 === index} key={route}>
+                    <SRoutePointIcon align="center" justify="center" />
+                    <Box css={{ width: "100%" }}>
+                      <Redacted height="$20" width="50%" text animated />
+                      <Redacted height="$20" text animated />
+                    </Box>
                   </SRoutePointWrapper>
                 )
               })}
@@ -202,11 +202,9 @@ export const TrackingPlaceholderShipment = () => {
                 titleIndent={24}
               >
                 <Stack space={12}>
-                  <Redacted height="$20" width="142px" text animated />
-                  <Redacted height="$20" width="113px" text animated />
-                  <Redacted height="$20" width="124px" text animated />
-                  <Redacted height="$20" width="157px" text animated />
-                  <Redacted height="$20" width="136px" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
                 </Stack>
               </TrackingDetailsItem>
               <TrackingDetailsItem
@@ -216,41 +214,44 @@ export const TrackingPlaceholderShipment = () => {
                 titleIndent={24}
               >
                 <Stack space={12}>
-                  <Redacted height="$20" width="142px" text animated />
-                  <Redacted height="$20" width="113px" text animated />
-                  <Redacted height="$20" width="124px" text animated />
-                  <Redacted height="$20" width="157px" text animated />
-                  <Redacted height="$20" width="136px" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
                 </Stack>
               </TrackingDetailsItem>
             </Stack>
           </STrackingGridItem>
         </Hidden>
+
         <Hidden below="md">
-          <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
+          <GridContainer fullBleed={{ "@initial": false, "@sm": true }} css={{ height: "100%" }}>
             <STrackingGridItem css={{ gridArea: "costs" }}>
               <TrackingDetailsItem
                 title="Costs"
                 titleScale={7}
                 titleColor={"system-black"}
-                titleIndent={24}
+                titleIndent={0}
               >
-                <Redacted height="$20" width="84px" text animated />
-                <Spacer size={32} />
+                <Redacted height="28px" width="50%" text animated />
+                <Spacer size={16} />
                 <Stack space={16}>
-                  <Rows count={6} height="$20" width="100%" />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
                   <Divider />
-                  <Rows count={2} height="$20" width="100%" />
+                  <Redacted height="$20" text animated />
+                  <Redacted height="$20" text animated />
                 </Stack>
               </TrackingDetailsItem>
             </STrackingGridItem>
           </GridContainer>
         </Hidden>
+
         <Hidden above="md">
           <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
             <STrackingGridItem css={{ gridArea: "costs" }}>
               <TrackingDetailsItem title="Costs" titleScale={11} titleIndent={8}>
-                <Redacted height="$20" width="185px" text animated />
+                <Redacted height="$24" width="50%" text animated />
               </TrackingDetailsItem>
             </STrackingGridItem>
           </GridContainer>
@@ -259,30 +260,69 @@ export const TrackingPlaceholderShipment = () => {
         <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
           <STrackingGridItem css={{ gridArea: "labels" }}>
             <Hidden below="md">
-              <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-                Tracking & Label LINKS
-              </Title>
-              <Spacer size={{ "@initial": 16, "@md": 24 }} />
-              <Redacted height="$48" text animated />
-              <Spacer size={{ "@initial": 24, "@md": 32 }} />
-              <LabelRows count={4} />
-              <Spacer size={20} />
-              <Redacted height="$16" css={{ maxWidth: "332px" }} text animated />
-              <Spacer size={4} />
-              <Redacted height="$16" width="149px" text animated />
+              <TrackingDetailsItem
+                title="Tracking & Label Links"
+                titleIndent={16}
+                titleScale={7}
+                titleColor={"system-black"}
+              >
+                <Copy scale={11} bold>
+                  Tracking number link
+                </Copy>
+                <Spacer size={4} />
+                <Redacted height="$40" text animated />
+              </TrackingDetailsItem>
             </Hidden>
+
             <Hidden above="md">
-              <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-                Tracking & Label links
+              <Title as="h3" scale={7}>
+                Label links
               </Title>
-              <Spacer size={{ "@initial": 16, "@md": 24 }} />
-              <Redacted height="$20" width="200px" text animated />
-              <Spacer size={{ "@initial": 24, "@md": 32 }} />
-              <LabelRows count={4} />
+              <Spacer size={16} />
+              <Copy scale={9}>
+                Shipment label must be printed and attached to a package before it is picked up
+              </Copy>
+            </Hidden>
+            <Spacer size={{ "@initial": 24, "@md": 32 }} />
+
+            <Stack space={{ "@initial": 16, "@md": 24 }}>
+              <Box>
+                <Copy scale={{ "@initial": 10, "@sm": 9 }}>Label in PDF</Copy>
+                <Spacer size={4} />
+                <Redacted height="$20" text animated />
+              </Box>
+              <Box>
+                <Copy scale={{ "@initial": 10, "@sm": 9 }}>Label in ZPL</Copy>
+                <Spacer size={4} />
+                <Redacted height="$20" text animated />
+              </Box>
+              <Hidden above="md">
+                <Divider />
+              </Hidden>
+              <Box>
+                <Copy scale={{ "@initial": 10, "@sm": 9 }}>Return label in PDF</Copy>
+                <Spacer size={4} />
+                <Redacted height="$20" text animated />
+              </Box>
+              <Box>
+                <Copy scale={{ "@initial": 10, "@sm": 9 }}>Return label in ZPL</Copy>
+                <Spacer size={4} />
+                <Redacted height="$20" text animated />
+              </Box>
+            </Stack>
+
+            <Spacer size={{ "@initial": 8, "@md": 0 }} />
+            <Hidden below="md">
+              <Spacer size={20} />
+              <Copy scale={9}>
+                * Shipment label must be printed and attached to a package before it is picked up
+              </Copy>
             </Hidden>
           </STrackingGridItem>
         </GridContainer>
       </STrackingGrid>
+
+      <Spacer size={{ "@initial": 24, "@md": 0 }} />
     </>
   )
 }

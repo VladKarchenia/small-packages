@@ -1,5 +1,4 @@
 import axios from "axios"
-import urljoin from "url-join"
 import { SHIPMENT_BASE_URI } from "@/config"
 import { refreshTokenFn } from "./authApi"
 import {
@@ -11,11 +10,12 @@ import {
 } from "./types"
 
 export const shipmentApi = axios.create({
-  baseURL: urljoin(SHIPMENT_BASE_URI, "api"),
+  baseURL: SHIPMENT_BASE_URI,
 })
 
 shipmentApi.defaults.headers.common["Content-Type"] = "application/json"
 
+// TODO: this is mutation
 export const createShipmentFn = async (data: ShipmentInput) => {
   const response = await shipmentApi.post<IShipmentResponse>("shipments", { ...data })
 
@@ -29,14 +29,22 @@ export const createShipmentFn = async (data: ShipmentInput) => {
 //   return response.data
 // }
 
+// TODO: this is query with enabled
 export const getShipmentByIdFn = async (shipmentId: string) => {
   const response = await shipmentApi.get<IShipmentResponse>(`shipments?id=${shipmentId}`)
 
   return response.data
 }
 
+// TODO: this is mutation
 export const updateShipmentFn = async (id: string, data: ShipmentInput) => {
-  // TODO: add response type
+  const response = await shipmentApi.put<IShipmentResponse>(`shipments/${id}`, { ...data })
+
+  return response.data
+}
+// TODO: this is mutation
+export const updateShipmentStatusFn = async (id: string, status: string) => {
+  const data = [{ op: "add", path: "/data/SHIPMENT_STATUS", value: status }]
 
   // maybe only add operation is needed
   // [
@@ -60,66 +68,76 @@ export const updateShipmentFn = async (id: string, data: ShipmentInput) => {
   //         }
   //         ]
   // }]
-  const response = await shipmentApi.patch<unknown>(`shipments/${id}`, { ...data })
+  const response = await shipmentApi.patch<IShipmentResponse>(
+    `shipments/${id}`,
+    JSON.stringify(data),
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  )
 
   return response.data
 }
 
+// TODO: this is query
 export const getAllShipmentsFn = async ({
-  organizationId,
   filter,
   sort,
   page = 0,
   size = 100,
 }: {
-  organizationId: number
   filter: string
   sort: string
   page?: number
   size?: number
 }) => {
+  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
   const response = await shipmentApi.get<IShipmentsResponse>(
-    `shipments/all?organizationId=${organizationId}&filter=${filter}&sort=${sort}&page=${page}&size=${size}`,
+    `shipments/all?organizationId=${organization?.id}&filter=${filter}&sort=${sort}&page=${page}&size=${size}`,
   )
 
   return response.data
 }
 
+// TODO: this is query with enabled condition
 export const searchShipmentsFn = async ({
   keyword,
-  organizationId,
   sort,
   page = 0,
   size = 20,
 }: {
   keyword: string
-  organizationId: number
   sort: string
   page: number
   size: number
 }) => {
+  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
   const response = await shipmentApi.get<IFoundShipmentsResponse>(
-    `shipments/search?keyword=${keyword}&organizationId=${organizationId}&sort=${sort}&page=${page}&size=${size}`,
+    `shipments/search?keyword=${keyword}&organizationId=${organization?.id}&sort=${sort}&page=${page}&size=${size}`,
   )
 
   return response.data
 }
 
+// TODO: this is query but under some conditions?
 export const getShipmentsFieldValuesFn = async ({
-  organizationId,
   field,
+  keyword,
   status,
   page = 0,
   size = 10,
 }: {
-  organizationId: number
   field: string
+  keyword: string
   status: "QUOTE" | "SHIPMENT"
   page?: number
   size?: number
 }) => {
+  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
   const response = await shipmentApi.get<IShipmentsFieldValuesResponse>(
-    `shipments/filter?organizationId=${organizationId}&field=${field}&status=${status}&page=${page}&size=${size}`,
+    `shipments/filter?organizationId=${organization?.id}&field=${field}&keyword=${keyword}&status=${status}&page=${page}&size=${size}`,
   )
 
   return response.data
@@ -135,11 +153,13 @@ shipmentApi.interceptors.response.use(
 
     if (errMessage.includes("Unauthorized") && !originalRequest._retry) {
       // TODO: use Zustand
-      const refreshToken = window.localStorage.getItem("refreshToken") || ""
+      const refreshToken = localStorage.getItem("refreshToken") || ""
       originalRequest._retry = true
 
       if (refreshToken) {
-        await refreshTokenFn(refreshToken)
+        const { accessToken } = await refreshTokenFn(refreshToken)
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
+
         return shipmentApi(originalRequest)
       }
     }

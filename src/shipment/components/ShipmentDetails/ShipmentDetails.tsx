@@ -1,4 +1,11 @@
+import { useCallback, useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
+
+import { PARCEL_LIMIT } from "@/constants"
+import { PickupType, PackageType, ParcelContentType } from "@/shared/types"
+import { ShipmentState, useShipmentStateContext } from "@/shared/state"
+
 import {
   Box,
   Button,
@@ -16,11 +23,8 @@ import {
   Stack,
   useStepperContext,
 } from "@/shared/components"
-import { ShippingType, StepActionsBar, StepInputGroup, StepName } from "@/shipment"
-import { ShipmentState } from "@/shared/state"
-import { PickupType, PackageType, ParcelContentType } from "@/shared/types"
 import { IconBin, IconPlus } from "@/shared/icons"
-import { PARCEL_LIMIT } from "@/constants"
+import { ShippingType, StepActionsBar, StepInputGroup, StepName, StepperState } from "@/shipment"
 
 const pickupTypeList: PickupType[] = Object.values(PickupType)
 const packageTypeList: PackageType[] = Object.values(PackageType)
@@ -28,11 +32,13 @@ const parcelContentTypeList: ParcelContentType[] = Object.values(ParcelContentTy
 
 export const ShipmentDetails = ({
   handleContinueClick,
-  shippingType,
+  setStepperState,
 }: {
   handleContinueClick: (step: StepName.SHIPMENT, nextStep: StepName.DATE) => void
-  shippingType: ShippingType
+  setStepperState: (value: any) => void
 }) => {
+  const [isStepChanged, setIsStepChanged] = useState(false)
+  const { shippingType, parcels: parcelsContext } = useShipmentStateContext()
   const {
     setValue,
     watch,
@@ -43,7 +49,10 @@ export const ShipmentDetails = ({
   } = useFormContext<ShipmentState>()
   const { fields } = useFieldArray({ name: "parcels" })
   const { parcels } = watch()
+  const stringifiedParcels = JSON.stringify(parcels)
   const { setSelected } = useStepperContext("ShipmentDetails")
+  const location = useLocation()
+  const isEditMode = location.pathname.includes("edit")
 
   const onContinueHandler = () => {
     setSelected([StepName.DATE])
@@ -74,6 +83,50 @@ export const ShipmentDetails = ({
     const newParcelsArray = parcels.filter((_, idx) => idx !== index)
     setValue("parcels", newParcelsArray)
   }
+
+  // transforms dimensions to strings and sets the value of the isStepChanged variable
+  // according to whether the array with parcels from the form has changed compared to the context
+  const stepChangesChecker = useCallback(() => {
+    const formattedParcels = parcels.map((parcel) => ({
+      ...parcel,
+      dimensions: {
+        length: `${parcel.dimensions.length}`,
+        width: `${parcel.dimensions.width}`,
+        height: `${parcel.dimensions.height}`,
+      },
+    }))
+
+    setIsStepChanged(JSON.stringify(formattedParcels) !== JSON.stringify(parcelsContext))
+  }, [parcels, parcelsContext])
+
+  // TODO: shippingType was added to avoid shipment edit mode - remove it later
+  // checks if edit mode is now and triggers the stepChangesChecker function
+  // if the stringifiedParcels variable has changed
+  useEffect(() => {
+    if (isEditMode && shippingType === ShippingType.Quote) {
+      stepChangesChecker()
+    }
+  }, [stringifiedParcels, isEditMode, stepChangesChecker, shippingType])
+
+  // TODO: shippingType was added to avoid shipment edit mode - remove it later
+  // checks if edit mode is now and triggers the setStepperState function
+  // if the isStepChanged variable has changed setting completed and disabled fields to the stepper steps
+  useEffect(() => {
+    if (isEditMode && shippingType === ShippingType.Quote) {
+      setStepperState((prevState: StepperState) => {
+        return {
+          ...prevState,
+          rates: {
+            ...prevState.rates,
+            // if the parcels haven't been changed, set to true
+            completed: !isStepChanged,
+            // if the parcels have been changed, set to false
+            disabled: isStepChanged,
+          },
+        }
+      })
+    }
+  }, [isStepChanged, setStepperState, isEditMode, shippingType])
 
   return (
     <GridContainer fullBleed>
@@ -487,7 +540,7 @@ export const ShipmentDetails = ({
 
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
 
-      <StepActionsBar shippingType={shippingType}>
+      <StepActionsBar>
         <Button onClick={onContinueHandler} full disabled={!!errors.parcels}>
           <Copy as="span" scale={8} color="system-white" bold>
             Continue

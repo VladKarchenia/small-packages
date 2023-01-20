@@ -1,4 +1,9 @@
+import { useCallback, useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
+
+import { ShipmentState, useShipmentStateContext } from "@/shared/state"
+
 import {
   Button,
   Copy,
@@ -8,22 +13,70 @@ import {
   Stack,
   useStepperContext,
 } from "@/shared/components"
-import { ShipmentState } from "@/shared/state"
-import { StepName, LocationInput, ShippingType, StepActionsBar, LocationPopover } from "@/shipment"
+import { StepName, LocationInput, StepActionsBar, LocationPopover, StepperState } from "@/shipment"
 
 export const AddressInfo = ({
   handleContinueClick,
+  setStepperState,
 }: {
   handleContinueClick: (step: StepName.INFO, nextStep: StepName.SHIPMENT) => void
+  setStepperState: (value: any) => void
 }) => {
+  const [isStepChanged, setIsStepChanged] = useState(false)
   const { setValue, watch } = useFormContext<ShipmentState>()
   const { sender, recipient } = watch()
+  const stringifiedSenderAddress = JSON.stringify(sender.fullAddress)
+  const stringifiedRecipientAddress = JSON.stringify(recipient.fullAddress)
   const { setSelected } = useStepperContext("AddressInfo")
+  const state = useShipmentStateContext()
+  const location = useLocation()
+  const isEditMode = location.pathname.includes("edit")
 
   const onContinueHandler = () => {
     setSelected([StepName.SHIPMENT])
     handleContinueClick(StepName.INFO, StepName.SHIPMENT)
   }
+
+  // sets the value of the isStepChanged variable according to whether the
+  // sender or recipient fullAddress from the form has changed compared to the context
+  const stepChangesChecker = useCallback(() => {
+    setIsStepChanged(
+      JSON.stringify(sender.fullAddress) !== JSON.stringify(state.sender.fullAddress) ||
+        JSON.stringify(recipient.fullAddress) !== JSON.stringify(state.recipient.fullAddress),
+    )
+  }, [
+    sender.fullAddress,
+    recipient.fullAddress,
+    state.sender.fullAddress,
+    state.recipient.fullAddress,
+  ])
+
+  // checks if edit mode is now and triggers the stepChangesChecker function
+  // if the stringifiedSenderAddress or stringifiedRecipientAddress variables have changed
+  useEffect(() => {
+    if (isEditMode) {
+      stepChangesChecker()
+    }
+  }, [stringifiedSenderAddress, stringifiedRecipientAddress, isEditMode, stepChangesChecker])
+
+  // checks if edit mode is now and triggers the setStepperState function
+  // if the isStepChanged variable has changed setting completed and disabled fields to the stepper steps
+  useEffect(() => {
+    if (isEditMode) {
+      setStepperState((prevState: StepperState) => {
+        return {
+          ...prevState,
+          rates: {
+            ...prevState.rates,
+            // if the address hasn't been changed, set to true
+            completed: !isStepChanged,
+            // if the address has been changed, set to false
+            disabled: isStepChanged,
+          },
+        }
+      })
+    }
+  }, [isStepChanged, setStepperState, isEditMode])
 
   return (
     <GridContainer fullBleed>
@@ -60,6 +113,8 @@ export const AddressInfo = ({
             onChange={(locationDetails) => {
               setValue("sender.fullAddress", locationDetails)
             }}
+            id="Address from"
+            label="From"
             placeholder="From"
             description="From"
             labelProps={{ required: true }}
@@ -70,6 +125,8 @@ export const AddressInfo = ({
             onChange={(locationDetails) => {
               setValue("recipient.fullAddress", locationDetails)
             }}
+            id="Address to"
+            label="To"
             placeholder="To"
             description="To"
             labelProps={{ required: true }}
@@ -78,14 +135,13 @@ export const AddressInfo = ({
         </Stack>
       </Hidden>
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
-      <StepActionsBar shippingType={ShippingType.Quote}>
+      <StepActionsBar>
         <Button
           onClick={onContinueHandler}
           full
           disabled={
             !sender.fullAddress.displayName ||
             !recipient.fullAddress.displayName ||
-            // TODO: do we need a better condition to prevent same from and to addresses using ID or some field?
             sender.fullAddress.displayName === recipient.fullAddress.displayName
           }
         >

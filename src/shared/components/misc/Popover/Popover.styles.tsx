@@ -28,7 +28,7 @@ export const SPopoverContent = styled(Content, {
   padding: "$24",
   backgroundColor: "$neutrals-0",
   maxWidth: "100%",
-  boxShadow: `0px 8px 24px ${rgba("system-black", 0.08)}`,
+  boxShadow: `0px 4px 15px ${rgba("system-black", 0.12)}`,
   zIndex: "$1",
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",

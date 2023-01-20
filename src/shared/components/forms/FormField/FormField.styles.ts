@@ -138,17 +138,29 @@ export const SFormFieldElement = styled("input", {
     isClickable: {
       true: { cursor: "pointer" },
     },
+
+    hasPrefix: {
+      true: {
+        paddingLeft: "$48",
+      },
+    },
+
+    hasSuffix: {
+      true: {
+        paddingRight: "$48",
+      },
+    },
   },
 })
 
 export const SFormFieldPrefix = styled("span", {
-  paddingLeft: "$16",
-  marginRight: "-$8",
   zIndex: "$1",
+  position: "absolute",
+  left: "$16",
 })
 
 export const SFormFieldSuffix = styled("span", {
-  paddingRight: "$16",
-  marginLeft: "-$8",
   zIndex: "$1",
+  position: "absolute",
+  right: "$16",
 })

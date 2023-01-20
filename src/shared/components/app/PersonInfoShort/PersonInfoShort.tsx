@@ -4,8 +4,8 @@ import { IPerson } from "@/shared/types"
 
 interface IPersonInfoShortProps {
   person: "sender" | "recipient"
-  sender: IPerson
-  recipient: IPerson
+  sender?: IPerson
+  recipient?: IPerson
 }
 
 export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortProps) => {
@@ -16,7 +16,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-          {person === "sender" ? sender.name : recipient.name}
+          {person === "sender" ? sender?.name : recipient?.name}
         </Copy>
       </Flex>
       <Flex align="center">
@@ -24,10 +24,10 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-          {person === "sender" ? sender.phone : recipient.phone}
+          {person === "sender" ? sender?.phone : recipient?.phone}
         </Copy>
       </Flex>
-      {person === "sender" && !!sender.company ? (
+      {person === "sender" && !!sender?.company ? (
         <Flex align="center">
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
@@ -37,7 +37,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           </Copy>
         </Flex>
       ) : null}
-      {person === "recipient" && !!recipient.company ? (
+      {person === "recipient" && !!recipient?.company ? (
         <Flex align="center">
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin size="xs" />
@@ -52,7 +52,7 @@ export const PersonInfoShort = ({ person, sender, recipient }: IPersonInfoShortP
           <IconLocationPin size="xs" />
         </Flex>
         <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-          {person === "sender" ? sender.fullAddress.displayName : recipient.fullAddress.displayName}
+          {person === "sender" ? sender?.fullAddress.displayName : recipient?.fullAddress.displayName}
         </Copy>
       </Flex>
     </Stack>

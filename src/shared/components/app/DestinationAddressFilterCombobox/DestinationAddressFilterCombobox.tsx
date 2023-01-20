@@ -2,42 +2,46 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useCombobox } from "downshift"
 import { useQuery } from "react-query"
-import { Box, Combobox, ComboboxInput, Divider, FormCheckbox, FormInput } from "@/shared/components"
-import { IconCross, IconSearch } from "@/shared/icons"
+import debounce from "just-debounce-it"
+
+import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { ShippingType } from "@/shipment"
+
+import { Box, ComboboxInput, Copy, Flex, FormCheckbox, FormInput, Stack } from "@/shared/components"
+import { IconCross, IconSearch } from "@/shared/icons"
+import { IllustrationSpinner } from "@/shared/illustrations"
+
 import {
   SSearchFilterComboboxMenu,
   SComboboxClearButton,
+  SCombobox,
 } from "./DestinationAddressFilterCombobox.styles"
-import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
-import debounce from "just-debounce-it"
 
 export const DestinationAddressFilterCombobox = () => {
   const { t } = useTranslation()
-
   const inputRef = useRef<HTMLInputElement>(null)
-  const { destinationAddress } = useDashboardStateContext()
+  const { destinationAddress, shippingType } = useDashboardStateContext()
   const { setDestinationAddressFilter, resetFilterField } = useDashboardActionContext()
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [inputValue, setInputValue] = useState("")
 
   const [results, setResults] = useState<string[]>([])
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [notFound, setNotFound] = useState(false)
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
     ["searchDestinationAddresses"],
     () =>
       getShipmentsFieldValuesFn({
-        // field: `data.CONSIGNEE_GEOLOC.DISPLAY_NAME${inputValue ? `:${inputValue}` : ""}`,
         field: `data.CONSIGNEE_GEOLOC.DISPLAY_NAME`,
-        // TODO: add shippingType condition "QUOTE" || "SHIPMENT"
-        status: "QUOTE",
-        organizationId: user?.activeOrganizationId,
+        keyword: inputValue,
+        status: shippingType === ShippingType.Quote ? "QUOTE" : "SHIPMENT",
       }),
     {
       enabled: false,
       onSuccess: (data) => {
         setResults(data.content)
+        setNotFound(data.content.length === 0)
       },
     },
   )
@@ -55,13 +59,17 @@ export const DestinationAddressFilterCombobox = () => {
     items: results,
     onInputValueChange: ({ inputValue }) => {
       setInputValue(inputValue || "")
+      setResults([])
+      setNotFound(false)
 
       if (
         typeof inputValue !== "undefined" &&
-        (inputValue.length > 3 || inputValue.trim().length === 0)
+        (inputValue.trim().length === 0 || inputValue.length > 3)
       ) {
         debouncedRefetch()
       }
+
+      return
     },
 
     onSelectedItemChange: ({ selectedItem }) => {
@@ -73,6 +81,8 @@ export const DestinationAddressFilterCombobox = () => {
   const clearDestination = useCallback(() => {
     comboboxProps.selectItem(null)
     resetFilterField("destinationAddress")
+    setResults([])
+    setNotFound(false)
     inputRef.current?.focus()
   }, [comboboxProps, resetFilterField])
 
@@ -100,63 +110,86 @@ export const DestinationAddressFilterCombobox = () => {
 
   const Content = () => {
     if (isLoading || isFetching) {
-      return <Box css={{ padding: "$12 $16" }}>LOADING</Box>
+      return (
+        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
+          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        </Flex>
+      )
     }
 
-    if (!isLoading && !isFetching && results.length === 0) {
-      return <Box css={{ padding: "$12 $16" }}>EMPTY BOX</Box>
+    if (notFound) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
+      )
     }
 
     return (
-      <>
-        <Box
-          css={{
-            "> label": {
-              padding: "$12 $16",
-              cursor: "pointer",
-              focusWithin: {
-                backgroundColor: "$neutrals-3",
-              },
-            },
-          }}
-        >
-          <FormCheckbox
-            value={"All"}
-            onChange={handleCheckAllClick}
-            name={"Select all"}
-            id={"Select all"}
-            label={"Select all"}
-            checked={isCheckAll}
-          />
-        </Box>
-
-        {results.map((item: string) => (
+      <Stack
+        space={0}
+        dividers
+        css={{
+          height: "100%",
+          paddingX: "$16",
+          "@md": { marginTop: 0 },
+        }}
+      >
+        {results.length > 0 ? (
           <>
             <Box
-              key={item}
               css={{
                 "> label": {
-                  padding: "$12 $16",
+                  paddingBottom: "$12",
                   cursor: "pointer",
-                  hover: {
+                  focusWithin: {
                     backgroundColor: "$neutrals-3",
                   },
                 },
               }}
             >
               <FormCheckbox
-                value={item}
-                onChange={handleChange}
-                name={item}
-                id={item}
-                label={item}
-                checked={destinationAddress.some((address) => address === item)}
+                value={"All"}
+                onChange={handleCheckAllClick}
+                name={"Select all"}
+                id={"Select all"}
+                label={"Select all"}
+                checked={isCheckAll}
               />
             </Box>
-            <Divider />
+
+            {results.map((item: string) => (
+              <>
+                <Box
+                  key={item}
+                  css={{
+                    "> label": {
+                      paddingY: "$12",
+                      cursor: "pointer",
+                      hover: {
+                        backgroundColor: "$neutrals-3",
+                      },
+                    },
+                  }}
+                >
+                  <FormCheckbox
+                    value={item}
+                    onChange={handleChange}
+                    name={item}
+                    id={item}
+                    label={item}
+                    checked={destinationAddress.some((i) => i === item)}
+                  />
+                </Box>
+              </>
+            ))}
           </>
-        ))}
-      </>
+        ) : (
+          <Flex css={{ padding: "$16", height: "$56" }} />
+        )}
+      </Stack>
     )
   }
 
@@ -173,7 +206,7 @@ export const DestinationAddressFilterCombobox = () => {
   }, [destinationAddress, results])
 
   return (
-    <Combobox {...comboboxProps}>
+    <SCombobox {...comboboxProps}>
       <Box css={{ paddingX: "$16" }}>
         <ComboboxInput ref={inputRef}>
           <FormInput
@@ -184,7 +217,7 @@ export const DestinationAddressFilterCombobox = () => {
             autoCorrect="off"
             autoComplete="off"
             data-testid="displayName-input"
-            prefix={<IconSearch size="xs" />}
+            prefix={<IconSearch fixedSize width={20} height={20} />}
             suffix={
               inputValue && (
                 <SComboboxClearButton
@@ -202,6 +235,6 @@ export const DestinationAddressFilterCombobox = () => {
       <SSearchFilterComboboxMenu>
         <Content />
       </SSearchFilterComboboxMenu>
-    </Combobox>
+    </SCombobox>
   )
 }

@@ -29,8 +29,9 @@ export interface IPlaceResponse {
 
 export interface IPlacesResponse {
   content: IPlaceResponse[]
-  empty: boolean
+  empty?: boolean
   first: boolean
+  hasContent?: boolean
   last: boolean
   number: number
   numberOfElements: number

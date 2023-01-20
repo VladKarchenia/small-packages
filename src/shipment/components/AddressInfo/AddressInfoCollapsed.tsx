@@ -6,10 +6,5 @@ export const AddressInfoCollapsed = () => {
   const { watch } = useFormContext<ShipmentState>()
   const { sender, recipient } = watch()
 
-  return (
-    <AddressInfoShort
-      fromAddress={sender.fullAddress.displayName}
-      toAddress={recipient.fullAddress.displayName}
-    />
-  )
+  return <AddressInfoShort fromAddress={sender.fullAddress} toAddress={recipient.fullAddress} />
 }

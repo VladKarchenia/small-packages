@@ -14,7 +14,7 @@ export const ShortInfoLine: React.FC<React.PropsWithChildren<IShortInfoLineProps
     <Flex align="center">
       {icon}
       <Spacer size={8} horizontal />
-      <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+      <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
         {text}
       </Copy>
       {children}

@@ -1,10 +1,11 @@
 import { useFormContext } from "react-hook-form"
-import { Copy, Flex, Spacer, Stack } from "@/shared/components"
-import { ShippingType } from "@/shipment"
-import { IconClock } from "@/shared/icons"
+
 import { ShipmentState } from "@/shared/state"
 
-export const ShipmentDetailsShort = ({ shippingType }: { shippingType: ShippingType }) => {
+import { Copy, Flex, Spacer, Stack } from "@/shared/components"
+import { IconClock } from "@/shared/icons"
+
+export const ShipmentDetailsShort = () => {
   const { watch } = useFormContext<ShipmentState>()
   const { parcels } = watch()
 

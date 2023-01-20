@@ -7,21 +7,21 @@ import {
   Grid,
   GridContainer,
   GridItem,
-  LoggedOutLabel,
+  ProfileButton,
+  LogoutButton,
   Spacer,
   Stack,
+  Hidden,
 } from "@/shared/components"
 import { IconBin, IconCalendar } from "@/shared/icons"
 import { HOME, USER_MANAGEMENT } from "@/constants"
 
 interface IMainLayoutProps {
-  fullContentSize?: boolean
   withGlobalSearch?: boolean
   mobileFullBleed?: boolean
 }
 
 export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = ({
-  fullContentSize = true,
   withGlobalSearch = false,
   mobileFullBleed = true,
   children,
@@ -44,30 +44,35 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
           }}
         >
           <Flex align="center" justify="between">
-            <a
-              aria-haspopup="false"
-              aria-label="Logo name"
-              role="button"
-              tabIndex={0}
-              href={"/"}
-              style={{ textDecoration: "none" }}
-            >
-              <Flex css={{ height: "$40" }}>
-                <img
-                  alt="logo"
-                  src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                />
-              </Flex>
-            </a>
-
-            <Flex align="center">
+            <Flex>
+              <a
+                aria-haspopup="false"
+                aria-label="Logo name"
+                role="button"
+                tabIndex={0}
+                href={"/"}
+                style={{ textDecoration: "none" }}
+              >
+                <Flex css={{ height: "$40" }}>
+                  <img
+                    alt="logo"
+                    src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
+                  />
+                </Flex>
+              </a>
+              <Spacer size={32} horizontal />
               {withGlobalSearch ? (
-                <>
+                <Hidden below="md">
                   <GlobalSearch />
                   <Spacer size={24} horizontal />
-                </>
+                </Hidden>
               ) : null}
-              <LoggedOutLabel />
+            </Flex>
+
+            <Flex align="center">
+              <ProfileButton />
+              <Spacer size={20} horizontal />
+              <LogoutButton />
             </Flex>
           </Flex>
         </GridItem>
@@ -122,19 +127,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
               columnGap={32}
               css={{ "@sm": { padding: "$32" } }}
             >
-              <GridItem
-                column={
-                  fullContentSize
-                    ? { "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }
-                    : {
-                        "@initial": "1 / span 6",
-                        "@sm": "1 / span 12",
-                        "@lg": "1 / span 16",
-                      }
-                }
-              >
-                {children}
-              </GridItem>
+              {children}
             </Grid>
           </GridItem>
         </Grid>

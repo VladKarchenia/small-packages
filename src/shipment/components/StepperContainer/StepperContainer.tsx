@@ -1,19 +1,23 @@
 import { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { useQuery } from "react-query"
 
 import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
-import { useShipmentActionContext } from "@/shared/state"
-import { TrackingRouteParams } from "@/tracking/types"
+import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
+import { RouteParams } from "@/shared/types"
 import { formatShipmentResponseData } from "@/shared/utils"
 
-import { Box } from "@/shared/components"
+import { Flex, GridItem } from "@/shared/components"
 import { QuoteForm, ShipmentForm, ShippingType } from "@/shipment"
+import { IllustrationSpinner } from "@/shared/illustrations"
 
-export const StepperContainer = ({ shippingType }: { shippingType: ShippingType }) => {
-  const { shipmentId } = useParams<keyof TrackingRouteParams>() as TrackingRouteParams
-  const setShipmentContext = useShipmentActionContext()
-  const accessToken = window.localStorage.getItem("accessToken") || ""
+export const StepperContainer = () => {
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const location = useLocation()
+  const { shippingType } = useShipmentStateContext()
+
+  const { setShipmentData, setShippingType } = useShipmentActionContext()
+  const accessToken = localStorage.getItem("accessToken") || ""
 
   const { isLoading, isFetching, refetch } = useQuery(
     // TODO: check how not to call this all the time!
@@ -23,7 +27,7 @@ export const StepperContainer = ({ shippingType }: { shippingType: ShippingType 
       enabled: false,
       // enabled: !!shipmentId,
       onSuccess: (shipment) => {
-        setShipmentContext(formatShipmentResponseData(shipment.data))
+        setShipmentData(formatShipmentResponseData(shipment.data))
       },
     },
   )
@@ -38,9 +42,39 @@ export const StepperContainer = ({ shippingType }: { shippingType: ShippingType 
     }
   }, [accessToken, shipmentId, refetch])
 
-  if (isLoading || isFetching) {
-    return <Box>Loading</Box>
+  useEffect(() => {
+    if (location.pathname.includes("create")) {
+      if (location.pathname.includes("quote")) {
+        setShippingType(ShippingType.Quote)
+      } else {
+        setShippingType(ShippingType.Shipment)
+      }
+    }
+  }, [])
+
+  if (isLoading || isFetching || !shippingType) {
+    return (
+      <GridItem column={{ "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }}>
+        <Flex
+          align="center"
+          justify="center"
+          css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, textAlign: "center" }}
+        >
+          <IllustrationSpinner css={{ display: "block", height: "$32", width: "$32" }} />
+        </Flex>
+      </GridItem>
+    )
   }
 
-  return shippingType === ShippingType.Quote ? <QuoteForm /> : <ShipmentForm />
+  return (
+    <GridItem
+      column={{
+        "@initial": "1 / span 6",
+        "@sm": "1 / span 12",
+        "@lg": "1 / span 16",
+      }}
+    >
+      {shippingType === ShippingType.Quote ? <QuoteForm /> : <ShipmentForm />}
+    </GridItem>
+  )
 }
