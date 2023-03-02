@@ -1,6 +1,9 @@
 import React from "react"
-import { CSS } from "@/config"
+
+import { CSS } from "@/stitches/config"
+
 import { Copy, IFormLabelProps } from "@/shared/components"
+
 import { SSearchFilterDrawerPreview } from "./SearchFilterDrawerPreview.styles"
 
 export interface ISearchFilterDrawerPreviewProps {
@@ -9,8 +12,8 @@ export interface ISearchFilterDrawerPreviewProps {
   placeholder?: string
   hidePlaceholder?: boolean
   labelProps?: IFormLabelProps
-  onClick?: (event: unknown) => void
-  onFocus?: (event: unknown) => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  onFocus?: React.FocusEventHandler<HTMLButtonElement>
   dataTestid?: string
   css?: CSS
   prefix?: React.ReactElement
@@ -59,13 +62,7 @@ export const SearchFilterDrawerPreview = React.forwardRef<
           css={css}
         >
           {prefix}
-          <Copy
-            scale={8}
-            color={!value ? "neutrals-5" : "neutrals-9"}
-            intent="detail"
-            bold
-            css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
-          >
+          <Copy scale={8} color={!value ? "neutrals-5" : "neutrals-9"} bold truncate>
             {value ? (!hidePlaceholder ? `${placeholder}: ${value}` : value) : placeholder}
           </Copy>
           {suffix}

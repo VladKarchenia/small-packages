@@ -1,6 +1,8 @@
+import { ShipmentStatus } from "@/shared/types"
+
 import { Box, Copy, Spacer } from "@/shared/components"
 import { IconTick, IconClock, IconCross } from "@/shared/icons"
-import { ShipmentStatus } from "@/shared/types"
+
 import { SDot, SRoutePointIcon, SRoutePointWrapper } from "./ShipmentRoutePoint.styles"
 
 interface IShipmentRoutePointProps {
@@ -32,17 +34,11 @@ export const ShipmentRoutePoint = ({
         )}
       </SRoutePointIcon>
       <Box>
-        <Copy
-          scale={8} //TODO: check fonts { "@initial": 8, "@sm": 8 }
-          color={isStepCompleted || isStepInProgress ? "system-black" : "neutrals-5"}
-        >
+        <Copy scale={8} color={isStepCompleted || isStepInProgress ? "system-black" : "neutrals-5"}>
           {status}
         </Copy>
         {date ? (
-          <Copy
-            scale={9} //TODO: check fonts { "@initial": 9, "@sm": 9 }
-            color="neutrals-5"
-          >
+          <Copy scale={9} color="neutrals-5">
             {date}
           </Copy>
         ) : (

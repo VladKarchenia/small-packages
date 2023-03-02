@@ -2,15 +2,19 @@ import { useRef } from "react"
 import { Routing } from "leaflet"
 import { TileLayer } from "react-leaflet"
 
-import { useShipmentStateContext } from "@/shared/state"
+import { IPerson } from "@/shared/types"
 
 import { Box, Copy } from "@/shared/components"
-import { RoutingMachine } from "@/shipment"
+import { RoutingMachine } from "@/shipment/components"
 
 import { SEmptyMapContainer, SMapContainer } from "./Map.styles"
 
-export const Map = () => {
-  const { recipient, sender } = useShipmentStateContext()
+interface IMapProps {
+  sender: IPerson
+  recipient: IPerson
+}
+
+export const Map = ({ sender, recipient }: IMapProps) => {
   const rMachine = useRef() as React.Ref<Routing.Control> | undefined
 
   if (
@@ -46,13 +50,7 @@ export const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <RoutingMachine
-          ref={rMachine}
-          // senderLat={sender.fullAddress.latitude}
-          // senderLong={sender.fullAddress.longitude}
-          // recipientLat={recipient.fullAddress.latitude}
-          // recipientLong={recipient.fullAddress.longitude}
-        />
+        <RoutingMachine ref={rMachine} />
       </SMapContainer>
     </Box>
   )

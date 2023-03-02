@@ -1,5 +1,5 @@
 import { AuthWrapper } from "@/shared/components"
-import { ResetFormContainer } from "./ResetFormContainer"
+import { ResetFormContainer } from "@/auth/components"
 
 export const Reset = () => {
   return (

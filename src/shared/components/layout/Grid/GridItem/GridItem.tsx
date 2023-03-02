@@ -1,10 +1,7 @@
 import React from "react"
-import {
-  ComponentProps,
-  ResponsiveProp,
-  mergeCSSObjects,
-  getStyleFromResponsiveProp,
-} from "@/utils"
+
+import { ComponentProps, ResponsiveProp } from "@/stitches/types"
+import { mergeCSSObjects, getStyleFromResponsiveProp } from "@/stitches/utils"
 import { getGridCoords } from "../utils"
 
 import { SGridItem } from "./GridItem.styles"

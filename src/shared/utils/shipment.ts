@@ -1,11 +1,20 @@
 import format from "date-fns/format"
 
-import { ShippingType } from "@/shipment"
-import { ShipmentInput } from "@/api/types"
-import { ShipmentState } from "@/shared/state"
-import { IParcel, PackageType, ParcelContentType, PickupType, ShipmentStatus } from "@/shared/types"
+import { IUserOrganization, ShipmentInput, ShipmentPackageInput } from "@/api/types"
+import {
+  IParcel,
+  PackageType,
+  ParcelContentType,
+  PickupType,
+  ShipmentStatus,
+  ShippingType,
+  ShipmentState,
+  IParcels,
+  IdenticalPackagesType,
+} from "@/shared/types"
+import { PACKAGE_CURRENCY_DEFAULT, PACKAGE_QUANTITY_DEFAULT } from "@/constants"
 
-const replaceFalsyProps = (key: string, value: unknown) => {
+const replaceFalsyProps = (_: string, value: unknown) => {
   // TODO: Should we remove empty string as well?
   // should create and patch use different helpers?
   if (value === "" || value === null || value === undefined) {
@@ -18,17 +27,26 @@ const replaceFalsyProps = (key: string, value: unknown) => {
 
 export const formatShipmentRequestData = (
   data: ShipmentState,
-  shippingType: ShippingType | null,
+  shippingType: ShippingType,
+  organization: IUserOrganization | null,
   status?: ShipmentStatus,
 ) => {
-  // TODO: use Zustand
-  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
-  const packages = data.parcels.map((item) => ({
-    DIMENSION: `${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}`,
-    WEIGHT: item.weight,
-    DECLARED_VALUE_AMOUNT: item.totalPrice,
-    PACKAGING: Object.keys(PackageType)[Object.values(PackageType).indexOf(item.packageType)],
-  }))
+  const packages = Object.values(data.parcels).reduce(
+    (acc: ShipmentPackageInput[], item: IParcel) => {
+      const parcel: ShipmentPackageInput = {
+        DIMENSION: `${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}`,
+        WEIGHT: item.weight,
+        DECLARED_VALUE_AMOUNT: item.totalPrice,
+        PACKAGING: PackageType.Custom,
+        PACKAGE_REF_ID: item.packageId,
+      }
+
+      const identicalParcels = Array.from(new Array(item.quantity)).map(() => parcel)
+
+      return [...acc, ...identicalParcels]
+    },
+    [],
+  )
 
   const initialData = {
     CONSIGNEE_ADDRESS1: data.recipient.fullAddress.address1,
@@ -41,9 +59,7 @@ export const formatShipmentRequestData = (
     CONSIGNEE_PHONE: data.recipient.phone,
     CONSIGNEE_PHONE_EXTENSION: data.recipient.extension,
     CONSIGNEE_POSTALCODE: data.recipient.fullAddress.zipCode,
-    CONSIGNEE_RESIDENTIAL: data.recipient.fullAddress.isResidential
-      ? `${data.recipient.fullAddress.isResidential}`
-      : "false",
+    CONSIGNEE_RESIDENTIAL: `${data.recipient.fullAddress.isResidential}`,
     CONSIGNEE_STATE: data.recipient.fullAddress.state,
     CONSIGNEE_GEOLOC: {
       DISPLAY_NAME: data.recipient.fullAddress.displayName,
@@ -81,7 +97,7 @@ export const formatShipmentRequestData = (
     RETURN_ADDRESS_STATE: data.senderReturn.fullAddress.state,
 
     PACKAGE: packages,
-    // PACKAGING_TYPE: ,
+    PACKAGING_TYPE: data.packaging.packagingType,
 
     PICKUP_READY_DATE: format(data.date, "MM/dd/yyyy"),
     PICKUP_READY_TIME: format(data.date, "HH:mm"),
@@ -91,9 +107,11 @@ export const formatShipmentRequestData = (
       ? Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(status)]
       : // TODO: fix this statuses
       shippingType === ShippingType.Quote
-      ? Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(ShipmentStatus.DRAFT)]
+      ? Object.keys(ShipmentStatus)[
+          Object.values(ShipmentStatus).indexOf(ShipmentStatus.QUOTE_QUOTED)
+        ]
       : Object.keys(ShipmentStatus)[
-          Object.values(ShipmentStatus).indexOf(ShipmentStatus.CONFIRMED)
+          Object.values(ShipmentStatus).indexOf(ShipmentStatus.SUBMITTED)
         ],
   }
 
@@ -102,27 +120,33 @@ export const formatShipmentRequestData = (
   return JSON.parse(formattedData)
 }
 
-export const formatShipmentResponseData = (data: ShipmentInput) => {
-  const parcels: IParcel[] = data.PACKAGE.map((item) => {
+export const formatShipmentResponseData = (data: ShipmentInput): ShipmentState => {
+  const sortedByIdParcels = data.PACKAGE.sort((a, b) =>
+    a.PACKAGE_REF_ID.localeCompare(b.PACKAGE_REF_ID),
+  )
+
+  const parcels = sortedByIdParcels.reduce((acc: IParcels, item: ShipmentPackageInput) => {
     const [length, width, height] = item.DIMENSION.split("x")
 
     return {
-      pickupType: PickupType.Schedule,
-      weight: parseFloat(item.WEIGHT).toFixed(1),
-      dimensions: {
-        length,
-        width,
-        height,
+      ...acc,
+      [item.PACKAGE_REF_ID]: {
+        weight: parseFloat(item.WEIGHT).toFixed(1),
+        dimensions: {
+          length,
+          width,
+          height,
+        },
+        totalPrice: item.DECLARED_VALUE_AMOUNT || "",
+        totalCurrency: PACKAGE_CURRENCY_DEFAULT,
+        packageId: item.PACKAGE_REF_ID,
+        packageType: PackageType.Custom,
+        quantity: acc[item.PACKAGE_REF_ID]
+          ? acc[item.PACKAGE_REF_ID]["quantity"] + 1
+          : PACKAGE_QUANTITY_DEFAULT,
       },
-      packageType: PackageType[item.PACKAGING],
-      content: ParcelContentType.Gift,
-      totalPrice: item.DECLARED_VALUE_AMOUNT || "",
-      totalCurrency: "USD",
-
-      // TRACKING_NUMBER - for the tracking page, need to add into the context
-      // currency field is not needed
     }
-  })
+  }, {})
 
   return {
     sender: {
@@ -177,8 +201,19 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
         address2: data.CONSIGNEE_ADDRESS2 || "",
         latitude: data.CONSIGNEE_GEOLOC.LATITUDE || "",
         longitude: data.CONSIGNEE_GEOLOC.LONGITUDE || "",
-        isResidential: JSON.parse(data.CONSIGNEE_RESIDENTIAL) || false,
+        isResidential: JSON.parse(data.CONSIGNEE_RESIDENTIAL),
       },
+    },
+    packaging: {
+      // TODO: there are no BE pickupType and packageContent data
+      pickupType: PickupType.Schedule,
+      packagingType: data.PACKAGING_TYPE,
+      totalPackagesNumber: data.PACKAGE.length,
+      packageContent: ParcelContentType.Gift,
+      identicalPackages:
+        Object.keys(parcels).length > 1
+          ? IdenticalPackagesType.Different
+          : IdenticalPackagesType.Identical,
     },
     parcels,
     date: new Date(`${data.PICKUP_READY_DATE} ${data.PICKUP_READY_TIME}`),
@@ -189,9 +224,6 @@ export const formatShipmentResponseData = (data: ShipmentInput) => {
       currency: "",
       id: "",
     },
-    shippingType: data.SHIPMENT_STATUS.includes("QUOTE")
-      ? ShippingType.Quote
-      : ShippingType.Shipment,
     shipmentStatus: ShipmentStatus[data.SHIPMENT_STATUS],
     currentLocation: {
       displayName: data?.CURRENT_GEOLOC?.DISPLAY_NAME || "",

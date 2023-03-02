@@ -1,5 +1,6 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
 
 import { SBaseIllustration } from "./Illustration.styles"
 

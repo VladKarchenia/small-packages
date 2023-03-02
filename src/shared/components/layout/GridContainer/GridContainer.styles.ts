@@ -1,7 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SGridContainer = styled("div", {
-  maxWidth: "1920px",
+  maxWidth: 1920,
   width: "100%",
   marginX: "auto",
 

@@ -1,6 +1,8 @@
 import React, { memo } from "react"
+
 import { Copy } from "@/shared/components"
 import { IconTick } from "@/shared/icons"
+
 import { SDropdownMenuItemIndicator, SDropdownMenuRadioItem } from "./Dropdown.styles"
 
 export interface IDropdownRadioItemProps {

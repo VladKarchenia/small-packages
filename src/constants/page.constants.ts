@@ -1,0 +1,8 @@
+export const HOME = "/"
+export const LOGIN = "/login"
+export const RECOVERY = "/recovery"
+export const RESET = "/reset"
+export const PROFILE = "/profile"
+export const CREATE = "/create"
+export const EDIT = "/edit"
+export const TRACKING = "/tracking"

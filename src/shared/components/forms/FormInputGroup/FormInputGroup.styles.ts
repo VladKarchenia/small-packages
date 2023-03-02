@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 import { SFormFieldElement } from "../FormField/FormField.styles"
 
@@ -12,7 +12,7 @@ export const SFormInputGroupItems = styled("div", {
 })
 
 export const SFormInputGroupItem = styled("div", {
-  flex: "1",
+  flex: 1,
   position: "relative",
 
   "&:not(:first-of-type)": {

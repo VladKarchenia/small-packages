@@ -1,4 +1,4 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { SDivider } from "./Divider.styles"
 

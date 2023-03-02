@@ -1,7 +1,13 @@
+import { useNavigate } from "react-router-dom"
+
+import { HOME } from "@/constants"
+
 import { Box, Flex, Grid, GridContainer, GridItem, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 
-export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+export const AuthWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const navigate = useNavigate()
+
   return (
     <CommonLayout>
       <GridContainer css={{ height: "100%" }} fullBleed={{ "@initial": false, "@sm": true }}>
@@ -29,7 +35,7 @@ export const AuthWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ childr
                 aria-label="Logo name"
                 role="button"
                 tabIndex={0}
-                href={"/"}
+                onClick={() => navigate(HOME)}
                 style={{ textDecoration: "none" }}
               >
                 <Flex css={{ height: "$40", "@sm": { height: "$64" } }}>

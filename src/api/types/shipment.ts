@@ -1,9 +1,10 @@
-import { PackageType, ShipmentStatus } from "@/shared/types"
+import { PackageType, PackagingType, ResidentialType, ShipmentStatus } from "@/shared/types"
 
 export interface ShipmentPackageInput {
   DECLARED_VALUE_AMOUNT?: string
   DIMENSION: string
-  PACKAGING: keyof typeof PackageType
+  PACKAGE_REF_ID: string
+  PACKAGING: PackageType
   TRACKING_NUMBER?: string
   WEIGHT: string
 }
@@ -26,7 +27,7 @@ export interface ShipmentInput {
   CONSIGNEE_PHONE: string
   CONSIGNEE_PHONE_EXTENSION?: string
   CONSIGNEE_POSTALCODE: string
-  CONSIGNEE_RESIDENTIAL: string
+  CONSIGNEE_RESIDENTIAL: ResidentialType
   CONSIGNEE_STATE: string
 
   CURRENT_GEOLOC: ShipmentGeolocation
@@ -57,7 +58,7 @@ export interface ShipmentInput {
   RETURN_ADDRESS_STATE: string
 
   PACKAGE: ShipmentPackageInput[]
-  // PACKAGING_TYPE: keyof typeof PackageType
+  PACKAGING_TYPE: PackagingType
 
   PICKUP_READY_DATE: string
   PICKUP_READY_TIME: string
@@ -110,15 +111,16 @@ export interface IShipmentsResponse {
 }
 
 export interface IFoundShipmentResponse {
-  consignee_ADDRESS: string
-  consignee_COMPANY: string
-  consignee_CONTACT: string
-  id: string
-  origin_ADDRESS: string
-  origin_COMPANY: string
-  origin_CONTACT: string
-  proship_ID: string
-  tracking_NUMBER: string
+  CONSIGNEE_ADDRESS: string
+  CONSIGNEE_COMPANY: string
+  CONSIGNEE_CONTACT: string
+  ID: string
+  ORIGIN_ADDRESS: string
+  ORIGIN_COMPANY: string
+  ORIGIN_CONTACT: string
+  PROSHIP_ID: string
+  SHIPMENT_STATUS: string
+  TRACKING_NUMBER: string
 }
 
 export interface IFoundShipmentsResponse {

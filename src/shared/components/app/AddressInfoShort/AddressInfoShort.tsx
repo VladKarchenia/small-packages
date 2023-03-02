@@ -16,7 +16,7 @@ export const AddressInfoShort = ({
         {`${fromAddress.country}, ${fromAddress.state}, ${fromAddress.city}`}
       </Copy>
       <Flex css={{ paddingX: "$8" }}>
-        <IconArrowRight size="xs" />
+        <IconArrowRight />
       </Flex>
       <Copy scale={8} color="system-black">
         {`${toAddress.country}, ${toAddress.state}, ${toAddress.city}`}

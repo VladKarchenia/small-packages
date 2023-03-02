@@ -1,6 +1,8 @@
 import React from "react"
-import { CSS } from "@/config"
-import { getStyleFromResponsiveProp, mergeCSSObjects, ResponsiveProp } from "@/utils"
+
+import { CSS } from "@/stitches/config"
+import { ResponsiveProp } from "@/stitches/types"
+import { getStyleFromResponsiveProp, mergeCSSObjects } from "@/stitches/utils"
 
 import { SAspectRatio } from "./AspectRatio.styles"
 

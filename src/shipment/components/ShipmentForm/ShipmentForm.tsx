@@ -1,31 +1,19 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
+import { StepName, ShipmentStep, IStepsDataItem, StepperState } from "@/shipment/types"
+
 import {
-  IStep,
-  StepName,
-  ShipmentDetails,
+  PackageDetails,
   DeliveryRates,
-  ShipmentStep,
   PersonInfo,
   StepperForm,
-  IStepsDataItem,
   ShipmentDateDetails,
   Summary,
   Receipt,
-} from "@/shipment"
+} from "@/shipment/components"
 
-type StepperState = {
-  from: IStep
-  to: IStep
-  shipment: IStep
-  date: IStep
-  rates: IStep
-  summary: IStep
-  receipt: IStep
-}
-
-const initialState: StepperState = {
+const initialState: Omit<StepperState, "info"> = {
   from: {
     name: "from",
     completed: false,
@@ -71,7 +59,7 @@ const initialState: StepperState = {
 }
 
 export const ShipmentForm = () => {
-  const [stepperState, setStepperState] = useState(initialState)
+  const [stepperState, setStepperState] = useState(initialState as StepperState)
   const [defaultStep, setDefaultStep] = useState<StepName | null>(null)
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
@@ -100,37 +88,25 @@ export const ShipmentForm = () => {
     {
       title: "Ship From",
       data: stepperState.from,
-      mainContent: (
-        <PersonInfo
-          handleContinueClick={handleContinueClick}
-          person="sender"
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="sender" />,
       // shortContent: <PersonInfoCollapsed person="sender" />,
     },
     {
       title: "Ship To",
       data: stepperState.to,
-      mainContent: (
-        <PersonInfo
-          handleContinueClick={handleContinueClick}
-          person="recipient"
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="recipient" />,
       // shortContent: <PersonInfoCollapsed person="recipient" />,
     },
     {
       title: "Shipment Details",
       data: stepperState.shipment,
       mainContent: (
-        <ShipmentDetails
+        <PackageDetails
           handleContinueClick={handleContinueClick}
           setStepperState={setStepperState}
         />
       ),
-      // shortContent: <ShipmentDetailsShort />,
+      // shortContent: <PackageDetailsShort />,
     },
     {
       title: "Ready Date",
@@ -162,7 +138,6 @@ export const ShipmentForm = () => {
   ]
 
   useEffect(() => {
-    // set active step
     setDefaultStep(StepName.FROM)
     // check expired date and time ->
     // set stepper state
@@ -211,6 +186,7 @@ export const ShipmentForm = () => {
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!defaultStep) return null

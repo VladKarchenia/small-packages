@@ -1,6 +1,7 @@
 import React from "react"
 import { DialogContentProps } from "@radix-ui/react-dialog"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
 
 import { SModalPanel } from "./Panel.styles"
 

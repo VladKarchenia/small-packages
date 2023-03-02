@@ -1,15 +1,17 @@
 import React from "react"
-import { CSS } from "@/config"
-import { Copy, IFormLabelProps } from "@/shared/components"
+
+import { CSS } from "@/stitches/config"
+
+import { Copy } from "@/shared/components"
+
 import { SProfileDrawerPreview } from "./ProfileDrawerPreview.styles"
 
 export interface IProfileDrawerPreviewProps {
   value: string | React.ReactElement | null
   placeholder?: string
   hidePlaceholder?: boolean
-  labelProps?: IFormLabelProps
-  onClick?: (event: unknown) => void
-  onFocus?: (event: unknown) => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  onFocus?: React.FocusEventHandler<HTMLButtonElement>
   dataTestid?: string
   css?: CSS
   prefix?: React.ReactElement
@@ -22,7 +24,6 @@ export const ProfileDrawerPreview = React.forwardRef<HTMLButtonElement, IProfile
       value,
       placeholder,
       hidePlaceholder = false,
-      labelProps,
       onClick,
       onFocus,
       dataTestid,
@@ -44,14 +45,8 @@ export const ProfileDrawerPreview = React.forwardRef<HTMLButtonElement, IProfile
           css={css}
         >
           {prefix}
-          <Copy
-            scale={8}
-            color={!value ? "system-black" : "system-black"}
-            intent="detail"
-            bold
-            css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
-          >
-            {value ? (!hidePlaceholder ? `${placeholder}: ${value}` : value) : placeholder}{" "}
+          <Copy scale={8} color={!value ? "system-black" : "system-black"} bold truncate id="LOH">
+            {value ? (!hidePlaceholder ? `${placeholder}: ${value}` : value) : placeholder}
           </Copy>
           {suffix}
         </SProfileDrawerPreview>

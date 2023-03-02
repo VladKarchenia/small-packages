@@ -1,4 +1,4 @@
-export * from "./ShipmentDetails"
+export * from "./PackageDetails"
 export * from "./StepItem"
 export * from "./StepperContainer"
 export * from "./DestinationCombobox"

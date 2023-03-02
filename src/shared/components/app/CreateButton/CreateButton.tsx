@@ -1,12 +1,24 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+
+import { useBoundStore } from "@/store"
+import { ShippingType } from "@/shared/types"
+import { CREATE } from "@/constants"
+
 import { Copy, Dropdown, DropdownItem, Spacer, Stack } from "@/shared/components"
 import { IconPlus } from "@/shared/icons"
+
 import { SCreateButton } from "./CreateButton.styles"
 
 export const CreateButton = () => {
   const [isCreateDropdownOpen, setCreateDropdownOpen] = useState<boolean>(false)
   const navigate = useNavigate()
+  const setShippingType = useBoundStore((state) => state.setShippingType)
+
+  const handleClick = (type: ShippingType) => {
+    setShippingType(type)
+    navigate(`${CREATE}/${type}`)
+  }
 
   return (
     <Dropdown
@@ -16,27 +28,32 @@ export const CreateButton = () => {
             Create
           </Copy>
           <Spacer size={8} horizontal />
-          <IconPlus fixedSize width={20} height={20} css={{ color: "$system-white" }} />
+          <IconPlus css={{ color: "$system-white" }} />
         </SCreateButton>
       }
       open={isCreateDropdownOpen}
       onOpenChange={() => setCreateDropdownOpen(!isCreateDropdownOpen)}
       triggerCss={{
         position: "absolute",
-        top: "-82px",
-        right: "$0",
+        // (-$80 + -$2) - the absolute position of the button over the parent container
+        top: `calc(-$80 + -$2)`,
+        right: 0,
       }}
       contentCss={{
-        paddingY: "$0",
+        paddingY: 0,
         borderRadius: "$8",
       }}
     >
       <Stack space={0}>
-        <DropdownItem key={"Quote"} label={"Quote"} onSelect={() => navigate("/create/quote")} />
         <DropdownItem
-          key={"Shipment"}
-          label={"Shipment"}
-          onSelect={() => navigate("/create/shipment")}
+          key="Quote"
+          label="Quote"
+          onSelect={() => handleClick(ShippingType.Quote)}
+        />
+        <DropdownItem
+          key="Shipment"
+          label="Shipment"
+          onSelect={() => handleClick(ShippingType.Shipment)}
         />
       </Stack>
     </Dropdown>

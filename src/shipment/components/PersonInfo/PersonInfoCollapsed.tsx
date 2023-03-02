@@ -1,5 +1,7 @@
 import { useFormContext } from "react-hook-form"
-import { ShipmentState } from "@/shared/state"
+
+import { ShipmentState } from "@/shared/types"
+
 import { PersonInfoShort } from "@/shared/components"
 
 export const PersonInfoCollapsed = ({ person }: { person: "sender" | "recipient" }) => {

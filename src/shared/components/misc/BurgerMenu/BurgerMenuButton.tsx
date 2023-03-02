@@ -1,5 +1,7 @@
 import React from "react"
+
 import { IconBurgerMenu } from "@/shared/icons"
+
 import { SBurgerMenuButton } from "./BurgerMenuButton.styles"
 
 interface IBurgerMenuButtonProps {

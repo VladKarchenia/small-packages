@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
-import { globalCss } from "@/config"
-import { Colors } from "@/config/theme/types"
+import { globalCss } from "@/stitches/config"
+import { Colors } from "@/stitches/types"
 import { IconProvider } from "@/shared/icons"
 
 import lazysizes from "lazysizes"
@@ -67,7 +67,7 @@ const globalStyles = (backgroundColor?: Colors) => {
     "button:not([class])": {
       appearance: "none",
       background: "transparent",
-      border: 0,
+      border: "none",
       borderRadius: 0,
       padding: 0,
       cursor: "pointer",
@@ -84,9 +84,10 @@ const globalStyles = (backgroundColor?: Colors) => {
       display: "block",
     },
 
-    /* Inherit fonts for inputs and buttons */
+    /* Inherit font and letterSpacing for inputs and buttons */
     "input, button, textarea, select": {
       font: "inherit",
+      letterSpacing: "inherit",
     },
 
     "strong, b": {

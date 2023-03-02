@@ -1,5 +1,6 @@
+import { ComponentProps } from "@/stitches/types"
+
 import { Box, Copy } from "@/shared/components"
-import { ComponentProps } from "@/utils"
 
 import {
   STable,
@@ -48,13 +49,13 @@ export const Table: React.FC<React.PropsWithChildren<ITableView>> = ({ caption, 
   </STable>
 )
 
-export const TableHead: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
+export const TableHead: React.FC<React.PropsWithChildren> = ({ children }) => (
   <STableHead>
     <STableRow>{children}</STableRow>
   </STableHead>
 )
 
-export const TableBody: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...props }) => (
+export const TableBody: React.FC<React.PropsWithChildren> = ({ children, ...props }) => (
   <STableBody {...props}>{children}</STableBody>
 )
 
@@ -72,7 +73,7 @@ export const Column: React.FC<IColumn> = ({ children, ...props }) => {
   return (
     <STabularHead scope="col" {...props}>
       <Box css={{ display: "inline-flex", alignItems: "center" }}>
-        <Copy as="span" scale={8} color="system-black" bold>
+        <Copy as="span" scale={{ "@initial": 10, "@lg": 8 }} color="system-black" bold>
           {children}
         </Copy>
       </Box>

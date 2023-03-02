@@ -1,5 +1,7 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Title } from "@/shared/components"
 
 import { SModalHeader } from "./Header.styles"

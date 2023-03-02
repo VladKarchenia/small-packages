@@ -1,7 +1,6 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SShippingCard = styled("div", {
-  reset: true,
   display: "flex",
   flexDirection: "column",
   width: "100%",

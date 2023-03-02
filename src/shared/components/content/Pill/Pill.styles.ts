@@ -1,7 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SPill = styled("button", {
-  $$borderColor: "$system-black",
+  $$borderColor: "$colors$system-black",
   reset: true,
   backgroundColor: "$system-black",
   border: "1px solid",
@@ -50,9 +50,9 @@ export const SPill = styled("button", {
     },
 
     size: {
-      small: { height: "$32", paddingX: "$12" },
-      medium: { height: "$40", paddingX: "$16" },
-      large: { height: "$48", paddingX: "$20" },
+      small: { height: "$24", paddingX: "$12" },
+      medium: { height: "$32", paddingX: "$16" },
+      large: { height: "$40", paddingX: "$20" },
     },
   },
 

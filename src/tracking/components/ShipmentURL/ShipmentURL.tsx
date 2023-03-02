@@ -2,7 +2,8 @@ import React, { useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 
 import { Copy, Flex, Hidden, Spacer } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
+import { IconCopy } from "@/shared/icons"
+
 import { SShipmentURLButton, SShipmentURLMessage } from "./ShipmentURL.styles"
 
 type ShipmentURLProps = {
@@ -14,7 +15,6 @@ export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false)
 
   const handleButtonClick = () => {
-    // toast.success("URL was copied")
     setCopiedToClipboard(true)
 
     setTimeout(() => {
@@ -25,27 +25,20 @@ export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
   return (
     <>
       <Hidden below="md">
-        <Copy scale={11} bold>Tracking number link</Copy>
+        <Copy scale={11} bold>
+          Tracking number link
+        </Copy>
         <Spacer size={4} />
       </Hidden>
       <CopyToClipboard text={url}>
         <SShipmentURLButton type="button" onClick={handleButtonClick}>
           <Flex align="center" justify="between" css={{ width: "100%" }}>
-            <Copy
-              scale={9}
-              color="system-black"
-              bold
-              css={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <Copy scale={9} color="system-black" bold truncate>
               {value}
             </Copy>
             <Spacer size={8} horizontal />
             <Flex align="center" justify="center" css={{ color: "$system-black" }}>
-              <IconCalendar size="xs" />
+              <IconCopy />
             </Flex>
           </Flex>
         </SShipmentURLButton>

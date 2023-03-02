@@ -1,6 +1,7 @@
-import { Button, Copy, Grid, GridItem, Stack, Title } from "@/shared/components"
 import { useModal, useModalActions } from "@/shared/hooks"
-import { GeneralModal } from "../GeneralModal"
+
+import { Button, Copy, Grid, GridItem, Stack, Title } from "@/shared/components"
+import { GeneralModal } from "@/modals"
 
 export const CancelQuoteModal = () => {
   const [cancelQuote] = useModal("cancelQuote")
@@ -27,7 +28,7 @@ export const CancelQuoteModal = () => {
           </Copy>
         </Stack>
 
-        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns={"1fr 1fr"}>
+        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns="1fr 1fr">
           <GridItem>
             <Button full onClick={handleContinueClick}>
               <Copy as="span" scale={8} color="system-white" bold>

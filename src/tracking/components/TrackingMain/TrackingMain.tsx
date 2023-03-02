@@ -1,16 +1,24 @@
 import { useNavigate } from "react-router-dom"
+
+import { IPerson, ShipmentStatus } from "@/shared/types"
+import { HOME } from "@/constants"
+
 import { HeaderBar, Hidden, Spacer } from "@/shared/components"
-import { TrackingHeader } from "@/tracking"
+import { TrackingHeader } from "@/tracking/components"
 
 interface ITrackingDetailsItemProps {
   headerTitle: string
-  shipmentDate: Date | null
+  createdAt: string
+  sender: IPerson
+  shipmentStatus: ShipmentStatus | null
 }
 
 export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItemProps>> = ({
   children,
   headerTitle,
-  shipmentDate,
+  sender,
+  createdAt,
+  shipmentStatus,
 }) => {
   const navigate = useNavigate()
 
@@ -19,11 +27,11 @@ export const TrackingMain: React.FC<React.PropsWithChildren<ITrackingDetailsItem
       <Hidden above="sm">
         <HeaderBar
           title={headerTitle}
-          onClick={() => navigate("/")}
+          onClick={() => navigate(HOME)}
           css={{ paddingRight: "$40" }}
         />
       </Hidden>
-      <TrackingHeader shipmentDate={shipmentDate} />
+      <TrackingHeader sender={sender} createdAt={createdAt} shipmentStatus={shipmentStatus} />
       <Spacer size={{ "@initial": 16, "@sm": 24 }} />
       {children}
       <Spacer size={{ "@initial": 24, "@md": 0 }} />

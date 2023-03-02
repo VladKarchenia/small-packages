@@ -1,4 +1,5 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { useTabsContext } from "./Tabs"
 
 import { STabPanel } from "./TabPanel.styles"

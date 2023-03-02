@@ -1,7 +1,6 @@
-import { Spaces } from "@/config/theme/spacing"
+import { ResponsiveProp, Spaces, Colors } from "@/stitches/types"
+
 import { Copy, Spacer, TypographyScale } from "@/shared/components"
-import { Colors } from "@/config/theme/types"
-import { ResponsiveProp } from "@/utils"
 
 interface ITrackingDetailsItemProps {
   title: string

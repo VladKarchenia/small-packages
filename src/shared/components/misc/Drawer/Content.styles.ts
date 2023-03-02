@@ -1,11 +1,11 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SDrawerContent = styled("div", {
   display: "flex",
   flexDirection: "column",
   flex: 1,
-  // 60px here is Drawer's header height
-  height: "calc(100% - 60px)",
+  // ($48 + $12) - Drawer's header height
+  height: "calc(100% - ($48 + $12))",
   padding: "$48 $24",
 
   focus: {

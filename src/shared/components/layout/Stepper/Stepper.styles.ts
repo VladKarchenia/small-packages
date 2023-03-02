@@ -1,11 +1,12 @@
 import { motion } from "framer-motion"
-import { styled } from "@/config"
+
+import { styled } from "@/stitches/config"
 
 export const SStepper = styled("div", {
   paddingBottom: "$40",
 
   "@sm": {
-    paddingBottom: "$0",
+    paddingBottom: 0,
   },
 })
 
@@ -23,11 +24,12 @@ export const SStepperPanel = styled(motion.div, {
 
   before: {
     content: "''",
-    width: "1px",
+    width: 1,
     height: "100%",
     backgroundColor: "$system-black",
     position: "absolute",
-    left: "26px",
+    // ($24 + $2) - absolute position of the line relative to the parent
+    left: `calc($24 + $2)`,
   },
 })
 

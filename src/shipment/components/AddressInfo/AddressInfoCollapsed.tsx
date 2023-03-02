@@ -1,6 +1,8 @@
 import { useFormContext } from "react-hook-form"
+
+import { ShipmentState } from "@/shared/types"
+
 import { AddressInfoShort } from "@/shared/components"
-import { ShipmentState } from "@/shared/state"
 
 export const AddressInfoCollapsed = () => {
   const { watch } = useFormContext<ShipmentState>()

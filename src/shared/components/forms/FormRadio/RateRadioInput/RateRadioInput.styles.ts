@@ -1,6 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
+import { rgba } from "@/stitches/utils"
+
 import { Flex } from "@/shared/components"
-import { rgba } from "@/utils"
 
 export const SRateRadioInputLabel = styled("label", {
   display: "flex",
@@ -34,7 +35,7 @@ export const SRateRadioInput = styled("input", {
   keyboardFocus: {
     [`+ ${SRateRadioInputBox}`]: {
       borderColor: "$brand-yellow-dark",
-      boxShadow: `0px 2px 4px 0px ${rgba("neutrals-9", 0.15)}`,
+      boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.15)}`,
     },
   },
 })

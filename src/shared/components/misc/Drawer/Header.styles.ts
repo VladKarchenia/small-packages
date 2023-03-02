@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SDrawerHeader = styled("header", {
   paddingTop: "$20",
@@ -7,7 +7,7 @@ export const SDrawerHeader = styled("header", {
   alignItems: "center",
   gridTemplateColumns: "$32 1fr $32",
   width: "100%",
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   position: "sticky",
   top: 0,
   zIndex: "$2",

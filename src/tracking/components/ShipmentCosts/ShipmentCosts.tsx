@@ -1,9 +1,11 @@
 import { useState } from "react"
-import { ShipmentCostsHeader } from "@/tracking"
-import { Costs } from "@/shared/components"
-import { ICost } from "@/shared/types"
+
+import { mediaQueries } from "@/stitches/theme"
 import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
+import { ICost } from "@/shared/types"
+
+import { Costs } from "@/shared/components"
+import { ShipmentCostsHeader } from "@/tracking/components"
 
 interface IShipmentCostsProps {
   title: string

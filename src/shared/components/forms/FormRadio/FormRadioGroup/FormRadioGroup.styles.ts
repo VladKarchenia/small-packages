@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SFormRadioGroup = styled("div", {
   variants: {
@@ -12,6 +12,13 @@ export const SFormRadioGroup = styled("div", {
         "@sm": {
           gridTemplateColumns: "1fr 1fr",
         },
+      },
+    },
+    horizontal: {
+      true: {
+        display: "grid",
+        columnGap: "$16",
+        gridTemplateColumns: "1fr 1fr",
       },
     },
   },

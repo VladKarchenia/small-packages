@@ -1,11 +1,11 @@
 import React from "react"
-import { Global } from "../components"
-import { useViewportHeight } from "../hooks"
 
-export const CommonLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+import { useViewportHeight } from "@/shared/hooks"
+
+import { Global } from "@/shared/components"
+
+export const CommonLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   useViewportHeight({ updateOnResize: true })
 
-  return <Global backgroundColor="neutrals-0">{children}</Global>
+  return <Global backgroundColor="system-white">{children}</Global>
 }
-
-export const getCommonLayout = (page: any) => <CommonLayout>{page}</CommonLayout>

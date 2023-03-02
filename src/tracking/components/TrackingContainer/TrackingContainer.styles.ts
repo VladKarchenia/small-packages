@@ -1,4 +1,5 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
+
 import { Grid, GridItem } from "@/shared/components"
 
 export const STrackingSection = styled("div", {

@@ -1,4 +1,7 @@
 import { useState } from "react"
+
+import { useModal, useModalActions } from "@/shared/hooks"
+
 import {
   Button,
   Copy,
@@ -9,8 +12,7 @@ import {
   Stack,
   Title,
 } from "@/shared/components"
-import { useModal, useModalActions } from "@/shared/hooks"
-import { GeneralModal } from "../GeneralModal"
+import { GeneralModal } from "@/modals"
 
 export const CancelShipmentModal = () => {
   const [isReasonsOpen, setReasonsOpen] = useState<boolean>(false)
@@ -18,7 +20,8 @@ export const CancelShipmentModal = () => {
   const { close } = useModalActions()
 
   const [checkedOption, setCheckedOption] = useState("Duplicated")
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setCheckedOption(e.target.value)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setCheckedOption(event.target.value)
 
   const handleContinueClick = () => {
     if (!isReasonsOpen) {
@@ -63,7 +66,7 @@ export const CancelShipmentModal = () => {
             onChange={handleChange}
             id="cancel-shipment-reason"
             name="cancel-shipment-reason"
-            css={{ paddingX: "$0" }}
+            css={{ paddingX: 0 }}
           >
             {[
               {
@@ -102,7 +105,7 @@ export const CancelShipmentModal = () => {
           </FormRadioGroup>
         ) : null}
 
-        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns={"1fr 1fr"}>
+        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns="1fr 1fr">
           <GridItem>
             <Button full onClick={handleContinueClick}>
               <Copy as="span" scale={8} color="system-white" bold>

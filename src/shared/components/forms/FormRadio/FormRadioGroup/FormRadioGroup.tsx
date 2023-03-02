@@ -1,6 +1,9 @@
 import React from "react"
-import { ComponentProps } from "@/utils/types"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { ErrorLabel, IFormRadioInputProps } from "@/shared/components"
+
 import { SFormRadioGroup } from "./FormRadioGroup.styles"
 
 type RadioGroupChildren =
@@ -19,42 +22,45 @@ export interface IFormRadioGroupProps
   error?: string
   view?: "circle" | "tick"
   withCells?: boolean
+  horizontal?: boolean
 }
 
-export const FormRadioGroup = ({
-  disabled,
-  value,
-  name,
-  view,
-  withCells = false,
-  ...props
-}: IFormRadioGroupProps) => {
-  const { id, error, children, onChange, ...radioGroupProps } = props
+export const FormRadioGroup = React.forwardRef<HTMLDivElement, IFormRadioGroupProps>(
+  (
+    { disabled, value, name, view, withCells = false, horizontal = false, ...props },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    forwardedRef,
+  ) => {
+    const { id, error, children, onChange, ...radioGroupProps } = props
 
-  const clonedChildren = React.Children.map(
-    children,
-    (child) =>
-      React.isValidElement(child) &&
-      React.cloneElement(child, {
-        name,
-        onChange,
-        disabled,
-        checked: value === child.props.value,
-        id: createRadioId(name, (child.props?.value as string) || ""),
-        view,
-      }),
-  )
+    const clonedChildren = React.Children.map(
+      children,
+      (child) =>
+        React.isValidElement(child) &&
+        React.cloneElement(child, {
+          name,
+          onChange,
+          disabled,
+          checked: value === child.props.value,
+          id: createRadioId(name, (child.props?.value as string) || ""),
+          view,
+        }),
+    )
 
-  return (
-    <SFormRadioGroup
-      id={id}
-      data-ui="radiogroup"
-      role="radiogroup"
-      withCells={withCells}
-      {...radioGroupProps}
-    >
-      {clonedChildren}
-      {error && <ErrorLabel id={`${id}__error`}>{error}</ErrorLabel>}
-    </SFormRadioGroup>
-  )
-}
+    return (
+      <SFormRadioGroup
+        id={id}
+        data-ui="radiogroup"
+        role="radiogroup"
+        withCells={withCells}
+        horizontal={horizontal}
+        {...radioGroupProps}
+      >
+        {clonedChildren}
+        {error && <ErrorLabel id={`${id}__error`}>{error}</ErrorLabel>}
+      </SFormRadioGroup>
+    )
+  },
+)
+
+FormRadioGroup.displayName = "FormRadioGroup"

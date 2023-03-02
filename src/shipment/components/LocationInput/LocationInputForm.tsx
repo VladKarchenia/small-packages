@@ -1,6 +1,7 @@
-import { Grid, Flex } from "@/shared/components"
 import { IAddress } from "@/shared/types"
-import { DestinationCombobox } from "../DestinationCombobox"
+
+import { Grid, Flex } from "@/shared/components"
+import { DestinationCombobox } from "@/shipment/components"
 
 interface ILocationInputFormProps {
   initialValue: IAddress
@@ -9,6 +10,7 @@ interface ILocationInputFormProps {
   label: string
   placeholder?: string
   country: string
+  person: "sender" | "recipient"
 }
 
 export const LocationInputForm: React.FC<ILocationInputFormProps> = ({
@@ -18,6 +20,7 @@ export const LocationInputForm: React.FC<ILocationInputFormProps> = ({
   label,
   placeholder,
   country,
+  person,
 }) => {
   return (
     <Grid rows="calc(100% - $80) $80" css={{ height: "100%" }}>
@@ -29,6 +32,7 @@ export const LocationInputForm: React.FC<ILocationInputFormProps> = ({
           label={label}
           placeholder={placeholder}
           country={country}
+          person={person}
         />
       </Flex>
     </Grid>

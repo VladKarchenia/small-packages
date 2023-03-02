@@ -1,7 +1,10 @@
 import React from "react"
-import { CSS } from "@/config"
-import { ComponentProps } from "@/utils/types"
+
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, Flex, Spacer, ErrorLabel, FormLabel, IFormLabelProps } from "@/shared/components"
+
 import { SFormInputGroup, SFormInputGroupItems, SFormInputGroupItem } from "./FormInputGroup.styles"
 
 export interface IFormInputGroupProps extends ComponentProps<typeof SFormInputGroup> {
@@ -25,7 +28,9 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
   children,
   description,
   error,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasError = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasFocus = false,
   label,
   labelProps,
@@ -44,7 +49,7 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
     </FormLabel>
 
     {description && (
-      <Copy color="neutrals-7" intent="detail">
+      <Copy color="neutrals-7">
         {description}
         {labelProps?.required ? (
           <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
@@ -56,7 +61,9 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
 
     {(!labelProps?.hidden || description) && <Spacer size={8} />}
 
-    <SFormInputGroupItems css={{ ...((inputCss || {}) as {}) }}>{children}</SFormInputGroupItems>
+    <SFormInputGroupItems css={{ ...((inputCss || {}) as Record<string, never>) }}>
+      {children}
+    </SFormInputGroupItems>
 
     {(error || afterField) && (
       <Flex justify="between">

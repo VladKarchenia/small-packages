@@ -1,10 +1,12 @@
 import React, { InputHTMLAttributes } from "react"
-import { FormComponentProps } from "@/utils/types"
-import { rgba } from "@/utils"
+
+import { FormComponentProps } from "@/stitches/types"
+import { ICost } from "@/shared/types"
+
 import { Copy, Flex, IconTooltip, Spacer, Stack } from "@/shared/components"
 import { IconInfoCircle } from "@/shared/icons"
+
 import { SRateRadioInputLabel, SRateRadioInputBox, SRateRadioInput } from "./RateRadioInput.styles"
-import { ICost } from "@/shared/types"
 
 const costs: ICost[] = [
   {
@@ -60,7 +62,7 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
 
     return (
       <SRateRadioInputLabel data-ui="radiobutton" {...labelProps}>
-        <SRateRadioInput ref={ref} data-ui="radiobutton__input" {...radioInputProps} type="radio" />
+        <SRateRadioInput ref={ref} data-ui="radiobutton-input" {...radioInputProps} type="radio" />
         <SRateRadioInputBox direction="column">
           <Copy scale={8} color="system-black" bold>
             {rateType}
@@ -97,7 +99,7 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                     </Stack>
                   </Stack>
                 }
-                ariaLabel={"Cost breakdown tooltip"}
+                ariaLabel="Cost breakdown tooltip"
                 withArrow={false}
                 withTitle={false}
                 contentWidth={260}
@@ -105,20 +107,15 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                 delayShow={150}
                 delayHide={150}
                 contentCss={{
-                  backgroundColor: "$neutrals-0",
                   padding: "$16",
-                  borderRadius: "$8",
                   border: "1px solid $neutrals-4",
-                  boxShadow: `0 $space$4 $space$8 ${rgba("system-black", 0.22)}`,
-                  textAlign: "start",
-                  width: "260px",
                 }}
                 triggerCss={{
                   "& > span": {
                     borderRadius: "$rounded",
                   },
                 }}
-                icon={<IconInfoCircle size="xs" css={{ color: "$system-black" }} />}
+                icon={<IconInfoCircle />}
               />
             </Flex>
           </Flex>

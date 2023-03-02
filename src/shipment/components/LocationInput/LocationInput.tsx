@@ -1,9 +1,11 @@
 import { useState } from "react"
-import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/components"
-import { IconArrowLeft } from "@/shared/icons"
+
 import { IAddress } from "@/shared/types"
+
+import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/components"
+import { IconChevronLeft } from "@/shared/icons"
+
 import { LocationInputForm } from "./LocationInputForm"
-import { id } from "date-fns/locale"
 
 interface ILocationInputProps {
   initialValue: IAddress
@@ -14,6 +16,7 @@ interface ILocationInputProps {
   description?: string
   labelProps?: IFormLabelProps
   country: string
+  person: "sender" | "recipient"
 }
 
 export const LocationInput: React.FC<ILocationInputProps> = ({
@@ -25,6 +28,7 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
   description,
   labelProps,
   country,
+  person,
 }) => {
   const { close } = useDrawerActions()
 
@@ -46,7 +50,7 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
       hidePlaceholder
       description={description}
       labelProps={labelProps}
-      closeIcon={<IconArrowLeft />}
+      closeIcon={<IconChevronLeft />}
       drawerForm={
         <LocationInputForm
           initialValue={locationDetails}
@@ -55,6 +59,7 @@ export const LocationInput: React.FC<ILocationInputProps> = ({
           label={label}
           placeholder={`${placeholder}: Country, state, city, zip code`}
           country={country}
+          person={person}
         />
       }
       dataTestid="displayName-button-filter"

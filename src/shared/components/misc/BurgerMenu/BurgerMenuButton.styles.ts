@@ -1,5 +1,6 @@
-import { styled } from "@/config"
-import { rgba, multipleSelectors } from "@/utils"
+import { styled } from "@/stitches/config"
+import { rgba, multipleSelectors } from "@/stitches/utils"
+
 import { HeaderNavButton } from "./HeaderNavButton"
 
 export const SBurgerMenuButton = styled(HeaderNavButton, {

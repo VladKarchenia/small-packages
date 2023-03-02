@@ -1,7 +1,10 @@
 import { memo, useEffect, useMemo } from "react"
-import { ComponentProps, generateHash } from "@/utils"
+
+import { generateHash } from "@/shared/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { useIconCache } from "../IconProvider"
+
 import { SIcon, SIconSvg } from "./Icon.styles"
 
 const defaultDimensions = {

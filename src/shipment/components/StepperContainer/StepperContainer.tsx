@@ -1,64 +1,46 @@
 import { useEffect } from "react"
 import { useLocation, useParams } from "react-router-dom"
-import { useQuery } from "react-query"
+import { shallow } from "zustand/shallow"
 
-import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
-import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
-import { RouteParams } from "@/shared/types"
-import { formatShipmentResponseData } from "@/shared/utils"
+import { useBoundStore } from "@/store"
+import { RouteParams, ShippingType } from "@/shared/types"
+import { useShipmentById } from "@/shared/data"
 
-import { Flex, GridItem } from "@/shared/components"
-import { QuoteForm, ShipmentForm, ShippingType } from "@/shipment"
+import { Breadcrumbs, Flex, GridItem, Hidden } from "@/shared/components"
 import { IllustrationSpinner } from "@/shared/illustrations"
+import { QuoteForm, ShipmentForm } from "@/shipment/components"
 
 export const StepperContainer = () => {
   const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const location = useLocation()
-  const { shippingType } = useShipmentStateContext()
-
-  const { setShipmentData, setShippingType } = useShipmentActionContext()
-  const accessToken = localStorage.getItem("accessToken") || ""
-
-  const { isLoading, isFetching, refetch } = useQuery(
-    // TODO: check how not to call this all the time!
-    ["getShipmentById"],
-    () => getShipmentByIdFn(shipmentId),
-    {
-      enabled: false,
-      // enabled: !!shipmentId,
-      onSuccess: (shipment) => {
-        setShipmentData(formatShipmentResponseData(shipment.data))
-      },
-    },
+  const [shippingType, setShippingType] = useBoundStore(
+    (state) => [state.shippingType, state.setShippingType],
+    shallow,
   )
 
-  useEffect(() => {
-    if (accessToken && shipmentId) {
-      if (!shipmentApi.defaults.headers.common["Authorization"]) {
-        shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
-      }
+  const { isLoading } = useShipmentById(shipmentId)
 
-      refetch()
-    }
-  }, [accessToken, shipmentId, refetch])
-
+  // we need this shippingType definition when we go directly to the create or edit link
   useEffect(() => {
-    if (location.pathname.includes("create")) {
-      if (location.pathname.includes("quote")) {
-        setShippingType(ShippingType.Quote)
-      } else {
-        setShippingType(ShippingType.Shipment)
-      }
+    if (location.pathname.includes("quote")) {
+      setShippingType(ShippingType.Quote)
+    } else {
+      setShippingType(ShippingType.Shipment)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (isLoading || isFetching || !shippingType) {
+  if (isLoading) {
     return (
       <GridItem column={{ "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }}>
         <Flex
           align="center"
           justify="center"
-          css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, textAlign: "center" }}
+          css={{
+            height: `calc((var(--vh) * 100))`,
+            textAlign: "center",
+            "@sm": { height: "100%" },
+          }}
         >
           <IllustrationSpinner css={{ display: "block", height: "$32", width: "$32" }} />
         </Flex>
@@ -74,6 +56,9 @@ export const StepperContainer = () => {
         "@lg": "1 / span 16",
       }}
     >
+      <Hidden below="md">
+        <Breadcrumbs />
+      </Hidden>
       {shippingType === ShippingType.Quote ? <QuoteForm /> : <ShipmentForm />}
     </GridItem>
   )

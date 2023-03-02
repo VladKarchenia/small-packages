@@ -1,24 +1,135 @@
 import { useEffect } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form"
-import { useMutation } from "react-query"
+import { shallow } from "zustand/shallow"
 
-import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
+import { useBoundStore } from "@/store"
+import { useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
+import { useShipmentById } from "@/shared/data"
+import { scrollTo } from "@/shared/utils"
+import {
+  DATE_CEIL_INTERVAL,
+  DIMENSION_DEFAULT,
+  EDIT,
+  PACKAGE_COST_DEFAULT,
+  PACKAGE_CURRENCY_DEFAULT,
+  PACKAGE_ID_DEFAULT,
+  PACKAGE_QUANTITY_DEFAULT,
+  PACKAGE_WEIGHT_DEFAULT,
+  TOTAL_PACKAGES_NUMBER_DEFAULT,
+  TRACKING,
+} from "@/constants"
 import { IShipmentResponse } from "@/api/types"
-import { scrollTo } from "@/utils"
-import { formatShipmentRequestData } from "@/shared/utils"
-import { ShipmentState, useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
+import {
+  PackageType,
+  ParcelContentType,
+  PickupType,
+  RouteParams,
+  ShippingType,
+  ShipmentState,
+  PackagingType,
+  IdenticalPackagesType,
+  ResidentialType,
+} from "@/shared/types"
+import { StepName, IStepsDataItem } from "@/shipment/types"
 
 import { Stepper } from "@/shared/components"
-import {
-  StepName,
-  StepperFooter,
-  StepItem,
-  StepperHeader,
-  IStepsDataItem,
-  ShippingType,
-} from "@/shipment"
-import { RouteParams, ShipmentStatus } from "@/shared/types"
+import { StepperFooter, StepItem, StepperHeader } from "@/shipment/components"
+
+const initialShipmentState: ShipmentState = {
+  sender: {
+    name: "",
+    phone: "",
+    extension: "",
+    email: "",
+    company: "",
+    fullAddress: {
+      displayName: "",
+      country: "United States",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+      latitude: "",
+      longitude: "",
+    },
+  },
+  senderReturn: {
+    name: "",
+    phone: "",
+    extension: "",
+    email: "",
+    company: "",
+    fullAddress: {
+      displayName: "",
+      country: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+      latitude: "",
+      longitude: "",
+    },
+  },
+  recipient: {
+    name: "",
+    phone: "",
+    extension: "",
+    email: "",
+    company: "",
+    fullAddress: {
+      displayName: "",
+      country: "United States",
+      zipCode: "",
+      state: "",
+      city: "",
+      address1: "",
+      address2: "",
+      latitude: "",
+      longitude: "",
+      isResidential: JSON.parse(ResidentialType.Nonresidential),
+    },
+  },
+  packaging: {
+    pickupType: PickupType.Schedule,
+    packagingType: PackagingType.OWN,
+    totalPackagesNumber: TOTAL_PACKAGES_NUMBER_DEFAULT,
+    packageContent: ParcelContentType.Gift,
+    identicalPackages: IdenticalPackagesType.Identical,
+  },
+  parcels: {
+    [PACKAGE_ID_DEFAULT]: {
+      weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
+      dimensions: {
+        length: `${DIMENSION_DEFAULT}`,
+        width: `${DIMENSION_DEFAULT}`,
+        height: `${DIMENSION_DEFAULT}`,
+      },
+      totalPrice: `${PACKAGE_COST_DEFAULT}`,
+      totalCurrency: PACKAGE_CURRENCY_DEFAULT,
+      packageId: PACKAGE_ID_DEFAULT,
+      packageType: PackageType.Custom,
+      quantity: PACKAGE_QUANTITY_DEFAULT,
+    },
+  },
+  date: new Date(Math.ceil(new Date().getTime() / DATE_CEIL_INTERVAL) * DATE_CEIL_INTERVAL),
+  rate: {
+    rateType: "",
+    name: "",
+    price: 0,
+    currency: "",
+    id: "",
+  },
+  currentLocation: {
+    displayName: "",
+    latitude: "",
+    longitude: "",
+  },
+  shipmentStatus: null,
+  hasReturnAddress: false,
+}
 
 interface IStepperFormProps {
   title: string
@@ -29,85 +140,56 @@ interface IStepperFormProps {
 export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps) => {
   const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
-  const { setShipmentData, setShippingType } = useShipmentActionContext()
-  const { date, parcels, rate, recipient, sender, senderReturn, hasReturnAddress, shippingType } =
-    useShipmentStateContext()
+  const [shippingType, setShippingType] = useBoundStore(
+    (state) => [state.shippingType, state.setShippingType],
+    shallow,
+  )
   const location = useLocation()
+  const { data } = useShipmentById(shipmentId)
   const isEditMode = location.pathname.includes("edit")
 
   const methods = useForm<ShipmentState>({
     mode: "onChange",
     defaultValues: {
-      sender: sender,
-      senderReturn: senderReturn,
-      recipient: recipient,
-      parcels: parcels,
-      date: date,
-      rate: rate,
-      hasReturnAddress: hasReturnAddress,
+      sender: data?.sender || initialShipmentState.sender,
+      senderReturn: data?.senderReturn || initialShipmentState.senderReturn,
+      recipient: data?.recipient || initialShipmentState.recipient,
+      packaging: data?.packaging || initialShipmentState.packaging,
+      parcels: data?.parcels || initialShipmentState.parcels,
+      date: data?.date || initialShipmentState.date,
+      rate: data?.rate || initialShipmentState.rate,
+      shipmentStatus: data?.shipmentStatus || initialShipmentState.shipmentStatus,
+      hasReturnAddress: data?.hasReturnAddress || initialShipmentState.hasReturnAddress,
     },
   })
 
-  const { mutate: createShipment, isLoading } = useMutation(
-    (data: ShipmentState) => createShipmentFn(formatShipmentRequestData(data, shippingType)),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        // navigate(`/edit/shipment/${id}`)
+  const { mutate: createShipment } = useCreateShipment()
+  const { mutate: updateShipment } = useUpdateShipment()
 
-        if (shippingType === ShippingType.Quote) {
-          setShippingType(ShippingType.Shipment)
-          navigate(`/edit/shipment/${id}`)
-        } else {
-          navigate(`/tracking/${id}`)
-        }
-      },
-    },
-  )
-
-  const { mutate: updateShipment } = useMutation(
-    (data: ShipmentState) =>
-      updateShipmentFn(
-        shipmentId,
-        formatShipmentRequestData(
-          data,
-          shippingType,
-          shippingType === ShippingType.Quote ? ShipmentStatus.DRAFT : ShipmentStatus.CONFIRMED,
-        ),
-      ),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        if (shippingType === ShippingType.Quote) {
-          setShippingType(ShippingType.Shipment)
-          navigate(`/edit/shipment/${id}`)
-        } else {
-          navigate(`/tracking/${id}`)
-        }
-      },
-    },
-  )
-
-  const onSubmitHandler = (data: ShipmentState) => {
-    setShipmentData({
-      sender: data.sender,
-      senderReturn: data.senderReturn,
-      recipient: data.recipient,
-      parcels: data.parcels,
-      date: data.date,
-      rate: data.rate,
-      shippingType: data.shippingType,
-      shipmentStatus: data.shipmentStatus,
-      currentLocation: {
-        displayName: "",
-        latitude: "",
-        longitude: "",
-      },
-      hasReturnAddress: data.hasReturnAddress,
-    } as ShipmentState)
-    isEditMode ? updateShipment(data) : createShipment(data)
-  }
+  const onSubmitHandler = (data: ShipmentState) =>
+    isEditMode
+      ? updateShipment(data, {
+          onSuccess: (data: IShipmentResponse) => {
+            if (shippingType === ShippingType.Quote) {
+              setShippingType(ShippingType.Shipment)
+              navigate(`${EDIT}/shipment/${data.id}`)
+            } else {
+              navigate(`${TRACKING}/${shippingType}/${data.id}`)
+            }
+          },
+        })
+      : createShipment(data, {
+          onSuccess: (data: IShipmentResponse) => {
+            if (shippingType === ShippingType.Quote) {
+              setShippingType(ShippingType.Shipment)
+              navigate(`${EDIT}/shipment/${data.id}`)
+            } else {
+              navigate(`${TRACKING}/${shippingType}/${data.id}`)
+            }
+          },
+        })
 
   useEffect(() => {
-    // TODO: fix this initial position on create shipment page
     scrollTo({ position: { top: 0, left: 0 } })
   }, [])
 

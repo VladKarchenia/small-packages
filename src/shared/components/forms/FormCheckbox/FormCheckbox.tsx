@@ -1,5 +1,7 @@
 import React, { InputHTMLAttributes } from "react"
-import { FormComponentProps } from "@/utils"
+
+import { FormComponentProps } from "@/stitches/types"
+
 import { Copy, Spacer, ErrorLabel } from "@/shared/components"
 
 import {
@@ -46,14 +48,14 @@ export const FormCheckbox = React.forwardRef(
     return (
       <>
         <SFormCheckboxLabel data-ui="form-checkbox" {...labelProps}>
-          <SFormCheckboxInput data-ui="form-checkbox__input" {...checkboxInputProps} />
-          <SFormCheckboxBox data-ui="form-checkbox__box">
+          <SFormCheckboxInput data-ui="form-checkbox-input" {...checkboxInputProps} />
+          <SFormCheckboxBox data-ui="form-checkbox-box">
             <SFormCheckboxTick />
           </SFormCheckboxBox>
           {!noLabel && (
             <>
               <Spacer size={16} horizontal />
-              <Copy color="neutrals-9" intent="detail" data-ui="form-checkbox__copy">
+              <Copy scale={8} color="neutrals-9" data-ui="form-checkbox-copy">
                 {label}
               </Copy>
             </>

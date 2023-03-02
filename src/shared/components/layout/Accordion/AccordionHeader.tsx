@@ -1,4 +1,5 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { Title, TypographyScale } from "@/shared/components"
 
 import { SAccordionHeader } from "./AccordionHeader.styles"

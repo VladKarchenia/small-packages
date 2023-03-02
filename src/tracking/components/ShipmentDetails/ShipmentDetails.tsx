@@ -1,7 +1,10 @@
-import { format } from "date-fns"
+import { useNavigate } from "react-router-dom"
+import tzlookup from "tz-lookup"
+import format from "date-fns/format"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
-import { useShipmentStateContext } from "@/shared/state"
-import { useModalActions } from "@/shared/hooks"
+import { IPackaging, IPerson, IRate, ShippingType } from "@/shared/types"
+import { TRACKING } from "@/constants"
 
 import {
   AddressInfoShort,
@@ -18,7 +21,7 @@ import {
   GridContainer,
   Link,
 } from "@/shared/components"
-import { IconCalendar, IconChevronRight } from "@/shared/icons"
+import { IconBox, IconChevronRight, IconTruck } from "@/shared/icons"
 import {
   SHIPMENT_DETAILS,
   costs,
@@ -27,22 +30,43 @@ import {
   ShipmentRoute,
   ShipmentCosts,
   ShipmentLabelContainer,
-} from "@/tracking"
+} from "@/tracking/components"
 
 import {
   STrackingGrid,
   STrackingGridItem,
 } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
-export const ShipmentDetails = () => {
-  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
-  const { open } = useModalActions()
+interface IShipmentDetailsProps {
+  sender: IPerson
+  recipient: IPerson
+  packaging: IPackaging
+  date: Date
+  rate: IRate
+  shipmentId: string
+  shippingType: ShippingType
+}
+
+export const ShipmentDetails = ({
+  sender,
+  recipient,
+  packaging,
+  date,
+  rate,
+  shipmentId,
+  shippingType,
+}: IShipmentDetailsProps) => {
+  const navigate = useNavigate()
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
 
   return (
     <STrackingGrid
       columns={{ "@initial": "1fr", "@md": "1fr 1fr 1fr 1fr" }}
       gap={{ "@initial": 16, "@md": 24 }}
-      rows={"auto auto"}
+      rows="auto auto"
     >
       <Hidden below="md" css={{ gridArea: "main" }}>
         <STrackingGridItem>
@@ -58,42 +82,65 @@ export const ShipmentDetails = () => {
             </TrackingDetailsItem>
             <TrackingDetailsItem title="Date and delivery service">
               <Stack space={12}>
+                <ShortInfoLine
+                  icon={<IconTruck css={{ color: "$neutrals-7" }} />}
+                  text={rate.name}
+                />
+                <Flex css={{ gap: "$4" }}>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    Pickup date:
+                  </Copy>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {date
+                      ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                          date,
+                          timeZone,
+                          "(zzz)",
+                        )}`
+                      : ""}
+                  </Copy>
+                </Flex>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
-                </Copy>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  {/* TODO: add time zone */}
+                  {/* TODO: add real arrivalDate with the time zone */}
                   Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                 </Copy>
-                <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
               </Stack>
             </TrackingDetailsItem>
 
             <TrackingDetailsItem title="Shipment Details">
-              <Stack space={12}>
+              <Stack space={8}>
+                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  {`Pickup type: ${packaging.pickupType}`}
+                </Copy>
+                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  {`Package type: ${packaging.packagingType}`}
+                </Copy>
+                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  {`Contents: ${packaging.packageContent}`}
+                </Copy>
                 <Flex align="center" justify="between">
-                  <Flex>
-                    <Flex align="center" justify="center">
-                      <IconCalendar size="xs" />
-                    </Flex>
-                    <Spacer size={8} horizontal />
+                  <Flex align="center" justify="center" css={{ gap: "$8" }}>
+                    <IconBox css={{ color: "$neutrals-7" }} />
                     <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                      {parcels.length} package(s)
+                      {`${packaging.totalPackagesNumber} ${
+                        packaging.totalPackagesNumber === 1 ? "parcel" : "parcels"
+                      }`}
                     </Copy>
                   </Flex>
-                  <Spacer size={8} horizontal />
                   <Link
-                    as="button"
-                    onClick={() => {
-                      open("shipmentDetails")
-                    }}
+                    onClick={() => navigate(`${TRACKING}/${shippingType}/${shipmentId}/packages`)}
                   >
-                    <Flex align="center">
-                      <Copy scale={{ "@initial": 9, "@md": 8 }} color={"system-black"}>
-                        View more
-                      </Copy>
-                      <IconChevronRight size="xs" css={{ color: "$system-black" }} />
-                    </Flex>
+                    <Copy
+                      as="span"
+                      scale={{ "@initial": 9, "@md": 8 }}
+                      color="system-black"
+                      bold
+                      css={{ display: "flex", alignItems: "center" }}
+                    >
+                      View all
+                      <Spacer size={4} horizontal />
+                      <IconChevronRight size="xs" css={{ paddingTop: "$2" }} />
+                    </Copy>
                   </Link>
                 </Flex>
               </Stack>
@@ -124,45 +171,66 @@ export const ShipmentDetails = () => {
 
               <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
                 <Stack space={12}>
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    Pickup date: {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
-                  </Copy>
-
+                  <ShortInfoLine
+                    icon={<IconTruck css={{ color: "$neutrals-7" }} />}
+                    text={rate.name}
+                  />
+                  <Flex css={{ gap: "$4" }}>
+                    <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                      Pickup date:
+                    </Copy>
+                    <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                      {date
+                        ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                            date,
+                            timeZone,
+                            "(zzz)",
+                          )}`
+                        : ""}
+                    </Copy>
+                  </Flex>
                   <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                     Arrival date: {SHIPMENT_DETAILS.arrivalDate}
                   </Copy>
-                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
                 </Stack>
               </TrackingDetailsItem>
+
               <TrackingDetailsItem title="Shipment Details" titleScale={11}>
-                <Stack space={12}>
-                  {parcels.map((parcel: any, index: number) => (
-                    <Stack space={8} key={index}>
-                      {parcels.length > 1 ? (
-                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
-                          Parcel {index + 1}
-                        </Copy>
-                      ) : null}
+                <Stack space={8}>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {`Pickup type: ${packaging.pickupType}`}
+                  </Copy>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {`Package type: ${packaging.packagingType}`}
+                  </Copy>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {`Contents: ${packaging.packageContent}`}
+                  </Copy>
+                  <Flex align="center" justify="between">
+                    <Flex align="center" justify="center" css={{ gap: "$8" }}>
+                      <IconBox css={{ color: "$neutrals-7" }} />
                       <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                        {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                        {parcel.pickupType}
+                        {`${packaging.totalPackagesNumber} ${
+                          packaging.totalPackagesNumber === 1 ? "parcel" : "parcels"
+                        }`}
                       </Copy>
-                      <Flex align="center">
-                        <Flex align="center" justify="center">
-                          <IconCalendar size="xs" />
-                        </Flex>
-                        <Spacer size={8} horizontal />
-                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                          {parcel.dimensions.length}x{parcel.dimensions.width}x
-                          {parcel.dimensions.height} in;
-                        </Copy>
-                        <Spacer size={8} horizontal />
-                        <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                          {parcel.weight} lb
-                        </Copy>
-                      </Flex>
-                    </Stack>
-                  ))}
+                    </Flex>
+                    <Link
+                      onClick={() => navigate(`${TRACKING}/${shippingType}/${shipmentId}/packages`)}
+                    >
+                      <Copy
+                        as="span"
+                        scale={{ "@initial": 9, "@md": 8 }}
+                        color="system-black"
+                        bold
+                        css={{ display: "flex", alignItems: "center" }}
+                      >
+                        View all
+                        <Spacer size={4} horizontal />
+                        <IconChevronRight size="xs" css={{ paddingTop: "$2" }} />
+                      </Copy>
+                    </Link>
+                  </Flex>
                 </Stack>
               </TrackingDetailsItem>
 
@@ -172,11 +240,11 @@ export const ShipmentDetails = () => {
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Sender’s info" titleScale={11}>
-                <PersonInfoShort person={"sender"} sender={sender} />
+                <PersonInfoShort person="sender" sender={sender} />
               </TrackingDetailsItem>
 
               <TrackingDetailsItem title="Recipient’s info" titleScale={11}>
-                <PersonInfoShort person={"recipient"} recipient={recipient} />
+                <PersonInfoShort person="recipient" recipient={recipient} />
               </TrackingDetailsItem>
             </Stack>
           </STrackingGridItem>
@@ -184,7 +252,7 @@ export const ShipmentDetails = () => {
       </Hidden>
 
       <GridItem column={{ "@md": "span 3" }} css={{ gridArea: "map" }}>
-        <Map />
+        <Map sender={sender} recipient={recipient} />
       </GridItem>
 
       <Hidden below="md">
@@ -192,7 +260,7 @@ export const ShipmentDetails = () => {
           <TrackingDetailsItem
             title="Route"
             titleScale={7}
-            titleColor={"system-black"}
+            titleColor="system-black"
             titleIndent={24}
           >
             {/* TODO: Fix Route block after BE data and final design */}
@@ -207,18 +275,18 @@ export const ShipmentDetails = () => {
             <TrackingDetailsItem
               title="Sender’s info"
               titleScale={7}
-              titleColor={"system-black"}
+              titleColor="system-black"
               titleIndent={24}
             >
-              <PersonInfoShort person={"sender"} sender={sender} />
+              <PersonInfoShort person="sender" sender={sender} />
             </TrackingDetailsItem>
             <TrackingDetailsItem
               title="Recipient’s info"
               titleScale={7}
-              titleColor={"system-black"}
+              titleColor="system-black"
               titleIndent={24}
             >
-              <PersonInfoShort person={"recipient"} recipient={recipient} />
+              <PersonInfoShort person="recipient" recipient={recipient} />
             </TrackingDetailsItem>
           </Stack>
         </STrackingGridItem>
@@ -237,7 +305,7 @@ export const ShipmentDetails = () => {
               title="Tracking & Label Links"
               titleIndent={16}
               titleScale={7}
-              titleColor={"system-black"}
+              titleColor="system-black"
             >
               <ShipmentURL
                 url={SHIPMENT_DETAILS.shipmentURL}

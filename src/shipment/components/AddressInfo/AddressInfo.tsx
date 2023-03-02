@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
 
-import { ShipmentState, useShipmentStateContext } from "@/shared/state"
+import { useShipmentById } from "@/shared/data"
+import { RouteParams, ShipmentState } from "@/shared/types"
+import { StepName, StepperState } from "@/shipment/types"
 
 import {
   Button,
@@ -13,14 +15,14 @@ import {
   Stack,
   useStepperContext,
 } from "@/shared/components"
-import { StepName, LocationInput, StepActionsBar, LocationPopover, StepperState } from "@/shipment"
+import { LocationInput, StepActionsBar, LocationPopover } from "@/shipment/components"
 
 export const AddressInfo = ({
   handleContinueClick,
   setStepperState,
 }: {
   handleContinueClick: (step: StepName.INFO, nextStep: StepName.SHIPMENT) => void
-  setStepperState: (value: any) => void
+  setStepperState: React.Dispatch<React.SetStateAction<StepperState>>
 }) => {
   const [isStepChanged, setIsStepChanged] = useState(false)
   const { setValue, watch } = useFormContext<ShipmentState>()
@@ -28,7 +30,8 @@ export const AddressInfo = ({
   const stringifiedSenderAddress = JSON.stringify(sender.fullAddress)
   const stringifiedRecipientAddress = JSON.stringify(recipient.fullAddress)
   const { setSelected } = useStepperContext("AddressInfo")
-  const state = useShipmentStateContext()
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const { data } = useShipmentById(shipmentId)
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
 
@@ -37,18 +40,20 @@ export const AddressInfo = ({
     handleContinueClick(StepName.INFO, StepName.SHIPMENT)
   }
 
-  // sets the value of the isStepChanged variable according to whether the
-  // sender or recipient fullAddress from the form has changed compared to the context
+  // sets the value of the isStepChanged variable according to whether the sender or
+  // recipient fullAddress from the form has changed compared to the currently stored
   const stepChangesChecker = useCallback(() => {
-    setIsStepChanged(
-      JSON.stringify(sender.fullAddress) !== JSON.stringify(state.sender.fullAddress) ||
-        JSON.stringify(recipient.fullAddress) !== JSON.stringify(state.recipient.fullAddress),
-    )
+    if (data?.sender.fullAddress && data?.recipient.fullAddress) {
+      setIsStepChanged(
+        JSON.stringify(sender.fullAddress) !== JSON.stringify(data.sender.fullAddress) ||
+          JSON.stringify(recipient.fullAddress) !== JSON.stringify(data.recipient.fullAddress),
+      )
+    }
   }, [
     sender.fullAddress,
     recipient.fullAddress,
-    state.sender.fullAddress,
-    state.recipient.fullAddress,
+    data?.sender.fullAddress,
+    data?.recipient.fullAddress,
   ])
 
   // checks if edit mode is now and triggers the stepChangesChecker function
@@ -91,7 +96,8 @@ export const AddressInfo = ({
             labelProps={{ hidden: true, required: true }}
             description="From"
             placeholder="From"
-            country={"United States"}
+            country="United States"
+            person="sender"
           />
           <LocationPopover
             value={recipient.fullAddress}
@@ -102,7 +108,8 @@ export const AddressInfo = ({
             labelProps={{ hidden: true, required: true }}
             description="To"
             placeholder="To"
-            country={"United States,Canada"}
+            country="United States,Canada"
+            person="recipient"
           />
         </Stack>
       </Hidden>
@@ -118,7 +125,8 @@ export const AddressInfo = ({
             placeholder="From"
             description="From"
             labelProps={{ required: true }}
-            country={"United States"}
+            country="United States"
+            person="sender"
           />
           <LocationInput
             initialValue={recipient.fullAddress}
@@ -130,7 +138,8 @@ export const AddressInfo = ({
             placeholder="To"
             description="To"
             labelProps={{ required: true }}
-            country={"United States,Canada"}
+            country="United States,Canada"
+            person="recipient"
           />
         </Stack>
       </Hidden>

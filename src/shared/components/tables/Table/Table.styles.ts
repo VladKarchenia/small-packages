@@ -1,8 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const STable = styled("table", {
   borderCollapse: "collapse",
-  // tableLayout: "fixed",
   width: "100%",
 })
 
@@ -31,7 +30,7 @@ export const STableBody = styled("tbody", {})
 export const STabularData = styled("td", {
   borderCollapse: "collapse",
   fontWeight: "normal",
-  padding: "$0",
+  padding: 0,
   height: "$56",
   verticalAlign: "middle",
   whiteSpace: "nowrap",
@@ -59,10 +58,14 @@ export const STabularData = styled("td", {
 })
 
 export const STabularHead = styled(STabularData, {
-  padding: "$0 $16",
+  padding: "$0 $12",
+
+  "@lg": {
+    paddingX: "$16",
+  },
 })
 
 export const STableCaption = styled("caption", {
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   visibility: "hidden",
 })

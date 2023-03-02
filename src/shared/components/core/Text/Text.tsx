@@ -1,11 +1,6 @@
-import { styled, CSS } from "@/config"
+import { styled, CSS } from "@/stitches/config"
 
-const editorialVariant = {
-  true: { fontFamily: "$serif" },
-  false: { fontFamily: "$sans" },
-}
-
-const fontSizeLineHeightMap: any = {
+const fontSizeLineHeightMap: { [key: string]: string | number } = {
   6: "16px",
   11: "16px",
   12: "18px",
@@ -35,6 +30,7 @@ const getScaleVariantStyles = (fontSize: number) => {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const scaleVariantMap: any = {
   0: {
     ...getScaleVariantStyles(48),
@@ -106,7 +102,6 @@ const trackingVariant = {
 }
 
 export const commonVariants = {
-  editorial: editorialVariant,
   scale: {
     0: {},
     1: {},
@@ -129,12 +124,6 @@ export const commonVariants = {
 export type TypographyScale = keyof typeof commonVariants.scale
 
 export const Text = styled("p", {
-  fontFamily: "$sans",
-  fontStyle: "normal",
-  fontStretch: "normal",
-  letterSpacing: "0.5px",
-  lineHeight: 1.5,
-
   variants: {
     ...commonVariants,
 

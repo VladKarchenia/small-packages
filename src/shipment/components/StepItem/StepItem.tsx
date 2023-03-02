@@ -1,4 +1,4 @@
-import { IStep } from "@/shipment"
+import { IStep } from "@/shipment/types"
 
 import {
   Copy,
@@ -9,7 +9,6 @@ import {
   StepperItem,
   StepperPanel,
 } from "@/shared/components"
-import { IconTick } from "@/shared/icons"
 
 interface IStepperItemProps {
   title: string
@@ -32,7 +31,7 @@ export const StepItem = ({ title, data, mainContent, totalSteps }: IStepperItemP
             paddingY: "$8",
 
             hover: {
-              backgroundColor: "$neutrals-0",
+              backgroundColor: "$system-white",
             },
           }}
         >
@@ -46,16 +45,12 @@ export const StepItem = ({ title, data, mainContent, totalSteps }: IStepperItemP
                 minWidth: "$20",
                 borderRadius: "$rounded",
                 backgroundColor: "$system-black",
-                color: "$neutrals-0",
+                color: "$system-white",
               }}
             >
-              {completed ? (
-                <IconTick size="xs" />
-              ) : (
-                <Copy scale={10} color="neutrals-0" bold>
-                  {stepNumber}
-                </Copy>
-              )}
+              <Copy scale={10} color="system-white" bold>
+                {stepNumber}
+              </Copy>
             </Flex>
             <Spacer size={12} horizontal />
             {title}

@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SModalHeader = styled("header", {
   zIndex: "$2",
@@ -10,7 +10,7 @@ export const SModalHeader = styled("header", {
   variants: {
     empty: {
       false: {
-        backgroundColor: "$neutrals-0",
+        backgroundColor: "$system-white",
         padding: "$16 $24",
         borderBottom: "1px solid $neutrals-4",
 

@@ -1,13 +1,18 @@
 import React from "react"
+import { useNavigate } from "react-router-dom"
+
+import { HOME, PROFILE } from "@/constants"
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, Drawer, Stack, useDrawer, useDrawerActions } from "@/shared/components"
-import { BurgerMenuButton } from "./BurgerMenuButton"
-import { HOME, USER_MANAGEMENT } from "@/constants"
-import { ComponentProps } from "@/utils"
-import { SNavLink } from "./NavLink.styles"
 import { IconCross } from "@/shared/icons"
 
+import { BurgerMenuButton } from "./BurgerMenuButton"
+
+import { SNavLink } from "./NavLink.styles"
+
 export interface INavItem {
-  href: string
+  url: string
   text: string
 }
 
@@ -17,11 +22,11 @@ interface INavLinkProps extends ComponentProps<typeof SNavLink> {
 
 const menuItems: INavItem[] = [
   {
-    href: HOME,
+    url: HOME,
     text: "Home",
   },
   {
-    href: USER_MANAGEMENT,
+    url: PROFILE,
     text: "User Management",
   },
 ]
@@ -29,8 +34,8 @@ const menuItems: INavItem[] = [
 export const MenuNavItems = ({ items }: { items: INavItem[] }) => {
   return (
     <Stack as="ul" space={12} outerDividers="bottom" dividers>
-      {items.map(({ href, text }) => (
-        <NavLink key={href} href={href}>
+      {items.map(({ url, text }) => (
+        <NavLink key={url} href={url}>
           {text}
         </NavLink>
       ))}
@@ -38,13 +43,22 @@ export const MenuNavItems = ({ items }: { items: INavItem[] }) => {
   )
 }
 
-export const NavLink: React.FC<INavLinkProps> = ({ children, href, selected = false, role }) => (
-  <SNavLink href={href} selected={selected} role={role}>
-    <Copy scale={8} color="system-black" bold>
-      {children}
-    </Copy>
-  </SNavLink>
-)
+export const NavLink: React.FC<INavLinkProps> = ({
+  children,
+  href = "",
+  selected = false,
+  role,
+}) => {
+  const navigate = useNavigate()
+
+  return (
+    <SNavLink onClick={() => navigate(href)} selected={selected} role={role}>
+      <Copy scale={8} color="system-black" bold>
+        {children}
+      </Copy>
+    </SNavLink>
+  )
+}
 
 interface IBurgerMenuProps {
   currentPathname?: string

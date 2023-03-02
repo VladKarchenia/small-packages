@@ -1,9 +1,17 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
-import { Box, Copy, Flex, Spacer } from "@/shared/components"
 
-import { ErrorLabel } from "../ErrorLabel"
-import { FormLabel, IFormLabelProps } from "../FormLabel"
+import { ComponentProps } from "@/stitches/types"
+
+import {
+  Box,
+  Copy,
+  Flex,
+  Spacer,
+  ErrorLabel,
+  FormLabel,
+  IFormLabelProps,
+} from "@/shared/components"
+
 import {
   SFormField,
   SFormFieldContainer,
@@ -21,6 +29,8 @@ export interface IFormFieldCommonProps {
   hasError?: boolean
 
   labelProps?: IFormLabelProps
+
+  borderless?: boolean
 
   prefix?: React.ReactNode
   suffix?: React.ReactNode
@@ -47,6 +57,8 @@ export const FormField = ({
 
   labelProps,
 
+  borderless,
+
   prefix,
   suffix,
 
@@ -68,6 +80,17 @@ export const FormField = ({
           ) : null}
         </FormLabel>
 
+        {description && (
+          <Copy scale={10}>
+            {description}
+            {labelProps?.required ? (
+              <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+                *
+              </Copy>
+            ) : null}
+          </Copy>
+        )}
+
         {postLabel && (
           <>
             <Spacer size={8} horizontal />
@@ -76,23 +99,13 @@ export const FormField = ({
         )}
       </Flex>
 
-      {description && (
-        <Copy scale={10}>
-          {description}
-          {labelProps?.required ? (
-            <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
-              *
-            </Copy>
-          ) : null}
-        </Copy>
-      )}
-
       {(!labelProps?.hidden || description) && <Spacer size={8} />}
 
       <SFormFieldContainer
         hasError={!!error || hasError}
         isFocused={isFocused}
-        // fix this
+        borderless={borderless}
+        // TODO: fix this
         // isDisabled={true}
       >
         {prefix && <SFormFieldPrefix>{prefix}</SFormFieldPrefix>}

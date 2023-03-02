@@ -1,39 +1,36 @@
-import { useEffect, useState } from "react"
-import { Flex, FormSelect, Copy, Spacer } from "@/shared/components"
+import { useState } from "react"
+import { isAxiosError } from "axios"
 import { useQuery } from "react-query"
-import { IUserOrganizationResponse } from "@/api/types"
+import { shallow } from "zustand/shallow"
+
+import { useAuthStore } from "@/store"
 import { getUserOrganizationsFn } from "@/api/userApi"
+import { IUserOrganization } from "@/api/types"
+import { showToast } from "@/shared/utils"
+
+import { Flex, FormSelect, Copy, Spacer } from "@/shared/components"
 
 export const SwitchOrganization = () => {
-  const organization: IUserOrganizationResponse = JSON.parse(
-    localStorage.getItem("organization") || "{}",
+  const [organization, setOrganization] = useAuthStore(
+    (state) => [state.organization, state.setOrganization],
+    shallow,
+  )
+  const [currentOrganization, setCurrentOrganization] = useState<IUserOrganization | null>(
+    organization,
   )
 
-  const [currentOrganization, setCurrentOrganization] =
-    useState<IUserOrganizationResponse>(organization)
-  const [organizations, setOrganizations] = useState<IUserOrganizationResponse[]>([])
-  const organizationsList: string[] = organizations.map((i) => i?.label || "")
-
-  const { isLoading, isFetching, refetch } = useQuery(
-    ["getAllOrganizations"],
-    () => getUserOrganizationsFn(),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        setOrganizations(data)
-      },
+  const { isLoading, data: organizations } = useQuery("allOrganizations", getUserOrganizationsFn, {
+    staleTime: Infinity,
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        showToast({ type: "error", text: error.response?.data.errorMessage || error.message })
+      }
     },
-  )
-
-  useEffect(() => {
-    if (organizations.length === 0) {
-      refetch()
-    }
-  }, [organizations, refetch])
+  })
 
   return (
     <>
-      <Copy scale={{ "@initial": 8, "@sm": 7 }} bold color={"system-black"}>
+      <Copy scale={{ "@initial": 8, "@sm": 7 }} bold color="system-black">
         Switch organization
       </Copy>
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
@@ -43,15 +40,16 @@ export const SwitchOrganization = () => {
           label="Select organization*"
           labelProps={{ hidden: true, required: true }}
           description="Select organization"
-          value={currentOrganization.label || ""}
-          onValueChange={(val: string) => {
+          value={currentOrganization?.label || ""}
+          onValueChange={(value) => {
             const newOrg =
-              organizations.find((i) => i.label === val) || ({} as IUserOrganizationResponse)
+              organizations?.find((i) => i.label === value) || ({} as IUserOrganization)
 
             setCurrentOrganization(newOrg)
-            localStorage.setItem("organization", JSON.stringify(newOrg))
+            setOrganization(newOrg)
           }}
-          options={organizationsList}
+          options={organizations?.map((i) => i?.label || "") || []}
+          disabled={isLoading}
         />
       </Flex>
     </>

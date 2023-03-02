@@ -1,6 +1,10 @@
+import { useCallback, useEffect, useMemo } from "react"
+import { isAxiosError } from "axios"
 import { Controller, useFormContext } from "react-hook-form"
 
-import { ShipmentState } from "@/shared/state"
+import { ResidentialType, ShipmentState } from "@/shared/types"
+import { useCitiesByZipCode } from "@/shipment/hooks"
+import { StepName } from "@/shipment/types"
 
 import {
   Button,
@@ -22,31 +26,21 @@ import {
 import {
   AddressFieldPopover,
   ReturnAddressSection,
-  ShippingType,
   StepActionsBar,
   StepInputGroup,
-  StepName,
-} from "@/shipment"
-import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
-import { searchCitiesByZipFn } from "@/api/placeApi"
-import { ICitiesByZipResponse } from "@/api/types"
+} from "@/shipment/components"
 
 export const PersonInfo = ({
   handleContinueClick,
   person,
-  setStepperState,
 }: {
   handleContinueClick: (
     step: StepName.FROM | StepName.TO,
     nextStep: StepName.TO | StepName.SHIPMENT,
   ) => void
   person: "sender" | "recipient"
-  setStepperState: (value: any) => void
 }) => {
   const countriesList = person === "sender" ? ["United States"] : ["United States", "Canada"]
-  const [statesList, setStatesList] = useState<ICitiesByZipResponse[]>([])
-  const [citiesList, setCitiesList] = useState<string[]>([])
 
   const {
     watch,
@@ -56,52 +50,11 @@ export const PersonInfo = ({
     setValue,
     getValues,
     setError,
+    clearErrors,
     formState: { errors },
   } = useFormContext<ShipmentState>()
 
   const { sender, senderReturn, recipient, hasReturnAddress } = watch()
-
-  const {
-    name: sendersName,
-    phone: sendersPhone,
-    email: sendersEmail,
-    fullAddress: {
-      country: sendersCountry,
-      zipCode: sendersZipCode,
-      state: sendersState,
-      city: sendersCity,
-      address1: sendersAddress1,
-      displayName: sendersDisplayName,
-    },
-  } = sender
-
-  const {
-    name: sendersReturnName,
-    phone: sendersReturnPhone,
-    email: sendersReturnEmail,
-    fullAddress: {
-      country: sendersReturnCountry,
-      zipCode: sendersReturnZipCode,
-      state: sendersReturnState,
-      city: sendersReturnCity,
-      address1: sendersReturnAddress1,
-      displayName: sendersReturnDisplayName,
-    },
-  } = senderReturn
-
-  const {
-    name: recipientsName,
-    phone: recipientsPhone,
-    email: recipientsEmail,
-    fullAddress: {
-      country: recipientsCountry,
-      zipCode: recipientsZipCode,
-      state: recipientsState,
-      city: recipientsCity,
-      address1: recipientsAddress1,
-      displayName: recipientsDisplayName,
-    },
-  } = recipient
 
   const country = getValues(`${person}.fullAddress.country`)
   const zipCode = getValues(`${person}.fullAddress.zipCode`)
@@ -124,32 +77,15 @@ export const PersonInfo = ({
     }
   }
 
-  const { isLoading, isFetching, refetch } = useQuery(
-    ["searchCitiesByZip"],
-    () =>
-      searchCitiesByZipFn({
-        country,
-        zipCode,
-      }),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        if (data.length !== 0) {
-          const states = data.map((item) => item.state)
+  const { data, status, error } = useCitiesByZipCode({ country, zipCode })
 
-          setStatesList(data)
-          setValue(`${person}.fullAddress.state`, state ? state : states[0])
-          setCitiesList(data[0].cities)
-        } else {
-          setError(`${person}.fullAddress.zipCode`, { message: "Zip code not found" })
-        }
-      },
-    },
+  const statesList = useMemo(() => data || [], [data])
+  const citiesList = useMemo(
+    () => statesList.find((item) => item.state === state)?.cities || [],
+    [statesList, state],
   )
 
-  // TODO: add useCallback here
-  // TODO: add similar condition to click on step title
-  const checkButtonDisability = () => {
+  const checkButtonDisability = useCallback(() => {
     if (!!errors.sender || !!errors.senderReturn || !!errors.recipient) {
       return true
     }
@@ -157,58 +93,70 @@ export const PersonInfo = ({
     if (person === "sender") {
       if (hasReturnAddress) {
         return (
-          !sendersName ||
-          !sendersPhone ||
-          !sendersEmail ||
-          !sendersCountry ||
-          !sendersZipCode ||
-          !sendersState ||
-          !sendersCity ||
-          !sendersAddress1 ||
-          !sendersDisplayName ||
-          !sendersReturnName ||
-          !sendersReturnPhone ||
-          !sendersReturnEmail ||
-          !sendersReturnCountry ||
-          !sendersReturnZipCode ||
-          !sendersReturnState ||
-          !sendersReturnCity ||
-          !sendersReturnAddress1 ||
-          !sendersReturnDisplayName
+          !sender.name ||
+          !sender.phone ||
+          !sender.email ||
+          !sender.fullAddress.country ||
+          !sender.fullAddress.zipCode ||
+          !sender.fullAddress.state ||
+          !sender.fullAddress.city ||
+          !sender.fullAddress.address1 ||
+          !sender.fullAddress.displayName ||
+          !senderReturn.name ||
+          !senderReturn.phone ||
+          !senderReturn.email ||
+          !senderReturn.fullAddress.country ||
+          !senderReturn.fullAddress.zipCode ||
+          !senderReturn.fullAddress.state ||
+          !senderReturn.fullAddress.city ||
+          !senderReturn.fullAddress.address1 ||
+          !senderReturn.fullAddress.displayName
         )
       } else {
         return (
-          !sendersName ||
-          !sendersPhone ||
-          !sendersEmail ||
-          !sendersCountry ||
-          !sendersZipCode ||
-          !sendersState ||
-          !sendersCity ||
-          !sendersAddress1 ||
-          !sendersDisplayName
+          !sender.name ||
+          !sender.phone ||
+          !sender.email ||
+          !sender.fullAddress.country ||
+          !sender.fullAddress.zipCode ||
+          !sender.fullAddress.state ||
+          !sender.fullAddress.city ||
+          !sender.fullAddress.address1 ||
+          !sender.fullAddress.displayName
         )
       }
     } else {
       return (
-        !recipientsName ||
-        !recipientsPhone ||
-        !recipientsEmail ||
-        !recipientsCountry ||
-        !recipientsZipCode ||
-        !recipientsState ||
-        !recipientsCity ||
-        !recipientsAddress1 ||
-        !recipientsDisplayName
+        !recipient.name ||
+        !recipient.phone ||
+        !recipient.email ||
+        !recipient.fullAddress.country ||
+        !recipient.fullAddress.zipCode ||
+        !recipient.fullAddress.state ||
+        !recipient.fullAddress.city ||
+        !recipient.fullAddress.address1 ||
+        !recipient.fullAddress.displayName
       )
     }
-  }
+  }, [sender, senderReturn, recipient, errors, hasReturnAddress, person])
 
   useEffect(() => {
-    if (zipCode) {
-      refetch()
+    if (status === "success" && statesList.length !== 0) {
+      const states = statesList.map((item) => item.state)
+
+      setValue(`${person}.fullAddress.state`, state ? state : states[0])
+      trigger(`${person}.fullAddress.zipCode`)
     }
-  }, [])
+  }, [status, statesList, person, state, setValue, trigger])
+
+  useEffect(() => {
+    if (isAxiosError(error)) {
+      setError(`${person}.fullAddress.zipCode`, {
+        type: "validate",
+        message: error.response?.data.errorMessage || error.message,
+      })
+    }
+  }, [error, setError, person])
 
   return (
     <GridContainer fullBleed>
@@ -221,8 +169,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormInput
-                    {...field}
                     {...register(field.name, {
+                      shouldUnregister: true,
                       required: {
                         value: true,
                         message: "Required field",
@@ -240,7 +188,8 @@ export const PersonInfo = ({
                         message: "Name max length exceeded",
                       },
                     })}
-                    onBlur={(event: any) => {
+                    {...field}
+                    onBlur={(event) => {
                       field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.name`)
                     }}
@@ -256,7 +205,7 @@ export const PersonInfo = ({
             />
           }
           end={
-            <Grid columns={"1fr $96"} columnGap={8}>
+            <Grid columns="1fr $96" columnGap={8}>
               <GridItem>
                 <Controller
                   name={`${person}.phone`}
@@ -264,8 +213,8 @@ export const PersonInfo = ({
                   render={({ field }) => {
                     return (
                       <FormInput
-                        {...field}
                         {...register(field.name, {
+                          shouldUnregister: true,
                           required: {
                             value: true,
                             message: "Required field",
@@ -275,7 +224,8 @@ export const PersonInfo = ({
                             message: "Not match the format: +1 NXX NXX XXXX",
                           },
                         })}
-                        onBlur={(event: any) => {
+                        {...field}
+                        onBlur={(event) => {
                           field.onChange(
                             event?.target?.value !== "" ? event?.target?.value.trim() : "",
                           )
@@ -299,8 +249,8 @@ export const PersonInfo = ({
                   render={({ field }) => {
                     return (
                       <FormInput
-                        {...field}
                         {...register(field.name, {
+                          shouldUnregister: true,
                           pattern: {
                             value: /^(\d{0,6})$/,
                             message: "Only numeric characters allowed",
@@ -310,7 +260,8 @@ export const PersonInfo = ({
                             message: "Extension max length exceeded",
                           },
                         })}
-                        onBlur={(event: any) => {
+                        {...field}
+                        onBlur={(event) => {
                           field.onChange(
                             event?.target?.value !== "" ? event?.target?.value.trim() : "",
                           )
@@ -339,8 +290,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormInput
-                    {...field}
                     {...register(field.name, {
+                      shouldUnregister: true,
                       minLength: {
                         value: 2,
                         message: "Name min length not met",
@@ -350,7 +301,8 @@ export const PersonInfo = ({
                         message: "Name max length exceeded",
                       },
                     })}
-                    onBlur={(event: any) => {
+                    {...field}
+                    onBlur={(event) => {
                       field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.company`)
                     }}
@@ -372,8 +324,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormInput
-                    {...field}
                     {...register(field.name, {
+                      shouldUnregister: true,
                       required: {
                         value: true,
                         message: "Required field",
@@ -383,7 +335,8 @@ export const PersonInfo = ({
                         message: "Invalid email",
                       },
                     })}
-                    onBlur={(event: any) => {
+                    {...field}
+                    onBlur={(event) => {
                       field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.email`)
                     }}
@@ -408,8 +361,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormSelect
+                    {...register(field.name, { shouldUnregister: true })}
                     {...field}
-                    {...register(field.name, {})}
                     onValueChange={(value) => {
                       if (value !== field.value) {
                         setValue(`${person}.fullAddress.zipCode`, "")
@@ -421,10 +374,11 @@ export const PersonInfo = ({
                         setValue(`${person}.fullAddress.latitude`, "")
                         setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          setValue(`${person}.fullAddress.isResidential`, false)
+                          setValue(
+                            `${person}.fullAddress.isResidential`,
+                            JSON.parse(ResidentialType.Nonresidential),
+                          )
                         }
-                        setStatesList([])
-                        setCitiesList([])
                       }
 
                       return field.onChange(value)
@@ -445,8 +399,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormInput
-                    {...field}
                     {...register(field.name, {
+                      shouldUnregister: true,
                       required: {
                         value: true,
                         message: "Required field",
@@ -469,11 +423,19 @@ export const PersonInfo = ({
                         value: country === "United States" ? 10 : 7,
                         message: "Zip code max length exceeded",
                       },
+                      validate: {
+                        notFound: (_, values) =>
+                          !!values[person].fullAddress.state || "Zip code not found",
+                      },
                     })}
-                    onChange={(e: any) => {
-                      let formattedValue = e?.target?.value.replaceAll(" ", "").toUpperCase()
+                    {...field}
+                    onChange={(event) => {
+                      let formattedValue = event?.target?.value.replaceAll(" ", "").toUpperCase()
 
-                      if (country === "Canada" && e?.target?.value.replaceAll(" ", "").length > 3) {
+                      if (
+                        country === "Canada" &&
+                        event?.target?.value.replaceAll(" ", "").length > 3
+                      ) {
                         formattedValue = formattedValue.replace(/^(.{3})(.*)$/, "$1 $2")
                       }
 
@@ -488,16 +450,16 @@ export const PersonInfo = ({
                         setValue(`${person}.fullAddress.latitude`, "")
                         setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          setValue(`${person}.fullAddress.isResidential`, false)
+                          setValue(
+                            `${person}.fullAddress.isResidential`,
+                            JSON.parse(ResidentialType.Nonresidential),
+                          )
                         }
-                        setStatesList([])
-                        setCitiesList([])
 
-                        return trigger(`${person}.fullAddress.zipCode`).then((isValid: boolean) => {
-                          if (isValid) {
-                            refetch()
-                          }
-                        })
+                        clearErrors([
+                          `${person}.fullAddress.city`,
+                          `${person}.fullAddress.address1`,
+                        ])
                       }
                     }}
                     id={`${person}.fullAddress.zipCode`}
@@ -507,6 +469,11 @@ export const PersonInfo = ({
                     type="text"
                     autoComplete="new-password"
                     error={errors[person]?.fullAddress?.zipCode?.message}
+                    onBlur={(event) => {
+                      field.onBlur()
+                      field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
+                      trigger(`${person}.fullAddress.zipCode`)
+                    }}
                   />
                 )
               }}
@@ -522,8 +489,8 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormSelect
+                    {...register(field.name, { shouldUnregister: true })}
                     {...field}
-                    {...register(field.name, {})}
                     onValueChange={(value) => {
                       if (value !== field.value) {
                         setValue(`${person}.fullAddress.city`, "")
@@ -533,10 +500,11 @@ export const PersonInfo = ({
                         setValue(`${person}.fullAddress.latitude`, "")
                         setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
-                          setValue(`${person}.fullAddress.isResidential`, false)
+                          setValue(
+                            `${person}.fullAddress.isResidential`,
+                            JSON.parse(ResidentialType.Nonresidential),
+                          )
                         }
-
-                        setCitiesList(statesList.find((item) => item.state === value)?.cities || [])
                       }
 
                       return field.onChange(value)
@@ -578,8 +546,8 @@ export const PersonInfo = ({
                     labelProps={{ hidden: true, required: true }}
                     description="City"
                     disabled={citiesList.length === 0}
-                    error={errors[person]?.fullAddress?.city?.message}
-                    onBlur={(event: any) => {
+                    errorMessage={errors[person]?.fullAddress?.city?.message}
+                    onBlur={(event) => {
                       onBlur()
                       onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.fullAddress.city`)
@@ -626,8 +594,8 @@ export const PersonInfo = ({
                     description="Address line 1"
                     placeholder="Street, apartment"
                     disabled={statesList.length === 0 || citiesList.length === 0}
-                    error={errors[person]?.fullAddress?.address1?.message}
-                    onBlur={(event: any) => {
+                    errorMessage={errors[person]?.fullAddress?.address1?.message}
+                    onBlur={(event) => {
                       onBlur()
                       onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.fullAddress.address1`)
@@ -645,14 +613,15 @@ export const PersonInfo = ({
               render={({ field }) => {
                 return (
                   <FormInput
-                    {...field}
                     {...register(field.name, {
+                      shouldUnregister: true,
                       maxLength: {
                         value: 40,
                         message: "Address max length exceeded",
                       },
                     })}
-                    onBlur={(event: any) => {
+                    {...field}
+                    onBlur={(event) => {
                       field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.fullAddress.address2`)
                     }}
@@ -672,12 +641,19 @@ export const PersonInfo = ({
         />
 
         {person === "recipient" ? (
-          <FormCheckbox
-            {...register(`${person}.fullAddress.isResidential`)}
+          <Controller
             name={`${person}.fullAddress.isResidential`}
-            id={`${person}.fullAddress.isResidential`}
-            label="This is a residential address"
-            error={errors[person]?.fullAddress?.isResidential?.message}
+            control={control}
+            render={({ field }) => {
+              return (
+                <FormCheckbox
+                  {...register(field.name)}
+                  id={`${person}.fullAddress.isResidential`}
+                  label="This is a residential address"
+                  error={errors[person]?.fullAddress?.isResidential?.message}
+                />
+              )
+            }}
           />
         ) : null}
 
@@ -699,6 +675,7 @@ export const PersonInfo = ({
                     "senderReturn.fullAddress.country",
                     value === "new" ? "United States" : "",
                   )
+                  clearErrors(["senderReturn"])
                   switchProps.onValueChange(value)
                 }}
                 checked={switchProps.value === "new"}
@@ -715,34 +692,7 @@ export const PersonInfo = ({
       <Spacer size={32} />
 
       <StepActionsBar>
-        <Button
-          onClick={onContinueHandler}
-          full
-          disabled={checkButtonDisability()}
-          // TODO: add senderReturn to the condition
-          // disabled={
-          //   !!errors.sender ||
-          //   !!errors.senderReturn ||
-          //   !!errors.recipient ||
-          //   (person === "sender"
-          //     ? !sendersName ||
-          //       !sendersPhone ||
-          //       !sendersEmail ||
-          //       !sendersCountry ||
-          //       !sendersZipCode ||
-          //       !sendersState ||
-          //       !sendersCity ||
-          //       !sendersAddress1
-          //     : !recipientsName ||
-          //       !recipientsPhone ||
-          //       !recipientsEmail ||
-          //       !recipientsCountry ||
-          //       !recipientsZipCode ||
-          //       !recipientsState ||
-          //       !recipientsCity ||
-          //       !recipientsAddress1)
-          // }
-        >
+        <Button onClick={onContinueHandler} full disabled={checkButtonDisability()}>
           <Copy as="span" scale={8} color="system-white" bold>
             Continue
           </Copy>

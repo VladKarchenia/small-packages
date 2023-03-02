@@ -1,26 +1,32 @@
 import { ShipmentsPagedOrderBy } from "@/dashboard/state"
-import { ShippingType } from "@/shipment"
-import { ShipmentStatus } from "../types"
+import { ShippingType, ShipmentStatus } from "@/shared/types"
 
 export const createSortString = (sortOrder: ShipmentsPagedOrderBy) => {
   switch (sortOrder) {
     case ShipmentsPagedOrderBy.CreationDateAsc:
     case ShipmentsPagedOrderBy.CreationDateDesc:
       return "createdAt"
-    // return "updatedAt"
 
     case ShipmentsPagedOrderBy.IdAsc:
     case ShipmentsPagedOrderBy.IdDesc:
       return "id"
 
+    case ShipmentsPagedOrderBy.SenderNameAsc:
+    case ShipmentsPagedOrderBy.SenderNameDesc:
+      return "data.ORIGIN_CONTACT"
+
     case ShipmentsPagedOrderBy.RecipientNameAsc:
     case ShipmentsPagedOrderBy.RecipientNameDesc:
       return "data.CONSIGNEE_CONTACT"
+
+    case ShipmentsPagedOrderBy.StatusAsc:
+    case ShipmentsPagedOrderBy.StatusDesc:
+      return "data.SHIPMENT_STATUS"
   }
 }
 
 export const createFilterString = (
-  shippingType: ShippingType | null,
+  tab: ShippingType,
   status: ShipmentStatus[],
   recipientName: string[],
   originalAddress: string[],
@@ -32,9 +38,9 @@ export const createFilterString = (
     filterString += `data.SHIPMENT_STATUS:${status.join(",")}`
   } else {
     filterString +=
-      shippingType === ShippingType.Quote
-        ? "data.SHIPMENT_STATUS:QUOTE_READY,QUOTE_QUOTED"
-        : "data.SHIPMENT_STATUS:COMPLETED,CONFIRMED,DELIVERED,DRAFT,IN_DELIVERY,SUBMIT_READY"
+      tab === ShippingType.Quote
+        ? "data.SHIPMENT_STATUS:QUOTE_QUOTED"
+        : "data.SHIPMENT_STATUS:DRAFT,SUBMIT_READY,SUBMITTED,IN_TRANSIT,DELIVERED,IN_RETURN,RETURNED"
   }
 
   if (originalAddress.length > 0) {

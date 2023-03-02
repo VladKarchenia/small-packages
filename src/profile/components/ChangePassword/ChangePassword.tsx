@@ -1,12 +1,13 @@
 import { useEffect } from "react"
-import { toast } from "react-toastify"
+import { isAxiosError } from "axios"
 import { useMutation } from "react-query"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 
 import { updateUserPasswordFn } from "@/api/userApi"
 import { ChangeInput } from "@/api/types"
 import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
+import { mediaQueries } from "@/stitches/theme"
+import { showToast } from "@/shared/utils"
 
 import { useDrawerActions } from "@/shared/components"
 
@@ -32,16 +33,15 @@ export const ChangePassword = () => {
   const { close } = useDrawerActions()
 
   const { mutate: updatePassword } = useMutation(
-    ({ oldPassword, newPassword }: ChangeInput) => updateUserPasswordFn(oldPassword, newPassword),
+    (data: ChangeInput) => updateUserPasswordFn(data),
     {
       onSuccess: () => {
-        toast.success("Your password was successfully changed", {
-          icon: false,
-          position: "bottom-right",
-          progressStyle: {
-            backgroundColor: "black",
-          },
-        })
+        showToast({ type: "success", text: "Your password was successfully changed" })
+      },
+      onError: (error) => {
+        if (isAxiosError(error)) {
+          showToast({ type: "error", text: error.response?.data.errorMessage || error.message })
+        }
       },
     },
   )

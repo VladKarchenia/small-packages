@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
-import { ComponentProps } from "@/utils"
-import { Placement } from "@popperjs/core"
 import { usePopper } from "react-popper"
+import { Placement } from "@popperjs/core"
 
-import { CSS } from "@/config"
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
 
 import {
   STooltipTrigger,
@@ -38,8 +38,7 @@ export interface ITooltipProps extends ComponentProps<typeof STooltipTrigger> {
   visible?: boolean
   edgePadding?: 8 | 16 | 24 | 32
   portalContainer?: HTMLElement
-  dataTrackId?: string
-  contentWidth?: number
+  contentWidth?: number | string
   withArrow?: boolean
   withTitle?: boolean
   contentCss?: CSS
@@ -80,7 +79,6 @@ export const Tooltip = ({
   visible = false,
   edgePadding = 16,
   portalContainer,
-  dataTrackId,
   ariaLabel,
   contentWidth = 360,
   withArrow = true,
@@ -165,8 +163,8 @@ export const Tooltip = ({
     setIsVisible((s) => !s)
   }
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault()
     toggleTooltip()
   }
 
@@ -207,6 +205,7 @@ export const Tooltip = ({
     >
       <STooltip data-ui="tooltip" data-placement={popperPlacement}>
         <STooltipArrow
+          data-popper-arrow
           data-ui="tooltip-arrow"
           style={styles.arrow}
           ref={setArrowElement}
@@ -227,7 +226,6 @@ export const Tooltip = ({
         type="button"
         data-ui="tooltip-trigger"
         ref={triggerElement}
-        data-track-id={dataTrackId}
         aria-label={ariaLabel}
         title={withTitle ? ariaLabel : undefined}
         css={{ ...triggerCss }}

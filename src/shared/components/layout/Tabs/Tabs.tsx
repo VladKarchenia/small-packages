@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
-import { ComponentProps, createContext } from "@/utils"
+
+import { createContext } from "@/shared/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { STabs } from "./Tabs.styles"
 
@@ -23,7 +25,7 @@ export interface ITabsProps extends Omit<ComponentProps<typeof STabs>, "onChange
   /**
    * Action called after changing the selected value
    */
-  onChange?: (value: any) => void
+  onChange?: (value: string) => void
   /**
    * allows to disable/leave the bottom-up movement animation for the TabPanel
    */
@@ -44,6 +46,7 @@ export const Tabs = ({ selectedTab = "", onChange, animate, ...props }: ITabsPro
     if (selected && onChange) {
       onChange(selected)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
 
   useEffect(() => {

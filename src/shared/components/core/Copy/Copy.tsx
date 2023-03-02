@@ -1,7 +1,8 @@
-import cx from "classnames"
 import deepmerge from "deepmerge"
-import { atomicClassNames, ComponentProps, ResponsiveProp } from "@/utils"
-import { Colors } from "@/config/theme/types"
+import cx from "classnames"
+
+import { ComponentProps, ResponsiveProp, Colors } from "@/stitches/types"
+import { atomicClassNames } from "@/stitches/utils"
 
 import { SCopy } from "./Copy.styles"
 
@@ -9,11 +10,8 @@ type CopyIntent = "cta" | "detail" | "copy"
 
 export interface ICopyProps extends Omit<ComponentProps<typeof SCopy>, "color"> {
   color?: Colors | ResponsiveProp<Colors>
-
   intent?: CopyIntent
-
   uppercase?: boolean
-
   dataTestid?: string
 }
 
@@ -39,8 +37,7 @@ function getCopyProps(intent?: CopyIntent) {
 }
 
 /**
- * Use for paragraphs and spans of text with options including editorial style,
- * scale and tracking.
+ * Use for paragraphs and spans of text with options including scale and tracking.
  */
 export const Copy = ({
   as,

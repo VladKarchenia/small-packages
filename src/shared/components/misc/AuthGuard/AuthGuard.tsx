@@ -1,19 +1,18 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
+import { shallow } from "zustand/shallow"
+
+import { useAuthStore } from "@/store"
 import { Role } from "@/shared/types"
+import { LOGIN } from "@/constants"
 
 export const AuthGuard = ({ allowedRoles }: { allowedRoles: Role[] }) => {
-  // TODO: use Zustand
-  const accessToken = localStorage.getItem("accessToken") || ""
-  const username = localStorage.getItem("username") || ""
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
-  const role = user?.authorities?.[0]?.authority
   const location = useLocation()
+  const [accessToken, user] = useAuthStore((state) => [state.accessToken, state.user], shallow)
+  const role = user?.authorities?.[0]?.authority
 
   return accessToken && allowedRoles.includes(role as Role) ? (
     <Outlet />
-  ) : accessToken && username ? (
-    <Navigate to="/unauthorized" state={{ from: location }} replace />
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate to={LOGIN} state={{ from: location }} replace />
   )
 }

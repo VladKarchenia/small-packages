@@ -1,10 +1,11 @@
 import React from "react"
-import { breakpoints } from "@/config"
-import { ComponentProps, atomicClassNames } from "@/utils"
+
+import { Breakpoint } from "@/stitches/theme"
+import { ComponentProps } from "@/stitches/types"
+import { atomicClassNames } from "@/stitches/utils"
 
 import { SHidden } from "./Hidden.styles"
 
-type Breakpoint = keyof typeof breakpoints
 export interface IHiddenProps extends ComponentProps<typeof SHidden> {
   above?: Breakpoint
   below?: Breakpoint

@@ -1,17 +1,20 @@
-import { IconBin } from "@/shared/icons"
 import React from "react"
+
+import { IconFilter } from "@/shared/icons"
+
 import { SFilterIconBox } from "./SortFilterBarPreview.styles"
 
 export interface ISortFilterBarPreviewProps {
   isFilterApplied: boolean
-  onClick?: (event: unknown) => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export const SortFilterBarPreview = React.forwardRef<HTMLInputElement, ISortFilterBarPreviewProps>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ isFilterApplied, onClick }, ref) => {
     return (
       <SFilterIconBox type="button" selected={isFilterApplied} onClick={onClick}>
-        <IconBin fixedSize width={20} height={20} />
+        <IconFilter css={{ color: "$neutrals-7" }} />
       </SFilterIconBox>
     )
   },

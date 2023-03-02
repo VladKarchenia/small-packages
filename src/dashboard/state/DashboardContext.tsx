@@ -2,15 +2,18 @@ import React, { createContext, useContext, useMemo, useState } from "react"
 
 import { PAGED_LIMIT } from "@/constants"
 import { ShipmentStatus } from "@/shared/types"
-import { ShippingType } from "@/shipment/types"
 
 export enum ShipmentsPagedOrderBy {
   CreationDateAsc = "Creation date (ASC)",
   CreationDateDesc = "Creation date (DESC)",
+  SenderNameAsc = "Sender name (A-Z)",
+  SenderNameDesc = "Sender name (Z-A)",
   RecipientNameAsc = "Recipient name (A-Z)",
   RecipientNameDesc = "Recipient name (Z-A)",
   IdAsc = "ID (ASC)",
   IdDesc = "ID (DESC)",
+  StatusAsc = "Status (A-Z)",
+  StatusDesc = "Status (Z-A)",
 }
 
 export enum SortDirection {
@@ -28,7 +31,6 @@ export interface DashboardState {
   recipientName: string[]
   originalAddress: string[]
   destinationAddress: string[]
-  shippingType: ShippingType
 }
 
 const initialDashboardState: DashboardState = {
@@ -41,7 +43,6 @@ const initialDashboardState: DashboardState = {
   recipientName: [],
   originalAddress: [],
   destinationAddress: [],
-  shippingType: ShippingType.Shipment,
 }
 
 type DashboardActions = {
@@ -53,7 +54,6 @@ type DashboardActions = {
   setRecipientNameFilter: (value: string[]) => void
   setOriginalAddressFilter: (value: string[]) => void
   setDestinationAddressFilter: (value: string[]) => void
-  setDashboardShippingType: (value: ShippingType) => void
 }
 
 export const DashboardStateContext = createContext<DashboardState>({} as DashboardState)
@@ -121,13 +121,8 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
           destinationAddress: array,
         }))
       },
-      setDashboardShippingType: (value) => {
-        setState((prevState) => ({
-          ...prevState,
-          shippingType: value,
-        }))
-      },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state],
   )
 

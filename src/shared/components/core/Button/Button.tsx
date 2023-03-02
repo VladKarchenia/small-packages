@@ -1,7 +1,9 @@
 import * as React from "react"
-import { ComponentProps } from "@/utils"
-import { IconDots } from "@/shared/icons"
-import { Copy, ICopyProps } from "@/shared/components"
+
+import { ComponentProps } from "@/stitches/types"
+
+import { Copy, Flex, ICopyProps } from "@/shared/components"
+import { IllustrationSpinner } from "@/shared/illustrations"
 
 import { SButton, SButtonIcon, SButtonSpinner } from "./Button.styles"
 
@@ -17,25 +19,20 @@ export interface IButtonProps extends ComponentProps<typeof SButton> {
 
   ariaLabel?: string
   dataTestid?: string
-  dataTrackId?: string
-  dataTrackValue?: string
 
   disabled?: boolean
-  floatingIcon?: boolean
   noWrap?: boolean
   shouldPreventDefault?: boolean
 
   copyProps?: ICopyProps
 
-  onBlur?: (e: React.SyntheticEvent) => void
-  onFocus?: (e: React.SyntheticEvent) => void
-  onClick?: (e: React.SyntheticEvent) => void
+  onBlur?: (event: React.SyntheticEvent) => void
+  onFocus?: (event: React.SyntheticEvent) => void
+  onClick?: (event: React.SyntheticEvent) => void
 }
 
 interface ButtonElementProps extends Partial<IButtonProps> {
   "aria-label"?: string
-  "data-track-id"?: string
-  "data-track-value"?: string
   "data-testid"?: string
   rel?: string
 }
@@ -43,12 +40,9 @@ interface ButtonElementProps extends Partial<IButtonProps> {
 export function Button({
   children,
   icon,
-  floatingIcon,
   noWrap,
   shouldPreventDefault,
   ariaLabel,
-  dataTrackId,
-  dataTrackValue,
   dataTestid,
   onClick,
   copyProps,
@@ -59,8 +53,6 @@ export function Button({
   const buttonProps = React.useMemo(() => {
     const commonButtonProps: ButtonElementProps = {
       "aria-label": ariaLabel,
-      "data-track-id": dataTrackId,
-      "data-track-value": dataTrackValue,
       "data-testid": dataTestid,
     }
 
@@ -75,40 +67,42 @@ export function Button({
         type: props.type || "button",
       }
     }
-  }, [ariaLabel, dataTestid, dataTrackId, dataTrackValue, isLink, props.target, props.type])
+  }, [ariaLabel, dataTestid, isLink, props.target, props.type])
 
   const handleClick = React.useCallback(
-    (e: React.SyntheticEvent) => {
+    (event: React.SyntheticEvent) => {
       if (shouldPreventDefault) {
-        e.preventDefault()
+        event.preventDefault()
       }
 
-      onClick && onClick(e)
+      onClick && onClick(event)
     },
     [shouldPreventDefault, onClick],
   )
 
   return (
     <SButton {...buttonProps} {...props} onClick={handleClick}>
-      {props.loading && (
-        <SButtonSpinner>
-          <IconDots />
-        </SButtonSpinner>
-      )}
-      {!noWrap ? (
-        <Copy
-          color="system-inherit"
-          intent={!props.rounded ? "cta" : "detail"}
-          uppercase={!props.rounded}
-          bold
-          {...copyProps}
-        >
-          {children}
-        </Copy>
-      ) : (
-        children
-      )}
-      {icon && <SButtonIcon float={floatingIcon}>{icon}</SButtonIcon>}
+      <Flex css={{ position: "relative", gap: "$8" }}>
+        {!noWrap ? (
+          <Copy
+            color="system-inherit"
+            intent={!props.rounded ? "cta" : "detail"}
+            uppercase={!props.rounded}
+            bold
+            {...copyProps}
+          >
+            {children}
+          </Copy>
+        ) : (
+          children
+        )}
+        {icon && <SButtonIcon>{icon}</SButtonIcon>}
+        {props.loading && (
+          <SButtonSpinner>
+            <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+          </SButtonSpinner>
+        )}
+      </Flex>
     </SButton>
   )
 }

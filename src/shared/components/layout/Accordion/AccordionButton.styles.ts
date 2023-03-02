@@ -1,8 +1,8 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SAccordionButton = styled("button", {
   reset: true,
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",

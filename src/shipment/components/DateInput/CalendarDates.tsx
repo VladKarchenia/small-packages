@@ -1,7 +1,10 @@
 import { useState } from "react"
+import tzlookup from "tz-lookup"
 import format from "date-fns/format"
 import addDays from "date-fns/addDays"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 import { useFormContext } from "react-hook-form"
+
 import type {} from "@mui/x-date-pickers/themeAugmentation"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -9,10 +12,12 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker"
 import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar"
 import { CalendarOrClockPickerView } from "@mui/x-date-pickers/internals/models/views"
-import { Box, Button, Copy, Grid, GridItem, Hidden, useDrawerActions } from "@/shared/components"
+
+import { mediaQueries } from "@/stitches/theme"
 import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
-import { ShipmentState } from "@/shared/state"
+import { ShipmentState } from "@/shared/types"
+
+import { Box, Button, Copy, Grid, GridItem, Hidden, useDrawerActions } from "@/shared/components"
 
 export const CalendarDates = () => {
   const [pickerView, setPickerView] = useState<CalendarOrClockPickerView>("day")
@@ -21,7 +26,12 @@ export const CalendarDates = () => {
 
   const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
   const { setValue, watch } = useFormContext<ShipmentState>()
-  const { date } = watch()
+  const { date, sender } = watch()
+
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
 
   const ampm = format(date, "a")
 
@@ -35,12 +45,12 @@ export const CalendarDates = () => {
           flexContainer: {
             button: {
               "&.Mui-selected": {
-                color: "black",
+                color: "var(--colors-system-black)",
               },
             },
           },
           indicator: {
-            backgroundColor: "black",
+            backgroundColor: "var(--colors-system-black)",
           },
         },
       },
@@ -49,9 +59,11 @@ export const CalendarDates = () => {
           root: {
             lineHeight: "initial",
             "&.Mui-selected": {
-              backgroundColor: "black",
+              backgroundColor: "var(--colors-system-black)",
+              color: "var(--colors-system-white)",
               "&:hover, &:focus": {
-                backgroundColor: "black",
+                backgroundColor: "var(--colors-system-black)",
+                color: "var(--colors-system-white)",
               },
             },
           },
@@ -68,50 +80,52 @@ export const CalendarDates = () => {
       MuiClock: {
         styleOverrides: {
           root: {
-            height: isSmallAndAbove ? "238px" : "286px",
-            margin: isSmallAndAbove ? "0 16px 32px 16px" : "16px",
+            height: isSmallAndAbove ? 238 : 286,
+            margin: isSmallAndAbove ? "0 var(--space-16) var(--space-32)" : "var(--space-16)",
           },
           pin: {
-            backgroundColor: "black",
+            backgroundColor: "var(--colors-system-black)",
           },
           clock: {
             scale: isSmallAndAbove ? "1" : "1.3",
-            marginTop: isSmallAndAbove ? "0px" : "20px",
+            marginTop: isSmallAndAbove ? 0 : "var(--space-20)",
           },
           amButton: {
-            width: "38px",
-            height: "27px",
-            padding: "0px",
-            top: "-72px",
-            right: "71px",
+            width: "var(--sizes-40)",
+            height: 27,
+            padding: 0,
+            top: -72,
+            right: 71,
             left: "auto",
             bottom: "auto",
-            color: ampm === "AM" ? "white" : "black",
-            backgroundColor: ampm === "AM" ? "black" : "white",
-            border: "1px solid lightgrey",
-            borderRadius: "8px 8px 0 0",
+            color: ampm === "AM" ? "var(--colors-system-white)" : "var(--colors-system-black)",
+            backgroundColor:
+              ampm === "AM" ? "var(--colors-system-black)" : "var(--colors-system-white)",
+            border: "1px solid var(--colors-neutrals-5)",
+            borderRadius: "var(--radii-8) var(--radii-8) 0 0",
             boxSizing: "content-box",
             ":hover": {
-              backgroundColor: "black",
-              color: "white",
+              backgroundColor: "var(--colors-system-black)",
+              color: "var(--colors-system-white)",
             },
           },
           pmButton: {
-            width: "38px",
-            height: "27px",
-            padding: "0px",
-            top: "-44px",
-            right: "71px",
+            width: "var(--sizes-40)",
+            height: 27,
+            padding: 0,
+            top: -44,
+            right: 71,
             left: "auto",
             bottom: "auto",
-            color: ampm === "PM" ? "white" : "black",
-            backgroundColor: ampm === "PM" ? "black" : "white",
-            border: "1px solid lightgrey",
-            borderRadius: "0 0 8px 8px",
+            color: ampm === "PM" ? "var(--colors-system-white)" : "var(--colors-system-black)",
+            backgroundColor:
+              ampm === "PM" ? "var(--colors-system-black)" : "var(--colors-system-white)",
+            border: "1px solid var(--colors-neutrals-5)",
+            borderRadius: "0 0 var(--radii-8) var(--radii-8)",
             boxSizing: "content-box",
             ":hover": {
-              backgroundColor: "black",
-              color: "white",
+              backgroundColor: "var(--colors-system-black)",
+              color: "var(--colors-system-white)",
             },
           },
         },
@@ -119,11 +133,11 @@ export const CalendarDates = () => {
       MuiClockPointer: {
         styleOverrides: {
           root: {
-            backgroundColor: "black",
+            backgroundColor: "var(--colors-system-black)",
           },
           thumb: {
-            backgroundColor: "black",
-            borderColor: "black",
+            backgroundColor: "var(--colors-system-black)",
+            borderColor: "var(--colors-system-black)",
           },
         },
       },
@@ -131,7 +145,7 @@ export const CalendarDates = () => {
         styleOverrides: {
           root: {
             "&.Mui-selected": {
-              backgroundColor: "black",
+              backgroundColor: "var(--colors-system-black)",
             },
           },
         },
@@ -185,10 +199,10 @@ export const CalendarDates = () => {
             "&:after": {
               content: "''",
               display: "block",
-              width: "40px",
-              height: "56px",
-              marginLeft: "12px",
-              borderRadius: "8px",
+              width: "var(--sizes-40)",
+              height: "var(--sizes-56)",
+              marginLeft: "var(--space-12)",
+              borderRadius: "var(--radii-8)",
             },
           },
         },
@@ -197,7 +211,8 @@ export const CalendarDates = () => {
         styleOverrides: {
           root: {
             justifyContent: "space-between",
-            height: "calc(100% - 76px)",
+            // (var(--sizes-72) + var(--sizes-4)) - header height with full date
+            height: `calc(100% - (var(--sizes-72) + var(--sizes-4)))`,
           },
           content: {
             overflow: "visible",
@@ -208,7 +223,7 @@ export const CalendarDates = () => {
         styleOverrides: {
           root: {
             scale: isSmallAndAbove ? "1" : "1.2",
-            marginTop: isSmallAndAbove ? "24px" : "32px",
+            marginTop: isSmallAndAbove ? "var(--space-24)" : "var(--space-32)",
             overflow: "visible",
           },
         },
@@ -216,8 +231,8 @@ export const CalendarDates = () => {
       MuiPickersCalendarHeader: {
         styleOverrides: {
           root: {
-            paddingLeft: "32px",
-            paddingRight: "24px",
+            paddingLeft: "var(--space-32)",
+            paddingRight: "var(--space-24)",
           },
         },
       },
@@ -234,7 +249,11 @@ export const CalendarDates = () => {
                 {format(date, "EEE, MMM d")}
               </Copy>
               <Copy scale={8} color="system-black">
-                {format(date, "hh:mm aa (OOO)")}
+                {`${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                  date,
+                  timeZone,
+                  "(zzz)",
+                )}`}
               </Copy>
             </Box>
           ) : null}
@@ -276,7 +295,7 @@ const CustomActionBar = (props: PickersActionBarProps) => {
   return (
     <Grid
       gap={{ "@initial": 8, "@sm": 16 }}
-      columns={"1fr 1fr"}
+      columns="1fr 1fr"
       css={{ paddingX: "$16", paddingBottom: "$20", "@sm": { display: "none" } }}
     >
       <GridItem>

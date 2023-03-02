@@ -1,10 +1,14 @@
 import React, { useCallback } from "react"
-import { ComponentProps, easing } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+import { easing } from "@/stitches/utils"
+
 import { Copy } from "@/shared/components"
 import { IconChevron } from "@/shared/icons"
 
 import { useAccordionContext } from "./Accordion"
 import { useAccordionItemContext } from "./AccordionItem"
+
 import { SAccordionButton } from "./AccordionButton.styles"
 
 export interface IAccordionButtonProps extends ComponentProps<typeof SAccordionButton> {
@@ -16,7 +20,6 @@ export interface IAccordionButtonProps extends ComponentProps<typeof SAccordionB
 
 const AccordionIcon = ({ open = false }) => (
   <IconChevron
-    size="xs"
     direction={open ? "top" : "bottom"}
     css={{
       transition: easing.smooth({ duration: 150, property: "transform" }),
@@ -38,12 +41,12 @@ const AccordionTextToggle = ({ open = false, hideLabel, showLabel }: IAccordionT
 )
 
 export const AccordionButton = ({ children, ...props }: IAccordionButtonProps) => {
-  const { textToggle, onItemOpen, onItemClose } = useAccordionContext("AccordionButton")
+  const { textToggle, onItemOpen } = useAccordionContext("AccordionButton")
   const { id, value, open, disabled } = useAccordionItemContext("AccordionButton")
 
   const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault()
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.preventDefault()
 
       // TODO: check this to prevent closing the accordion panel (possibly with an additional prop)
       // if (open) {

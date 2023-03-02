@@ -1,7 +1,5 @@
-import React, { memo } from "react"
-import { Copy, FormCheckbox } from "@/shared/components"
-import { IconTick } from "@/shared/icons"
-// import { SDropdownMenuItemIndicator, SDropdownMenuCheckboxItem } from "./Dropdown.styles"
+import { memo } from "react"
+import { FormCheckbox } from "@/shared/components"
 
 export interface IDropdownCheckboxItemProps {
   value: string
@@ -15,9 +13,7 @@ export const DropdownCheckboxItem = memo(function ({
   onSelect,
 }: IDropdownCheckboxItemProps) {
   return (
-    // <SDropdownMenuCheckboxItem>
     <FormCheckbox
-      // key={item}
       value={value}
       onChange={onSelect}
       name={label}
@@ -25,7 +21,6 @@ export const DropdownCheckboxItem = memo(function ({
       label={label}
       checked={false}
     />
-    // </SDropdownMenuCheckboxItem>
   )
 })
 

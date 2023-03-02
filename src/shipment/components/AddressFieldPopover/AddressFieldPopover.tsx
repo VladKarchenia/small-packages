@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import { useQuery } from "react-query"
-import debounce from "just-debounce-it"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { isAxiosError } from "axios"
 import { useFormContext } from "react-hook-form"
+import { useDebounce, useDebouncedCallback } from "use-debounce"
 
-import { searchPlacesFn } from "@/api/placeApi"
 import { IPlaceResponse } from "@/api/types"
-import { IAddress } from "@/shared/types"
-import { ShipmentState } from "@/shared/state"
+import { IAddress, ResidentialType, ShipmentState } from "@/shared/types"
 import { useElementDimensions } from "@/shared/hooks"
+import { useSearchPlaces } from "@/shipment/hooks"
 import { transformLocation } from "@/shipment/utils"
 
 import {
@@ -19,22 +18,22 @@ import {
   Popover,
   PopoverAnchor,
   PopoverContent,
+  Spinner,
 } from "@/shared/components"
-import { IllustrationSpinner } from "@/shared/illustrations"
 
 interface IAddressFieldPopoverProps {
   name: string
   fieldName: keyof IAddress
   value: string
-  onChange: (event: any) => void
-  onBlur?: (event: any) => void
+  onChange: (value: string) => void
+  onBlur?: React.FocusEventHandler<HTMLInputElement>
   id: string
   label: string
   labelProps?: IFormLabelProps
   description?: string
   placeholder?: string
   disabled?: boolean
-  error?: string
+  errorMessage?: string
   defaultSuggestions?: string[]
   person: "sender" | "recipient" | "senderReturn"
 }
@@ -51,25 +50,64 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
   description,
   placeholder,
   disabled,
-  error,
+  errorMessage,
   defaultSuggestions,
   person,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { dimensions } = useElementDimensions(containerRef)
-  const triggerRef = useRef<any>(null)
-  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
+  const triggerRef = useRef<HTMLInputElement>(null)
+  const isTriggerClick = (event: Event) =>
+    event.composedPath().includes(triggerRef.current as EventTarget)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>(value)
-
-  const [results, setResults] = useState<IAddress[]>([])
-  const [notFound, setNotFound] = useState(false)
 
   const { getValues, setValue, trigger } = useFormContext<ShipmentState>()
   const country = getValues(`${person}.fullAddress.country`)
   const zipCode = getValues(`${person}.fullAddress.zipCode`)
   const state = getValues(`${person}.fullAddress.state`)
   const city = getValues(`${person}.fullAddress.city`)
+
+  const [keyword] = useDebounce(
+    fieldName === "city" || !city
+      ? `${zipCode} ${state} ${inputValue.trim()}`.toLowerCase()
+      : `${zipCode} ${state} ${city} ${inputValue.trim()}`.toLowerCase(),
+    300,
+  )
+  const [input] = useDebounce(inputValue.trim(), 300)
+  const debouncedSetIsOpen = useDebouncedCallback((v) => setIsOpen(v), 300)
+
+  const { data, isLoading, isIdle, error } = useSearchPlaces({
+    input,
+    country,
+    keyword,
+  })
+
+  const results = useMemo(() => {
+    const result: IAddress[] = []
+
+    if (data) {
+      if (data.first.content.length > 0) {
+        // TODO: need to filter results?
+        data.first.content.map((item: IPlaceResponse) =>
+          result.push(transformLocation({ ...item, person })),
+        )
+      }
+
+      if (data.second.content.length > 0) {
+        data.second.content
+          .filter((item: IPlaceResponse) =>
+            fieldName === "city"
+              ? !!item.zipCode && !!item.city
+              : !!item.zipCode && !!item.city && !!item.address1,
+          )
+          .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
+      }
+    }
+
+    return result
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, fieldName])
 
   const handleClick = (locationDetails: IAddress) => {
     onChange(locationDetails[fieldName] as string)
@@ -79,81 +117,35 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
       setValue(`${person}.fullAddress.displayName`, locationDetails.displayName)
       setValue(`${person}.fullAddress.latitude`, locationDetails.latitude)
       setValue(`${person}.fullAddress.longitude`, locationDetails.longitude)
-
-      // if (!city) {
       setValue(`${person}.fullAddress.city`, locationDetails.city)
-      trigger(`${person}.fullAddress.city`)
-      // }
 
+      trigger(`${person}.fullAddress.city`)
       trigger(`${person}.fullAddress.address1`)
     }
 
-    setResults([])
     setIsOpen(false)
   }
 
-  const { isLoading, isFetching, refetch } = useQuery(
-    ["searchPlaces"],
-    () =>
-      searchPlacesFn({
-        country: getValues(`${person}.fullAddress.country`),
-        keyword:
-          fieldName === "city" || !city
-            ? `${country} ${zipCode} ${state} ${inputValue}`
-            : `${country} ${zipCode} ${state} ${city} ${inputValue}`,
-      }),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        const result: IAddress[] = []
-
-        if (data.first.content.length > 0) {
-          // TODO: need to filter results
-          data.first.content.map((item: IPlaceResponse) => result.push(transformLocation(item)))
-        }
-
-        if (data.second.content.length > 0) {
-          data.second.content
-            .filter((item: IPlaceResponse) =>
-              fieldName === "city"
-                ? !!item.zipCode && !!item.city
-                : !!item.zipCode && !!item.city && !!item.address1,
-            )
-            .map((item: IPlaceResponse) => result.push(transformLocation(item)))
-        }
-
-        setResults(result)
-        setNotFound(result.length === 0)
-      },
-    },
-  )
-
   const Content = () => {
-    if (isLoading || isFetching) {
-      return (
-        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
-          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
-        </Flex>
-      )
+    if (isIdle && !defaultSuggestions) {
+      return null
     }
 
-    if (notFound) {
+    if (isLoading) {
+      return <Spinner />
+    }
+
+    if (isAxiosError(error)) {
       return (
         <Flex css={{ padding: "$16" }}>
           <Copy scale={8} color="system-black">
-            Not found
+            {error.response?.data.errorMessage || error.message}
           </Copy>
         </Flex>
       )
     }
 
-    if (
-      !isLoading &&
-      !isFetching &&
-      results.length === 0 &&
-      inputValue === "" &&
-      defaultSuggestions
-    ) {
+    if (inputValue === "" && defaultSuggestions) {
       return (
         <>
           {defaultSuggestions.map((value: string) => (
@@ -162,7 +154,6 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
               onClick={() => {
                 onChange(value)
                 setInputValue(value)
-                setResults([])
                 setIsOpen(false)
               }}
               css={{
@@ -180,6 +171,16 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
             </Box>
           ))}
         </>
+      )
+    }
+
+    if (results.length === 0) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            Not found
+          </Copy>
+        </Flex>
       )
     }
 
@@ -215,13 +216,6 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
     )
   }
 
-  const debouncedRefetch = useCallback(
-    debounce(() => {
-      refetch()
-    }, 800),
-    [],
-  )
-
   useEffect(() => {
     setInputValue(value)
   }, [value])
@@ -242,43 +236,40 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
             type="text"
             autoComplete="new-password"
             disabled={disabled}
-            error={error}
+            error={errorMessage}
             onClick={() => {
               if (!isOpen) {
-                setResults([])
-                setIsOpen(true)
-
-                if (inputValue.length > 3) {
-                  refetch()
+                if (
+                  (inputValue.trim().length === 0 && defaultSuggestions) ||
+                  inputValue.trim().length > 3
+                ) {
+                  setIsOpen(true)
                 }
               }
             }}
             onFocus={() => {
               if (!isOpen) {
-                setResults([])
-                setIsOpen(true)
-
-                if (inputValue.length > 3) {
-                  refetch()
+                if (
+                  (inputValue.trim().length === 0 && defaultSuggestions) ||
+                  inputValue.trim().length > 3
+                ) {
+                  setIsOpen(true)
                 }
               }
             }}
-            onChange={(e: any) => {
-              setInputValue(e.target.value)
-              setResults([])
-              setNotFound(false)
+            onChange={(event) => {
+              setInputValue(event.target.value)
 
-              if (e.target.value.length > 3) {
-                debouncedRefetch()
-
-                if (!isOpen) {
-                  setIsOpen(true)
-                }
+              if (
+                (event.target.value.trim().length === 0 && defaultSuggestions) ||
+                event.target.value.trim().length > 3
+              ) {
+                debouncedSetIsOpen(true)
               } else {
                 setIsOpen(false)
               }
 
-              if (e.target.value !== value) {
+              if (event.target.value !== value) {
                 if (fieldName === "city") {
                   setValue(`${person}.fullAddress.address1`, "")
                 }
@@ -287,7 +278,10 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
                 setValue(`${person}.fullAddress.latitude`, "")
                 setValue(`${person}.fullAddress.longitude`, "")
                 if (person === "recipient") {
-                  setValue(`${person}.fullAddress.isResidential`, false)
+                  setValue(
+                    `${person}.fullAddress.isResidential`,
+                    JSON.parse(ResidentialType.Nonresidential),
+                  )
                 }
               }
             }}
@@ -308,21 +302,21 @@ export const AddressFieldPopover: React.FC<IAddressFieldPopoverProps> = ({
           height: "max-content",
           maxHeight: "$192",
           overflow: "auto",
-          padding: "$0",
+          padding: 0,
           border: "none",
-          borderRadius: "$0",
+          borderRadius: 0,
           zIndex: "$2",
           outline: "none",
         }}
-        onInteractOutside={(e: any) => {
-          if (isTriggerClick(e)) {
+        onInteractOutside={(event) => {
+          if (isTriggerClick(event)) {
             return
           }
 
           return setIsOpen(false)
         }}
-        onOpenAutoFocus={(e: any) => {
-          e.preventDefault()
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
         }}
       >
         <Content />

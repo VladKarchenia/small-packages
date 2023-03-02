@@ -1,8 +1,7 @@
 import { Overlay } from "@radix-ui/react-dialog"
 
-import { styled } from "@/config"
-
-import { animations, easing, rgba } from "@/utils"
+import { styled } from "@/stitches/config"
+import { animations, easing, rgba } from "@/stitches/utils"
 
 export const SDrawerOverlay = styled(Overlay, {
   backgroundColor: rgba("neutrals-9", 0.4),

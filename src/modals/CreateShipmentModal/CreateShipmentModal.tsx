@@ -1,7 +1,11 @@
-import { CreateRoundedButton, Modal, ModalProps, Stack } from "@/shared/components"
-import { useModal, useModalActions } from "@/shared/hooks"
-import { ShippingType } from "@/shipment"
 import { useNavigate } from "react-router-dom"
+
+import { useBoundStore } from "@/store"
+import { useModal, useModalActions } from "@/shared/hooks"
+import { ShippingType } from "@/shared/types"
+import { CREATE } from "@/constants"
+
+import { CreateRoundedButton, Modal, ModalProps, Stack } from "@/shared/components"
 
 const modalProps: ModalProps = {
   align: { "@initial": "bottomRight" },
@@ -11,13 +15,14 @@ const modalProps: ModalProps = {
     zIndex: "$8",
   },
   panelCss: {
-    bottom: "134px",
+    // ($96 + $40) - the absolute panel position from the bottom of the screen
+    bottom: `calc($96 + $40)`,
     left: "auto",
     right: "$16",
     zIndex: "$8",
   },
   contentCss: {
-    padding: "$0",
+    padding: 0,
     backgroundColor: "transparent",
     boxShadow: "none",
   },
@@ -32,9 +37,11 @@ export const CreateShipmentModal = () => {
   const navigate = useNavigate()
   const [createShipment] = useModal("createShipment")
   const { close } = useModalActions()
+  const setShippingType = useBoundStore((state) => state.setShippingType)
 
   const handleClick = (type: ShippingType) => {
-    navigate(`/create/${type}`)
+    setShippingType(type)
+    navigate(`${CREATE}/${type}`)
     close("createShipment")
   }
 
@@ -43,13 +50,11 @@ export const CreateShipmentModal = () => {
       <Stack space={20} css={{ display: "flex", flexDirection: "column", alignItems: "end" }}>
         <CreateRoundedButton
           label="Create a quote"
-          iconSize="sm"
           ariaLabel="Create a quote"
           onClick={() => handleClick(ShippingType.Quote)}
         />
         <CreateRoundedButton
           label="Create a shipment"
-          iconSize="sm"
           ariaLabel="Create a shipment"
           onClick={() => handleClick(ShippingType.Shipment)}
         />

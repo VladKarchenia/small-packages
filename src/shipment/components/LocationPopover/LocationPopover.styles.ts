@@ -1,9 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SComboboxClearButton = styled("button", {
   reset: true,
-  backgroundColor: "$neutrals-2",
-  borderRadius: "$rounded",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

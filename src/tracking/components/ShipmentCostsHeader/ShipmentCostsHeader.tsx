@@ -28,7 +28,7 @@ export const ShipmentCostsHeader = ({
           <Hidden above="sm">
             <ButtonIcon
               ariaLabel="Show details"
-              icon={showCostsDetails ? <IconChevronTop /> : <IconChevronDown />}
+              icon={showCostsDetails ? <IconChevronTop size="xs" /> : <IconChevronDown size="xs" />}
               onClick={handleShowDetailsClick}
             />
           </Hidden>

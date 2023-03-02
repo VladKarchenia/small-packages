@@ -1,15 +1,13 @@
-import { styled } from "@/config"
-
-import { easing, animations } from "@/utils"
+import { styled } from "@/stitches/config"
+import { easing, animations, rgba } from "@/stitches/utils"
 
 export const STooltipWrapper = styled("div", {
   animation: `${animations.fadeIn} 150ms ease-out`,
-  zIndex: 1,
+  zIndex: "$1",
 })
 
 export const STooltip = styled("div", {
   position: "relative",
-  // padding: "$8",
 
   '&[data-placement="bottom"], &[data-placement="bottom-start"], &[data-placement="bottom-end"]': {
     paddingTop: "$8",
@@ -47,8 +45,12 @@ export const STooltipTrigger = styled("button", {
 })
 
 export const STooltipContent = styled("div", {
-  backgroundColor: "$brand-yellow-lightest",
+  width: 260,
+  backgroundColor: "$system-white",
   padding: "$24",
+  borderRadius: "$8",
+  boxShadow: `0 $space$4 $space$8 ${rgba("system-black", 0.22)}`,
+  textAlign: "start",
 })
 
 export const STooltipArrow = styled("div", {
@@ -64,30 +66,30 @@ export const STooltipArrow = styled("div", {
     left: 0,
     borderWidth: "$8",
     borderBottomWidth: 0,
-    borderTopColor: "$brand-yellow-lightest",
+    borderTopColor: "$system-white",
   },
 
   '&[data-placement*="right"]': {
     top: 0,
     left: 0,
     borderWidth: "$8",
-    borderLeft: 0,
-    borderRightColor: "$brand-yellow-lightest",
+    borderLeft: "none",
+    borderRightColor: "$system-white",
   },
 
   '&[data-placement*="bottom"]': {
     top: 0,
     borderWidth: "$8",
-    borderTop: 0,
-    borderBottomColor: "$brand-yellow-lightest",
+    borderTop: "none",
+    borderBottomColor: "$system-white",
   },
 
   '&[data-placement*="left"]': {
     top: 0,
     right: 0,
     borderWidth: "$8",
-    borderRight: 0,
-    borderLeftColor: "$brand-yellow-lightest",
+    borderRight: "none",
+    borderLeftColor: "$system-white",
   },
 
   variants: {

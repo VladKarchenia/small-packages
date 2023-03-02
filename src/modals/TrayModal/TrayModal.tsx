@@ -10,14 +10,14 @@ const modalProps: ModalProps = {
     },
   },
   contentCss: {
-    paddingX: "$0",
+    paddingX: 0,
 
     "@max-sm": {
       width: "100%",
       borderRadius: "$2 $2 0 0",
     },
     "@sm": {
-      borderRadius: 24,
+      borderRadius: "$24",
     },
   },
   closeButton: {

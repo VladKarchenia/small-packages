@@ -1,5 +1,5 @@
-import { withIcon } from "../Icon/Icon"
+import { withIcon } from "../Icon"
 
 export const IconPlus = withIcon(
-  '<path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 6V18H11.5V6H12.5Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6 11.5H18V12.5H6V11.5Z" fill="currentColor"/>',
+  '<path fill="currentColor" d="M12 6a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 1 1 0 1.5h-4.5v4.5a.75.75 0 1 1-1.5 0v-4.5h-4.5a.75.75 0 1 1 0-1.5h4.5v-4.5A.75.75 0 0 1 12 6Z"/>',
 )

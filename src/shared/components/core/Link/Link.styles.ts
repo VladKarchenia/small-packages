@@ -1,5 +1,5 @@
-import { styled } from "@/config"
-import { multipleSelectors } from "@/utils"
+import { styled } from "@/stitches/config"
+import { multipleSelectors } from "@/stitches/utils"
 
 export const SLink = styled("a", {
   reset: true,

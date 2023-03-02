@@ -1,30 +1,37 @@
 import { useNavigate, useParams } from "react-router-dom"
-import format from "date-fns/format"
+import tzlookup from "tz-lookup"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
-import { ShippingType } from "@/shipment"
-import { Role, RouteParams, ShipmentStatus } from "@/shared/types"
+import { useAuthStore, useBoundStore } from "@/store"
+import { IPerson, Role, RouteParams, ShipmentStatus, ShippingType } from "@/shared/types"
+import { EDIT } from "@/constants"
 
 import { ButtonIcon, Copy, Flex, GridContainer, Stack, StatusLabel } from "@/shared/components"
 import { IconPencil } from "@/shared/icons"
-import { useShipmentStateContext } from "@/shared/state"
 
 interface ITrackingHeaderProps {
-  shipmentDate: Date | null
+  sender: IPerson
+  createdAt: string
+  shipmentStatus: ShipmentStatus | null
   role?: Role
 }
 
-export const TrackingHeader = ({ shipmentDate }: ITrackingHeaderProps) => {
-  const { shippingType, shipmentStatus } = useShipmentStateContext()
+export const TrackingHeader = ({ sender, createdAt, shipmentStatus }: ITrackingHeaderProps) => {
   const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
-  // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const shippingType = useBoundStore((state) => state.shippingType)
+  const user = useAuthStore((state) => state.user)
   const role = user?.authorities?.[0]?.authority
+
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
 
   const handleEditClick = () => {
     shippingType === ShippingType.Quote
-      ? navigate(`/edit/quote/${shipmentId}`)
-      : navigate(`/edit/shipment/${shipmentId}`)
+      ? navigate(`${EDIT}/quote/${shipmentId}`)
+      : navigate(`${EDIT}/shipment/${shipmentId}`)
   }
 
   return (
@@ -49,14 +56,12 @@ export const TrackingHeader = ({ shipmentDate }: ITrackingHeaderProps) => {
               ariaLabel="Edit shipment"
               icon={<IconPencil />}
               onClick={handleEditClick}
-              css={{ height: "$32" }}
             />
           ) : null}
         </Flex>
         {role === Role.Admin || role === Role.Ops ? (
           <Copy scale={{ "@initial": 10, "@md": 8 }}>
-            {/* TODO: this is create date, with time and time zone */}
-            {shipmentDate ? format(shipmentDate, "dd.MM.yyyy (OOO)") : ""}
+            {formatInTimeZone(Date.parse(createdAt), timeZone, "MMM d, yyyy hh:mm aa (zzz)")}
           </Copy>
         ) : null}
       </Stack>

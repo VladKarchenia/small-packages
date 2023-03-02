@@ -9,6 +9,7 @@ export const getFormFieldProps = ({
   hasError,
   isFocused,
   labelProps,
+  borderless,
   prefix,
   suffix,
 }: IFormFieldCommonProps & Pick<IFormFieldProps, "id">): IFormFieldCommonProps => {
@@ -26,6 +27,8 @@ export const getFormFieldProps = ({
       ...labelProps,
       htmlFor: id,
     },
+
+    borderless,
 
     prefix,
     suffix,

@@ -1,5 +1,5 @@
-import { keyframes, styled } from "@/config"
-import { multipleSelectors, rgba } from "@/utils"
+import { keyframes, styled } from "@/stitches/config"
+import { multipleSelectors, rgba } from "@/stitches/utils"
 import {
   CheckboxItem,
   Content,
@@ -12,22 +12,22 @@ import {
 } from "@radix-ui/react-dropdown-menu"
 
 const slideUpAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(2px)" },
+  "0%": { opacity: 0, transform: "translateY($2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideRightAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(-2px)" },
+  "0%": { opacity: 0, transform: "translateX(-$2)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
 const slideDownAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(-2px)" },
+  "0%": { opacity: 0, transform: "translateY(-$2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideLeftAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(2px)" },
+  "0%": { opacity: 0, transform: "translateX(2$)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
@@ -37,7 +37,7 @@ export const SDropdownMenuContent = styled(Content, {
   alignItems: "flex-start",
   justifyContent: "center",
   width: "max-content",
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   borderRadius: "$4",
   marginY: "$12",
   paddingY: "$16",

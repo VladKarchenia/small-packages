@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+
 import { Copy, Link } from "@/shared/components"
 
 interface IShipmentLabelProps {
@@ -6,10 +8,12 @@ interface IShipmentLabelProps {
 }
 
 export const ShipmentLabel = ({ title, link }: IShipmentLabelProps) => {
+  const navigate = useNavigate()
+
   return (
     <>
       <Copy scale={{ "@initial": 10, "@sm": 9 }}>{title}</Copy>
-      <Link scale={{ "@initial": 10, "@sm": 8 }} href={link} underline blue>
+      <Link scale={{ "@initial": 10, "@sm": 8 }} onClick={() => navigate(link)} underline blue>
         {link}
       </Link>
     </>

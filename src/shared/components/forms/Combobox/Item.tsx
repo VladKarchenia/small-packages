@@ -6,6 +6,7 @@ interface IComboboxItemProps {
   className?: string
   children: React.ReactNode
   index: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   item: any
 }
 

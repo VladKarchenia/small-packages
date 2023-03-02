@@ -1,12 +1,14 @@
+import { IPackaging, IParcel } from "@/shared/types"
+
 import { Copy, Flex, Spacer, Stack } from "@/shared/components"
 import { IconCalendar } from "@/shared/icons"
-import { IParcel } from "@/shared/types"
 
 interface IParcelInfoProps {
+  packaging: IPackaging
   parcel: IParcel
 }
 
-export const ParcelInfo = ({ parcel }: IParcelInfoProps) => {
+export const ParcelInfo = ({ packaging, parcel }: IParcelInfoProps) => {
   return (
     <Stack space={12}>
       <Flex>
@@ -15,12 +17,12 @@ export const ParcelInfo = ({ parcel }: IParcelInfoProps) => {
         </Copy>
         <Spacer size={4} horizontal />
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          {parcel.content}
+          {packaging.packageContent}
         </Copy>
       </Flex>
       <Flex>
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="neutrals-7">
-          Total Parcel Value:
+          Declared value:
         </Copy>
         <Spacer size={4} horizontal />
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
@@ -29,7 +31,7 @@ export const ParcelInfo = ({ parcel }: IParcelInfoProps) => {
       </Flex>
       <Flex align="center">
         <Flex align="center" justify="center">
-          <IconCalendar size="xs" />
+          <IconCalendar />
         </Flex>
         <Spacer size={8} horizontal />
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
@@ -42,7 +44,7 @@ export const ParcelInfo = ({ parcel }: IParcelInfoProps) => {
       </Flex>
       <Flex align="center">
         <Flex align="center" justify="center">
-          <IconCalendar size="xs" />
+          <IconCalendar />
         </Flex>
         <Spacer size={8} horizontal />
         <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">

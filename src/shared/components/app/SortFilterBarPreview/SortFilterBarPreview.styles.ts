@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SFilterIconBox = styled("button", {
   reset: true,
@@ -8,8 +8,8 @@ export const SFilterIconBox = styled("button", {
   width: "$48",
   height: "$48",
   position: "absolute",
-  top: "$0",
-  right: "$0",
+  top: 0,
+  right: 0,
   border: "1px solid transparent",
 
   variants: {

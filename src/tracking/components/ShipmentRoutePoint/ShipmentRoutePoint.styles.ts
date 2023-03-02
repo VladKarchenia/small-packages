@@ -1,4 +1,5 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
+
 import { Box, Flex } from "@/shared/components"
 
 export const SRoutePointWrapper = styled(Flex, {
@@ -20,6 +21,7 @@ export const SRoutePointWrapper = styled(Flex, {
         before: {
           content: "''",
           margin: "auto",
+          // $40 - offset at the top and bottom of the line
           height: `calc(100% - $40)`,
           borderRight: "1px dashed $neutrals-7",
           position: "absolute",
@@ -50,8 +52,8 @@ export const SRoutePointIcon = styled(Flex, {
 })
 
 export const SDot = styled(Box, {
-  height: "$8",
-  width: "$8",
+  height: "$4",
+  width: "$4",
   backgroundColor: "$system-white",
   borderRadius: "$rounded",
 })

@@ -1,24 +1,18 @@
 import { useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { useQuery } from "react-query"
+import { useLocation, useParams } from "react-router-dom"
+import { shallow } from "zustand/shallow"
 
-import { getShipmentByIdFn, shipmentApi } from "@/api/shipmentApi"
-import { ShippingType } from "@/shipment"
-import { ICost, Role, RouteParams } from "@/shared/types"
-import { useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
-import { formatShipmentResponseData } from "@/shared/utils"
+import { useBoundStore } from "@/store"
+import { ICost, RouteParams, ShippingType } from "@/shared/types"
+import { useShipmentById } from "@/shared/data"
 
-import { Flex } from "@/shared/components"
-import { IllustrationSpinner } from "@/shared/illustrations"
 import {
-  ShipmentDetailsUnauthorized,
   ShipmentDetails,
   QuoteDetails,
   TrackingMain,
   TrackingPlaceholderShipment,
   TrackingPlaceholderQuote,
-  TrackingPlaceholderShipmentUnauthorized,
-} from "@/tracking"
+} from "@/tracking/components"
 
 export const costs: ICost[] = [
   {
@@ -88,79 +82,86 @@ export const SHIPMENT_DETAILS = {
 }
 
 export const TrackingContainer = () => {
-  const { shippingType } = useShipmentStateContext()
   const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
-  const { setShipmentData } = useShipmentActionContext()
-
-  const { isLoading, isFetching, refetch } = useQuery(
-    // TODO: check how not to call this all the time!
-    ["getShipmentById"],
-    () => getShipmentByIdFn(shipmentId),
-    {
-      enabled: false,
-      // enabled: !!shipmentId,
-      onSuccess: (shipment) => {
-        return setShipmentData(formatShipmentResponseData(shipment.data))
-      },
-    },
+  const location = useLocation()
+  // const [user] = useAuthStore((state) => [state.user])
+  const [shippingType, setShippingType] = useBoundStore(
+    (state) => [state.shippingType, state.setShippingType],
+    shallow,
   )
+  // const role = user?.authorities?.[0]?.authority
 
-  // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
-  const role = user?.authorities?.[0]?.authority
-  const accessToken = localStorage.getItem("accessToken") || ""
+  const { isLoading, data } = useShipmentById(shipmentId)
 
+  // we need this shippingType definition when we go directly to the tracking link
   useEffect(() => {
-    if (accessToken) {
-      if (!shipmentApi.defaults.headers.common["Authorization"]) {
-        shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
-      }
-
-      refetch()
+    if (location.pathname.includes("quote")) {
+      setShippingType(ShippingType.Quote)
+    } else {
+      setShippingType(ShippingType.Shipment)
     }
-  }, [accessToken, refetch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  if (isLoading || isFetching || !shippingType) {
+  if (isLoading || !data) {
     if (shippingType === ShippingType.Quote) {
       return <TrackingPlaceholderQuote />
     }
 
-    if (shippingType === ShippingType.Shipment) {
-      return <TrackingPlaceholderShipment />
+    // TODO: need to add condition to show this component
+    // if (shippingType === ShippingType.Shipment) {
+    //   return <TrackingPlaceholderShipmentUnauthorized />
+    // }
 
-      // TODO: need to add condition to show this component
-      // return <TrackingPlaceholderShipmentUnauthorized />
-    }
+    return <TrackingPlaceholderShipment />
+  }
 
+  const { sender, recipient, date, rate, shipmentStatus, createdAt, packaging } = data
+
+  if (shippingType === ShippingType.Quote) {
     return (
-      <Flex
-        align="center"
-        justify="center"
-        css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, textAlign: "center" }}
+      <TrackingMain
+        headerTitle="Quote details"
+        sender={sender}
+        createdAt={createdAt}
+        shipmentStatus={shipmentStatus}
       >
-        <IllustrationSpinner css={{ display: "block", height: "$32", width: "$32" }} />
-      </Flex>
+        <QuoteDetails
+          sender={sender}
+          recipient={recipient}
+          packaging={packaging}
+          date={date}
+          shipmentStatus={shipmentStatus}
+          shipmentId={shipmentId}
+          shippingType={shippingType}
+        />
+      </TrackingMain>
     )
   }
 
   // TODO: need to add condition to show this component
   // return (
-  //   <TrackingMain headerTitle="Shipment details" shipmentDate={new Date()}>
-  //     <ShipmentDetailsUnauthorized />
+  //   <TrackingMain headerTitle="Shipment details" createdAt={createdAt}>
+  //     <ShipmentDetailsUnauthorized sender={sender} recipient={recipient} rate={rate} />
   //   </TrackingMain>
   // )
 
-  if (shippingType === ShippingType.Quote) {
-    return (
-      <TrackingMain headerTitle="Quote detail" shipmentDate={new Date()}>
-        <QuoteDetails />
-      </TrackingMain>
-    )
-  }
-
   return (
-    <TrackingMain headerTitle="Shipment details" shipmentDate={new Date()}>
-      <ShipmentDetails />
+    <TrackingMain
+      headerTitle="Shipment details"
+      sender={sender}
+      createdAt={createdAt}
+      shipmentStatus={shipmentStatus}
+    >
+      <ShipmentDetails
+        sender={sender}
+        recipient={recipient}
+        packaging={packaging}
+        date={date}
+        rate={rate}
+        shipmentId={shipmentId}
+        shippingType={shippingType}
+      />
     </TrackingMain>
   )
 }

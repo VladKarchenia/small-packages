@@ -1,6 +1,8 @@
-import { CSS } from "@/config"
+import { CSS } from "@/stitches/config"
+
 import { Copy, Spacer } from "@/shared/components"
 import { IconPlus, IconSize } from "@/shared/icons"
+
 import { SCreateRoundedButton, SCreateRoundedButtonIcon } from "./CreateRoundedButton.styles"
 
 interface ICreateRoundedButtonProps {

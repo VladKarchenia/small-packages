@@ -1,6 +1,6 @@
 import axios from "axios"
-import { ILoginResponse, IRefreshResponse, LoginInput } from "./types"
-import { AUTH_BASE_URI } from "@/config"
+import { ILoginResponse, IRefreshResponse, LoginInput, RecoveryInput } from "./types"
+import { AUTH_BASE_URI } from "@/constants"
 import { userApi, getMeFn } from "./userApi"
 import { shipmentApi } from "./shipmentApi"
 import { placeApi } from "./placeApi"
@@ -12,71 +12,49 @@ export const authApi = axios.create({
 
 authApi.defaults.headers.common["Content-Type"] = "application/json"
 
-// TODO: this is mutation
 export const loginUserFn = async ({ username, password }: LoginInput) => {
-  const response = await authApi.post<ILoginResponse>("auth/login", { username, password })
-  const { accessToken, refreshToken } = response.data
+  const { data } = await authApi.post<ILoginResponse>("auth/login", { username, password })
+  const { accessToken } = data
 
   userApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
 
-  // TODO: move it to the Zustand
-  localStorage.setItem("accessToken", accessToken)
-  localStorage.setItem("refreshToken", refreshToken)
-  localStorage.setItem("username", username)
+  const { user, organizations } = await getMeFn(username)
 
-  await getMeFn(username)
-
-  return response.data
+  return { ...data, user, organizations }
 }
 
-// TODO: this is mutation
-export const logoutUserFn = async () => {
-  const token = localStorage.getItem("refreshToken") || ""
-  const response = await authApi.post("auth/logout", { token })
+export const logoutUserFn = async (token: string) => {
+  const { data } = await authApi.post<string>("auth/logout", { token })
 
   delete userApi.defaults.headers.common["Authorization"]
   delete shipmentApi.defaults.headers.common["Authorization"]
   delete placeApi.defaults.headers.common["Authorization"]
   delete organizationApi.defaults.headers.common["Authorization"]
 
-  // TODO: use Zustand
-  localStorage.setItem("accessToken", "")
-  localStorage.setItem("refreshToken", "")
-  localStorage.setItem("username", "")
-  localStorage.setItem("user", "")
-  localStorage.setItem("organization", "")
-
-  return response.data
+  return data
 }
 
-// TODO: this is mutation
 export const refreshTokenFn = async (token: string) => {
-  const response = await authApi.post<IRefreshResponse>("auth/refresh", { token })
-  const { accessToken, refreshToken } = response.data
+  const { data } = await authApi.post<IRefreshResponse>("auth/refresh", { token })
+  const { accessToken } = data
 
   userApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
 
-  // TODO: use Zustand
-  localStorage.setItem("accessToken", accessToken)
-  localStorage.setItem("refreshToken", refreshToken)
-
-  return response.data
+  return data
 }
 
-// TODO: this is mutation
-export const forgotPasswordFn = async (email: string) => {
-  const response = await authApi.post("auth/forgot_password", { email })
+export const forgotPasswordFn = async ({ email }: RecoveryInput) => {
+  const { data } = await authApi.post<string>("auth/forgot_password", { email })
 
-  return response.data
+  return data
 }
 
-// TODO: this is mutation
 export const resetPasswordFn = async ({
   newPassword,
   token,
@@ -84,7 +62,7 @@ export const resetPasswordFn = async ({
   newPassword: string
   token: string
 }) => {
-  const response = await authApi.post("auth/reset_password", { newPassword, token })
+  const { data } = await authApi.post<string>("auth/reset_password", { newPassword, token })
 
-  return response.data
+  return data
 }
