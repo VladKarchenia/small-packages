@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { ComponentProps, createContext } from "@/utils"
+
+import { createContext } from "@/shared/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { SStepper } from "./Stepper.styles"
 

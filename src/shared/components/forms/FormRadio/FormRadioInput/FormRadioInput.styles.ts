@@ -1,5 +1,5 @@
-import { styled } from "@/config"
-import { multipleSelectors, rgba } from "@/utils"
+import { styled } from "@/stitches/config"
+import { multipleSelectors, rgba } from "@/stitches/utils"
 
 export const SFormRadioInputLabel = styled("label", {
   display: "flex",
@@ -7,7 +7,7 @@ export const SFormRadioInputLabel = styled("label", {
 })
 
 export const SFormRadioInputBox = styled("span", {
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   border: "1px solid $neutrals-9",
   width: "$24",
   height: "$24",
@@ -81,14 +81,14 @@ export const SFormRadioInput = styled("input", {
       circle: {
         hover: {
           [`+ ${SFormRadioInputBox}`]: {
-            boxShadow: `0px 2px 4px 0px ${rgba("neutrals-9", 0.2)}`,
+            boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.2)}`,
           },
         },
 
         keyboardFocus: {
           [`+ ${SFormRadioInputBox}`]: {
             borderColor: "$system-black",
-            boxShadow: `0px 2px 4px 0px ${rgba("neutrals-9", 0.15)}`,
+            boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.15)}`,
           },
         },
 

@@ -1,13 +1,15 @@
+import { useLocation, useNavigate } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
-import { useMutation } from "react-query"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import format from "date-fns/format"
+import tzlookup from "tz-lookup"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
+import { shallow } from "zustand/shallow"
 
-import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
+import { useBoundStore } from "@/store"
+import { useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
 import { IShipmentResponse } from "@/api/types"
-import { IParcel, RouteParams, ShipmentStatus } from "@/shared/types"
-import { formatShipmentRequestData } from "@/shared/utils"
-import { ShipmentState, useShipmentActionContext, useShipmentStateContext } from "@/shared/state"
+import { ShippingType, ShipmentState } from "@/shared/types"
+import { StepName } from "@/shipment/types"
+import { EDIT, TRACKING } from "@/constants"
 
 import {
   Copy,
@@ -16,13 +18,13 @@ import {
   Spacer,
   Button,
   useStepperContext,
-  Flex,
   ShortInfoLine,
   PersonInfoShort,
   Grid,
+  Flex,
 } from "@/shared/components"
-import { IconCalendar } from "@/shared/icons"
-import { ShippingType, StepActionsBar, StepName } from "@/shipment"
+import { IconClock, IconTruck } from "@/shared/icons"
+import { StepActionsBar } from "@/shipment/components"
 
 import { SGridItem } from "./Summary.styles"
 
@@ -31,71 +33,53 @@ export const Summary = ({
 }: {
   handleContinueClick?: (step: StepName.SUMMARY, nextStep: StepName.RECEIPT) => void
 }) => {
-  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  console.log("render Summary")
+
   const navigate = useNavigate()
-  const { shippingType } = useShipmentStateContext()
-  const { setShipmentData, setShippingType } = useShipmentActionContext()
+  const [shippingType, setShippingType] = useBoundStore(
+    (state) => [state.shippingType, state.setShippingType],
+    shallow,
+  )
   const { handleSubmit, watch } = useFormContext<ShipmentState>()
-  const { sender, recipient, rate, date, parcels } = watch()
+  const { sender, recipient, rate, date, packaging, parcels } = watch()
 
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
 
-  const { mutate: createShipment, isLoading } = useMutation(
-    (data: ShipmentState) => createShipmentFn(formatShipmentRequestData(data, shippingType)),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        // TODO: need first to add condition to unblock steps
-        // navigate(`/edit/shipment/${id}`)
-        // setSelected([StepName.RECEIPT])
-        // if (handleContinueClick) {
-        //   handleContinueClick(StepName.SUMMARY, StepName.RECEIPT)
-        // }
-      },
-    },
+  const senderTimeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
+  const recipientTimeZone = tzlookup(
+    parseFloat(recipient.fullAddress.latitude),
+    parseFloat(recipient.fullAddress.longitude),
   )
 
-  const { mutate: updateShipment } = useMutation(
-    (data: ShipmentState) =>
-      updateShipmentFn(
-        shipmentId,
-        formatShipmentRequestData(
-          data,
-          shippingType,
-          shippingType === ShippingType.Quote ? ShipmentStatus.DRAFT : ShipmentStatus.CONFIRMED,
-        ),
-      ),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        if (shippingType === ShippingType.Quote) {
-          setShippingType(ShippingType.Shipment)
-          navigate(`/edit/shipment/${id}`)
-        } else {
-          navigate(`/tracking/${id}`)
-        }
-      },
-    },
-  )
+  const { mutate: createShipment } = useCreateShipment()
+  const { mutate: updateShipment } = useUpdateShipment()
 
-  const onSubmitHandler = (data: ShipmentState) => {
-    setShipmentData({
-      sender: data.sender,
-      senderReturn: data.senderReturn,
-      recipient: data.recipient,
-      parcels: data.parcels,
-      date: data.date,
-      rate: data.rate,
-      shippingType: data.shippingType,
-      shipmentStatus: data.shipmentStatus,
-      currentLocation: {
-        displayName: "",
-        latitude: "",
-        longitude: "",
-      },
-      hasReturnAddress: data.hasReturnAddress,
-    })
-    isEditMode ? updateShipment(data) : createShipment(data)
-  }
+  const onSubmitHandler = (data: ShipmentState) =>
+    isEditMode
+      ? updateShipment(data, {
+          onSuccess: (data: IShipmentResponse) => {
+            if (shippingType === ShippingType.Quote) {
+              setShippingType(ShippingType.Shipment)
+              navigate(`${EDIT}/shipment/${data.id}`)
+            } else {
+              navigate(`${TRACKING}/${shippingType}/${data.id}`)
+            }
+          },
+        })
+      : createShipment(data, {
+          onSuccess: (data: IShipmentResponse) => {
+            // TODO: need first to add condition to unblock steps
+            navigate(`${EDIT}/shipment/${data.id}`)
+            setSelected([StepName.RECEIPT])
+            if (handleContinueClick) {
+              handleContinueClick(StepName.SUMMARY, StepName.RECEIPT)
+            }
+          },
+        })
 
   const { setSelected } = useStepperContext("ShipmentSummaryDetails")
 
@@ -115,50 +99,43 @@ export const Summary = ({
             Ship From
           </Copy>
           <Spacer size={16} />
-          <PersonInfoShort person={"sender"} sender={sender} />
+          <PersonInfoShort person="sender" sender={sender} />
         </SGridItem>
         <SGridItem>
           <Copy scale={{ "@initial": 11, "@sm": 9 }} bold>
             Ship To
           </Copy>
           <Spacer size={16} />
-          <PersonInfoShort person={"recipient"} recipient={recipient} />
+          <PersonInfoShort person="recipient" recipient={recipient} />
         </SGridItem>
         <SGridItem>
           <Copy scale={{ "@initial": 11, "@sm": 9 }} bold>
             Shipment details
           </Copy>
           <Spacer size={16} />
-          <Stack space={12}>
-            {parcels.map((parcel: IParcel, index: number) => (
-              <Stack space={8} key={index}>
-                {parcels.length > 1 ? (
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
-                    Parcel {index + 1}
-                  </Copy>
-                ) : null}
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  <span color={"$neutrals-7"}>Contents: </span> {parcel.content}
-                </Copy>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  <span color={"$neutrals-7"}>Total Declared Value: </span> ${parcel.totalPrice}
-                </Copy>
-                <Flex align="center">
-                  <Flex align="center" justify="center">
-                    <IconCalendar size="xs" />
-                  </Flex>
-                  <Spacer size={8} horizontal />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height}{" "}
-                    in;
-                  </Copy>
-                  <Spacer size={8} horizontal />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    {parcel.weight} lb
-                  </Copy>
-                </Flex>
-              </Stack>
-            ))}
+          <Stack space={8}>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Pickup type: ${packaging.pickupType}`}
+            </Copy>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Package type: ${packaging.packagingType}`}
+            </Copy>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Contents: ${packaging.packageContent}`}
+            </Copy>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Number of packages: ${packaging.totalPackagesNumber}`}
+            </Copy>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Total weight: ${Object.values(parcels)
+                .reduce((sum, i) => (sum += parseFloat(i.weight) * i.quantity), 0)
+                .toFixed(1)} lb`}
+            </Copy>
+            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              {`Total Declared Value: $${Object.values(parcels)
+                .reduce((sum, i) => (sum += parseInt(i.totalPrice) * i.quantity), 0)
+                .toFixed(0)}`}
+            </Copy>
           </Stack>
         </SGridItem>
         <SGridItem>
@@ -169,8 +146,8 @@ export const Summary = ({
               </Copy>
               <Spacer size={16} />
               <ShortInfoLine
-                icon={<IconCalendar size="xs" />}
-                text={format(date, "MMM d, yyyy hh:mm aa (OOO)")}
+                icon={<IconClock css={{ color: "$neutrals-7" }} />}
+                text={formatInTimeZone(date, senderTimeZone, "MMM d, yyyy hh:mm aa (zzz)")}
               />
             </>
             <>
@@ -179,10 +156,19 @@ export const Summary = ({
               </Copy>
               <Spacer size={16} />
               <Stack space={12}>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                  Arrival date: {format(date, "MMM d, yyyy hh:mm aa (OOO)")}
-                </Copy>
-                <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
+                <ShortInfoLine
+                  icon={<IconTruck css={{ color: "$neutrals-7" }} />}
+                  text={rate.name}
+                />
+                <Flex wrap css={{ gap: "$4" }}>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {/* TODO: fix this date&time to arrival, not pickup */}
+                    Arrival date:
+                  </Copy>
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {formatInTimeZone(date, recipientTimeZone, "MMM d, yyyy hh:mm aa (zzz)")}
+                  </Copy>
+                </Flex>
                 <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
                   Total price: ${rate.price}
                 </Copy>

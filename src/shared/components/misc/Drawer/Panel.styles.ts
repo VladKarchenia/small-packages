@@ -1,11 +1,10 @@
 import { DialogContent } from "@radix-ui/react-dialog"
 
-import { styled } from "@/config"
-
-import { animations } from "@/utils"
+import { styled } from "@/stitches/config"
+import { animations } from "@/stitches/utils"
 
 export const SDrawerPanel = styled(DialogContent, {
-  backgroundColor: "white",
+  backgroundColor: "$system-white",
   zIndex: "$9",
   top: 0,
   right: 0,

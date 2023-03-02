@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom"
 
+import { useAuthStore } from "@/store"
 import { Role } from "@/shared/types"
+import { HOME } from "@/constants"
 
 import {
   Box,
@@ -15,7 +17,7 @@ import {
   Stack,
   Title,
 } from "@/shared/components"
-import { TrackingDetailsItem } from "@/tracking"
+import { TrackingDetailsItem } from "@/tracking/components"
 
 import {
   STrackingGrid,
@@ -29,8 +31,7 @@ import {
 export const TrackingPlaceholderShipment = () => {
   const routes = [1, 2, 3]
   const navigate = useNavigate()
-  // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const user = useAuthStore((state) => state.user)
   const role = user?.authorities?.[0]?.authority
 
   return (
@@ -38,13 +39,13 @@ export const TrackingPlaceholderShipment = () => {
       <Hidden above="sm">
         <HeaderBar
           title="Shipment details"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(HOME)}
           css={{ paddingRight: "$40" }}
         />
       </Hidden>
       <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
         <Hidden below="md">
-          <Redacted height="$32" width="565px" text animated />
+          <Redacted height="$32" width="560px" text animated />
           <Spacer size={12} />
           {role === Role.Admin || role === Role.Ops ? (
             <Redacted height="$24" width="180px" text animated />
@@ -64,7 +65,7 @@ export const TrackingPlaceholderShipment = () => {
       <STrackingGrid
         columns={{ "@initial": "1fr", "@md": "1fr 1fr 1fr 1fr" }}
         gap={{ "@initial": 16, "@md": 24 }}
-        rows={"auto auto"}
+        rows="auto auto"
       >
         <Hidden below="md" css={{ gridArea: "main" }}>
           <STrackingGridItem>
@@ -162,7 +163,7 @@ export const TrackingPlaceholderShipment = () => {
           <Box
             css={{
               backgroundColor: "$neutrals-3",
-              minHeight: "260px",
+              minHeight: 260,
 
               "@md": { borderRadius: "$8", minHeight: "100%" },
             }}
@@ -174,7 +175,7 @@ export const TrackingPlaceholderShipment = () => {
             <TrackingDetailsItem
               title="Route"
               titleScale={7}
-              titleColor={"system-black"}
+              titleColor="system-black"
               titleIndent={24}
             >
               {routes.map((route, index) => {
@@ -198,7 +199,7 @@ export const TrackingPlaceholderShipment = () => {
               <TrackingDetailsItem
                 title="Sender’s info"
                 titleScale={7}
-                titleColor={"system-black"}
+                titleColor="system-black"
                 titleIndent={24}
               >
                 <Stack space={12}>
@@ -210,7 +211,7 @@ export const TrackingPlaceholderShipment = () => {
               <TrackingDetailsItem
                 title="Recipient’s info"
                 titleScale={7}
-                titleColor={"system-black"}
+                titleColor="system-black"
                 titleIndent={24}
               >
                 <Stack space={12}>
@@ -229,10 +230,10 @@ export const TrackingPlaceholderShipment = () => {
               <TrackingDetailsItem
                 title="Costs"
                 titleScale={7}
-                titleColor={"system-black"}
+                titleColor="system-black"
                 titleIndent={0}
               >
-                <Redacted height="28px" width="50%" text animated />
+                <Redacted height="$32" width="50%" text animated />
                 <Spacer size={16} />
                 <Stack space={16}>
                   <Redacted height="$20" text animated />
@@ -264,7 +265,7 @@ export const TrackingPlaceholderShipment = () => {
                 title="Tracking & Label Links"
                 titleIndent={16}
                 titleScale={7}
-                titleColor={"system-black"}
+                titleColor="system-black"
               >
                 <Copy scale={11} bold>
                   Tracking number link

@@ -1,6 +1,7 @@
 import { Overlay } from "@radix-ui/react-dialog"
-import { styled } from "@/config"
-import { easing, rgba, animations } from "@/utils"
+
+import { styled } from "@/stitches/config"
+import { easing, rgba, animations } from "@/stitches/utils"
 import { MODAL_ANIMATION_DURATION } from "@/constants"
 
 export const SModalOverlay = styled(Overlay, {

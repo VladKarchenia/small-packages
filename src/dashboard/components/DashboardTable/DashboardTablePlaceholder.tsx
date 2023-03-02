@@ -1,4 +1,5 @@
-import { useTranslation } from "react-i18next"
+import { ShippingType } from "@/shared/types"
+
 import {
   CreateButton,
   Flex,
@@ -8,14 +9,21 @@ import {
   TableRow,
   TabularData,
 } from "@/shared/components"
-import { DashboardTableHead } from "./DashboardTableHead"
-import { ShippingType } from "@/shipment"
 
-const PlaceholderRow = ({ shippingType }: { shippingType: ShippingType }) => (
-  <TableRow>
+import { DashboardTableHead } from "./DashboardTableHead"
+
+const PlaceholderRow = ({ tab }: { tab: ShippingType }) => (
+  <TableRow
+    css={{
+      cursor: "default",
+      hover: {
+        backgroundColor: "inherit",
+      },
+    }}
+  >
     <TabularData
       css={{
-        paddingLeft: "$24",
+        paddingLeft: "$12",
       }}
     >
       <Redacted height="$24" text animated />
@@ -27,10 +35,10 @@ const PlaceholderRow = ({ shippingType }: { shippingType: ShippingType }) => (
     >
       <Redacted height="$24" text animated />
     </TabularData>
-    {shippingType === ShippingType.Shipment ? (
+    {tab === ShippingType.Shipment ? (
       <TabularData
         css={{
-          paddingLeft: `calc($16 + $12)`,
+          paddingLeft: "$16",
         }}
       >
         <Redacted height="$24" text animated />
@@ -61,38 +69,36 @@ const PlaceholderRow = ({ shippingType }: { shippingType: ShippingType }) => (
 )
 
 interface IDashboardTablePlaceholderProps {
-  shippingType: ShippingType
+  tab: ShippingType
   isFilterApplied: boolean
 }
 
 export const DashboardTablePlaceholder = ({
-  shippingType,
+  tab,
   isFilterApplied,
 }: IDashboardTablePlaceholderProps) => {
-  const { t } = useTranslation()
-
   return (
     <>
       <CreateButton />
       <Flex align="center" justify="between">
         <Flex align="center" wrap css={{ gap: "$12" }}>
-          {shippingType === ShippingType.Shipment ? (
+          {tab === ShippingType.Shipment ? (
             <>
-              <Redacted height="$40" width="108px" text animated />
-              <Redacted height="$40" width="172px" text animated />
+              <Redacted height="$40" width="100px" text animated />
+              <Redacted height="$40" width="170px" text animated />
             </>
           ) : (
-            <Redacted height="$40" width="204px" text animated />
+            <Redacted height="$40" width="200px" text animated />
           )}
-          <Redacted height="$40" width="204px" text animated />
+          <Redacted height="$40" width="200px" text animated />
           {isFilterApplied ? <Redacted height="$24" width="100px" text animated /> : null}
         </Flex>
       </Flex>
       <Table caption="Dashboard table">
-        <DashboardTableHead />
+        <DashboardTableHead isLoading={true} />
         <TableBody>
           {Array.from(new Array(20), (_, index) => index).map((v) => (
-            <PlaceholderRow key={`placeholder-row-${v}`} shippingType={shippingType} />
+            <PlaceholderRow key={`placeholder-row-${v}`} tab={tab} />
           ))}
         </TableBody>
       </Table>

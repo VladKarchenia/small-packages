@@ -1,7 +1,8 @@
 import React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
-import { ComponentProps } from "@/utils"
-import { CSS } from "@/config"
+
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
 
 import { SPopoverContent } from "./Popover.styles"
 

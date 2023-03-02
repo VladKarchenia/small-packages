@@ -1,4 +1,5 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy } from "@/shared/components"
 
 type IErrorLabelProps = ComponentProps<typeof Copy>

@@ -1,4 +1,5 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { Picture } from "@/shared/components"
 
 import { SAvatar } from "./Avatar.styles"

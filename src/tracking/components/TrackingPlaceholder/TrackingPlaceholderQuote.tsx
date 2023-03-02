@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom"
 
-import { Role } from "@/shared/types"
+import { useAuthStore } from "@/store"
+import { mediaQueries } from "@/stitches/theme"
 import { useMedia } from "@/shared/hooks"
-import { mediaQueries } from "@/config"
+import { Role } from "@/shared/types"
+import { HOME } from "@/constants"
 
 import {
   GridContainer,
@@ -13,15 +15,14 @@ import {
   Stack,
   Title,
 } from "@/shared/components"
-import { TrackingDetailsItem } from "@/tracking"
+import { TrackingDetailsItem } from "@/tracking/components"
 
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
 export const TrackingPlaceholderQuote = () => {
   const navigate = useNavigate()
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
-  // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const user = useAuthStore((state) => state.user)
   const role = user?.authorities?.[0]?.authority
 
   return (
@@ -29,13 +30,13 @@ export const TrackingPlaceholderQuote = () => {
       <Hidden above="sm">
         <HeaderBar
           title="Quote details"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(HOME)}
           css={{ paddingRight: "$40" }}
         />
       </Hidden>
       <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
         <Hidden below="md">
-          <Redacted height="$32" width="565px" text animated />
+          <Redacted height="$32" width="560px" text animated />
           <Spacer size={12} />
           {role === Role.Admin || role === Role.Ops ? (
             <Redacted height="$24" width="180px" text animated />
@@ -60,7 +61,7 @@ export const TrackingPlaceholderQuote = () => {
             paddingBottom: "$48",
           },
           "@md": {
-            maxWidth: "565px",
+            maxWidth: 560,
             marginLeft: "initial",
           },
         }}
@@ -77,7 +78,7 @@ export const TrackingPlaceholderQuote = () => {
               title="From where to where"
               titleScale={{ "@initial": 11, "@md": 9 }}
             >
-              <Redacted height="$24" width="312px" text animated />
+              <Redacted height="$24" width="320px" text animated />
             </TrackingDetailsItem>
 
             <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
@@ -87,7 +88,7 @@ export const TrackingPlaceholderQuote = () => {
             <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
               <Stack space={12}>
                 <Redacted height="$20" width="260px" text animated />
-                <Redacted height="$20" width="136px" text animated />
+                <Redacted height="$20" width="140px" text animated />
               </Stack>
             </TrackingDetailsItem>
           </Stack>

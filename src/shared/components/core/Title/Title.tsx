@@ -1,12 +1,12 @@
 import cx from "classnames"
-import { ComponentProps, ResponsiveProp, atomicClassNames } from "@/utils"
-import { Colors } from "@/config/theme/types"
+
+import { ComponentProps, ResponsiveProp, Colors } from "@/stitches/types"
+import { atomicClassNames } from "@/stitches/utils"
 
 import { STitle } from "./Title.styles"
 
 export interface ITitleProps extends Omit<ComponentProps<typeof STitle>, "color"> {
   color?: Colors | ResponsiveProp<Colors>
-
   dataTestid?: string
 }
 

@@ -1,24 +1,25 @@
 import { Content, Trigger } from "@radix-ui/react-popover"
-import { keyframes, styled } from "@/config"
-import { rgba } from "@/utils"
+
+import { keyframes, styled } from "@/stitches/config"
+import { rgba } from "@/stitches/utils"
 
 const slideUpAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(2px)" },
+  "0%": { opacity: 0, transform: "translateY($2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideRightAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(-2px)" },
+  "0%": { opacity: 0, transform: "translateX(-$2)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
 const slideDownAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(-2px)" },
+  "0%": { opacity: 0, transform: "translateY(-$2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideLeftAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(2px)" },
+  "0%": { opacity: 0, transform: "translateX($2)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
@@ -26,9 +27,9 @@ export const SPopoverContent = styled(Content, {
   border: "1px solid $neutrals-4",
   borderRadius: "$2",
   padding: "$24",
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   maxWidth: "100%",
-  boxShadow: `0px 4px 15px ${rgba("system-black", 0.12)}`,
+  boxShadow: `0 $space$4 $space$16 ${rgba("system-black", 0.12)}`,
   zIndex: "$1",
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",

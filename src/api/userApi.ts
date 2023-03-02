@@ -1,7 +1,7 @@
 import axios from "axios"
-import { IUser, IUserOrganizationResponse } from "./types"
-import { USER_BASE_URI } from "@/config"
-import { refreshTokenFn } from "./authApi"
+
+import { USER_BASE_URI } from "@/constants"
+import { IUser, IUserOrganization } from "./types"
 
 export const userApi = axios.create({
   baseURL: USER_BASE_URI,
@@ -9,63 +9,30 @@ export const userApi = axios.create({
 
 userApi.defaults.headers.common["Content-Type"] = "application/json"
 
-// TODO: this is query with enabled condition
 export const getMeFn = async (username: string) => {
-  const response = await userApi.get<IUser>(`users/info?username=${username}`)
+  const { data: user } = await userApi.get<IUser>(`users/info?username=${username}`)
+  const organizations = await getUserOrganizationsFn()
 
-  // TODO: use Zustand
-  localStorage.setItem("user", JSON.stringify(response.data))
-
-  const organization = JSON.parse(localStorage.getItem("organization") || "{}")
-  const id = organization?.id ? organization?.id : response.data.organizationIds[0]
-
-  const responseList = await getUserOrganizationsFn()
-
-  if (responseList.length > 0) {
-    localStorage.setItem("organization", JSON.stringify(responseList.find((i) => i.id === id)))
-  }
-
-  return response.data
+  return { user, organizations }
 }
 
-// TODO: this is query
 export const getUserOrganizationsFn = async () => {
-  const response = await userApi.get<IUserOrganizationResponse[]>("users/organizations")
+  const { data } = await userApi.get<IUserOrganization[]>("users/organizations")
 
-  return response.data
+  return data
 }
 
-// TODO: this is mutation
-export const updateUserPasswordFn = async (oldPassword: string, newPassword: string) => {
-  const response = await userApi.post("users/update_password", {
+export const updateUserPasswordFn = async ({
+  oldPassword,
+  newPassword,
+}: {
+  oldPassword: string
+  newPassword: string
+}) => {
+  const { data } = await userApi.post("users/update_password", {
     oldPassword,
     newPassword,
   })
 
-  return response.data
+  return data
 }
-
-userApi.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    const originalRequest = error.config
-    const errMessage = error.response.data.error as string
-
-    if (errMessage.includes("Unauthorized") && !originalRequest._retry) {
-      // TODO: use Zustand
-      const refreshToken = localStorage.getItem("refreshToken") || ""
-      originalRequest._retry = true
-
-      if (refreshToken) {
-        const { accessToken } = await refreshTokenFn(refreshToken)
-        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
-
-        return userApi(originalRequest)
-      }
-    }
-
-    return Promise.reject(error)
-  },
-)

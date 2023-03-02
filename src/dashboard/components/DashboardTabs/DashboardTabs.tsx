@@ -1,57 +1,72 @@
-import { useTranslation } from "react-i18next"
+import { useEffect } from "react"
+import { shallow } from "zustand/shallow"
 
-import { mediaQueries } from "@/config"
+import { mediaQueries } from "@/stitches/theme"
 import { useMedia } from "@/shared/hooks"
-import { useDashboardActionContext } from "@/dashboard/state"
-import { ShippingType } from "@/shipment"
+import { useBoundStore } from "@/store"
+import { ShipmentsPagedOrderBy, SortDirection, useDashboardActionContext } from "@/dashboard/state"
+import { ShippingType } from "@/shared/types"
 
 import { Box, TabList, TabListItem, TabPanel, TabPanels, Tabs } from "@/shared/components"
-import { DashboardList, DashboardTable } from "@/dashboard"
+import { DashboardList, DashboardTable } from "@/dashboard/components"
 
 export const DashboardTabs = () => {
-  const { t } = useTranslation()
-  const { setDashboardShippingType, resetFilterField } = useDashboardActionContext()
+  const { resetFilterField, setSortOrder, setSortDirection } = useDashboardActionContext()
+  const [tab, setShippingType, setTab] = useBoundStore(
+    (state) => [state.tab, state.setShippingType, state.setTab],
+    shallow,
+  )
 
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
-  // TODO: put active tab value in Zustand store
+
+  useEffect(() => {
+    setShippingType(tab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Tabs
-      selectedTab="shipments"
+      selectedTab={tab}
       animate={false}
-      css={{ paddingBottom: "$40", "@sm": { paddingBottom: "$0" } }}
+      css={{ paddingBottom: "$40", "@sm": { paddingBottom: 0 } }}
     >
       <TabList label="dashboard-tabs">
         <TabListItem
-          id="shipments"
+          id={ShippingType.Shipment}
           onChange={() => {
-            setDashboardShippingType(ShippingType.Shipment)
+            setTab(ShippingType.Shipment)
+            setShippingType(ShippingType.Shipment)
             resetFilterField("status")
             resetFilterField("recipientName")
             resetFilterField("originalAddress")
             resetFilterField("destinationAddress")
+            setSortOrder(ShipmentsPagedOrderBy.CreationDateAsc)
+            setSortDirection(SortDirection.ASC)
           }}
         >
           Shipments
         </TabListItem>
         <TabListItem
-          id="quotes"
+          id={ShippingType.Quote}
           onChange={() => {
-            setDashboardShippingType(ShippingType.Quote)
+            setTab(ShippingType.Quote)
+            setShippingType(ShippingType.Quote)
             resetFilterField("status")
             resetFilterField("recipientName")
             resetFilterField("originalAddress")
             resetFilterField("destinationAddress")
+            setSortOrder(ShipmentsPagedOrderBy.CreationDateAsc)
+            setSortDirection(SortDirection.ASC)
           }}
         >
           Quotes
         </TabListItem>
       </TabList>
       <TabPanels>
-        <TabPanel id="shipments">
+        <TabPanel id={ShippingType.Shipment}>
           <Box>{isMediumAndAbove ? <DashboardTable /> : <DashboardList />}</Box>
         </TabPanel>
-        <TabPanel id="quotes">
+        <TabPanel id={ShippingType.Quote}>
           <Box>{isMediumAndAbove ? <DashboardTable /> : <DashboardList />}</Box>
         </TabPanel>
       </TabPanels>

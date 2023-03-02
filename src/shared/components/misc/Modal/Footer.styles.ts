@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SModalFooter = styled("footer", {
   position: "sticky",
@@ -6,7 +6,7 @@ export const SModalFooter = styled("footer", {
   bottom: "-$$modalContentYPadding",
   marginBottom: "-$$modalContentYPadding",
   marginX: "-$$modalContentXPadding",
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   borderTop: "1px solid $neutrals-4",
   padding: "$16 $24",
 })

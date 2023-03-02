@@ -1,25 +1,30 @@
 import { useCallback, useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
 
-import { ShipmentState, useShipmentStateContext } from "@/shared/state"
+import { useBoundStore } from "@/store"
+import { useShipmentById } from "@/shared/data"
+import { RouteParams, ShippingType, ShipmentState } from "@/shared/types"
+import { StepName, StepperState } from "@/shipment/types"
 
 import { Copy, GridContainer, Stack, Spacer, useStepperContext, Button } from "@/shared/components"
-import { DateInput, ShippingType, StepActionsBar, StepName, StepperState } from "@/shipment"
+import { DateInput, StepActionsBar } from "@/shipment/components"
 
 export const ShipmentDateDetails = ({
   handleContinueClick,
   setStepperState,
 }: {
   handleContinueClick: (step: StepName.DATE, nextStep: StepName.RATES) => void
-  setStepperState: (value: any) => void
+  setStepperState: React.Dispatch<React.SetStateAction<StepperState>>
 }) => {
   const [isStepChanged, setIsStepChanged] = useState(false)
   const { watch } = useFormContext<ShipmentState>()
-  const { date } = watch()
+  const { date, sender } = watch()
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
-  const { shippingType, date: dateContext } = useShipmentStateContext()
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const shippingType = useBoundStore((state) => state.shippingType)
+  const { data } = useShipmentById(shipmentId)
 
   const { setSelected } = useStepperContext("ShipmentDateDetails")
 
@@ -28,11 +33,13 @@ export const ShipmentDateDetails = ({
     handleContinueClick(StepName.DATE, StepName.RATES)
   }
 
-  // transforms dimensions to strings and sets the value of the isStepChanged variable
-  // according to whether the array with parcels from the form has changed compared to the context
+  // transforms dimensions to strings and sets the value of the isStepChanged variable according to
+  // whether the array with parcels from the form has changed compared to the currently stored
   const stepChangesChecker = useCallback(() => {
-    setIsStepChanged(date.getTime() !== dateContext.getTime())
-  }, [date, dateContext])
+    if (data?.date) {
+      setIsStepChanged(date.getTime() !== data.date.getTime())
+    }
+  }, [date, data?.date])
 
   // TODO: shippingType was added to avoid shipment edit mode - remove it later
   // checks if edit mode is now and triggers the stepChangesChecker function
@@ -67,7 +74,7 @@ export const ShipmentDateDetails = ({
     <GridContainer fullBleed>
       <Stack space={12} css={{ position: "relative" }}>
         <Copy scale={9}>Please, select a ready date to calculate the cost</Copy>
-        <DateInput date={date} />
+        <DateInput date={date} sender={sender} />
       </Stack>
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
       <StepActionsBar>

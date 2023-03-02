@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SModalCloseButton = styled("button", {
   reset: true,
@@ -10,7 +10,7 @@ export const SModalCloseButton = styled("button", {
   alignItems: "center",
   justifyContent: "center",
   color: "$neutrals-9",
-  borderRadius: 4,
+  borderRadius: "$4",
   transition: "200ms ease-out",
   cursor: "pointer",
 

@@ -1,36 +1,18 @@
-import { useNavigate } from "react-router-dom"
-import { useMutation } from "react-query"
-
-import { logoutUserFn } from "@/api/authApi"
+import { useLogout } from "@/auth/hooks"
 
 import { ButtonIcon } from "@/shared/components"
-import { IconClock } from "@/shared/icons"
+import { IconLogout } from "@/shared/icons"
 
 export const LogoutButton = () => {
-  const navigate = useNavigate()
-
-  const { mutate: logoutUser } = useMutation(() => logoutUserFn(), {
-    onSuccess: () => {
-      navigate("/login")
-    },
-  })
+  const { mutate: logoutUser } = useLogout()
 
   return (
     <ButtonIcon
       type="button"
       ariaLabel="Logout button"
-      icon={
-        <IconClock
-          width={32}
-          height={32}
-          fixedSize={true}
-          css={{
-            borderRadius: "$rounded",
-            cursor: "pointer",
-          }}
-        />
-      }
+      icon={<IconLogout />}
       onClick={() => logoutUser()}
+      css={{ cursor: "pointer" }}
     />
   )
 }

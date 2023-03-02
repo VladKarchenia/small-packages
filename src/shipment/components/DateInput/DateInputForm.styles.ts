@@ -1,8 +1,8 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SDatesInputContent = styled("div", {
   width: "100%",
-  maxWidth: "480px",
+  maxWidth: 480,
   overflow: "hidden auto",
   paddingY: 0,
   margin: "0 auto",

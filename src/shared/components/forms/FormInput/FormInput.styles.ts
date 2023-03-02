@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 import { SFormFieldElement } from "../FormField/FormField.styles"
 

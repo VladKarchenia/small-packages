@@ -1,63 +1,162 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import { useQuery } from "react-query"
-import debounce from "just-debounce-it"
+import { useEffect, useMemo, useState } from "react"
+import { useDebounce } from "use-debounce"
+import { useCombobox } from "downshift"
 
-import { getShipmentsFieldValuesFn } from "@/api/shipmentApi"
+import { useShipmentsFieldValues } from "@/dashboard/hooks"
+import { useBoundStore } from "@/store"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
-import { ShippingType } from "@/shipment"
+import { ShippingType } from "@/shared/types"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/stitches/theme"
 
 import {
   Box,
-  Copy,
-  Divider,
-  Flex,
   FormCheckbox,
   FormInput,
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-  Spacer,
+  IResponseContentProps,
+  MobileCombobox,
+  ResponseContent,
+  ResponseContentItem,
 } from "@/shared/components"
-import { IconChevronDown, IconSearch } from "@/shared/icons"
-import { IllustrationSpinner } from "@/shared/illustrations"
-
-import { SStatusFilterButton } from "./DashboardTableDestinationAddressFilter.styles"
+import { IconSearch } from "@/shared/icons"
+import { DashboardTableFilter } from "@/dashboard/components"
 
 export const DashboardTableDestinationAddressFilter = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { destinationAddress, shippingType } = useDashboardStateContext()
-  const { setDestinationAddressFilter, resetFilterField } = useDashboardActionContext()
+  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
+  const tab = useBoundStore((state) => state.tab)
+  const { destinationAddress } = useDashboardStateContext()
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [inputValue, setInputValue] = useState<string>("")
-  const triggerRef = useRef<any>()
-  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
 
-  const [results, setResults] = useState<string[]>([])
-  const [notFound, setNotFound] = useState(false)
-  const { isLoading, isFetching, refetch } = useQuery(
-    // TODO: check how not to call this all the time!
-    ["searchDestinationAddresses"],
-    () =>
-      getShipmentsFieldValuesFn({
-        field: `data.CONSIGNEE_GEOLOC.DISPLAY_NAME`,
-        keyword: inputValue,
-        status: shippingType === ShippingType.Quote ? "QUOTE" : "SHIPMENT",
-      }),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        setResults(data.content)
-        setNotFound(data.content.length === 0)
-      },
+  const [keyword] = useDebounce(inputValue.trim(), 300)
+
+  const { data, isLoading, isIdle, error } = useShipmentsFieldValues({
+    field: "data.CONSIGNEE_GEOLOC.DISPLAY_NAME",
+    keyword,
+    status: tab === ShippingType.Quote ? "QUOTE" : "SHIPMENT",
+  })
+
+  const results = useMemo(() => (data ? data : []), [data])
+
+  useEffect(() => {
+    if (destinationAddress.length === results.length) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
+  }, [destinationAddress, results])
+
+  if (isMediumAndAbove) {
+    return (
+      <DesktopView
+        destinationAddress={destinationAddress}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      >
+        <Content
+          results={results}
+          isLoading={isLoading}
+          isIdle={isIdle}
+          error={error}
+          isCheckAll={isCheckAll}
+          destinationAddress={destinationAddress}
+        />
+      </DesktopView>
+    )
+  }
+
+  return (
+    <MobileView results={results} inputValue={inputValue} setInputValue={setInputValue}>
+      <Content
+        results={results}
+        isLoading={isLoading}
+        isIdle={isIdle}
+        error={error}
+        isCheckAll={isCheckAll}
+        destinationAddress={destinationAddress}
+      />
+    </MobileView>
+  )
+}
+
+interface IDesktopViewProps {
+  destinationAddress: string[]
+  inputValue: string
+  setInputValue: React.Dispatch<React.SetStateAction<string>>
+}
+
+const DesktopView: React.FC<React.PropsWithChildren<IDesktopViewProps>> = ({
+  children,
+  destinationAddress,
+  inputValue,
+  setInputValue,
+}) => {
+  return (
+    <DashboardTableFilter
+      label="Destination address"
+      name="destinationAddress"
+      amount={destinationAddress.length}
+    >
+      <Box css={{ padding: "$12 $16" }}>
+        <FormInput
+          value={inputValue}
+          label="Search for address"
+          labelProps={{ hidden: true }}
+          placeholder="Search for address"
+          onChange={(event) => setInputValue(event.target.value)}
+          suffix={<IconSearch />}
+        />
+      </Box>
+
+      {children}
+    </DashboardTableFilter>
+  )
+}
+
+interface IMobileViewProps {
+  results: string[]
+  inputValue: string
+  setInputValue: React.Dispatch<React.SetStateAction<string>>
+}
+
+const MobileView: React.FC<React.PropsWithChildren<IMobileViewProps>> = ({
+  children,
+  results,
+  inputValue,
+  setInputValue,
+}) => {
+  const { resetFilterField } = useDashboardActionContext()
+
+  const comboboxProps = useCombobox({
+    isOpen: true,
+    inputValue,
+    items: results,
+    onInputValueChange: ({ inputValue }) => {
+      setInputValue(inputValue || "")
     },
-  )
+  })
 
-  const debouncedRefetch = useCallback(
-    debounce(() => {
-      refetch()
-    }, 800),
-    [],
+  return (
+    <MobileCombobox
+      comboboxProps={comboboxProps}
+      id="destinationAddressFilter"
+      label="Destination address filter"
+      placeholder="Search for destination address"
+      inputValue={inputValue}
+      prefix={<IconSearch />}
+      clearDestinationFn={() => resetFilterField("destinationAddress")}
+    >
+      {children}
+    </MobileCombobox>
   )
+}
+
+interface IContentProps extends Omit<IResponseContentProps, "handleCheckAllClick"> {
+  destinationAddress: string[]
+}
+
+const Content = ({ results, destinationAddress, ...props }: IContentProps) => {
+  const { setDestinationAddressFilter, resetFilterField } = useDashboardActionContext()
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     if (!event.currentTarget.checked) {
@@ -81,171 +180,20 @@ export const DashboardTableDestinationAddressFilter = () => {
     return setDestinationAddressFilter(results)
   }
 
-  const Content = () => {
-    if (isLoading || isFetching) {
-      return (
-        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
-          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
-        </Flex>
-      )
-    }
-
-    if (notFound) {
-      return (
-        <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            Not found
-          </Copy>
-        </Flex>
-      )
-    }
-
-    return (
-      <>
-        {results.length > 0 ? (
-          <>
-            <Box
-              css={{
-                "> label": {
-                  padding: "$12 $16",
-                  cursor: "pointer",
-                  hover: {
-                    backgroundColor: "$neutrals-3",
-                  },
-                },
-              }}
-            >
-              <FormCheckbox
-                value={"All"}
-                onChange={handleCheckAllClick}
-                name={"Select all"}
-                id={"Select all"}
-                label={"Select all"}
-                checked={isCheckAll}
-              />
-            </Box>
-            <Divider />
-            <Box css={{ height: "max-content", maxHeight: "240px", overflow: "auto" }}>
-              {results.map((item) => (
-                <Box
-                  key={item}
-                  css={{
-                    "> label": {
-                      padding: "$12 $16",
-                      cursor: "pointer",
-                      hover: {
-                        backgroundColor: "$neutrals-3",
-                      },
-
-                      "> p": {
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                      },
-                    },
-                  }}
-                >
-                  <FormCheckbox
-                    value={item}
-                    onChange={handleChange}
-                    name={item}
-                    id={item}
-                    label={item}
-                    checked={destinationAddress.some((address) => address === item)}
-                  />
-                </Box>
-              ))}
-            </Box>
-          </>
-        ) : (
-          <Flex css={{ padding: "$16", height: "$56" }} />
-        )}
-      </>
-    )
-  }
-
-  useEffect(() => {
-    if (destinationAddress.length === results.length) {
-      setIsCheckAll(true)
-    } else {
-      setIsCheckAll(false)
-    }
-  }, [destinationAddress, results])
-
   return (
-    <Popover open={isOpen}>
-      <PopoverAnchor asChild>
-        <SStatusFilterButton
-          ref={triggerRef}
-          onClick={() => {
-            if (!isOpen) {
-              setResults([])
-              setIsOpen(true)
-
-              if (inputValue === "" || inputValue.length > 3) {
-                refetch()
-              }
-            }
-          }}
-          onFocus={() => {
-            if (!isOpen) {
-              setResults([])
-              setIsOpen(true)
-
-              if (inputValue === "" || inputValue.length > 3) {
-                refetch()
-              }
-            }
-          }}
-        >
-          <Copy as="span" scale={8} color="neutrals-8" bold>
-            Destination address
-          </Copy>
-          <Spacer size={16} horizontal />
-          <IconChevronDown fixedSize width={20} height={20} />
-        </SStatusFilterButton>
-      </PopoverAnchor>
-      <PopoverContent
-        align="start"
-        css={{ width: "360px", padding: "$0", border: "none", borderRadius: "$0" }}
-        alignOffset={-1}
-        onInteractOutside={(e: any) => {
-          // if (isClearButtonClick(e: any)) {
-          //   if (e.detail.originalEvent.isTrusted) {
-          //     handleClearButton()
-          //   }
-          //   return
-          // }
-          if (isTriggerClick(e)) {
-            return
-          }
-          return setIsOpen(false)
-        }}
-        onOpenAutoFocus={(e: any) => {
-          e.preventDefault()
-        }}
-      >
-        <Box css={{ padding: "$12 $16" }}>
-          <FormInput
-            value={inputValue}
-            label="Search for address"
-            labelProps={{ hidden: true }}
-            placeholder="Search for address"
-            onChange={(e: any) => {
-              setInputValue(e.target.value)
-              setResults([])
-              setNotFound(false)
-
-              if (e.target.value === "" || e.target.value.length > 3) {
-                debouncedRefetch()
-              }
-            }}
-            suffix={<IconSearch height={20} width={20} fixedSize />}
+    <ResponseContent results={results} handleCheckAllClick={handleCheckAllClick} {...props}>
+      {results.map((item) => (
+        <ResponseContentItem key={item}>
+          <FormCheckbox
+            value={item}
+            onChange={handleChange}
+            name={item}
+            id={item}
+            label={item}
+            checked={destinationAddress.includes(item)}
           />
-        </Box>
-
-        <Content />
-      </PopoverContent>
-    </Popover>
+        </ResponseContentItem>
+      ))}
+    </ResponseContent>
   )
 }

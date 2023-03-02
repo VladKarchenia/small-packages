@@ -1,5 +1,10 @@
 import { useRef, useState } from "react"
+import tzlookup from "tz-lookup"
 import format from "date-fns/format"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
+
+import { IPerson } from "@/shared/types"
+
 import {
   Hidden,
   Popover,
@@ -8,17 +13,25 @@ import {
   SearchFilterDrawer,
   SearchFilterDrawerPreview,
 } from "@/shared/components"
-import { IconArrowLeft, IconCalendar } from "@/shared/icons"
+import { IconCalendar, IconChevronLeft } from "@/shared/icons"
+
 import { DateInputForm } from "./DateInputForm"
 
 interface IDateInputProps {
   date: Date
+  sender: IPerson
 }
 
-export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
+export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const triggerRef = useRef<any>()
-  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const isTriggerClick = (event: Event) =>
+    event.composedPath().includes(triggerRef.current as EventTarget)
+
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
 
   return (
     <>
@@ -26,10 +39,18 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
         <SearchFilterDrawer
           drawerName="dateInput"
           drawerTitle="Date and Time"
-          value={date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
-          placeholder={"Select date and time"}
+          value={
+            date
+              ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                  date,
+                  timeZone,
+                  "(zzz)",
+                )}`
+              : ""
+          }
+          placeholder="Select date and time"
           hidePlaceholder
-          closeIcon={<IconArrowLeft />}
+          closeIcon={<IconChevronLeft />}
           suffix={<IconCalendar />}
           drawerForm={<DateInputForm />}
           dataTestid="date-button-filter"
@@ -41,9 +62,17 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
           <PopoverAnchor asChild>
             <SearchFilterDrawerPreview
               ref={triggerRef}
-              value={date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
+              value={
+                date
+                  ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                      date,
+                      timeZone,
+                      "(zzz)",
+                    )}`
+                  : ""
+              }
               suffix={<IconCalendar />}
-              placeholder={"Select date and time"}
+              placeholder="Select date and time"
               hidePlaceholder
               dataTestid="date-button-filter"
               css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
@@ -61,17 +90,17 @@ export const DateInput: React.FC<IDateInputProps> = ({ date }) => {
           </PopoverAnchor>
           <PopoverContent
             align="start"
-            css={{ padding: "$0", border: "none", borderRadius: "$8", zIndex: "$2" }}
+            css={{ padding: 0, border: "none", borderRadius: "$8", zIndex: "$2" }}
             alignOffset={-1}
-            onInteractOutside={(e: any) => {
-              if (isTriggerClick(e)) {
+            onInteractOutside={(event) => {
+              if (isTriggerClick(event)) {
                 return
               }
 
               return setIsOpen(false)
             }}
-            onOpenAutoFocus={(e: any) => {
-              e.preventDefault()
+            onOpenAutoFocus={(event) => {
+              event.preventDefault()
             }}
           >
             <DateInputForm />

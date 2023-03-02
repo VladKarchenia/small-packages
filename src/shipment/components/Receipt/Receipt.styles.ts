@@ -1,4 +1,5 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
+
 import { GridItem } from "@/shared/components"
 
 export const SGridItem = styled(GridItem, {

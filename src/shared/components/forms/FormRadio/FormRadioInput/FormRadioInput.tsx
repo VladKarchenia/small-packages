@@ -1,7 +1,10 @@
 import React, { InputHTMLAttributes } from "react"
-import { FormComponentProps } from "@/utils/types"
+
+import { CSS } from "@/stitches/config"
+import { FormComponentProps } from "@/stitches/types"
+
 import { Copy, Spacer } from "@/shared/components"
-import { CSS } from "@/config"
+import { IconTick } from "@/shared/icons"
 
 import {
   SFormRadioInputLabel,
@@ -11,7 +14,6 @@ import {
   SFormRadioInput,
   SFormRadioTickCopyBox,
 } from "./FormRadioInput.styles"
-import { IconTick } from "@/shared/icons"
 
 export interface IFormRadioInputProps
   extends FormComponentProps<typeof SFormRadioInput, InputHTMLAttributes<HTMLInputElement>> {
@@ -45,26 +47,26 @@ export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInput
 
     return (
       <SFormRadioInputLabel data-ui="radiobutton" {...labelProps} css={labelCss}>
-        <SFormRadioInput ref={ref} data-ui="radiobutton__input" {...radioInputProps} type="radio" />
+        <SFormRadioInput ref={ref} data-ui="radiobutton-input" {...radioInputProps} type="radio" />
         {view === "tick" ? (
           <SFormRadioTickCopyBox>
-            <Copy color="neutrals-9" intent="detail">
+            <Copy scale={8} color="neutrals-9">
               {label}
             </Copy>
             <Spacer size={16} horizontal />
-            <SFormRadioTickInputBox data-ui="radiobutton__box">
+            <SFormRadioTickInputBox data-ui="radiobutton-tick-box">
               <IconTick />
             </SFormRadioTickInputBox>
           </SFormRadioTickCopyBox>
         ) : (
           <>
-            <SFormRadioInputBox data-ui="radiobutton__box">
+            <SFormRadioInputBox data-ui="radiobutton-box">
               <SFormRadioInputCircle />
             </SFormRadioInputBox>
             {!noLabel && (
               <>
                 <Spacer size={16} horizontal />
-                <Copy color="neutrals-9" intent="detail">
+                <Copy scale={8} color="neutrals-9">
                   {label}
                 </Copy>
               </>

@@ -1,5 +1,7 @@
 import React, { memo } from "react"
+
 import { Box, Copy, Divider, Spacer } from "@/shared/components"
+
 import { SDropdownMenuLabel } from "./Dropdown.styles"
 
 export interface IDropdownLabelProps {

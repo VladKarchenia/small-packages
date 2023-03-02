@@ -1,13 +1,13 @@
-import { useMutation } from "react-query"
-import { useNavigate, useParams } from "react-router-dom"
-import { format } from "date-fns"
+import { useNavigate } from "react-router-dom"
+import tzlookup from "tz-lookup"
+import format from "date-fns/format"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
-import { mediaQueries } from "@/config"
-import { RouteParams, ShipmentStatus } from "@/shared/types"
-import { useShipmentStateContext } from "@/shared/state"
+import { mediaQueries } from "@/stitches/theme"
+import { IPackaging, IPerson, ShipmentStatus, ShippingType } from "@/shared/types"
 import { useMedia } from "@/shared/hooks"
-import { updateShipmentStatusFn } from "@/api/shipmentApi"
-import { IShipmentResponse } from "@/api/types"
+import { useUpdateShipmentStatus } from "@/tracking/hooks"
+import { TRACKING } from "@/constants"
 
 import {
   AddressInfoShort,
@@ -16,33 +16,43 @@ import {
   Flex,
   GridContainer,
   Hidden,
+  Link,
   Spacer,
   Stack,
   Title,
 } from "@/shared/components"
-import { IconCalendar, IconClock } from "@/shared/icons"
-import { TrackingDetailsItem } from "@/tracking"
+import { IconBox, IconChevronRight, IconClock } from "@/shared/icons"
+import { TrackingDetailsItem } from "@/tracking/components"
 
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
 
-export const QuoteDetails = () => {
-  const { date, parcels, recipient, sender, shipmentStatus } = useShipmentStateContext()
-  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
-  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
-  const navigate = useNavigate()
+interface IQuoteDetailsProps {
+  sender: IPerson
+  recipient: IPerson
+  packaging: IPackaging
+  date: Date
+  shipmentStatus: ShipmentStatus | null
+  shipmentId: string
+  shippingType: ShippingType
+}
 
-  const { mutate: updateShipmentStatus, isLoading } = useMutation(
-    () =>
-      updateShipmentStatusFn(
-        shipmentId,
-        Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(ShipmentStatus.DRAFT)],
-      ),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        navigate(`/edit/shipment/${id}`)
-      },
-    },
+export const QuoteDetails = ({
+  sender,
+  recipient,
+  packaging,
+  date,
+  shipmentStatus,
+  shipmentId,
+  shippingType,
+}: IQuoteDetailsProps) => {
+  const navigate = useNavigate()
+  const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
   )
+
+  const { mutate: updateShipmentStatus } = useUpdateShipmentStatus()
 
   return (
     <GridContainer
@@ -53,7 +63,7 @@ export const QuoteDetails = () => {
           paddingBottom: "$48",
         },
         "@md": {
-          maxWidth: "565px",
+          maxWidth: 560,
           marginLeft: "initial",
         },
       }}
@@ -75,42 +85,52 @@ export const QuoteDetails = () => {
 
           <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
             <Flex align="center">
-              <IconClock size="xs" css={{ paddingRight: "$8" }} />
+              <IconClock css={{ color: "$neutrals-7", paddingRight: "$8" }} />
               <Copy scale={9} color="system-black">
-                {date ? format(date, "MMM d, yyyy hh:mm aa (OOO)") : ""}
+                {date
+                  ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
+                      date,
+                      timeZone,
+                      "(zzz)",
+                    )}`
+                  : ""}
               </Copy>
             </Flex>
           </TrackingDetailsItem>
 
           <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
-            <Stack space={12}>
-              {parcels.map((parcel: any, index: number) => (
-                <Stack space={8} key={index}>
-                  {parcels.length > 1 ? (
-                    <Copy scale={9} color="system-black" bold>
-                      Parcel {index + 1}
-                    </Copy>
-                  ) : null}
-                  <Copy scale={9} color="system-black">
-                    {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                    {parcel.pickupType}
+            <Stack space={8}>
+              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                {`Pickup type: ${packaging.pickupType}`}
+              </Copy>
+              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                {`Package type: ${packaging.packagingType}`}
+              </Copy>
+              <Flex align="center" justify="between">
+                <Flex align="center" justify="center" css={{ gap: "$8" }}>
+                  <IconBox css={{ color: "$neutrals-7" }} />
+                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                    {`${packaging.totalPackagesNumber} ${
+                      packaging.totalPackagesNumber === 1 ? "parcel" : "parcels"
+                    }`}
                   </Copy>
-                  <Flex align="center">
-                    <Flex align="center" justify="center">
-                      <IconCalendar size="xs" />
-                    </Flex>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black">
-                      {parcel.dimensions.length}x{parcel.dimensions.width}x
-                      {parcel.dimensions.height} in;
-                    </Copy>
-                    <Spacer size={8} horizontal />
-                    <Copy scale={9} color="system-black">
-                      {parcel.weight} lb
-                    </Copy>
-                  </Flex>
-                </Stack>
-              ))}
+                </Flex>
+                <Link
+                  onClick={() => navigate(`${TRACKING}/${shippingType}/${shipmentId}/packages`)}
+                >
+                  <Copy
+                    as="span"
+                    scale={{ "@initial": 9, "@md": 8 }}
+                    color="system-black"
+                    bold
+                    css={{ display: "flex", alignItems: "center" }}
+                  >
+                    View all
+                    <Spacer size={4} horizontal />
+                    <IconChevronRight size="xs" css={{ paddingTop: "$2" }} />
+                  </Copy>
+                </Link>
+              </Flex>
             </Stack>
           </TrackingDetailsItem>
         </Stack>

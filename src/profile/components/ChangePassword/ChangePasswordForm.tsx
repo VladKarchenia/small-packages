@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import { Button, Copy, Flex, FormInput, Spacer, Stack, Hidden } from "@/shared/components"
-import { IconClarityEye } from "@/shared/icons"
+
 import { ChangeInput } from "@/api/types"
-import { SShowPasswordButton } from "./ChangePasswordForm.styls"
+
+import { Button, Copy, Flex, FormInput, Spacer, Stack, Hidden, Title } from "@/shared/components"
+import { IconClarityEye, IconClarityEyeCrossed } from "@/shared/icons"
+
+import { SShowPasswordButton } from "./ChangePasswordForm.styles"
 
 export const ChangePasswordForm = ({
   defaultValues,
@@ -28,13 +31,11 @@ export const ChangePasswordForm = ({
 
   return (
     <Flex justify="center" direction="column">
-      {/* TODO: maybe it will be a Title component */}
-      <Copy scale={{ "@initial": 8, "@sm": 7 }} bold color={"system-black"}>
+      <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
         Change password
-      </Copy>
+      </Title>
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
       <Stack space={24}>
-        {/*TODO: maybe need add some component for input passwords*/}
         <Controller
           control={control}
           defaultValue={defaultValues.oldPassword}
@@ -42,13 +43,14 @@ export const ChangePasswordForm = ({
           render={({ field }) => {
             return (
               <FormInput
-                {...field}
                 {...register(field.name, {
+                  shouldUnregister: true,
                   required: {
                     value: true,
                     message: "Required field",
                   },
                 })}
+                {...field}
                 id="Old password"
                 label="Current password"
                 labelProps={{ hidden: true, required: true }}
@@ -61,7 +63,7 @@ export const ChangePasswordForm = ({
                     type="button"
                     onClick={() => toggleCurrentPasswordVisibility()}
                   >
-                    <IconClarityEye height={20} width={20} fixedSize />
+                    {currentPasswordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
                   </SShowPasswordButton>
                 }
               />
@@ -75,8 +77,8 @@ export const ChangePasswordForm = ({
           render={({ field }) => {
             return (
               <FormInput
-                {...field}
                 {...register(field.name, {
+                  shouldUnregister: true,
                   required: {
                     value: true,
                     message: "Required field",
@@ -102,6 +104,7 @@ export const ChangePasswordForm = ({
                     message: "Password max length exceeded",
                   },
                 })}
+                {...field}
                 id="New password"
                 label="New password"
                 labelProps={{ hidden: true, required: true }}
@@ -111,7 +114,7 @@ export const ChangePasswordForm = ({
                 placeholder="Enter new password"
                 suffix={
                   <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
-                    <IconClarityEye height={20} width={20} fixedSize />
+                    {passwordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
                   </SShowPasswordButton>
                 }
               />
@@ -125,8 +128,8 @@ export const ChangePasswordForm = ({
           render={({ field }) => {
             return (
               <FormInput
-                {...field}
                 {...register(field.name, {
+                  shouldUnregister: true,
                   required: {
                     value: true,
                     message: "Required field",
@@ -147,6 +150,7 @@ export const ChangePasswordForm = ({
                     message: "Password max length exceeded",
                   },
                 })}
+                {...field}
                 id="Re-enter password"
                 label="Re-enter password"
                 labelProps={{ hidden: true, required: true }}
@@ -159,7 +163,7 @@ export const ChangePasswordForm = ({
                     type="button"
                     onClick={() => toggleConfirmPasswordVisibility()}
                   >
-                    <IconClarityEye height={20} width={20} fixedSize />
+                    {confirmPasswordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
                   </SShowPasswordButton>
                 }
               />
@@ -189,7 +193,7 @@ export const ChangePasswordForm = ({
           </Button>
           <Spacer size={16} horizontal />
           {/* TODO: cancel action? */}
-          <Button action="secondary" onClick={() => console.log("clear form?")} full>
+          <Button action="secondary" onClick={() => null} full>
             <Copy as="span" scale={8} color="system-black" bold>
               Cancel
             </Copy>

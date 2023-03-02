@@ -1,17 +1,17 @@
-import { Copy, Spacer, Stack } from "@/shared/components"
-import { SwitchOrganization, ChangePassword } from "@/profile"
+import { useAuthStore } from "@/store"
 import { Role } from "@/shared/types"
 
+import { Breadcrumbs, Spacer, Stack, Title } from "@/shared/components"
+import { SwitchOrganization, ChangePassword } from "@/profile/components"
+
 export const ProfileDesktop = () => {
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const user = useAuthStore((state) => state.user)
   const role = user?.authorities?.[0]?.authority
 
   return (
     <>
-      {/* TODO: it should be Title, so need to fix it later */}
-      <Copy scale={5} color="system-black" bold>
-        User Profile
-      </Copy>
+      <Breadcrumbs />
+      <Title as="h2">User Profile</Title>
       <Spacer size={40} />
       <Stack space={40}>
         {role === Role.Admin || role === Role.Ops ? <SwitchOrganization /> : null}

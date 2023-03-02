@@ -1,33 +1,41 @@
 import React from "react"
 import Select, { components } from "react-select"
-import {
-  Box,
-  Copy,
-  ErrorLabel,
-  Flex,
-  FormLabel,
-  IFormLabelProps,
-  Spacer,
-} from "@/shared/components"
+
+import { boxShadows, rgba } from "@/stitches/utils"
+
+import { Copy, ErrorLabel, Flex, FormLabel, IFormLabelProps, Spacer } from "@/shared/components"
 import { IconChevronDown, IconTick } from "@/shared/icons"
-import { boxShadows, rgba } from "@/utils"
-import { SSelectIcon } from "./FormSelect.styles"
 
 interface ISelectProps {
-  value: string
-  onValueChange: (value: any) => void
-  options: string[]
+  value: unknown
+  onValueChange: (value: unknown) => void
+  options: unknown[]
   label: string
   labelProps?: IFormLabelProps
-  description: string
+  description?: string
   name: string
   disabled?: boolean
+  borderless?: boolean
   error?: string
 }
 
+const { Option } = components
+
 export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
   (
-    { label, labelProps, description, value, onValueChange, options, disabled, error, ...props },
+    {
+      label,
+      labelProps,
+      description,
+      value,
+      onValueChange,
+      options,
+      disabled,
+      borderless,
+      error,
+      ...props
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     forwardedRef,
   ) => {
     return (
@@ -58,37 +66,35 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
           isDisabled={disabled}
           components={{
             IndicatorSeparator: () => null,
-            DropdownIndicator: () => (
-              <SSelectIcon>
-                <IconChevronDown size="xs" />
-              </SSelectIcon>
-            ),
+            DropdownIndicator: () => <IconChevronDown size="xs" />,
             Option: ({ children, isSelected, ...rest }) => (
-              <components.Option isSelected={isSelected} {...rest}>
-                <Flex align="center" justify="between">
+              <Option isSelected={isSelected} {...rest}>
+                <Flex align="center" justify="between" css={{ gap: "$12" }}>
                   {children}
                   {isSelected ? <IconTick /> : null}
                 </Flex>
-              </components.Option>
+              </Option>
             ),
           }}
           styles={{
             control: (styles) => ({
               ...styles,
+              justifyContent: !borderless ? "space-between" : "start",
+              gap: "var(--space-8)",
               border: "none",
               borderRadius: "var(--radii-8)",
               appearance: "none",
               WebkitAppearance: "none",
               outline: "none",
               cursor: "pointer",
-              boxShadow: boxShadows.input.initial,
+              boxShadow: !borderless ? boxShadows.input.initial : "none",
               transition: "100ms box-shadow ease-out",
 
               ":hover": {
-                boxShadow: boxShadows.input.hover,
+                boxShadow: !borderless ? boxShadows.input.hover : "none",
               },
               ":focus-within": {
-                boxShadow: boxShadows.input.focus,
+                boxShadow: !borderless ? boxShadows.input.focus : "none",
               },
             }),
             singleValue: (styles) => ({
@@ -97,12 +103,15 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
             }),
             valueContainer: (styles) => ({
               ...styles,
-              padding: "var(--space-12) var(--space-16)",
+              flex: !borderless ? 1 : "initial",
+              padding: !borderless
+                ? "var(--space-12) var(--space-0) var(--space-12) var(--space-16)"
+                : "var(--space-12) var(--space-0)",
             }),
             indicatorsContainer: (styles) => ({
               ...styles,
               justifyContent: "center",
-              width: "var(--sizes-48)",
+              width: !borderless ? "var(--sizes-48)" : "var(--sizes-24)",
             }),
             menu: (styles) => ({
               ...styles,
@@ -113,16 +122,13 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
             }),
             menuList: (styles) => ({
               ...styles,
-              margin: "var(--space-8) 0",
+              margin: "var(--space-8) var(--space-0)",
               padding: "var(--space-0)",
-              maxHeight: "auto",
+              minWidth: 100,
+              maxHeight: 290,
               borderRadius: "var(--radii-8)",
               border: "1px solid var(--colors-neutrals-3)",
               boxShadow: `0 var(--space-8) var(--space-24) 0 ${rgba("system-black", 0.08)}`,
-
-              "@media only screen and (min-width: 768px)": {
-                maxHeight: "290px",
-              },
             }),
             option: (styles) => ({
               ...styles,
@@ -147,11 +153,8 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
         />
 
         {error && (
-          <Box css={{ position: "absolute" }}>
-            <Flex justify="between">
-              <ErrorLabel id={label}>{error}</ErrorLabel>
-            </Flex>
-          </Box>
+          // TODO: do we need position: absolute here?
+          <ErrorLabel id={label}>{error}</ErrorLabel>
         )}
       </>
     )

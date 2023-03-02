@@ -1,22 +1,24 @@
-import { useMutation } from "react-query"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
 
-import { createShipmentFn, updateShipmentFn } from "@/api/shipmentApi"
-import { IShipmentResponse } from "@/api/types"
-import { Role, RouteParams, ShipmentStatus } from "@/shared/types"
-import { ShipmentState, useShipmentStateContext } from "@/shared/state"
+import { useAuthStore, useBoundStore } from "@/store"
+import { useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
 import { useModalActions } from "@/shared/hooks"
-import { formatShipmentRequestData } from "@/shared/utils"
+import { getPrevStep } from "@/shipment/utils"
+import { IShipmentResponse } from "@/api/types"
+import { Role, ShippingType, ShipmentState } from "@/shared/types"
+import { StepName } from "@/shipment/types"
+import { HOME, TRACKING } from "@/constants"
 
 import { Box, Button, Copy, Flex, HeaderBar, Hidden, useStepperContext } from "@/shared/components"
-import { StepName, getPrevStep, ShippingType, EditActionsButton } from "@/shipment"
+import { EditActionsButton } from "@/shipment/components"
 
 export const StepperHeader = ({ title }: { title: string }) => {
-  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
-  const { shippingType } = useShipmentStateContext()
   const navigate = useNavigate()
   const { selected, setSelected } = useStepperContext("StepperHeader")
+  const shippingType = useBoundStore((state) => state.shippingType)
+  const user = useAuthStore((state) => state.user)
+  const role = user?.authorities?.[0]?.authority
   const isFirstStep = selected[0] === StepName.INFO || selected[0] === StepName.FROM
   // TODO: add on the shipment page
   // const isLastStep =
@@ -27,60 +29,14 @@ export const StepperHeader = ({ title }: { title: string }) => {
   const isEditMode = location.pathname.includes("edit")
   const { open } = useModalActions()
 
-  // TODO: use Zustand
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
-  const role = user?.authorities?.[0]?.authority
-
   const { getValues } = useFormContext<ShipmentState>()
 
-  const { mutate: createShipment } = useMutation(
-    (data: ShipmentState) =>
-      createShipmentFn(
-        formatShipmentRequestData(
-          data,
-          shippingType,
-          shippingType === ShippingType.Quote ? ShipmentStatus.QUOTE_QUOTED : ShipmentStatus.DRAFT,
-        ),
-      ),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        if (shippingType === ShippingType.Quote) {
-          navigate(`/tracking/${id}`)
-        }
-        // TODO: else navigate to edit shipment page
-        //  else {
-        //   navigate(`/tracking/${id}`)
-        // }
-      },
-    },
-  )
-
-  const { mutate: updateShipment } = useMutation(
-    (data: ShipmentState) =>
-      updateShipmentFn(
-        shipmentId,
-        formatShipmentRequestData(
-          data,
-          shippingType,
-          shippingType === ShippingType.Quote ? ShipmentStatus.QUOTE_QUOTED : ShipmentStatus.DRAFT,
-        ),
-      ),
-    {
-      onSuccess: ({ id }: IShipmentResponse) => {
-        if (shippingType === ShippingType.Quote) {
-          navigate(`/tracking/${id}`)
-        }
-        // TODO: else navigate to edit shipment page
-        //  else {
-        //   navigate(`/tracking/${id}`)
-        // }
-      },
-    },
-  )
+  const { mutate: createShipment } = useCreateShipment()
+  const { mutate: updateShipment } = useUpdateShipment()
 
   const onBackHandler = () => {
     if (isFirstStep) {
-      return navigate("/")
+      return navigate(HOME)
     }
 
     const prevStep = getPrevStep({ shippingType, currentStep: selected[0] })
@@ -151,7 +107,29 @@ export const StepperHeader = ({ title }: { title: string }) => {
               action="secondary"
               disabled={false}
               onClick={() =>
-                isEditMode ? updateShipment(getValues()) : createShipment(getValues())
+                isEditMode
+                  ? updateShipment(getValues(), {
+                      onSuccess: (data: IShipmentResponse) => {
+                        if (shippingType === ShippingType.Quote) {
+                          navigate(`${TRACKING}/${shippingType}/${data.id}`)
+                        }
+                        // TODO: else navigate to edit shipment page
+                        //  else {
+                        //   navigate(`${TRACKING}/${data.id}`)
+                        // }
+                      },
+                    })
+                  : createShipment(getValues(), {
+                      onSuccess: (data: IShipmentResponse) => {
+                        if (shippingType === ShippingType.Quote) {
+                          navigate(`${TRACKING}/${shippingType}/${data.id}`)
+                        }
+                        // TODO: else navigate to edit shipment page
+                        //  else {
+                        //   navigate(`${TRACKING}/${data.id}`)
+                        // }
+                      },
+                    })
               }
               css={{
                 display: "none",

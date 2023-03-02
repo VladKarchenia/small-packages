@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SNavLink = styled("a", {
   $$color: "$colors$neutrals-7",

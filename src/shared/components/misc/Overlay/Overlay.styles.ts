@@ -1,10 +1,10 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
-import { easing, rgba } from "@/utils"
+import { easing, rgba } from "@/stitches/utils"
 
 export const SOverlay = styled("div", {
   position: "fixed",
-  zIndex: 1,
+  zIndex: "$1",
   left: 0,
   top: 0,
   width: "100%",

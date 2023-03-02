@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useCallback, useEffect, useRef, useState } from "react"
+import React, { ChangeEventHandler, useCallback, useRef } from "react"
 
 import type { SwitchOptionProps } from "./Option"
 import { SwitchIndicator } from "./Indicator"
@@ -25,18 +25,21 @@ export const Switch = <T extends string>({
 }: SwitchProps<T>) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const [selected, setSelected] = useState<HTMLLabelElement | null>(null)
+  // We need this "selected" value if we want to control the position of the switch indicator
+  // const [selected, setSelected] = useState<HTMLLabelElement>(
+  //   document.querySelector(`[data-switch-option="${value}"]`) as HTMLLabelElement,
+  // )
 
   const isChecked = useCallback((props: SwitchOptionProps) => props.value === value, [value])
 
   const onChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-    (e) => onValueChange(e.target.value as T),
+    (event) => onValueChange(event.target.value as T),
     [onValueChange],
   )
 
-  useEffect(() => {
-    setSelected(document.querySelector(`[data-switch-option="${value}"]`) as HTMLLabelElement)
-  }, [value])
+  // useEffect(() => {
+  //   setSelected(document.querySelector(`[data-switch-option="${value}"]`) as HTMLLabelElement)
+  // }, [value])
 
   return (
     <SSwitch ref={ref} checked={checked}>
@@ -44,13 +47,14 @@ export const Switch = <T extends string>({
         children,
         (child) =>
           React.isValidElement(child) &&
-          React.cloneElement<any>(child, {
+          React.cloneElement(child as React.ReactElement, {
             name,
             checked: isChecked(child.props),
             onChange,
           }),
       )}
-      <SwitchIndicator selected={selected} checked={checked} />
+      {/* <SwitchIndicator selected={selected} checked={checked} /> */}
+      <SwitchIndicator checked={checked} />
     </SSwitch>
   )
 }

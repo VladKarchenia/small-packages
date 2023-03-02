@@ -1,6 +1,6 @@
-import { css } from "@/config"
-import { Spaces } from "@/config/theme/spacing"
-import { getStyleFromResponsiveProp, ResponsiveProp } from "@/utils"
+import { css } from "@/stitches/config"
+import { ResponsiveProp, Spaces } from "@/stitches/types"
+import { getStyleFromResponsiveProp } from "@/stitches/utils"
 
 function getSpacingKey(
   horizontal: boolean | ResponsiveProp<boolean>,

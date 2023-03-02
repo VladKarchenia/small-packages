@@ -1,46 +1,57 @@
-import format from "date-fns/format"
+import { useNavigate } from "react-router-dom"
+import tzlookup from "tz-lookup"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
 import { IShipmentResponse } from "@/api/types"
-import { ShipmentStatus } from "@/shared/types"
-import { ShippingType } from "@/shipment"
+import { ShipmentStatus, ShippingType } from "@/shared/types"
+import { TRACKING } from "@/constants"
 
-import { Copy, Divider, Flex, Spacer, Stack, StatusLabel } from "@/shared/components"
+import { Copy, Divider, Flex, Stack, StatusLabel } from "@/shared/components"
+import { ActionDetailsButton } from "@/dashboard/components"
 
-import { ActionDetailsButton } from "../ActionDetailsButton"
 import { SShippingCard } from "./ShippingCard.styles"
 
 interface IShippingCardProps {
   shipment: IShipmentResponse
+  tab: ShippingType
   shippingType: ShippingType
 }
 
-export const ShippingCard = ({ shipment, shippingType }: IShippingCardProps) => {
+export const ShippingCard = ({ shipment, tab, shippingType }: IShippingCardProps) => {
+  const navigate = useNavigate()
+  const timeZone = tzlookup(
+    parseFloat(shipment.data.ORIGIN_GEOLOC.LATITUDE),
+    parseFloat(shipment.data.ORIGIN_GEOLOC.LONGITUDE),
+  )
+
   return (
-    <SShippingCard href={`/tracking/${shipment.id}`}>
+    <SShippingCard onClick={() => navigate(`${TRACKING}/${shippingType}/${shipment.id}`)}>
       <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
         <Stack space={8}>
           <StatusLabel status={ShipmentStatus[shipment.data.SHIPMENT_STATUS]} />
           <Copy scale={9} color="system-black" bold>
             #{shipment.id}
           </Copy>
-          <Copy scale={9}>{format(new Date(shipment.createdAt), "MMM d, yyyy (OOO)")}</Copy>
+          <Copy scale={9}>
+            {formatInTimeZone(Date.parse(shipment.createdAt), timeZone, "MMM d, yyyy (zzz)")}
+          </Copy>
         </Stack>
-        <ActionDetailsButton shippingType={shippingType} shipmentId={shipment.id} horizontal />
+        <ActionDetailsButton tab={tab} shipmentId={shipment.id} horizontal />
       </Flex>
       <Divider />
-      <ShippingCardInfo shippingType={shippingType} shipment={shipment} />
+      <ShippingCardInfo tab={tab} shipment={shipment} />
     </SShippingCard>
   )
 }
 
 const ShippingCardInfo = ({
   shipment,
-  shippingType,
+  tab,
 }: {
   shipment: IShipmentResponse
-  shippingType: ShippingType
+  tab: ShippingType
 }) => {
-  if (shippingType === ShippingType.Quote) {
+  if (tab === ShippingType.Quote) {
     return (
       <Stack space={12} css={{ marginTop: "$16" }}>
         <ShippingCardInfoLine
@@ -72,11 +83,7 @@ const ShippingCardInfoLine = ({ title, value }: { title: string; value: string }
     <Copy scale={9} css={{ paddingRight: "$32", minWidth: "max-content" }}>
       {title}
     </Copy>
-    <Copy
-      scale={9}
-      color="system-black"
-      css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
-    >
+    <Copy scale={9} color="system-black" truncate>
       {value}
     </Copy>
   </Flex>

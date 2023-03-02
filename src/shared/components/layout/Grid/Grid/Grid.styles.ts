@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 /**
  * If needed we can add missing CSS grid properties such as `grid-auto-flow` through a Stitches variant

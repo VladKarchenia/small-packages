@@ -5,31 +5,24 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { BrowserRouter } from "react-router-dom"
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
-import { AuthProvider, ShipmentProvider, UserProvider } from "@/shared/state"
+
 import commonTranslations from "@/locales/en/common.json"
 
+import { AxiosInterceptor } from "@/axios"
 import App from "./App"
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 1000,
+      // possible settings
+      // refetchOnWindowFocus: false,
+      // refetchOnmount: false,
+      // refetchOnReconnect: false,
+      // retry: 1,
     },
   },
 })
-
-// possible settings
-// const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       refetchOnWindowFocus: false,
-//       refetchOnmount: false,
-//       refetchOnReconnect: false,
-//       retry: 1,
-//       staleTime: 5 * 1000,
-//     },
-//   },
-// })
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -54,13 +47,9 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <UserProvider>
-          <ShipmentProvider>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          </ShipmentProvider>
-        </UserProvider>
+        <AxiosInterceptor>
+          <App />
+        </AxiosInterceptor>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

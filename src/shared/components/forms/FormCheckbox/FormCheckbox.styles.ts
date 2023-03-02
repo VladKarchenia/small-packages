@@ -1,5 +1,5 @@
-import { styled } from "@/config"
-import { multipleSelectors, rgba } from "@/utils"
+import { styled } from "@/stitches/config"
+import { multipleSelectors, rgba } from "@/stitches/utils"
 
 import { IconTick } from "@/shared/icons"
 
@@ -12,7 +12,7 @@ export const SFormCheckboxLabel = styled("label", {
 export const SFormCheckboxBox = styled(
   "span",
   {
-    backgroundColor: "$neutrals-0",
+    backgroundColor: "$system-white",
     border: "1px solid $neutrals-9",
     width: "$24",
     height: "$24",
@@ -45,14 +45,14 @@ export const SFormCheckboxInput = styled("input", {
 
   hover: {
     [`+ ${SFormCheckboxBox}`]: {
-      boxShadow: `0 2px 4px 0 ${rgba("neutrals-9", 0.2)}`,
+      boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.2)}`,
     },
   },
 
   keyboardFocus: {
     [`+ ${SFormCheckboxBox}`]: {
       borderColor: "$brand-yellow-dark",
-      boxShadow: `0 2px 4px 0 ${rgba("neutrals-9", 0.15)}`,
+      boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.15)}`,
     },
   },
 

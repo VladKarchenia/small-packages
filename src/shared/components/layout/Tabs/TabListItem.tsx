@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef } from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy } from "@/shared/components"
 
 import { useTabsContext } from "./Tabs"
+
 import { STabListItem } from "./TabListItem.styles"
 
 export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {

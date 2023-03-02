@@ -3,7 +3,7 @@ import { getIconRotation } from "../utils"
 import { IIconProps, withIcon } from "../Icon"
 
 const IconChevronImpl = withIcon(
-  '<path fill="currentColor" fill-rule="evenodd" d="M16.446 12a.64.64 0 0 0-.174-.456l-7.522-7.3-.503.912L15.3 12l-7.053 6.844.503.911 7.522-7.3a.64.64 0 0 0 .174-.455Z" clip-rule="evenodd"/>',
+  '<path fill="currentColor" d="M10.17 5a1 1 0 0 1 .78.37l4.83 6a1 1 0 0 1 0 1.27l-5 6a1.001 1.001 0 0 1-1.54-1.28L13.71 12 9.39 6.64A1 1 0 0 1 10.17 5Z"/>',
 )
 
 export const IconChevron = ({ direction, ...props }: IIconProps) => (

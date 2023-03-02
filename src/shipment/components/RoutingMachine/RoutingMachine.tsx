@@ -1,17 +1,14 @@
 import * as L from "leaflet"
 import "leaflet-routing-machine"
 import { createControlComponent } from "@react-leaflet/core"
-import { useShipmentStateContext } from "@/shared/state"
+import { useParams } from "react-router-dom"
 
-// interface IRoutingProps {
-//   senderLat: string
-//   senderLong: string
-//   recipientLat: string
-//   recipientLong: string
-// }
+import { useShipmentById } from "@/shared/data"
+import { RouteParams } from "@/shared/types"
 
 const Routing = () => {
-  const { recipient, sender } = useShipmentStateContext()
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const { data } = useShipmentById(shipmentId)
 
   const routingControl = L.Routing.control({
     show: false,
@@ -30,11 +27,14 @@ const Routing = () => {
     },
     plan: new L.Routing.Plan(
       [
-        L.latLng(parseFloat(sender.fullAddress.latitude), parseFloat(sender.fullAddress.longitude)),
+        L.latLng(
+          parseFloat(data?.sender.fullAddress.latitude || ""),
+          parseFloat(data?.sender.fullAddress.longitude || ""),
+        ),
         // TODO: add here current point if it exists
         L.latLng(
-          parseFloat(recipient.fullAddress.latitude),
-          parseFloat(recipient.fullAddress.longitude),
+          parseFloat(data?.recipient.fullAddress.latitude || ""),
+          parseFloat(data?.recipient.fullAddress.longitude || ""),
         ),
       ],
       {

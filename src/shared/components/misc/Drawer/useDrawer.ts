@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import debounce from "just-debounce-it"
+import { useDebouncedCallback } from "use-debounce"
 
 import { useDialog, useDialogActions, useEventListener } from "@/shared/hooks"
 
@@ -21,7 +21,7 @@ export function useDrawer(name: string, defaultOpen?: boolean) {
     [dialogProps, offset, scrollable],
   )
 
-  const handleScroll = debounce(() => {
+  const handleScroll = useDebouncedCallback(() => {
     if (!container) return
 
     setOffset(container?.scrollTop)

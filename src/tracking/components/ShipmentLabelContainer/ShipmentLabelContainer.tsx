@@ -1,5 +1,5 @@
 import { Stack, Divider, Hidden } from "@/shared/components"
-import { ShipmentLabel } from "../ShipmentLabel"
+import { ShipmentLabel } from "@/tracking/components"
 
 interface IShipmentLabelContainerProps {
   pdfLabel: string

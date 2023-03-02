@@ -1,7 +1,7 @@
 import React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-import { CSS } from "@/config"
+import { CSS } from "@/stitches/config"
 
 import { DrawerPortal, DrawerPortalProps } from "./Portal"
 import { DrawerOverlay } from "./Overlay"

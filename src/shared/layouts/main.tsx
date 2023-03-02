@@ -1,5 +1,8 @@
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+
+import { HOME, PROFILE } from "@/constants"
+
 import {
   ButtonIcon,
   Flex,
@@ -13,8 +16,7 @@ import {
   Stack,
   Hidden,
 } from "@/shared/components"
-import { IconBin, IconCalendar } from "@/shared/icons"
-import { HOME, USER_MANAGEMENT } from "@/constants"
+import { IconHome, IconManagement } from "@/shared/icons"
 
 interface IMainLayoutProps {
   withGlobalSearch?: boolean
@@ -28,11 +30,11 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
 }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const isActive = (pathname: string, href: string) => pathname === href
+  const isActive = (pathname: string, url: string) => pathname === url
 
   return (
     <GridContainer fullBleed={{ "@initial": mobileFullBleed, "@sm": true }}>
-      <Grid rows={{ "@initial": "1fr", "@sm": "72px 1fr" }}>
+      <Grid rows={{ "@initial": "1fr", "@sm": "$72 1fr" }}>
         <GridItem
           css={{
             display: "none",
@@ -50,8 +52,8 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
                 aria-label="Logo name"
                 role="button"
                 tabIndex={0}
-                href={"/"}
-                style={{ textDecoration: "none" }}
+                onClick={() => navigate(HOME)}
+                style={{ textDecoration: "none", cursor: "pointer" }}
               >
                 <Flex css={{ height: "$40" }}>
                   <img
@@ -76,14 +78,14 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
             </Flex>
           </Flex>
         </GridItem>
-        <Grid columns={{ "@initial": "1fr", "@sm": "88px 1fr" }}>
+        <Grid columns={{ "@initial": "1fr", "@sm": "$88 1fr" }}>
           <GridItem
             css={{
               display: "none",
               "@sm": {
                 display: "block",
-                // 72px - desktop header height
-                minHeight: `calc((var(--vh) * 100) - 72px)`,
+                // $72 - desktop header height
+                minHeight: `calc((var(--vh) * 100) - $72)`,
                 paddingY: "$32",
                 borderRight: "1px solid $neutrals-4",
                 textAlign: "center",
@@ -95,8 +97,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
                 type="button"
                 ariaLabel="Home button"
                 icon={
-                  <IconBin
-                    size="sm"
+                  <IconHome
                     css={{
                       color: isActive(location.pathname, HOME) ? "$system-black" : "$neutrals-4",
                     }}
@@ -108,16 +109,13 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
                 type="button"
                 ariaLabel="User Management"
                 icon={
-                  <IconCalendar
-                    size="sm"
+                  <IconManagement
                     css={{
-                      color: isActive(location.pathname, USER_MANAGEMENT)
-                        ? "$system-black"
-                        : "$neutrals-4",
+                      color: isActive(location.pathname, PROFILE) ? "$system-black" : "$neutrals-4",
                     }}
                   />
                 }
-                onClick={() => navigate(USER_MANAGEMENT)}
+                onClick={() => navigate(PROFILE)}
               />
             </Stack>
           </GridItem>
@@ -125,7 +123,7 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
             <Grid
               columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
               columnGap={32}
-              css={{ "@sm": { padding: "$32" } }}
+              css={{ "@sm": { height: "100%", padding: "$32" } }}
             >
               {children}
             </Grid>
@@ -135,5 +133,3 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
     </GridContainer>
   )
 }
-
-export const getMainLayout = (page: any) => <MainLayout>{page}</MainLayout>

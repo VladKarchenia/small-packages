@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const STabListItem = styled("button", {
   reset: true,
@@ -11,10 +11,10 @@ export const STabListItem = styled("button", {
     backgroundColor: "$neutrals-9",
     borderRadius: "$8",
     content: "''",
-    bottom: "$0",
+    bottom: 0,
     height: "$2",
-    left: "$0",
-    right: "$0",
+    left: 0,
+    right: 0,
     position: "absolute",
     transformOrigin: "left center",
     transform: "scaleX(0)",
@@ -22,7 +22,7 @@ export const STabListItem = styled("button", {
   },
 
   "@sm": {
-    paddingTop: "$0",
+    paddingTop: 0,
 
     hover: {
       after: {
@@ -33,7 +33,7 @@ export const STabListItem = styled("button", {
   },
 
   "@md": {
-    bottom: "-1px",
+    bottom: -1,
     paddingBottom: "$16",
   },
 

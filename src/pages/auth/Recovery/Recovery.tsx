@@ -1,5 +1,5 @@
 import { AuthWrapper } from "@/shared/components"
-import { RecoveryFormContainer } from "./RecoveryFormContainer"
+import { RecoveryFormContainer } from "@/auth/components"
 
 export const Recovery = () => {
   return (

@@ -1,6 +1,7 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
+import { multipleSelectors } from "@/stitches/utils"
+
 import { ButtonIcon } from "@/shared/components"
-import { multipleSelectors } from "@/utils"
 
 export const SActionButton = styled(ButtonIcon, {
   display: "flex",
@@ -33,7 +34,7 @@ export const SActionButton = styled(ButtonIcon, {
   "@md": {
     width: "$48",
     height: "$48",
-    backgroundColor: "$neutrals-0",
+    backgroundColor: "$system-white",
 
     hover: {
       backgroundColor: "$neutrals-1",
@@ -50,7 +51,7 @@ export const SActionButton = styled(ButtonIcon, {
     },
 
     disabled: {
-      backgroundColor: "$neutrals-0",
+      backgroundColor: "$system-white",
     },
   },
 })

@@ -1,10 +1,10 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
 
 import { SHeaderNavButton } from "./HeaderNavButton.styles"
 
 export interface IHeaderNavButtonProps extends ComponentProps<typeof SHeaderNavButton> {
-  href?: string
   target?: string
   rel?: string
 }

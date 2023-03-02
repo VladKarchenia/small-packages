@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 import { ButtonIcon } from "@/shared/components"
 
 export const SCreateRoundedButton = styled("div", {

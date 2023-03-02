@@ -1,23 +1,26 @@
 import { Navigate, useRoutes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-import { AuthGuard, Box } from "@/shared/components"
+
 import { ModalsContainer } from "@/modals"
+import { Role } from "@/shared/types"
+
 import {
-  CreateShipment,
+  Shipment,
   Home,
   Login,
   PageNotFound,
   Profile,
-  Unauthorize,
   Tracking,
   Reset,
   Recovery,
+  Packages,
 } from "@/pages"
-import { Role } from "@/shared/types"
+
+import { AuthGuard, Box } from "@/shared/components"
 
 import "react-toastify/dist/ReactToastify.css"
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
-import "@/styles/fonts.css"
+import "@/stitches/fonts/fonts.css"
 
 const App: React.FC = (): JSX.Element => {
   const authRoutes = {
@@ -42,29 +45,41 @@ const App: React.FC = (): JSX.Element => {
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [{ path: "", element: <Profile /> }],
       },
-      // TODO: maybe change it to quote/create or quote/id/edit?
       {
         path: "create",
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [
-          { path: "quote", element: <CreateShipment /> },
-          { path: "shipment", element: <CreateShipment /> },
+          { path: "quote", element: <Shipment /> },
+          { path: "shipment", element: <Shipment /> },
         ],
       },
       {
         path: "edit",
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [
-          { path: "quote/:shipmentId", element: <CreateShipment /> },
-          { path: "shipment/:shipmentId", element: <CreateShipment /> },
+          { path: "quote/:shipmentId", element: <Shipment /> },
+          { path: "shipment/:shipmentId", element: <Shipment /> },
         ],
       },
       {
-        path: "tracking/:shipmentId",
-        // path: "tracking/*",
-        element: <Tracking />,
+        path: "tracking",
+        children: [
+          {
+            path: "quote/:shipmentId",
+            children: [
+              { path: "", element: <Tracking /> },
+              { path: "packages", element: <Packages /> },
+            ],
+          },
+          {
+            path: "shipment/:shipmentId",
+            children: [
+              { path: "", element: <Tracking /> },
+              { path: "packages", element: <Packages /> },
+            ],
+          },
+        ],
       },
-      { path: "unauthorized", element: <Unauthorize /> },
       { path: "*", element: <Navigate to="/404" /> },
       { path: "404", element: <PageNotFound /> },
     ],

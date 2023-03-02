@@ -1,5 +1,5 @@
-import { styled } from "@/config"
-import { boxShadows } from "@/utils/styles"
+import { styled } from "@/stitches/config"
+import { boxShadows } from "@/stitches/utils"
 
 export const SFormField = styled("div", {
   width: "100%",
@@ -14,7 +14,7 @@ export const SFormFieldContainer = styled("label", {
   position: "relative",
   display: "flex",
   alignItems: "center",
-  backgroundColor: "$neutrals-0",
+  backgroundColor: "$system-white",
   borderRadius: "$8",
   boxShadow: boxShadows.input.initial,
   transition: "100ms box-shadow ease-out",
@@ -64,7 +64,36 @@ export const SFormFieldContainer = styled("label", {
         },
       },
     },
+
+    borderless: {
+      false: {},
+      true: {
+        boxShadow: "none",
+
+        "&:hover": {
+          boxShadow: "none",
+        },
+
+        "&:focus-within": {
+          boxShadow: "none",
+        },
+      },
+    },
   },
+
+  compoundVariants: [
+    {
+      hasError: true,
+      borderless: true,
+      css: {
+        backgroundColor: "initial",
+
+        "&, &:hover, &:focus-within": {
+          boxShadow: "none !important",
+        },
+      },
+    },
+  ],
 })
 
 export const SFormFieldElement = styled("input", {
@@ -80,11 +109,6 @@ export const SFormFieldElement = styled("input", {
   paddingY: "$12",
   color: "$neutrals-9",
   minHeight: "$48",
-  fontFamily: "$sans",
-  fontSize: 16,
-  fontWeight: 400,
-  letterSpacing: ".5px",
-  lineHeight: 1.5,
   flex: 1,
   marginTop: 0,
   marginBottom: 0,
@@ -148,6 +172,12 @@ export const SFormFieldElement = styled("input", {
     hasSuffix: {
       true: {
         paddingRight: "$48",
+      },
+    },
+
+    borderless: {
+      true: {
+        paddingX: 0,
       },
     },
   },

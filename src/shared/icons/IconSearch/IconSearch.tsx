@@ -1,5 +1,5 @@
-import { withIcon } from "../Icon/Icon"
+import { withIcon } from "../Icon"
 
 export const IconSearch = withIcon(
-  '<circle fill="none" cx="10.5" cy="10.5" r="7" stroke="currentColor"/><circle fill="none" cx="10.5" cy="10.5" r="7" stroke="currentColor"/><path d="M16 15l6.354 5.646" stroke="currentColor"/>',
+  '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="m20 20-3.778-3.784m2.094-5.058a7.158 7.158 0 1 1-14.316 0 7.158 7.158 0 0 1 14.316 0v0Z"/>',
 )

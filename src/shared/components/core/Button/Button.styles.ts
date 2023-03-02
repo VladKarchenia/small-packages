@@ -1,6 +1,6 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
-import { rgba } from "@/utils"
+import { rgba } from "@/stitches/utils"
 
 export const SButton = styled("button", {
   reset: true,
@@ -16,7 +16,7 @@ export const SButton = styled("button", {
   borderRadius: "$8",
 
   focus: {
-    boxShadow: `0 4px 12px 0 ${rgba("neutrals-5", 0.5)}`,
+    boxShadow: `0 $space$4 $space$12 0 ${rgba("neutrals-5", 0.5)}`,
   },
 
   disabled: {
@@ -32,7 +32,7 @@ export const SButton = styled("button", {
       primary: {
         backgroundColor: "$system-black",
         borderColor: "transparent",
-        color: "$neutrals-0",
+        color: "$system-white",
 
         hover: {
           backgroundColor: "$neutrals-7",
@@ -45,12 +45,12 @@ export const SButton = styled("button", {
         },
       },
       secondary: {
-        backgroundColor: "$neutrals-0",
+        backgroundColor: "$system-white",
         borderColor: "$system-black",
         color: "$neutrals-9",
 
         hover: {
-          backgroundColor: "$neutrals-0",
+          backgroundColor: "$system-white",
           borderColor: "$neutrals-9",
         },
 
@@ -71,13 +71,21 @@ export const SButton = styled("button", {
       true: {
         paddingX: "$20",
         height: "$48",
-        borderRadius: "9999px",
+        borderRadius: "$pill",
       },
     },
 
     loading: {
       true: {
+        backgroundColor: "$neutrals-6",
+        borderColor: "transparent",
+        color: "$system-white",
+        boxShadow: "none",
         pointerEvents: "none",
+
+        hover: {
+          backgroundColor: "$neutrals-6",
+        },
       },
     },
 
@@ -98,44 +106,15 @@ export const SButtonSpinner = styled("div", {
   alignItems: "center",
   justifyContent: "center",
   position: "absolute",
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-
-  "& ~ *": {
-    transition: "150ms opacity ease-out",
-    opacity: 0,
-  },
+  right: "-$32",
+  top: "50%",
+  transform: "translateY(-50%)",
 })
 
 export const SButtonIcon = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  marginLeft: "$4",
-  marginRight: "-$4",
   height: "$24",
   width: "$24",
-
-  "@sm": {
-    marginLeft: "$8",
-    marginRight: "-$8",
-  },
-
-  svg: {
-    display: "block",
-  },
-
-  variants: {
-    float: {
-      true: {
-        position: "absolute",
-        top: "50%",
-        right: "$16",
-        transform: "translateY(-50%)",
-        margin: 0,
-      },
-    },
-  },
 })

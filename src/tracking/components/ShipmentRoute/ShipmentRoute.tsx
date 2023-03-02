@@ -1,5 +1,6 @@
 import { ShipmentStatus } from "@/shared/types"
-import { ShipmentRoutePoint } from "@/tracking"
+
+import { ShipmentRoutePoint } from "@/tracking/components"
 
 interface RouteInfo {
   status: string

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useMemo } from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { useTabs } from "./hooks"
 
 import { STabList } from "./TabList.styles"
@@ -16,10 +18,8 @@ export const TabList = ({ children, label, ...props }: ITabListProps) => {
   const { getNextItem, getPreviousItem, getStartItem, getEndItem, setItems } = useTabs()
 
   const tabListItems = useMemo(() => {
-    return React.Children.toArray(children).map(
-      // (child: React.ReactElement<ITabListItemProps>) => child.props.id
-      (child: any) => child.props.id,
-    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return React.Children.toArray(children).map((child: any) => child.props.id)
   }, [children])
 
   useEffect(() => {

@@ -1,5 +1,5 @@
-import { withIcon } from "../Icon/Icon"
+import { withIcon } from "../Icon"
 
 export const IconClock = withIcon(
-  '<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 1a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M16 13.5h-5.5V7h1v5.5H16v1Z" fill="currentColor"/>',
+  '<path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M12 20a7.974 7.974 0 0 0 5.657-2.343A7.974 7.974 0 0 0 20 12a7.976 7.976 0 0 0-2.343-5.657A7.975 7.975 0 0 0 12 4a7.975 7.975 0 0 0-5.657 2.343A7.975 7.975 0 0 0 4 12a7.974 7.974 0 0 0 2.343 5.657A7.974 7.974 0 0 0 12 20Z"/><path fill="currentColor" d="M11.7 9H10v4.353L12.798 16 14 14.863l-2.3-2.176V9Z"/>',
 )

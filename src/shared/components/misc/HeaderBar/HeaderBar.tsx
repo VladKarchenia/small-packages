@@ -1,4 +1,4 @@
-import { CSS } from "@/config"
+import { CSS } from "@/stitches/config"
 
 import { Box, ButtonIcon, Copy, Flex, Hidden } from "@/shared/components"
 import { IconChevronLeft } from "@/shared/icons"
@@ -20,14 +20,14 @@ export const HeaderBar = ({
         width: "100%",
         paddingY: "$16",
         paddingLeft: "$8",
-        "@md": { paddingTop: "$0", paddingBottom: "$40" },
+        "@md": { paddingTop: 0, paddingBottom: "$40" },
       }}
     >
       <Hidden above="sm">
         <ButtonIcon
           type="button"
           ariaLabel="Back button"
-          icon={<IconChevronLeft size="sm" />}
+          icon={<IconChevronLeft />}
           onClick={onClick}
           css={{ flex: "0 0 auto" }}
         />

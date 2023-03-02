@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
+import { StepName, QuoteStep, StepperState } from "@/shipment/types"
+
 import {
-  IStep,
-  StepName,
-  ShipmentDetails,
+  PackageDetails,
   AddressInfo,
   DeliveryRates,
-  QuoteStep,
   StepperForm,
   ShipmentDateDetails,
-} from "@/shipment"
-import { useShipmentStateContext } from "@/shared/state"
+} from "@/shipment/components"
 
-export type StepperState = {
-  info: IStep
-  shipment: IStep
-  date: IStep
-  rates: IStep
-}
-
-const initialState: StepperState = {
+const initialState: Omit<StepperState, "from" | "to" | "summary" | "receipt"> = {
   info: {
     name: "info",
     completed: false,
@@ -48,9 +39,8 @@ const initialState: StepperState = {
 }
 
 export const QuoteForm = () => {
-  const [stepperState, setStepperState] = useState<StepperState>(initialState)
+  const [stepperState, setStepperState] = useState(initialState as StepperState)
   const [defaultStep, setDefaultStep] = useState<StepName | null>(null)
-  const state = useShipmentStateContext()
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
 
@@ -85,12 +75,12 @@ export const QuoteForm = () => {
       title: "Shipment Details",
       data: stepperState.shipment,
       mainContent: (
-        <ShipmentDetails
+        <PackageDetails
           handleContinueClick={handleContinueClick}
           setStepperState={setStepperState}
         />
       ),
-      // shortContent: <ShipmentDetailsShort />,
+      // shortContent: <PackageDetailsShort />,
     },
     {
       title: "Ready Date",
@@ -112,7 +102,6 @@ export const QuoteForm = () => {
   ]
 
   useEffect(() => {
-    // set active step
     setDefaultStep(StepName.INFO)
     // check expired date and time ->
     // set stepper state
@@ -143,6 +132,7 @@ export const QuoteForm = () => {
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!defaultStep) return null

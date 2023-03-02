@@ -1,5 +1,7 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, HiddenVisually } from "@/shared/components"
 
 import { SFormLabel } from "./FormLabel.styles"

@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const STrackerLabel = styled("div", {
   display: "flex",

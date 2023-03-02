@@ -1,0 +1,60 @@
+/* See README about advice on how to load fonts */
+/* @font-face {
+  font-family: DomaineDisplayNarrow;
+  src: url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-Regular.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-Regular.woff")
+      format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: DomaineDisplayNarrow;
+  src: url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-RegularItalic.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-RegularItalic.woff")
+      format("woff");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: DomaineDisplayNarrow;
+  src: url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-Medium.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-Medium.woff")
+      format("woff");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: DomaineDisplayNarrow;
+  src: url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-MediumItalic.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-MediumItalic.woff")
+      format("woff");
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+} */
+@font-face {
+  font-family: HalyardDisplay;
+  src: url("https://static.plumcache.com/static/fonts/Halyard/book/HalyardDisBook.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Halyard/book/HalyardDisBook.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: HalyardDisplay;
+  src: url("https://static.plumcache.com/static/fonts/Halyard/regular/HalyardDisplay-Regular.woff2")
+      format("woff2"),
+    url("https://static.plumcache.com/static/fonts/Halyard/regular/HalyardDisplay-Regular.woff")
+      format("woff");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}

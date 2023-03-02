@@ -1,4 +1,5 @@
-import { createContext, ComponentProps } from "@/utils"
+import { createContext } from "@/shared/utils"
+import { ComponentProps } from "@/stitches/types"
 import { useId } from "@/shared/hooks"
 
 import { useStepperContext } from "./Stepper"

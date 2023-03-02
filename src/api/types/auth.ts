@@ -1,19 +1,3 @@
-import { Role } from "@/shared/types"
-
-interface IAuthority {
-  authority: Role
-}
-
-export interface IUser {
-  id: number
-  username: string
-  firstName: string
-  lastName: string
-  authorities: IAuthority[]
-  // need to fix this, move to the contextType, Admin is able to choose this ID, User have only 1 id in the array
-  organizationIds: number[]
-}
-
 export interface ILoginResponse {
   accessToken: string
   refreshToken: string

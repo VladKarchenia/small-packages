@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
+import { useEffect, useMemo } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 
-import { searchCitiesByZipFn } from "@/api/placeApi"
-import { ICitiesByZipResponse } from "@/api/types"
-import { ShipmentState } from "@/shared/state"
+import { ShipmentState } from "@/shared/types"
+import { useCitiesByZipCode } from "@/shipment/hooks"
 
 import { FormInput, FormSelect, Grid, GridItem, Stack } from "@/shared/components"
-import { AddressFieldPopover, StepInputGroup } from "@/shipment"
+import { AddressFieldPopover, StepInputGroup } from "@/shipment/components"
+import { isAxiosError } from "axios"
 
 export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" | "new" }) => {
   const person = "senderReturn"
   const countriesList = ["United States"]
-  const [statesList, setStatesList] = useState<ICitiesByZipResponse[]>([])
-  const [citiesList, setCitiesList] = useState<string[]>([])
 
   const {
     control,
@@ -22,6 +19,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
     setValue,
     getValues,
     setError,
+    clearErrors,
     formState: { errors },
   } = useFormContext<ShipmentState>()
 
@@ -29,34 +27,31 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
   const zipCode = getValues(`${person}.fullAddress.zipCode`)
   const state = getValues(`${person}.fullAddress.state`)
 
-  const { isLoading, isFetching, refetch } = useQuery(
-    ["searchReturnCitiesByZip"],
-    () =>
-      searchCitiesByZipFn({
-        country,
-        zipCode,
-      }),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        if (data.length !== 0) {
-          const states = data.map((item) => item.state)
+  const { data, status, error } = useCitiesByZipCode({ country, zipCode })
 
-          setStatesList(data)
-          setValue(`${person}.fullAddress.state`, state ? state : states[0])
-          setCitiesList(data[0].cities)
-        } else {
-          setError(`${person}.fullAddress.zipCode`, { message: "Zip code not found" })
-        }
-      },
-    },
+  const statesList = useMemo(() => data || [], [data])
+  const citiesList = useMemo(
+    () => statesList.find((item) => item.state === state)?.cities || [],
+    [statesList, state],
   )
 
   useEffect(() => {
-    if (zipCode) {
-      refetch()
+    if (status === "success" && statesList.length !== 0) {
+      const states = statesList.map((item) => item.state)
+
+      setValue(`${person}.fullAddress.state`, state ? state : states[0])
+      trigger(`${person}.fullAddress.zipCode`)
     }
-  }, [])
+  }, [status, statesList, person, state, setValue, trigger])
+
+  useEffect(() => {
+    if (isAxiosError(error)) {
+      setError(`${person}.fullAddress.zipCode`, {
+        type: "validate",
+        message: error.response?.data.errorMessage || error.message,
+      })
+    }
+  }, [error, setError, person])
 
   useEffect(() => {
     if (switchValue === "similar") {
@@ -73,9 +68,6 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
       setValue("senderReturn.fullAddress.address2", "")
       setValue("senderReturn.fullAddress.latitude", "")
       setValue("senderReturn.fullAddress.longitude", "")
-
-      setStatesList([])
-      setCitiesList([])
     }
   }, [switchValue, setValue])
 
@@ -91,8 +83,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormInput
-                  {...field}
                   {...register(field.name, {
+                    shouldUnregister: true,
                     required: {
                       value: true,
                       message: "Required field",
@@ -110,14 +102,15 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       message: "Name max length exceeded",
                     },
                   })}
-                  onBlur={(event: any) => {
+                  {...field}
+                  onBlur={(event) => {
                     field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.name`)
                   }}
                   id={`${person}.name`}
-                  label={"Sender's name"}
+                  label="Sender's name"
                   labelProps={{ hidden: true, required: true }}
-                  description={"Sender's name"}
+                  description="Sender's name"
                   type="text"
                   error={errors[person]?.name?.message}
                 />
@@ -126,7 +119,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
           />
         }
         end={
-          <Grid columns={"1fr $96"} columnGap={8}>
+          <Grid columns="1fr $96" columnGap={8}>
             <GridItem>
               <Controller
                 name={`${person}.phone`}
@@ -134,8 +127,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                 render={({ field }) => {
                   return (
                     <FormInput
-                      {...field}
                       {...register(field.name, {
+                        shouldUnregister: true,
                         required: {
                           value: true,
                           message: "Required field",
@@ -145,7 +138,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                           message: "Not match the format: +1 NXX NXX XXXX",
                         },
                       })}
-                      onBlur={(event: any) => {
+                      {...field}
+                      onBlur={(event) => {
                         field.onChange(
                           event?.target?.value !== "" ? event?.target?.value.trim() : "",
                         )
@@ -169,8 +163,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                 render={({ field }) => {
                   return (
                     <FormInput
-                      {...field}
                       {...register(field.name, {
+                        shouldUnregister: true,
                         pattern: {
                           value: /^(\d{0,6})$/,
                           message: "Only numeric characters allowed",
@@ -180,7 +174,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                           message: "Extension max length exceeded",
                         },
                       })}
-                      onBlur={(event: any) => {
+                      {...field}
+                      onBlur={(event) => {
                         field.onChange(
                           event?.target?.value !== "" ? event?.target?.value.trim() : "",
                         )
@@ -209,8 +204,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormInput
-                  {...field}
                   {...register(field.name, {
+                    shouldUnregister: true,
                     minLength: {
                       value: 2,
                       message: "Name min length not met",
@@ -220,7 +215,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       message: "Name max length exceeded",
                     },
                   })}
-                  onBlur={(event: any) => {
+                  {...field}
+                  onBlur={(event) => {
                     field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.company`)
                   }}
@@ -242,8 +238,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormInput
-                  {...field}
                   {...register(field.name, {
+                    shouldUnregister: true,
                     required: {
                       value: true,
                       message: "Required field",
@@ -253,7 +249,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       message: "Invalid email",
                     },
                   })}
-                  onBlur={(event: any) => {
+                  {...field}
+                  onBlur={(event) => {
                     field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.email`)
                   }}
@@ -278,8 +275,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormSelect
+                  {...register(field.name, { shouldUnregister: true })}
                   {...field}
-                  {...register(field.name, {})}
                   onValueChange={(value) => {
                     if (value !== field.value) {
                       setValue(`${person}.fullAddress.zipCode`, "")
@@ -290,9 +287,6 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       setValue(`${person}.fullAddress.displayName`, "")
                       setValue(`${person}.fullAddress.latitude`, "")
                       setValue(`${person}.fullAddress.longitude`, "")
-
-                      setStatesList([])
-                      setCitiesList([])
                     }
 
                     return field.onChange(value)
@@ -313,8 +307,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormInput
-                  {...field}
                   {...register(field.name, {
+                    shouldUnregister: true,
                     required: {
                       value: true,
                       message: "Required field",
@@ -337,11 +331,19 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       value: country === "United States" ? 10 : 7,
                       message: "Zip code max length exceeded",
                     },
+                    validate: {
+                      notFound: (_, values) =>
+                        !!values[person].fullAddress.state || "Zip code not found",
+                    },
                   })}
-                  onChange={(e: any) => {
-                    let formattedValue = e?.target?.value.replaceAll(" ", "").toUpperCase()
+                  {...field}
+                  onChange={(event) => {
+                    let formattedValue = event?.target?.value.replaceAll(" ", "").toUpperCase()
 
-                    if (country === "Canada" && e?.target?.value.replaceAll(" ", "").length > 3) {
+                    if (
+                      country === "Canada" &&
+                      event?.target?.value.replaceAll(" ", "").length > 3
+                    ) {
                       formattedValue = formattedValue.replace(/^(.{3})(.*)$/, "$1 $2")
                     }
 
@@ -356,14 +358,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       setValue(`${person}.fullAddress.latitude`, "")
                       setValue(`${person}.fullAddress.longitude`, "")
 
-                      setStatesList([])
-                      setCitiesList([])
-
-                      return trigger(`${person}.fullAddress.zipCode`).then((isValid: boolean) => {
-                        if (isValid) {
-                          refetch()
-                        }
-                      })
+                      clearErrors([`${person}.fullAddress.city`, `${person}.fullAddress.address1`])
                     }
                   }}
                   id={`${person}.fullAddress.zipCode`}
@@ -372,6 +367,11 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                   description="Zip code / Postal code"
                   type="text"
                   error={errors[person]?.fullAddress?.zipCode?.message}
+                  onBlur={(event) => {
+                    field.onBlur()
+                    field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
+                    trigger(`${person}.fullAddress.zipCode`)
+                  }}
                 />
               )
             }}
@@ -387,8 +387,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormSelect
+                  {...register(field.name, { shouldUnregister: true })}
                   {...field}
-                  {...register(field.name, {})}
                   onValueChange={(value) => {
                     if (value !== field.value) {
                       setValue(`${person}.fullAddress.city`, "")
@@ -397,8 +397,6 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       setValue(`${person}.fullAddress.displayName`, "")
                       setValue(`${person}.fullAddress.latitude`, "")
                       setValue(`${person}.fullAddress.longitude`, "")
-
-                      setCitiesList(statesList.find((item) => item.state === value)?.cities || [])
                     }
 
                     return field.onChange(value)
@@ -440,8 +438,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                   labelProps={{ hidden: true, required: true }}
                   description="City"
                   disabled={citiesList.length === 0}
-                  error={errors[person]?.fullAddress?.city?.message}
-                  onBlur={(event: any) => {
+                  errorMessage={errors[person]?.fullAddress?.city?.message}
+                  onBlur={(event) => {
                     onBlur()
                     onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.fullAddress.city`)
@@ -457,7 +455,6 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
 
       <StepInputGroup
         start={
-          // TODO: add validation if address wasn't selected from the list (lat, lng, displayName weren't set)
           <Controller
             name={`${person}.fullAddress.address1`}
             control={control}
@@ -484,8 +481,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                   description="Address line 1"
                   placeholder="Street, apartment"
                   disabled={statesList.length === 0 || citiesList.length === 0}
-                  error={errors[person]?.fullAddress?.address1?.message}
-                  onBlur={(event: any) => {
+                  errorMessage={errors[person]?.fullAddress?.address1?.message}
+                  onBlur={(event) => {
                     onBlur()
                     onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.fullAddress.address1`)
@@ -503,14 +500,15 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
             render={({ field }) => {
               return (
                 <FormInput
-                  {...field}
                   {...register(field.name, {
+                    shouldUnregister: true,
                     maxLength: {
                       value: 40,
                       message: "Address max length exceeded",
                     },
                   })}
-                  onBlur={(event: any) => {
+                  {...field}
+                  onBlur={(event) => {
                     field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.fullAddress.address2`)
                   }}

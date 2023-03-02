@@ -1,32 +1,33 @@
 import { useNavigate } from "react-router-dom"
-import { useMutation } from "react-query"
 
-import { logoutUserFn } from "@/api/authApi"
+import { useAuthStore } from "@/store"
+import { useLogout } from "@/auth/hooks"
 import { Role } from "@/shared/types"
+import { HOME, LOGIN } from "@/constants"
 
 import { HeaderBar, Spacer, Stack, Grid, Link, Copy, GridContainer } from "@/shared/components"
 import { IconChevronLeft, IconChevronRight } from "@/shared/icons"
-import { ProfileDrawer, SwitchOrganization, ChangePassword } from "@/profile"
+import { ProfileDrawer, SwitchOrganization, ChangePassword } from "@/profile/components"
 
 export const ProfileMobile = () => {
   const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const user = useAuthStore((state) => state.user)
   const role = user?.authorities?.[0]?.authority
 
-  const { isLoading, mutate: logoutUser } = useMutation(() => logoutUserFn(), {
-    onSuccess: () => {
-      navigate("/login")
-    },
-  })
+  const { mutate: logoutUser } = useLogout()
 
   const handleLogoutClick = () => {
     logoutUser()
-    navigate("/login")
+    navigate(LOGIN)
   }
 
   return (
     <>
-      <HeaderBar title="User profile" onClick={() => navigate("/")} css={{ paddingRight: "$40" }} />
+      <HeaderBar
+        title="User profile"
+        onClick={() => navigate(HOME)}
+        css={{ paddingRight: "$40" }}
+      />
       <Spacer size={{ "@initial": 8, "@sm": 0 }} />
       <GridContainer>
         <Grid>
@@ -55,7 +56,7 @@ export const ProfileMobile = () => {
                 paddingBottom: "$16",
               }}
             >
-              <Copy scale={{ "@initial": 8, "@sm": 8 }} color={"system-black"} bold>
+              <Copy scale={{ "@initial": 8, "@sm": 8 }} color="system-black" bold>
                 Logout
               </Copy>
             </Link>

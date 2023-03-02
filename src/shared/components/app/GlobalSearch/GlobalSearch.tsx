@@ -1,12 +1,13 @@
-import { useCallback, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
+import { useMemo, useRef, useState } from "react"
+import { isAxiosError } from "axios"
 import { useNavigate } from "react-router-dom"
-import debounce from "just-debounce-it"
-import { useQuery } from "react-query"
+import { useDebounce, useDebouncedCallback } from "use-debounce"
 
-import { searchShipmentsFn } from "@/api/shipmentApi"
+import { useSearchShipments } from "@/shared/data"
 import { IFoundShipmentResponse } from "@/api/types"
-import { useClearButton, useElementDimensions } from "@/shared/hooks"
+import { ShippingType } from "@/shared/types"
+import { useElementDimensions } from "@/shared/hooks"
+import { TRACKING } from "@/constants"
 
 import {
   Box,
@@ -16,71 +17,60 @@ import {
   Popover,
   PopoverAnchor,
   PopoverContent,
+  Spinner,
 } from "@/shared/components"
 import { IconCross, IconSearch } from "@/shared/icons"
-import { IllustrationSpinner } from "@/shared/illustrations"
 
 import { SComboboxClearButton } from "./GlobalSearch.styles"
 
 export const GlobalSearch = () => {
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
   const { dimensions } = useElementDimensions(containerRef)
-  const { clearRef, isClearButtonClick } = useClearButton()
-  const triggerRef = useRef<any>()
-  const isTriggerClick = (e: Event) => e.composedPath().includes(triggerRef.current)
+  const triggerRef = useRef<HTMLInputElement>(null)
+  const isTriggerClick = (event: Event) =>
+    event.composedPath().includes(triggerRef.current as EventTarget)
+  const clearButtonRef = useRef<HTMLButtonElement>(null)
+  const isClearButtonClick = (event: Event) =>
+    event.composedPath().includes(clearButtonRef.current as EventTarget)
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>("")
 
-  const [results, setResults] = useState<IFoundShipmentResponse[]>([])
-  const [notFound, setNotFound] = useState(false)
-  const { isLoading, isFetching, refetch } = useQuery(
-    // TODO: check how not to call this all the time!
-    ["searchShipments"],
-    () =>
-      searchShipmentsFn({
-        keyword: inputValue,
-        sort: "createdAt,asc",
-        page: 0,
-        size: 50,
-      }),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        setResults(data.content)
-        setNotFound(data.content.length === 0)
-      },
-    },
-  )
+  const [keyword] = useDebounce(inputValue.trim(), 300)
+  const debouncedSetIsOpen = useDebouncedCallback((v) => setIsOpen(v), 300)
+
+  const { data, isLoading, isIdle, error } = useSearchShipments(keyword)
+
+  const results = useMemo(() => (data ? data : []), [data])
 
   const handleClearButton = () => {
     setInputValue("")
     setIsOpen(false)
-    setResults([])
-    setNotFound(false)
     // if (triggerRef.current) {
     //   ;(triggerRef.current as HTMLInputElement).focus()
     // }
   }
 
-  const debouncedRefetch = useCallback(
-    debounce(() => {
-      refetch()
-    }, 800),
-    [],
-  )
-
   const Content = () => {
-    if (isLoading || isFetching) {
+    if (isIdle) {
+      return null
+    }
+
+    if (isLoading) {
+      return <Spinner />
+    }
+
+    if (isAxiosError(error)) {
       return (
-        <Flex align="center" css={{ padding: "$16", height: "$56" }}>
-          <IllustrationSpinner css={{ display: "block", height: "$20", width: "$20" }} />
+        <Flex css={{ padding: "$16" }}>
+          <Copy scale={8} color="system-black">
+            {error.response?.data.errorMessage || error.message}
+          </Copy>
         </Flex>
       )
     }
 
-    if (notFound) {
+    if (results.length === 0) {
       return (
         <Flex css={{ padding: "$16" }}>
           <Copy scale={8} color="system-black">
@@ -92,29 +82,35 @@ export const GlobalSearch = () => {
 
     return (
       <>
-        {results.map((shipment: IFoundShipmentResponse) => (
-          <Box
-            key={`${shipment.id}`}
-            onClick={() => navigate(`/tracking/${shipment.id}`)}
-            css={{
-              padding: "$12 $16",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              cursor: "pointer",
-              hover: {
-                backgroundColor: "$neutrals-3",
-              },
-            }}
-          >
-            <Copy scale={9} color="system-black" bold>
-              #{shipment.id}
-            </Copy>
-            <Copy scale={10} color="system-black">
-              {shipment.origin_ADDRESS}
-            </Copy>
-          </Box>
-        ))}
+        {results.map((shipment: IFoundShipmentResponse) => {
+          const shippingType = shipment.SHIPMENT_STATUS.includes("QUOTE")
+            ? ShippingType.Quote
+            : ShippingType.Shipment
+
+          return (
+            <Box
+              key={`${shipment.ID}`}
+              onClick={() => navigate(`${TRACKING}/${shippingType}/${shipment.ID}`)}
+              css={{
+                padding: "$12 $16",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                cursor: "pointer",
+                hover: {
+                  backgroundColor: "$neutrals-3",
+                },
+              }}
+            >
+              <Copy scale={9} color="system-black" bold>
+                #{shipment.ID}
+              </Copy>
+              <Copy scale={10} color="system-black">
+                {shipment.ORIGIN_ADDRESS}
+              </Copy>
+            </Box>
+          )
+        })}
       </>
     )
   }
@@ -130,46 +126,36 @@ export const GlobalSearch = () => {
             labelProps={{ hidden: true }}
             placeholder="Search for quotes and shipments by ID, address..."
             onClick={() => {
-              if (!isOpen && inputValue.length > 3) {
-                setResults([])
-                refetch()
-                return setIsOpen(true)
+              if (!isOpen && inputValue.trim().length > 3) {
+                setIsOpen(true)
               }
             }}
             onFocus={() => {
-              if (!isOpen && inputValue.length > 3) {
-                setResults([])
-                refetch()
-                return setIsOpen(true)
+              if (!isOpen && inputValue.trim().length > 3) {
+                setIsOpen(true)
               }
             }}
-            onChange={(e: any) => {
-              setInputValue(e.target.value)
-              setResults([])
-              setNotFound(false)
+            onChange={(event) => {
+              setInputValue(event.target.value)
 
-              if (e.target.value.length > 3) {
-                debouncedRefetch()
-
-                if (!isOpen) {
-                  setIsOpen(true)
-                }
+              if (event.target.value.trim().length > 3) {
+                debouncedSetIsOpen(true)
               } else {
                 setIsOpen(false)
               }
             }}
-            prefix={<IconSearch height={20} width={20} fixedSize />}
-            css={{ width: "410px", height: "$40", minHeight: "$40" }}
+            prefix={<IconSearch />}
+            css={{ width: 410, height: "$40", minHeight: "$40" }}
           />
           {inputValue?.length > 0 && (
             <SComboboxClearButton
-              ref={clearRef}
+              ref={clearButtonRef}
               type="button"
-              aria-label={t("filters.clearDestination")}
+              aria-label="clearDestination"
               css={{ position: "absolute", right: "$12", zIndex: "$1" }}
               onClick={handleClearButton}
             >
-              <IconCross size="xs" />
+              <IconCross />
             </SComboboxClearButton>
           )}
         </Flex>
@@ -179,27 +165,27 @@ export const GlobalSearch = () => {
         css={{
           width: dimensions.clientWidth,
           height: "max-content",
-          maxHeight: "330px",
+          maxHeight: 330,
           overflow: "auto",
-          padding: "$0",
+          padding: 0,
           border: "none",
-          borderRadius: "$0",
+          borderRadius: 0,
         }}
-        onInteractOutside={(e: any) => {
-          if (isClearButtonClick(e)) {
-            if (e.detail.originalEvent.isTrusted) {
+        onInteractOutside={(event) => {
+          if (isClearButtonClick(event)) {
+            if (event.detail.originalEvent.isTrusted) {
               handleClearButton()
             }
             return
           }
 
-          if (isTriggerClick(e)) {
+          if (isTriggerClick(event)) {
             return
           }
           return setIsOpen(false)
         }}
-        onOpenAutoFocus={(e: any) => {
-          e.preventDefault()
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
         }}
       >
         <Content />

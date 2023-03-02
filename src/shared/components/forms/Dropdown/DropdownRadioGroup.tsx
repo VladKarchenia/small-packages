@@ -1,4 +1,5 @@
 import React, { memo } from "react"
+
 import { SDropdownMenuRadioGroup } from "./Dropdown.styles"
 
 export interface IDropdownRadioGroupProps {

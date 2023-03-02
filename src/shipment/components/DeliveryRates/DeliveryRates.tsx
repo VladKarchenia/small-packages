@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
+
+import { useBoundStore } from "@/store"
+import { useModalActions } from "@/shared/hooks"
+import { ShippingType, ShipmentState } from "@/shared/types"
+import { StepName } from "@/shipment/types"
+
 import {
   Copy,
   FormRadioGroup,
@@ -10,9 +16,7 @@ import {
   Button,
   useStepperContext,
 } from "@/shared/components"
-import { ShippingType, StepActionsBar, StepName } from "@/shipment"
-import { ShipmentState, useShipmentStateContext } from "@/shared/state"
-import { useModalActions } from "@/shared/hooks"
+import { StepActionsBar } from "@/shipment/components"
 
 const rates = [
   {
@@ -43,7 +47,7 @@ export const DeliveryRates = ({
 }: {
   handleContinueClick?: (step: StepName.RATES, nextStep: StepName.SUMMARY) => void
 }) => {
-  const { shippingType } = useShipmentStateContext()
+  const shippingType = useBoundStore((state) => state.shippingType)
   const { setValue, watch } = useFormContext<ShipmentState>()
   const { rate } = watch()
 
@@ -55,7 +59,8 @@ export const DeliveryRates = ({
 
   const [checkedOption, setCheckedOption] = useState(rate.id)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setCheckedOption(e.target.value)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setCheckedOption(event.target.value)
 
   const onContinueHandler = () => {
     setSelected([StepName.SUMMARY])

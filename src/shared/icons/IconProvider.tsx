@@ -8,7 +8,8 @@ export const IconCache = createContext<IconCacheContextValue>(
 
 export const useIconCache = () => useContext(IconCache)
 
-export const IconProvider = ({ children }: React.PropsWithChildren<unknown>) => {
+export const IconProvider = ({ children }: React.PropsWithChildren) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [cache, setCache] = useState({} as any)
 
   return (

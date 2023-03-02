@@ -1,5 +1,5 @@
-import { Drawer, IFormLabelProps, Title } from "@/shared/components"
-import { ProfileDrawerPreview } from "@/profile"
+import { Drawer, Title } from "@/shared/components"
+import { ProfileDrawerPreview } from "@/profile/components"
 
 interface IProfileDrawerProps {
   drawerTitle: string
@@ -9,7 +9,6 @@ interface IProfileDrawerProps {
   suffix?: React.ReactElement
   placeholder?: string
   hidePlaceholder?: boolean
-  labelProps?: IFormLabelProps
   dataTestid?: string
   drawerForm: React.ReactNode
 }
@@ -22,7 +21,6 @@ export const ProfileDrawer = ({
   suffix,
   placeholder,
   hidePlaceholder = false,
-  labelProps,
   dataTestid,
   drawerForm,
 }: IProfileDrawerProps) => {
@@ -43,7 +41,6 @@ export const ProfileDrawer = ({
           suffix={suffix}
           placeholder={placeholder}
           hidePlaceholder={hidePlaceholder}
-          labelProps={labelProps}
           dataTestid={dataTestid}
           css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
         />

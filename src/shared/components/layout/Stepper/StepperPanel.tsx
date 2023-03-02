@@ -1,5 +1,5 @@
-import { CSS } from "@stitches/react"
-import { ComponentProps } from "@/utils"
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
 
 import { Box } from "@/shared/components"
 
@@ -49,7 +49,7 @@ export const StepperPanel = ({
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
       >
         {open ? (
-          <SStepperContent css={{ ...contentCss, paddingBottom: isStepLast ? "$0" : "$48" }}>
+          <SStepperContent css={{ ...contentCss, paddingBottom: isStepLast ? 0 : "$48" }}>
             {mainContent}
           </SStepperContent>
         ) : null}

@@ -1,6 +1,5 @@
-import { styled } from "@/config"
-
-import { easing, rgba } from "@/utils"
+import { styled } from "@/stitches/config"
+import { easing, rgba } from "@/stitches/utils"
 
 export const SSwitchIndicator = styled("div", {
   position: "absolute",
@@ -10,7 +9,7 @@ export const SSwitchIndicator = styled("div", {
   height: "$20",
   backgroundColor: "$system-white",
   borderRadius: "$rounded",
-  boxShadow: `0px 2px 8px ${rgba("system-black", 0.2)}`,
+  boxShadow: `0 $space$2 $space$8 ${rgba("system-black", 0.2)}`,
   transition: easing.smooth({
     property: "transform",
     duration: 200,
@@ -20,6 +19,10 @@ export const SSwitchIndicator = styled("div", {
     checked: {
       true: {
         backgroundColor: "$system-black",
+        transform: "translateX($16)",
+      },
+      false: {
+        transform: "translateX(-$4)",
       },
     },
   },

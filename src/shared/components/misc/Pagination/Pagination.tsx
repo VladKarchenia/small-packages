@@ -1,4 +1,5 @@
 import React from "react"
+
 import { Flex, FlexItem } from "@/shared/components"
 import { IconChevronLeft, IconChevronRight } from "@/shared/icons"
 
