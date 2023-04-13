@@ -5,5 +5,6 @@ export const SDivider = styled("hr", {
   height: 1,
   border: "none",
   margin: 0,
-  backgroundColor: "$neutrals-4",
+  backgroundColor: "$theme-n4-n7",
+  transition: "150ms ease-out",
 })

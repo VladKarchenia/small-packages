@@ -21,7 +21,11 @@ export const ShipmentRoutePoint = ({
   const isLastStep = status === ShipmentStatus.CANCELLED || status === ShipmentStatus.DELIVERED
 
   return (
-    <SRoutePointWrapper align="start" last={isLastStep}>
+    <SRoutePointWrapper
+      align="start"
+      last={isLastStep}
+      active={isStepCompleted || isStepInProgress}
+    >
       <SRoutePointIcon align="center" justify="center" active={isStepCompleted || isStepInProgress}>
         {status === ShipmentStatus.CANCELLED ? (
           <IconCross size="xs" />
@@ -30,15 +34,19 @@ export const ShipmentRoutePoint = ({
         ) : isStepInProgress ? (
           <IconClock size="xs" />
         ) : (
-          <SDot />
+          <SDot active={isStepCompleted || isStepInProgress} />
         )}
       </SRoutePointIcon>
       <Box>
-        <Copy scale={8} color={isStepCompleted || isStepInProgress ? "system-black" : "neutrals-5"}>
+        <Copy
+          scale={9}
+          color={isStepCompleted || isStepInProgress ? "theme-b-n3" : "neutrals-5"}
+          fontWeight={isStepCompleted || isStepInProgress ? "bold" : "regular"}
+        >
           {status}
         </Copy>
         {date ? (
-          <Copy scale={9} color="neutrals-5">
+          <Copy scale={10} color="theme-n6-n5">
             {date}
           </Copy>
         ) : (

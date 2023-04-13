@@ -21,9 +21,9 @@ export const loginUserFn = async ({ username, password }: LoginInput) => {
   placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
   organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
 
-  const { user, organizations } = await getMeFn(username)
+  const { user, organizations, settings } = await getMeFn(username)
 
-  return { ...data, user, organizations }
+  return { ...data, user, organizations, settings }
 }
 
 export const logoutUserFn = async (token: string) => {

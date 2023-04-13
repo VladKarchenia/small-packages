@@ -5,10 +5,10 @@ import { searchShipmentsFn } from "@/api/shipmentApi"
 
 export const useSearchShipments = (keyword: string) => {
   const organization = useAuthStore((state) => state.organization)
-  const isEnabled = keyword.length > 3
+  const isEnabled = !!organization.id && keyword.length > 3
 
   return useQuery(
-    ["searchShipments", keyword],
+    ["searchShipments", organization.id, keyword],
     () => searchShipmentsFn({ keyword, organization }),
     {
       staleTime: 5 * 60 * 1000,

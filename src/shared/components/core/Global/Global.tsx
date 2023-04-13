@@ -1,14 +1,15 @@
 import React, { useEffect } from "react"
-import { globalCss } from "@/stitches/config"
-import { Colors } from "@/stitches/types"
-import { IconProvider } from "@/shared/icons"
-
 import lazysizes from "lazysizes"
 import "lazysizes/plugins/attrchange/ls.attrchange"
 
+import { globalCss, darkTheme } from "@/stitches/config"
+import { darkColorsMap } from "@/stitches/theme"
+
+import { IconProvider } from "@/shared/icons"
+
 lazysizes.cfg.loadMode = 1
 
-const globalStyles = (backgroundColor?: Colors) => {
+const globalStyles = () => {
   return globalCss({
     /* Box sizing rules */
     "*, *::before, *::after": {
@@ -37,11 +38,13 @@ const globalStyles = (backgroundColor?: Colors) => {
       fontFamily: "$sans",
       fontStyle: "normal",
       fontStretch: "normal",
+      fontWeight: "normal",
       letterSpacing: "0.5px",
       textRendering: "optimizeSpeed",
       lineHeight: 1.5,
       overflowX: "hidden",
-      backgroundColor: backgroundColor ? `$${backgroundColor}` : "",
+      backgroundColor: "$theme-w-n11",
+      transition: "150ms ease-out",
     },
 
     "a, button": {
@@ -128,6 +131,40 @@ const globalStyles = (backgroundColor?: Colors) => {
     ".leaflet-control-container .leaflet-routing-container-hide": {
       display: "none",
     },
+
+    ".leaflet-tooltip": {
+      width: "max-content",
+      maxWidth: 400,
+      backgroundColor: "$theme-w-n7",
+      borderColor: "$theme-w-n7",
+      borderRadius: "$8",
+      color: "$theme-b-n3",
+      whiteSpace: "normal",
+      textAlign: "center",
+
+      before: {
+        borderTopColor: "$theme-w-n7",
+      },
+    },
+
+    // custom scrollbar styles based on the current theme
+    "*::-webkit-scrollbar": {
+      width: "auto",
+    },
+
+    "*::-webkit-scrollbar-track": {
+      backgroundColor: "var(--colors-theme-n2-n7)",
+    },
+
+    "*::-webkit-scrollbar-thumb": {
+      backgroundColor: "var(--colors-theme-n4-n6)",
+      border: "3px solid var(--colors-theme-n2-n7)",
+      borderRadius: "var(--radii-8)",
+
+      ":hover": {
+        backgroundColor: "var(--colors-neutrals-5)",
+      },
+    },
   })()
 }
 
@@ -140,7 +177,7 @@ const pageCoverStyles = globalCss({
     height: "100%",
     top: 0,
     left: 0,
-    backgroundColor: "$system-white",
+    backgroundColor: "$theme-w-n11",
     zIndex: 99999,
   },
 
@@ -149,22 +186,38 @@ const pageCoverStyles = globalCss({
   },
 })
 
+const updateThemeColors = globalCss({
+  "@dark": {
+    ":root:not(.light)": {
+      ...Object.keys(darkTheme.colors).reduce((varSet, currentColorKey) => {
+        const currentColor = darkTheme.colors[currentColorKey as keyof typeof darkColorsMap]
+        const currentColorValue =
+          currentColor.value.substring(0, 1) === "$"
+            ? `$colors${currentColor.value}`
+            : currentColor.value
+
+        return {
+          ...varSet,
+          [currentColor.variable]: currentColorValue,
+        }
+      }, {}),
+    },
+  },
+})
+
 export const Global = ({
   children,
   shouldCoverPage,
-  backgroundColor,
 }: React.PropsWithChildren<{
   shouldCoverPage?: boolean
-  /**
-   * Use to set the body background colour
-   */
-  backgroundColor?: Colors
 }>) => {
-  globalStyles(backgroundColor)
+  globalStyles()
 
   if (shouldCoverPage) {
     pageCoverStyles()
   }
+
+  updateThemeColors()
 
   useEffect(() => {
     if (shouldCoverPage) {

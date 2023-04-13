@@ -10,7 +10,7 @@ export const SModalHeader = styled("header", {
   variants: {
     empty: {
       false: {
-        backgroundColor: "$system-white",
+        backgroundColor: "$theme-w-n11",
         padding: "$16 $24",
         borderBottom: "1px solid $neutrals-4",
 

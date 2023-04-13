@@ -17,3 +17,10 @@ export enum ShippingType {
   Quote = "quote",
   Shipment = "shipment",
 }
+
+export enum SettingType {
+  GeneralInfo = "generalInfo",
+  Preferences = "preferences",
+  Addresses = "addresses",
+  Accounts = "accounts",
+}

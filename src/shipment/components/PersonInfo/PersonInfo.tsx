@@ -16,10 +16,12 @@ import {
   Grid,
   GridContainer,
   GridItem,
+  Hidden,
   Spacer,
   Stack,
   Switch,
   SwitchOption,
+  Title,
   useStepperContext,
   useSwitch,
 } from "@/shared/components"
@@ -40,7 +42,10 @@ export const PersonInfo = ({
   ) => void
   person: "sender" | "recipient"
 }) => {
-  const countriesList = person === "sender" ? ["United States"] : ["United States", "Canada"]
+  const countriesList = useMemo(
+    () => (person === "sender" ? ["United States"] : ["United States", "Canada"]),
+    [person],
+  )
 
   const {
     watch,
@@ -59,6 +64,11 @@ export const PersonInfo = ({
   const country = getValues(`${person}.fullAddress.country`)
   const zipCode = getValues(`${person}.fullAddress.zipCode`)
   const state = getValues(`${person}.fullAddress.state`)
+  const city = getValues(`${person}.fullAddress.city`)
+  const address1 = getValues(`${person}.fullAddress.address1`)
+  const address2 = getValues(`${person}.fullAddress.address2`)
+  const latitude = getValues(`${person}.fullAddress.latitude`)
+  const longitude = getValues(`${person}.fullAddress.longitude`)
 
   const { setSelected } = useStepperContext("PersonInfo")
 
@@ -79,11 +89,13 @@ export const PersonInfo = ({
 
   const { data, status, error } = useCitiesByZipCode({ country, zipCode })
 
-  const statesList = useMemo(() => data || [], [data])
+  const statesList = useMemo(() => data?.data || [], [data?.data])
   const citiesList = useMemo(
     () => statesList.find((item) => item.state === state)?.cities || [],
     [statesList, state],
   )
+  const zipLatitude = useMemo(() => data?.latitude || "", [data?.latitude])
+  const zipLongitude = useMemo(() => data?.longitude || "", [data?.longitude])
 
   const checkButtonDisability = useCallback(() => {
     if (!!errors.sender || !!errors.senderReturn || !!errors.recipient) {
@@ -142,12 +154,27 @@ export const PersonInfo = ({
 
   useEffect(() => {
     if (status === "success" && statesList.length !== 0) {
-      const states = statesList.map((item) => item.state)
+      setValue(`${person}.fullAddress.state`, state ? state : statesList[0].state)
+      setValue(`${person}.fullAddress.city`, city ? city : citiesList[0])
+      setValue(`${person}.fullAddress.latitude`, latitude ? latitude : zipLatitude)
+      setValue(`${person}.fullAddress.longitude`, longitude ? longitude : zipLongitude)
 
-      setValue(`${person}.fullAddress.state`, state ? state : states[0])
       trigger(`${person}.fullAddress.zipCode`)
     }
-  }, [status, statesList, person, state, setValue, trigger])
+  }, [
+    status,
+    statesList,
+    citiesList,
+    person,
+    state,
+    city,
+    setValue,
+    trigger,
+    latitude,
+    zipLatitude,
+    longitude,
+    zipLongitude,
+  ])
 
   useEffect(() => {
     if (isAxiosError(error)) {
@@ -160,6 +187,12 @@ export const PersonInfo = ({
 
   return (
     <GridContainer fullBleed>
+      <Hidden below="sm">
+        <Title as="h3" scale={3}>
+          {person === "sender" ? "Ship From" : "Ship To"}
+        </Title>
+        <Spacer size={40} />
+      </Hidden>
       <Stack space={24}>
         <StepInputGroup
           start={
@@ -205,7 +238,7 @@ export const PersonInfo = ({
             />
           }
           end={
-            <Grid columns="1fr $96" columnGap={8}>
+            <Grid columns="1fr $96" columnGap={16}>
               <GridItem>
                 <Controller
                   name={`${person}.phone`}
@@ -456,10 +489,7 @@ export const PersonInfo = ({
                           )
                         }
 
-                        clearErrors([
-                          `${person}.fullAddress.city`,
-                          `${person}.fullAddress.address1`,
-                        ])
+                        clearErrors([`${person}.fullAddress.address1`])
                       }
                     }}
                     id={`${person}.fullAddress.zipCode`}
@@ -497,8 +527,6 @@ export const PersonInfo = ({
                         setValue(`${person}.fullAddress.address1`, "")
                         setValue(`${person}.fullAddress.address2`, "")
                         setValue(`${person}.fullAddress.displayName`, "")
-                        setValue(`${person}.fullAddress.latitude`, "")
-                        setValue(`${person}.fullAddress.longitude`, "")
                         if (person === "recipient") {
                           setValue(
                             `${person}.fullAddress.isResidential`,
@@ -529,31 +557,33 @@ export const PersonInfo = ({
                   value: true,
                   message: "Required field",
                 },
-                maxLength: {
-                  value: 40,
-                  message: "City max length exceeded",
-                },
               }}
-              render={({ field: { onChange, onBlur, value, name } }) => {
+              render={({ field }) => {
                 return (
-                  <AddressFieldPopover
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                    fieldName="city"
-                    id={`${person}.fullAddress.city`}
+                  <FormSelect
+                    {...register(field.name, { shouldUnregister: true })}
+                    {...field}
+                    onValueChange={(value) => {
+                      if (value !== field.value) {
+                        setValue(`${person}.fullAddress.address1`, "")
+                        setValue(`${person}.fullAddress.address2`, "")
+                        setValue(`${person}.fullAddress.displayName`, "")
+                        if (person === "recipient") {
+                          setValue(
+                            `${person}.fullAddress.isResidential`,
+                            JSON.parse(ResidentialType.Nonresidential),
+                          )
+                        }
+                      }
+
+                      return field.onChange(value)
+                    }}
                     label="City"
                     labelProps={{ hidden: true, required: true }}
                     description="City"
+                    options={citiesList}
                     disabled={citiesList.length === 0}
-                    errorMessage={errors[person]?.fullAddress?.city?.message}
-                    onBlur={(event) => {
-                      onBlur()
-                      onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
-                      trigger(`${person}.fullAddress.city`)
-                    }}
-                    defaultSuggestions={citiesList}
-                    person={person}
+                    error={errors[person]?.fullAddress?.city?.message}
                   />
                 )
               }}
@@ -572,13 +602,8 @@ export const PersonInfo = ({
                   message: "Required field",
                 },
                 maxLength: {
-                  value: 40,
+                  value: 100,
                   message: "Address max length exceeded",
-                },
-                validate: {
-                  selected: (v: string) =>
-                    (v.length > 0 && !!getValues(`${person}.fullAddress.displayName`)) ||
-                    "Address not selected",
                 },
               }}
               render={({ field: { onChange, onBlur, value, name } }) => {
@@ -587,13 +612,12 @@ export const PersonInfo = ({
                     name={name}
                     value={value}
                     onChange={onChange}
-                    fieldName="address1"
                     id={`${person}.fullAddress.address1`}
                     label="Address line 1"
                     labelProps={{ hidden: true, required: true }}
                     description="Address line 1"
-                    placeholder="Street, apartment"
-                    disabled={statesList.length === 0 || citiesList.length === 0}
+                    placeholder=""
+                    disabled={citiesList.length === 0}
                     errorMessage={errors[person]?.fullAddress?.address1?.message}
                     onBlur={(event) => {
                       onBlur()
@@ -601,6 +625,8 @@ export const PersonInfo = ({
                       trigger(`${person}.fullAddress.address1`)
                     }}
                     person={person}
+                    zipLatitude={zipLatitude}
+                    zipLongitude={zipLongitude}
                   />
                 )
               }}
@@ -621,6 +647,19 @@ export const PersonInfo = ({
                       },
                     })}
                     {...field}
+                    onChange={(event) => {
+                      const formattedValue = event?.target?.value.replaceAll(" ", "")
+
+                      if (formattedValue !== address2) {
+                        field.onChange(formattedValue)
+                        setValue(
+                          `${person}.fullAddress.displayName`,
+                          formattedValue !== ""
+                            ? `${formattedValue}, ${address1}, ${city}, ${state}, ${zipCode}, ${country}`
+                            : `${address1}, ${city}, ${state}, ${zipCode}, ${country}`,
+                        )
+                      }
+                    }}
                     onBlur={(event) => {
                       field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                       trigger(`${person}.fullAddress.address2`)
@@ -629,7 +668,8 @@ export const PersonInfo = ({
                     label="Address line 2"
                     labelProps={{ hidden: true }}
                     description="Address line 2"
-                    placeholder="House, suite, etc."
+                    placeholder="Apt, suite, etc."
+                    disabled={address1.length === 0}
                     type="text"
                     autoComplete="new-password"
                     error={errors[person]?.fullAddress?.address2?.message}
@@ -656,46 +696,41 @@ export const PersonInfo = ({
             }}
           />
         ) : null}
-
-        {person === "sender" ? (
-          <>
-            <Flex
-              align="center"
-              justify={{ "@initial": "between", "@sm": "start" }}
-              css={{ gap: "$24" }}
-            >
-              <Copy scale={{ "@initial": 8, "@sm": 7 }} color="system-black" bold>
-                Use a different return address?
-              </Copy>
-              <Switch
-                {...switchProps}
-                onValueChange={(value) => {
-                  setValue("hasReturnAddress", value === "new")
-                  setValue(
-                    "senderReturn.fullAddress.country",
-                    value === "new" ? "United States" : "",
-                  )
-                  clearErrors(["senderReturn"])
-                  switchProps.onValueChange(value)
-                }}
-                checked={switchProps.value === "new"}
-              >
-                <SwitchOption value="similar" />
-                <SwitchOption value="new" />
-              </Switch>
-            </Flex>
-            <ReturnAddressSection switchValue={switchProps.value} />
-          </>
-        ) : null}
       </Stack>
+
+      {person === "sender" ? (
+        <>
+          <Spacer size={{ "@initial": 40, "@md": 48 }} />
+          <Flex
+            align="center"
+            justify={{ "@initial": "between", "@sm": "start" }}
+            css={{ gap: "$24" }}
+          >
+            <Copy scale={5} color="theme-b-n3" fontWeight="bold">
+              Use a different return address?
+            </Copy>
+            <Switch
+              {...switchProps}
+              onValueChange={(value) => {
+                setValue("hasReturnAddress", value === "new")
+                setValue("senderReturn.fullAddress.country", value === "new" ? "United States" : "")
+                clearErrors(["senderReturn"])
+                switchProps.onValueChange(value)
+              }}
+              checked={switchProps.value === "new"}
+            >
+              <SwitchOption value={hasReturnAddress ? "similar" : "new"} />
+            </Switch>
+          </Flex>
+          <ReturnAddressSection switchValue={switchProps.value} />
+        </>
+      ) : null}
 
       <Spacer size={32} />
 
       <StepActionsBar>
-        <Button onClick={onContinueHandler} full disabled={checkButtonDisability()}>
-          <Copy as="span" scale={8} color="system-white" bold>
-            Continue
-          </Copy>
+        <Button full disabled={checkButtonDisability()} onClick={onContinueHandler}>
+          Continue
         </Button>
       </StepActionsBar>
     </GridContainer>

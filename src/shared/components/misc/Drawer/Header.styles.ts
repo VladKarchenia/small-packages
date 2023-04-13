@@ -7,7 +7,7 @@ export const SDrawerHeader = styled("header", {
   alignItems: "center",
   gridTemplateColumns: "$32 1fr $32",
   width: "100%",
-  backgroundColor: "$system-white",
+  backgroundColor: "$theme-w-n11",
   position: "sticky",
   top: 0,
   zIndex: "$2",
@@ -24,7 +24,7 @@ export const SDrawerHeader = styled("header", {
   variants: {
     hasSeparator: {
       true: {
-        borderBottom: "1px solid $neutrals-3",
+        borderBottom: "1px solid $neutrals-5",
       },
     },
   },
@@ -37,7 +37,7 @@ export const SDrawerCloseButton = styled("button", {
   justifyContent: "center",
   width: "$32",
   height: "$40",
-  color: "$neutrals-9",
+  color: "$theme-b-n3",
   transition: "200ms ease-out",
   cursor: "pointer",
   appearance: "none",
@@ -45,6 +45,10 @@ export const SDrawerCloseButton = styled("button", {
   outline: "none",
 
   hover: {
-    color: "$neutrals-7",
+    outline: "1px solid $theme-b-n3",
+  },
+
+  keyboardFocus: {
+    outline: "1px solid $theme-b-n3",
   },
 })

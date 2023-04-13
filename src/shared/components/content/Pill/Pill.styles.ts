@@ -1,50 +1,42 @@
 import { styled } from "@/stitches/config"
 
 export const SPill = styled("button", {
-  $$borderColor: "$colors$system-black",
   reset: true,
-  backgroundColor: "$system-black",
-  border: "1px solid",
-  borderRadius: "$pill",
-  borderColor: "$$borderColor",
   display: "flex",
   alignItems: "center",
-  color: "$system-white",
+  backgroundColor: "$theme-vlt-ydt",
+  color: "$theme-b-n3",
+  border: "1px solid $theme-vl-yl",
   cursor: "pointer",
-  transition: "100ms border-color, 100ms transform",
+  outline: "1px solid transparent",
+  outlineOffset: "$space$2",
+  transition: "100ms ease-out",
 
   "@supportsHover": {
     hover: {
-      $$borderColor: "$colors$neutrals-9",
+      backgroundColor: "$theme-vlr-ydr",
     },
   },
 
-  active: {
-    transform: "scale(0.95)",
+  keyboardFocus: {
+    outline: "1px solid $theme-vl-n3",
   },
 
   disabled: {
     pointerEvents: "none",
-    backgroundColor: "$neutrals-2",
-    $$borderColor: "$colors$neutrals-2",
-
-    "& > *": {
-      color: "$neutrals-7",
-    },
+    backgroundColor: "$theme-n1-n10",
+    color: "$theme-n4-n7",
   },
 
   variants: {
     selected: {
-      true: { $$borderColor: "$colors$neutrals-9" },
+      true: {},
     },
 
     active: {
       true: {
-        $$borderColor: "$colors$brand-yellow-darker",
         "@supportsHover": {
-          hover: {
-            $$borderColor: "$colors$brand-yellow-darker",
-          },
+          hover: {},
         },
       },
     },
@@ -60,9 +52,7 @@ export const SPill = styled("button", {
     {
       selected: true,
       active: true,
-      css: {
-        $$borderColor: "$colors$brand-yellow-darker",
-      },
+      css: {},
     },
   ],
 
@@ -75,7 +65,7 @@ export const SSelectedDot = styled("div", {
   height: "$8",
   width: "$8",
   borderRadius: "$rounded",
-  backgroundColor: "$colors$brand-yellow-dark",
+  backgroundColor: "$brand-yellow-dark",
   marginLeft: "$8",
   marginTop: "$2",
 })

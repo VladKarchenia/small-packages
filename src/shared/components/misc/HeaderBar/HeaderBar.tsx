@@ -20,16 +20,16 @@ export const HeaderBar = ({
         width: "100%",
         paddingY: "$16",
         paddingLeft: "$8",
+        "@sm": { paddingLeft: 0 },
         "@md": { paddingTop: 0, paddingBottom: "$40" },
       }}
     >
       <Hidden above="sm">
         <ButtonIcon
-          type="button"
-          ariaLabel="Back button"
           icon={<IconChevronLeft />}
+          ariaLabel="Back button"
           onClick={onClick}
-          css={{ flex: "0 0 auto" }}
+          inputIcon
         />
       </Hidden>
       <Box
@@ -39,7 +39,7 @@ export const HeaderBar = ({
           "@sm": { textAlign: "start" },
         }}
       >
-        <Copy scale={{ "@initial": 8, "@md": 5 }} color="system-black" bold>
+        <Copy scale={3} color="theme-b-n3" fontWeight="bold">
           {title}
         </Copy>
       </Box>

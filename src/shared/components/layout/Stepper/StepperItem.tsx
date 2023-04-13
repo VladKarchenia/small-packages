@@ -1,6 +1,5 @@
 import { createContext } from "@/shared/utils"
 import { ComponentProps } from "@/stitches/types"
-import { useId } from "@/shared/hooks"
 
 import { useStepperContext } from "./Stepper"
 import { SStepperItem } from "./Stepper.styles"
@@ -31,15 +30,13 @@ export interface IStepperItemProps extends ComponentProps<typeof SStepperItem> {
 export const StepperItem = ({ value, isDisabled, isCompleted, ...props }: IStepperItemProps) => {
   const { selected, disabled, completed } = useStepperContext("StepperItem")
 
-  const id = useId(8)
-
   const isOpen = selected.includes(value) || false
   const isStepDisabled = disabled || isDisabled || false
   const isStepCompleted = completed || isCompleted || false
 
   return (
     <StepperItemProvider
-      id={id}
+      id={value}
       value={value}
       open={isOpen}
       disabled={isStepDisabled}

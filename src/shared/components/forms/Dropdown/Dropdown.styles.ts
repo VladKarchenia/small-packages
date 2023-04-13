@@ -1,5 +1,5 @@
 import { keyframes, styled } from "@/stitches/config"
-import { multipleSelectors, rgba } from "@/stitches/utils"
+import { boxShadows, multipleSelectors } from "@/stitches/utils"
 import {
   CheckboxItem,
   Content,
@@ -37,11 +37,11 @@ export const SDropdownMenuContent = styled(Content, {
   alignItems: "flex-start",
   justifyContent: "center",
   width: "max-content",
-  backgroundColor: "$system-white",
-  borderRadius: "$4",
+  backgroundColor: "$theme-w-n10",
+  borderRadius: 0,
   marginY: "$12",
-  paddingY: "$16",
-  boxShadow: `0 $space$4 $space$8 0 ${rgba("system-black", 0.22)}`,
+  paddingY: 0,
+  boxShadow: boxShadows.dropdown,
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",
     animationTimingFunction: "ease-in-out",
@@ -62,13 +62,6 @@ export const SDropdownMenuTrigger = styled(Trigger, {
   display: "flex",
   alignItems: "center",
   position: "relative",
-
-  keyboardFocus: {
-    "& > span": {
-      outline: "currentcolor auto 1px",
-      outlineColor: "-webkit-focus-ring-color",
-    },
-  },
 })
 
 export const SDropdownMenuItem = styled(Item, {
@@ -77,19 +70,14 @@ export const SDropdownMenuItem = styled(Item, {
   display: "flex",
   alignItems: "center",
   width: "100%",
-  position: "relative",
   height: "$40",
+  backgroundColor: "transparent",
+  position: "relative",
+  cursor: "pointer",
   transition: "150ms background-color ease-out",
 
-  "&:first-of-type": {
-    borderRadius: "$8 $8 0 0",
-  },
-  "&:last-of-type": {
-    borderRadius: "0 0 $8 $8",
-  },
-
   ...multipleSelectors(["hover", "keyboardFocus"], {
-    backgroundColor: "$neutrals-1",
+    backgroundColor: "$theme-n2-n7",
   }),
 })
 

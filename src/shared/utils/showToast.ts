@@ -1,5 +1,7 @@
 import { toast } from "react-toastify"
 
+import { boxShadows } from "@/stitches/utils"
+
 import { IToastProps, Toast, ToastType } from "@/shared/components"
 
 function getProgressStyle(type: ToastType) {
@@ -10,15 +12,15 @@ function getProgressStyle(type: ToastType) {
       }
     case "info":
       return {
-        backgroundColor: "var(--colors-brand-blue-dark)",
+        backgroundColor: "var(--colors-special-info)",
       }
     case "warning":
       return {
-        backgroundColor: "var(--colors-brand-yellow-primary)",
+        backgroundColor: "var(--colors-special-warning)",
       }
     case "success":
       return {
-        backgroundColor: "var(--colors-brand-green-primary)",
+        backgroundColor: "var(--colors-special-success)",
       }
     case "default":
       return {}
@@ -31,6 +33,10 @@ export const showToast = ({ type, text }: IToastProps) => {
     icon: false,
     position: "bottom-right",
     progressStyle: getProgressStyle(type),
+    style: {
+      borderRadius: 0,
+      boxShadow: boxShadows.toast,
+    },
     data: {
       type,
       text,

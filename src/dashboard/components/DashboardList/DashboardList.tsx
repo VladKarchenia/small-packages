@@ -117,20 +117,16 @@ export const DashboardList = () => {
       {!isLoading && shipments.length > 0 ? (
         <>
           <Flex align="center" justify="between">
-            <Copy scale={9}>
-              Found:
-              <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$4" }}>
+            <Copy color="theme-n6-n5">
+              Results:
+              <Copy as="span" color="theme-b-n3" css={{ paddingLeft: "$4" }}>
                 {shipments.length}
               </Copy>
             </Copy>
-            <Flex align="center">
+            <Flex align="center" css={{ color: "$theme-n6-n5" }}>
               {direction === SortDirection.ASC ? <IconLongArrowDown /> : <IconLongArrowTop />}
-              <Copy scale={9} css={{ paddingX: "$4" }}>
-                Sort by:
-              </Copy>
-              <Copy scale={9} color="system-black" bold>
-                {sortOrder}
-              </Copy>
+              <Copy css={{ paddingX: "$4" }}>Sort by:</Copy>
+              <Copy color="theme-b-n3">{sortOrder}</Copy>
             </Flex>
           </Flex>
           <Spacer size={12} />
@@ -144,10 +140,11 @@ export const DashboardList = () => {
               />
             ))}
           </Stack>
+          <Spacer size={40} />
         </>
       ) : (
         <Box css={{ textAlign: "center" }}>
-          <Copy as="span" scale={8} color="system-black">
+          <Copy as="span" color="theme-b-n3">
             {isFilterApplied
               ? "There are no issues that match your filter"
               : "There is no data yet"}

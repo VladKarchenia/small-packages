@@ -8,7 +8,7 @@ const shimmer = keyframes({
 
 export const SRedacted = styled("div", {
   position: "relative",
-  backgroundColor: "$neutrals-3",
+  backgroundColor: "$theme-n2-n9",
   maxWidth: "100%",
   overflow: "hidden",
 
@@ -22,10 +22,10 @@ export const SRedacted = styled("div", {
           right: 0,
           bottom: 0,
           left: 0,
-          backgroundImage: `linear-gradient(90deg, ${rgba("system-white", 0)} 0, ${rgba(
-            "system-white",
+          backgroundImage: `linear-gradient(90deg, ${rgba("theme-w-b", 0)} 0, ${rgba(
+            "theme-w-b",
             0.25,
-          )} 20%, ${rgba("system-white", 0.5)} 60%, ${rgba("system-white", 0)})`,
+          )} 20%, ${rgba("theme-w-b", 0.1)} 60%, ${rgba("theme-w-b", 0)})`,
           transform: "translateX(-100%)",
           animation: `${shimmer} 2s infinite`,
         },

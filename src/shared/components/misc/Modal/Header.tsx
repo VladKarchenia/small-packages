@@ -14,7 +14,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({ title, children, ...pr
   return (
     <SModalHeader empty={!title} {...props}>
       {title && (
-        <Title as="h3" scale={7}>
+        <Title as="h3" scale={3}>
           {title}
         </Title>
       )}

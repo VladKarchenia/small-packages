@@ -3,19 +3,16 @@ import React from "react"
 import { CSS } from "@/stitches/config"
 import { ComponentProps } from "@/stitches/types"
 
-import { Copy, Flex, Spacer, ErrorLabel, FormLabel, IFormLabelProps } from "@/shared/components"
+import { Copy, Spacer, ErrorLabel, FormLabel, IFormLabelProps, Box } from "@/shared/components"
 
 import { SFormInputGroup, SFormInputGroupItems, SFormInputGroupItem } from "./FormInputGroup.styles"
 
 export interface IFormInputGroupProps extends ComponentProps<typeof SFormInputGroup> {
   description?: string
   error?: string
-  hasError?: boolean
-  hasFocus?: boolean
   label: React.ReactNode
   labelProps?: IFormLabelProps
   id?: string
-  afterField?: React.ReactNode
   inputCss?: CSS
 }
 
@@ -28,48 +25,35 @@ export const FormInputGroup: React.FC<React.PropsWithChildren<IFormInputGroupPro
   children,
   description,
   error,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  hasError = false,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  hasFocus = false,
   label,
   labelProps,
-  afterField,
   inputCss,
   ...props
 }) => (
   <SFormInputGroup {...props}>
-    <FormLabel {...labelProps}>
-      {label}
-      {labelProps?.required ? (
-        <Copy as="span" scale={9} css={{ paddingLeft: "$2" }}>
-          *
-        </Copy>
-      ) : null}
-    </FormLabel>
+    <FormLabel {...labelProps}>{label}</FormLabel>
 
     {description && (
-      <Copy color="neutrals-7">
+      <Copy scale={10} color="neutrals-5" fontWeight="semiBold">
         {description}
         {labelProps?.required ? (
-          <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+          <Copy as="span" scale={10} fontWeight="semiBold" css={{ paddingLeft: "$2" }}>
             *
           </Copy>
         ) : null}
       </Copy>
     )}
 
-    {(!labelProps?.hidden || description) && <Spacer size={8} />}
+    {(!labelProps?.hidden || description) && <Spacer size={4} />}
 
     <SFormInputGroupItems css={{ ...((inputCss || {}) as Record<string, never>) }}>
       {children}
     </SFormInputGroupItems>
 
-    {(error || afterField) && (
-      <Flex justify="between">
-        {error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}
-        {afterField}
-      </Flex>
+    {error && (
+      <Box css={{ position: "absolute" }}>
+        <ErrorLabel id={props?.id}>{error}</ErrorLabel>
+      </Box>
     )}
   </SFormInputGroup>
 )

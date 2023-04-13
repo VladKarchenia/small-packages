@@ -6,7 +6,7 @@ export const SModalFooter = styled("footer", {
   bottom: "-$$modalContentYPadding",
   marginBottom: "-$$modalContentYPadding",
   marginX: "-$$modalContentXPadding",
-  backgroundColor: "$system-white",
+  backgroundColor: "$neutrals-0",
   borderTop: "1px solid $neutrals-4",
   padding: "$16 $24",
 })

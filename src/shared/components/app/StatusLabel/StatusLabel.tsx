@@ -9,9 +9,7 @@ export const StatusLabel = ({ status }: { status: ShipmentStatus | null }) => {
 
   return (
     <STrackerLabel>
-      <Copy scale={{ "@initial": 11, "@md": 10, "@lg": 9 }} color="system-white">
-        {status}
-      </Copy>
+      <Copy color="neutrals-0">{status}</Copy>
     </STrackerLabel>
   )
 }

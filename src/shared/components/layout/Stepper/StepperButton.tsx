@@ -134,8 +134,8 @@ export const StepperButton = ({ children, ...props }: IStepperButtonProps) => {
       type="button"
       data-ui="stepper-button"
       data-testid="stepper-button"
-      {...props}
       onClick={handleClick}
+      {...props}
     >
       {children}
       {completed ? (

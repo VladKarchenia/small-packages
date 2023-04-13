@@ -1,6 +1,7 @@
 import React, { InputHTMLAttributes } from "react"
 
 import { FormComponentProps } from "@/stitches/types"
+import { enterKeyDown } from "@/shared/utils"
 
 import { Copy, Spacer, ErrorLabel } from "@/shared/components"
 
@@ -9,6 +10,7 @@ import {
   SFormCheckboxInput,
   SFormCheckboxLabel,
   SFormCheckboxTick,
+  SFormCheckboxHyphen,
 } from "./FormCheckbox.styles"
 
 export interface IFormCheckboxProps
@@ -21,10 +23,15 @@ export interface IFormCheckboxProps
    * ! Every field should always contain a label, so whenever this prop is used, make sure to add a label for the field manually
    */
   noLabel?: boolean
+
+  iconType?: "tick" | "hyphen"
 }
 
 export const FormCheckbox = React.forwardRef(
-  ({ checked, noLabel, error, ...props }: IFormCheckboxProps, ref: React.Ref<HTMLInputElement>) => {
+  (
+    { checked, noLabel, iconType = "tick", error, ...props }: IFormCheckboxProps,
+    ref: React.Ref<HTMLInputElement>,
+  ) => {
     const { label, disabled, id, ...inputProps } = props
 
     const labelProps = React.useMemo(() => {
@@ -47,15 +54,21 @@ export const FormCheckbox = React.forwardRef(
 
     return (
       <>
-        <SFormCheckboxLabel data-ui="form-checkbox" {...labelProps}>
+        <SFormCheckboxLabel
+          data-ui="form-checkbox"
+          onKeyDown={(e) => {
+            enterKeyDown(e.key) && e.preventDefault()
+          }}
+          {...labelProps}
+        >
           <SFormCheckboxInput data-ui="form-checkbox-input" {...checkboxInputProps} />
           <SFormCheckboxBox data-ui="form-checkbox-box">
-            <SFormCheckboxTick />
+            {iconType === "tick" ? <SFormCheckboxTick /> : <SFormCheckboxHyphen />}
           </SFormCheckboxBox>
           {!noLabel && (
             <>
-              <Spacer size={16} horizontal />
-              <Copy scale={8} color="neutrals-9" data-ui="form-checkbox-copy">
+              <Spacer size={12} horizontal />
+              <Copy color={disabled ? "theme-n5-n7" : "theme-b-n3"} data-ui="form-checkbox-copy">
                 {label}
               </Copy>
             </>

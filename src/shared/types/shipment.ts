@@ -1,3 +1,5 @@
+import { IPlaceResponse } from "@/api/types"
+
 export enum ShipmentStatus {
   DRAFT = "Draft",
   SUBMIT_READY = "Submit ready",
@@ -17,7 +19,9 @@ export enum ShipmentStatus {
 }
 
 export enum PickupType {
-  Schedule = "Schedule a pickup",
+  DEFAULT = "Use an already scheduled pickup at my location",
+  SCHEDULE = "Schedule a pickup",
+  DROPOFF = "Drop off package at location",
 }
 
 export enum PackageType {
@@ -25,20 +29,36 @@ export enum PackageType {
 }
 
 export enum PackagingType {
-  OWN = "My packaging",
-  ENVELOPE = "Envelope",
+  Own = "My packaging",
+  Envelope = "Envelope",
 }
 
-export enum ParcelContentType {
-  Gift = "Gift",
-  Company = "Data within my company",
-  Selling = "Selling items",
-  Documents = "Non commercial documents",
-  Samples = "Product samples",
-  Repair = "Items to be repaired",
-  Return = "Items for return",
-  Other = "Other",
+export enum Currency {
+  USD = "USD",
+  // CAD = "CAD",
 }
+
+export enum UnitOfMeasure {
+  //TODO: check parsing when we change values (unitOfMeasure)
+  IN_LB = "in/lb",
+  // CM_KG = "cm/kg",
+}
+
+export enum Carriers {
+  FedEx = "FedEx",
+  UPS = "UPS",
+}
+
+// export enum ParcelContentType {
+//   Gift = "Gift",
+//   Company = "Data within my company",
+//   Selling = "Selling items",
+//   Documents = "Non commercial documents",
+//   Samples = "Product samples",
+//   Repair = "Items to be repaired",
+//   Return = "Items for return",
+//   Other = "Other",
+// }
 
 interface IParcelDimensions {
   length: string
@@ -55,7 +75,7 @@ export interface IPackaging {
   pickupType: PickupType
   packagingType: PackagingType
   totalPackagesNumber: number
-  packageContent: ParcelContentType
+  packageContent: string
   identicalPackages: IdenticalPackagesType
 }
 
@@ -92,16 +112,11 @@ export enum ResidentialType {
   Nonresidential = "false",
 }
 
-export interface IAddress {
-  displayName: string
-  country: string
-  zipCode: string
-  state: string
-  city: string
-  address1: string
-  address2?: string
-  latitude: string
-  longitude: string
+export interface IAddress
+  extends Omit<
+    IPlaceResponse,
+    "contactName" | "email" | "id" | "locationType" | "phone" | "phoneExtension"
+  > {
   isResidential?: boolean
 }
 

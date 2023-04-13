@@ -9,7 +9,7 @@ export const Home = () => {
   return (
     <DashboardProvider>
       <CommonLayout>
-        <MainLayout withGlobalSearch mobileFullBleed={false}>
+        <MainLayout mobileFullBleed={false}>
           <GridItem
             column={{ "@initial": "1 / span 6", "@sm": "1 / span 12", "@lg": "1 / span 24" }}
           >

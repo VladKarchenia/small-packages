@@ -1,10 +1,10 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 
-import { HOME, PROFILE } from "@/constants"
+import { HOME, SETTINGS } from "@/constants"
 import { ComponentProps } from "@/stitches/types"
 
-import { Copy, Drawer, Stack, useDrawer, useDrawerActions } from "@/shared/components"
+import { Copy, Drawer, Stack, Title, useDrawer, useDrawerActions } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
 
 import { BurgerMenuButton } from "./BurgerMenuButton"
@@ -16,9 +16,7 @@ export interface INavItem {
   text: string
 }
 
-interface INavLinkProps extends ComponentProps<typeof SNavLink> {
-  selected?: boolean
-}
+interface INavLinkProps extends ComponentProps<typeof SNavLink> {}
 
 const menuItems: INavItem[] = [
   {
@@ -26,8 +24,8 @@ const menuItems: INavItem[] = [
     text: "Home",
   },
   {
-    url: PROFILE,
-    text: "User Management",
+    url: SETTINGS,
+    text: "Settings",
   },
 ]
 
@@ -43,19 +41,12 @@ export const MenuNavItems = ({ items }: { items: INavItem[] }) => {
   )
 }
 
-export const NavLink: React.FC<INavLinkProps> = ({
-  children,
-  href = "",
-  selected = false,
-  role,
-}) => {
+export const NavLink: React.FC<INavLinkProps> = ({ children, href = "", role }) => {
   const navigate = useNavigate()
 
   return (
-    <SNavLink onClick={() => navigate(href)} selected={selected} role={role}>
-      <Copy scale={8} color="system-black" bold>
-        {children}
-      </Copy>
+    <SNavLink as="button" type="button" onClick={() => navigate(href)} role={role}>
+      <Copy fontWeight="semiBold">{children}</Copy>
     </SNavLink>
   )
 }
@@ -77,6 +68,11 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = () => {
         trigger={<BurgerMenuButton onClick={() => open("BurgerMenu")} />}
         contentCss={{ padding: "$24 $16" }}
         direction="left"
+        header={
+          <Title as="h3" scale={3} color="theme-b-n3">
+            Menu
+          </Title>
+        }
       >
         <MenuNavItems items={menuItems} />
       </Drawer>

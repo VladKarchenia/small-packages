@@ -3,9 +3,10 @@ import { useRef, useState } from "react"
 import { DashboardState, useDashboardActionContext } from "@/dashboard/state"
 import { useMedia } from "@/shared/hooks"
 import { mediaQueries } from "@/stitches/theme"
+import { escapeKeyDown, spaceAndEnterKeyDown } from "@/shared/utils"
 
 import { Copy, Pill, Popover, PopoverAnchor, PopoverContent } from "@/shared/components"
-import { IconChevronDown, IconCross } from "@/shared/icons"
+import { IconChevronDown, IconChevronTop, IconCross } from "@/shared/icons"
 
 import { SStatusFilterButton } from "./DashboardTableFilter.styles"
 
@@ -28,7 +29,10 @@ export const DashboardTableFilter: React.FC<
 
   return (
     <Popover open={isOpen}>
-      <PopoverAnchor asChild>
+      <PopoverAnchor
+        asChild
+        onKeyDown={(e: { key: string }) => escapeKeyDown(e.key) && setIsOpen(false)}
+      >
         <SStatusFilterButton
           ref={triggerRef}
           onClick={(event) => {
@@ -36,8 +40,9 @@ export const DashboardTableFilter: React.FC<
               setIsOpen(true)
             }
           }}
+          active={isOpen}
         >
-          <Copy as="span" scale={{ "@initial": 9, "@lg": 8 }} color="neutrals-8" bold>
+          <Copy as="span" fontWeight="semiBold">
             {label}
           </Copy>
 
@@ -47,26 +52,30 @@ export const DashboardTableFilter: React.FC<
               ref={pillRef}
               suffix={<IconCross onClick={() => resetFilterField(name)} />}
               size="small"
+              tabIndex={0}
+              onKeyDown={(e: { key: string }) =>
+                spaceAndEnterKeyDown(e.key) && resetFilterField(name)
+              }
               data-testid="status-filter"
             >
               {amount} {isLargeAndAbove ? "selected" : ""}
             </Pill>
           ) : null}
 
-          <IconChevronDown size="xs" />
+          {isOpen ? <IconChevronTop size="xs" /> : <IconChevronDown size="xs" />}
         </SStatusFilterButton>
       </PopoverAnchor>
       <PopoverContent
+        close={() => setIsOpen(false)}
         align="start"
-        css={{ width: 360, padding: 0, border: "none", borderRadius: 0 }}
+        css={{
+          width: 360,
+          keyboardFocus: {
+            outline: "1px solid $theme-vl-n3",
+          },
+        }}
         alignOffset={-1}
         onInteractOutside={(event) => {
-          // if (isClearButtonClick) {
-          //   if (event.detail.originalEvent.isTrusted) {
-          //     handleClearButton()
-          //   }
-          //   return
-          // }
           if (isTriggerClick(event)) {
             return
           }

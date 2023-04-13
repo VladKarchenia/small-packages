@@ -5,7 +5,7 @@ export const SPackagesInfoCard = styled("div", {
   flexDirection: "column",
   width: "100%",
   padding: "$16",
-  borderRadius: "$8",
-  border: "1px solid $neutrals-4",
+  backgroundColor: "$theme-w-n9",
+  border: "1px solid $theme-n4-tr",
   textAlign: "left",
 })

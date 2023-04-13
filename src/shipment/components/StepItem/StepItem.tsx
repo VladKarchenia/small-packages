@@ -3,9 +3,9 @@ import { IStep } from "@/shipment/types"
 import {
   Copy,
   Flex,
-  Spacer,
   StepperButton,
   StepperHeader,
+  StepperIcon,
   StepperItem,
   StepperPanel,
 } from "@/shared/components"
@@ -23,37 +23,17 @@ export const StepItem = ({ title, data, mainContent, totalSteps }: IStepperItemP
 
   return (
     <StepperItem value={name} isDisabled={disabled} isCompleted={completed}>
-      <StepperHeader scale={8}>
-        <StepperButton
-          size="small"
-          compact
-          css={{
-            paddingY: "$8",
-
-            hover: {
-              backgroundColor: "$system-white",
-            },
-          }}
-        >
-          <Flex align="center">
-            <Flex
-              align="center"
-              justify="center"
-              css={{
-                height: "$20",
-                width: "$20",
-                minWidth: "$20",
-                borderRadius: "$rounded",
-                backgroundColor: "$system-black",
-                color: "$system-white",
-              }}
-            >
-              <Copy scale={10} color="system-white" bold>
-                {stepNumber}
-              </Copy>
-            </Flex>
-            <Spacer size={12} horizontal />
-            {title}
+      <StepperHeader isStepLast={isStepLast}>
+        <StepperButton size="small" compact>
+          <Flex
+            align="center"
+            direction={{ "@initial": "row", "@sm": "column" }}
+            css={{ gap: "$12" }}
+          >
+            <StepperIcon stepNumber={stepNumber} />
+            <Copy color={"system-inherit"} fontWeight="bold">
+              {title}
+            </Copy>
           </Flex>
         </StepperButton>
       </StepperHeader>

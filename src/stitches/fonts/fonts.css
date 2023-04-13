@@ -1,60 +1,50 @@
-/* See README about advice on how to load fonts */
-/* @font-face {
-  font-family: DomaineDisplayNarrow;
-  src: url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-Regular.woff2")
+@font-face {
+  font-family: Lato;
+  src: url("./Lato-Regular.woff2") format("woff2"), url("./Lato-Regular.woff") format("woff");
+  /* src: url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Regular.woff2")
       format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-Regular.woff")
-      format("woff");
+    url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Regular.woff") format("woff"); */
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: DomaineDisplayNarrow;
-  src: url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-RegularItalic.woff2")
+  font-family: Lato;
+  src: url("./Lato-Medium.woff2") format("woff2"), url("./Lato-Medium.woff") format("woff");
+  /* src: url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Medium.woff2")
       format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Domaine/regular/DomaineDisplayNarrowWeb-RegularItalic.woff")
-      format("woff");
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: DomaineDisplayNarrow;
-  src: url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-Medium.woff2")
-      format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-Medium.woff")
-      format("woff");
+    url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Medium.woff") format("woff"); */
   font-style: normal;
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: DomaineDisplayNarrow;
-  src: url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-MediumItalic.woff2")
+  font-family: Lato;
+  src: url("./Lato-Semibold.woff2") format("woff2"), url("./Lato-Semibold.woff") format("woff");
+  /* src: url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Semibold.woff2")
       format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Domaine/medium/DomaineDisplayNarrowWeb-MediumItalic.woff")
-      format("woff");
-  font-style: italic;
-  font-weight: 500;
-  font-display: swap;
-} */
-@font-face {
-  font-family: HalyardDisplay;
-  src: url("https://static.plumcache.com/static/fonts/Halyard/book/HalyardDisBook.woff2")
-      format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Halyard/book/HalyardDisBook.woff") format("woff");
+    url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Semibold.woff") format("woff"); */
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: HalyardDisplay;
-  src: url("https://static.plumcache.com/static/fonts/Halyard/regular/HalyardDisplay-Regular.woff2")
+  font-family: Lato;
+  src: url("./Lato-Bold.woff2") format("woff2"), url("./Lato-Bold.woff") format("woff");
+  /* src: url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Bold.woff2")
       format("woff2"),
-    url("https://static.plumcache.com/static/fonts/Halyard/regular/HalyardDisplay-Regular.woff")
-      format("woff");
+    url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Bold.woff") format("woff"); */
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: Lato;
+  src: url("./Lato-Black.woff2") format("woff2"), url("./Lato-Black.woff") format("woff");
+  /* src: url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Black.woff2")
+      format("woff2"),
+    url("https://smallpdevstorageacc.blob.core.windows.net/smallpdevcontainer/Lato-Black.woff") format("woff"); */
+  font-style: normal;
+  font-weight: 900;
   font-display: swap;
 }

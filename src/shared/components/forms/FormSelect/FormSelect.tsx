@@ -1,9 +1,18 @@
-import React from "react"
+import { forwardRef } from "react"
 import Select, { components } from "react-select"
 
-import { boxShadows, rgba } from "@/stitches/utils"
+import { boxShadows } from "@/stitches/utils"
+import { enterKeyDown } from "@/shared/utils"
 
-import { Copy, ErrorLabel, Flex, FormLabel, IFormLabelProps, Spacer } from "@/shared/components"
+import {
+  Box,
+  Copy,
+  ErrorLabel,
+  Flex,
+  FormLabel,
+  IFormLabelProps,
+  Spacer,
+} from "@/shared/components"
 import { IconChevronDown, IconTick } from "@/shared/icons"
 
 interface ISelectProps {
@@ -21,7 +30,7 @@ interface ISelectProps {
 
 const { Option } = components
 
-export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
+export const FormSelect = forwardRef<HTMLDivElement, ISelectProps>(
   (
     {
       label,
@@ -39,23 +48,23 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
     forwardedRef,
   ) => {
     return (
-      <>
-        <Flex justify="between">
+      <Box>
+        <Flex justify="between" css={{ position: "relative" }}>
           <FormLabel {...labelProps}>{label}</FormLabel>
+
+          {description && (
+            <Copy scale={10} color="neutrals-5" fontWeight="semiBold">
+              {description}
+              {labelProps?.required ? (
+                <Copy as="span" scale={10} fontWeight="semiBold" css={{ paddingLeft: "$2" }}>
+                  *
+                </Copy>
+              ) : null}
+            </Copy>
+          )}
         </Flex>
 
-        {description && (
-          <Copy scale={10}>
-            {description}
-            {labelProps?.required ? (
-              <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
-                *
-              </Copy>
-            ) : null}
-          </Copy>
-        )}
-
-        {(!labelProps?.hidden || description) && <Spacer size={8} />}
+        {(!labelProps?.hidden || description) && <Spacer size={4} />}
 
         <Select
           {...props}
@@ -64,42 +73,66 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
           options={options.map((i) => ({ value: i, label: i }))}
           isSearchable={false}
           isDisabled={disabled}
+          onKeyDown={(e) => {
+            enterKeyDown(e.key) && e.preventDefault()
+          }}
           components={{
             IndicatorSeparator: () => null,
             DropdownIndicator: () => <IconChevronDown size="xs" />,
-            Option: ({ children, isSelected, ...rest }) => (
-              <Option isSelected={isSelected} {...rest}>
-                <Flex align="center" justify="between" css={{ gap: "$12" }}>
-                  {children}
-                  {isSelected ? <IconTick /> : null}
-                </Flex>
-              </Option>
-            ),
+            Option: ({ children, isSelected, ...rest }) => {
+              return (
+                <Option isSelected={isSelected} {...rest}>
+                  <Flex align="center" justify="between" css={{ gap: "$12" }}>
+                    {children}
+                    {isSelected ? <IconTick /> : null}
+                  </Flex>
+                </Option>
+              )
+            },
           }}
           styles={{
             control: (styles) => ({
               ...styles,
               justifyContent: !borderless ? "space-between" : "start",
               gap: "var(--space-8)",
+              backgroundColor: disabled
+                ? "var(--colors-theme-n1-n10)"
+                : borderless
+                ? "initial"
+                : "var(--colors-theme-w-n9)",
+              color: disabled ? "var(--colors-theme-n4-n7)" : "var(--colors-theme-b-n3)",
               border: "none",
-              borderRadius: "var(--radii-8)",
+              borderRadius: "var(--radii-0)",
+              cursor: "pointer",
+              boxShadow: !borderless
+                ? error
+                  ? boxShadows.input.error
+                  : boxShadows.input.initial
+                : "none",
+              transition: "100ms ease-out",
               appearance: "none",
               WebkitAppearance: "none",
               outline: "none",
-              cursor: "pointer",
-              boxShadow: !borderless ? boxShadows.input.initial : "none",
-              transition: "100ms box-shadow ease-out",
 
-              ":hover": {
-                boxShadow: !borderless ? boxShadows.input.hover : "none",
+              "&:hover": {
+                boxShadow: !borderless
+                  ? error
+                    ? boxShadows.input.error
+                    : boxShadows.input.hover
+                  : "none",
               },
-              ":focus-within": {
-                boxShadow: !borderless ? boxShadows.input.focus : "none",
+              "&:focus, &:focus-within": {
+                boxShadow: !borderless
+                  ? error
+                    ? boxShadows.input.error
+                    : boxShadows.input.focus
+                  : "none",
+                color: !borderless ? "var(--colors-theme-b-n3)" : "var(--colors-theme-vl-yl)",
               },
             }),
             singleValue: (styles) => ({
               ...styles,
-              color: "var(--colors-system-black)",
+              color: "var(--colors-system-inherit)",
             }),
             valueContainer: (styles) => ({
               ...styles,
@@ -111,12 +144,13 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
             indicatorsContainer: (styles) => ({
               ...styles,
               justifyContent: "center",
-              width: !borderless ? "var(--sizes-48)" : "var(--sizes-24)",
+              width: !borderless ? "var(--space-48)" : "var(--space-24)",
             }),
             menu: (styles) => ({
               ...styles,
               margin: "var(--space-0)",
-              backgroundColor: "var(--colors-system-white)",
+              backgroundColor: "transparent",
+              borderRadius: "var(--radii-0)",
               zIndex: "var(--zIndices-2)",
               boxShadow: "none",
             }),
@@ -126,37 +160,25 @@ export const FormSelect = React.forwardRef<HTMLDivElement, ISelectProps>(
               padding: "var(--space-0)",
               minWidth: 100,
               maxHeight: 290,
-              borderRadius: "var(--radii-8)",
-              border: "1px solid var(--colors-neutrals-3)",
-              boxShadow: `0 var(--space-8) var(--space-24) 0 ${rgba("system-black", 0.08)}`,
+              boxShadow: boxShadows.dropdown,
             }),
-            option: (styles) => ({
+            option: (styles, { isFocused }) => ({
               ...styles,
               padding: "var(--space-12) var(--space-16)",
-              backgroundColor: "var(--colors-system-white)",
-              color: "var(--colors-system-black)",
+              backgroundColor: isFocused ? "var(--colors-theme-n2-n7)" : "var(--colors-theme-w-n8)",
+              color: "var(--colors-theme-b-n3)",
               cursor: "pointer",
               zIndex: "var(--zIndices-1)",
-
-              ":hover, :focus, :focus-within": {
-                backgroundColor: "var(--colors-neutrals-3)",
-              },
-
-              ":first-of-type": {
-                borderRadius: "var(--radii-8) var(--radii-8) 0 0",
-              },
-              ":last-of-type": {
-                borderRadius: "0 0 var(--radii-8) var(--radii-8)",
-              },
             }),
           }}
         />
 
         {error && (
-          // TODO: do we need position: absolute here?
-          <ErrorLabel id={label}>{error}</ErrorLabel>
+          <Box css={{ position: "absolute" }}>
+            <ErrorLabel id={label}>{error}</ErrorLabel>
+          </Box>
         )}
-      </>
+      </Box>
     )
   },
 )

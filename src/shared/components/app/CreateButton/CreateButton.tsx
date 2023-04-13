@@ -5,10 +5,8 @@ import { useBoundStore } from "@/store"
 import { ShippingType } from "@/shared/types"
 import { CREATE } from "@/constants"
 
-import { Copy, Dropdown, DropdownItem, Spacer, Stack } from "@/shared/components"
+import { Button, Dropdown, DropdownItem, Stack } from "@/shared/components"
 import { IconPlus } from "@/shared/icons"
-
-import { SCreateButton } from "./CreateButton.styles"
 
 export const CreateButton = () => {
   const [isCreateDropdownOpen, setCreateDropdownOpen] = useState<boolean>(false)
@@ -22,14 +20,21 @@ export const CreateButton = () => {
 
   return (
     <Dropdown
+      asChild
       trigger={
-        <SCreateButton>
-          <Copy as="span" scale={8} color="system-white" bold>
-            Create
-          </Copy>
-          <Spacer size={8} horizontal />
-          <IconPlus css={{ color: "$system-white" }} />
-        </SCreateButton>
+        <Button
+          action="primary"
+          type="button"
+          ariaLabel="Create button"
+          suffix={<IconPlus />}
+          css={{
+            height: "$40",
+            padding: "$0 $24",
+            cursor: "pointer",
+          }}
+        >
+          Create
+        </Button>
       }
       open={isCreateDropdownOpen}
       onOpenChange={() => setCreateDropdownOpen(!isCreateDropdownOpen)}
@@ -39,17 +44,9 @@ export const CreateButton = () => {
         top: `calc(-$80 + -$2)`,
         right: 0,
       }}
-      contentCss={{
-        paddingY: 0,
-        borderRadius: "$8",
-      }}
     >
       <Stack space={0}>
-        <DropdownItem
-          key="Quote"
-          label="Quote"
-          onSelect={() => handleClick(ShippingType.Quote)}
-        />
+        <DropdownItem key="Quote" label="Quote" onSelect={() => handleClick(ShippingType.Quote)} />
         <DropdownItem
           key="Shipment"
           label="Shipment"

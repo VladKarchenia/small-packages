@@ -7,7 +7,7 @@ import { SBaseIllustration } from "./Illustration.styles"
 export interface IIllustrationProps extends ComponentProps<typeof SBaseIllustration> {
   dataTestId?: string
 
-  scribble?: boolean
+  theme?: "light" | "dark"
 }
 
 export const BaseIllustration: React.FC<IIllustrationProps> = ({

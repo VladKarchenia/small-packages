@@ -17,12 +17,12 @@ export const SCreateRoundedButtonIcon = styled(ButtonIcon, {
   variants: {
     color: {
       white: {
-        backgroundColor: "$system-white",
-        color: "$system-black",
+        backgroundColor: "$neutrals-0",
+        color: "$neutrals-11",
       },
       black: {
-        backgroundColor: "$system-black",
-        color: "$system-white",
+        backgroundColor: "$theme-b-yl",
+        color: "$theme-w-n11",
       },
     },
     size: {

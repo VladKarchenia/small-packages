@@ -52,7 +52,7 @@ export const RecoveryFormContainer = () => {
     }
   }, [error, setError])
 
-  if (user) {
+  if (user.id) {
     return <Navigate to={HOME} replace />
   }
 

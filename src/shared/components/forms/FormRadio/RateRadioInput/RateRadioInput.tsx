@@ -2,6 +2,8 @@ import React, { InputHTMLAttributes } from "react"
 
 import { FormComponentProps } from "@/stitches/types"
 import { ICost } from "@/shared/types"
+import { enterKeyDown } from "@/shared/utils"
+import { boxShadows } from "@/stitches/utils"
 
 import { Copy, Flex, IconTooltip, Spacer, Stack } from "@/shared/components"
 import { IconInfoCircle } from "@/shared/icons"
@@ -61,16 +63,21 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
     }, [id, disabled, props])
 
     return (
-      <SRateRadioInputLabel data-ui="radiobutton" {...labelProps}>
+      <SRateRadioInputLabel
+        data-ui="radiobutton"
+        onKeyDown={(e) => {
+          enterKeyDown(e.key) && e.preventDefault()
+        }}
+        {...labelProps}
+      >
         <SRateRadioInput ref={ref} data-ui="radiobutton-input" {...radioInputProps} type="radio" />
         <SRateRadioInputBox direction="column">
-          <Copy scale={8} color="system-black" bold>
-            {rateType}
-          </Copy>
           <Flex align="center" justify="between">
-            <Copy scale={10}>{rateName}</Copy>
+            <Copy scale={5} color="theme-b-n3" fontWeight="bold">
+              {rateType}
+            </Copy>
             <Flex align="center">
-              <Copy scale={8} color="system-black" bold>
+              <Copy scale={5} color="theme-b-n3" fontWeight="bold">
                 {currency} {price.toFixed(2)}
               </Copy>
               <Spacer size={8} horizontal />
@@ -78,8 +85,10 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                 tooltip={
                   <Stack space={16} dividers>
                     <Stack space={0}>
-                      <Copy scale={10}>Cost</Copy>
-                      <Copy scale={8} color="system-black" bold>
+                      <Copy scale={{ "@initial": 11, "@sm": 4 }} color="theme-n6-n5">
+                        Cost
+                      </Copy>
+                      <Copy scale={3} color="theme-b-n3" fontWeight="black">
                         {currency} {price.toFixed(2)}
                       </Copy>
                     </Stack>
@@ -87,12 +96,8 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                       {costs.map((cost) => {
                         return (
                           <Flex justify="between" key={cost.name}>
-                            <Copy scale={9} color="neutrals-7">
-                              {cost.name}
-                            </Copy>
-                            <Copy scale={9} color="system-black">
-                              ${cost.value.toFixed(2)}
-                            </Copy>
+                            <Copy color="theme-n6-n5">{cost.name}</Copy>
+                            <Copy color="theme-n6-n5">${cost.value.toFixed(2)}</Copy>
                           </Flex>
                         )
                       })}
@@ -103,22 +108,23 @@ export const RateRadioInput = React.forwardRef<HTMLInputElement, IRateRadioInput
                 withArrow={false}
                 withTitle={false}
                 contentWidth={260}
-                trigger={["hover", "focus"]}
+                // trigger={["hover", "focus"]}
+                trigger={["click"]}
                 delayShow={150}
                 delayHide={150}
                 contentCss={{
-                  padding: "$16",
-                  border: "1px solid $neutrals-4",
+                  boxShadow: boxShadows.dropdown,
                 }}
                 triggerCss={{
-                  "& > span": {
-                    borderRadius: "$rounded",
-                  },
+                  color: "$theme-n6-n5",
                 }}
                 icon={<IconInfoCircle />}
               />
             </Flex>
           </Flex>
+          <Copy scale={9} color="theme-n6-n5">
+            {rateName}
+          </Copy>
         </SRateRadioInputBox>
       </SRateRadioInputLabel>
     )

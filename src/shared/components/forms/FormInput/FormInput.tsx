@@ -1,6 +1,7 @@
 import React, { InputHTMLAttributes } from "react"
 
 import { FormComponentProps } from "@/stitches/types"
+import { enterKeyDown } from "@/shared/utils"
 
 import { FormField, IFormFieldCommonProps, getFormFieldProps } from "@/shared/components"
 
@@ -30,6 +31,9 @@ export const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
           hasSuffix={!!suffix}
           hasPrefix={!!prefix}
           borderless={borderless}
+          onKeyDown={(e: { key: string; preventDefault: () => void }) => {
+            enterKeyDown(e.key) && e.preventDefault()
+          }}
           {...props}
         />
       </FormField>

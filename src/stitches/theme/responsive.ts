@@ -32,6 +32,8 @@ export const mediaQueries = {
   isTouchDevice: "(pointer: coarse)",
 
   reduceMotion: "(prefers-reduced-motion: reduce)",
+
+  dark: "(prefers-color-scheme: dark)",
 }
 
 export type MediaQuery = keyof typeof mediaQueries

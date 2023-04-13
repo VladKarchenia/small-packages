@@ -1,27 +1,26 @@
-import { ResponsiveProp, Spaces, Colors } from "@/stitches/types"
-
-import { Copy, Spacer, TypographyScale } from "@/shared/components"
+import { Copy, Spacer } from "@/shared/components"
 
 interface ITrackingDetailsItemProps {
   title: string
-  titleIndent?: Spaces
-  titleColor?: Colors | ResponsiveProp<Colors>
-  titleScale?: TypographyScale | ResponsiveProp<TypographyScale>
+  main?: boolean
 }
 
 export const TrackingDetailsItem: React.FC<React.PropsWithChildren<ITrackingDetailsItemProps>> = ({
   children,
   title,
-  titleIndent = 16,
-  titleColor = "neutrals-7",
-  titleScale = 9,
+  main,
 }) => {
   return (
     <>
-      <Copy scale={titleScale} color={titleColor} bold>
+      <Copy
+        scale={main ? 5 : 9}
+        color={main ? "theme-b-n3" : "theme-n6-n3"}
+        fontWeight="bold"
+        uppercase={main ? true : false}
+      >
         {title}
       </Copy>
-      <Spacer size={titleIndent} />
+      <Spacer size={main ? 24 : 16} />
       {children}
     </>
   )

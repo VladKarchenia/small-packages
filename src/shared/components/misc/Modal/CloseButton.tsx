@@ -20,13 +20,7 @@ export const ModalCloseButton = (props: ModalCloseButtonProps) => {
         data-modals="modal-close-button"
         data-testid="modal-close-button"
       >
-        {props?.variant === "text" ? (
-          <Copy color="system-inherit" scale={8}>
-            Close
-          </Copy>
-        ) : (
-          <IconCross />
-        )}
+        {props?.variant === "text" ? <Copy>Close</Copy> : <IconCross />}
       </SModalCloseButton>
     </DialogClose>
   )

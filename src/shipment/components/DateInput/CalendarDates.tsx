@@ -37,20 +37,48 @@ export const CalendarDates = () => {
 
   const theme = createTheme({
     components: {
+      MuiButtonBase: {
+        defaultProps: {
+          disableRipple: true,
+        },
+      },
       MuiTabs: {
         styleOverrides: {
           root: {
             order: 1,
+            backgroundColor: "var(--colors-theme-vlt-n9)",
           },
           flexContainer: {
             button: {
+              color: "var(--colors-neutrals-5)",
+              border: "1px solid var(--colors-theme-vlt-n9)",
+              padding: 0,
+              "&:hover": {
+                backgroundColor: "var(--colors-theme-vlr-n7)",
+                border: "1px solid var(--colors-theme-vlr-n7)",
+                color: "var(--colors-theme-vl-yl)",
+              },
+              ".has-focus &:focus": {
+                backgroundColor: "var(--colors-theme-w-n9)",
+                border: "1px solid var(--colors-theme-vl-n3)",
+              },
+
               "&.Mui-selected": {
-                color: "var(--colors-system-black)",
+                border: "1px solid var(--colors-theme-vlt-n9)",
+                color: "var(--colors-theme-vl-yl)",
+                "&:hover": {
+                  backgroundColor: "var(--colors-theme-vlr-ydr)",
+                  border: "1px solid var(--colors-theme-vlr-ydr)",
+                },
+                ".has-focus &:focus": {
+                  backgroundColor: "var(--colors-theme-w-n9)",
+                  border: "1px solid var(--colors-theme-vl-n3)",
+                },
               },
             },
           },
           indicator: {
-            backgroundColor: "var(--colors-system-black)",
+            backgroundColor: "var(--colors-theme-vl-yl)",
           },
         },
       },
@@ -58,13 +86,64 @@ export const CalendarDates = () => {
         styleOverrides: {
           root: {
             lineHeight: "initial",
-            "&.Mui-selected": {
-              backgroundColor: "var(--colors-system-black)",
-              color: "var(--colors-system-white)",
-              "&:hover, &:focus": {
-                backgroundColor: "var(--colors-system-black)",
-                color: "var(--colors-system-white)",
+            "&:not(.Mui-selected)": {
+              backgroundColor: "var(--colors-theme-w-n8)",
+              color: "var(--colors-theme-n4-n7)",
+              ".has-focus &:focus": {
+                backgroundColor: "var(--colors-theme-vlr-ydr)",
+                border: "1px solid var(--colors-theme-vl-n3)",
+                color: "var(--colors-theme-vl-yl)",
               },
+              "&:hover": {
+                backgroundColor: "var(--colors-theme-vlr-ydr)",
+                border: "none",
+                color: "var(--colors-theme-vl-yl)",
+              },
+            },
+            "&:not(.Mui-disabled)": {
+              backgroundColor: "var(--colors-theme-w-n8)",
+              color: "var(--colors-theme-b-n3)",
+            },
+            "&.Mui-selected": {
+              backgroundColor: "var(--colors-theme-vl-yl)",
+              color: "var(--colors-theme-w-b)",
+              "&:hover": {
+                backgroundColor: "var(--colors-theme-vl-yl)",
+                color: "var(--colors-theme-w-b)",
+              },
+              "&:focus": {
+                backgroundColor: "var(--colors-theme-vl-yl)",
+                color: "var(--colors-theme-w-b)",
+              },
+              ".has-focus &:focus": {
+                backgroundColor: "var(--colors-theme-vlr-ydr)",
+                border: "1px solid var(--colors-theme-vl-n3)",
+                color: "var(--colors-theme-vl-yl)",
+              },
+            },
+          },
+          today: {
+            "&:not(.Mui-selected)": {
+              border: "1px solid var(--colors-theme-b-n3)",
+            },
+          },
+        },
+      },
+      MuiDayPicker: {
+        styleOverrides: {
+          weekDayLabel: { color: "var(--colors-theme-n6-n5)" },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: "var(--colors-theme-b-n3)",
+            borderRadius: "0",
+            "&:hover": {
+              backgroundColor: "var(--colors-theme-n2-n7)",
+            },
+            ".has-focus &:focus": {
+              outline: "1px solid var(--colors-theme-vl-n3)",
             },
           },
         },
@@ -74,6 +153,7 @@ export const CalendarDates = () => {
           root: {
             position: "relative",
             overflow: "visible",
+            backgroundColor: "var(--colors-theme-w-n8)",
           },
         },
       },
@@ -82,50 +162,94 @@ export const CalendarDates = () => {
           root: {
             height: isSmallAndAbove ? 238 : 286,
             margin: isSmallAndAbove ? "0 var(--space-16) var(--space-32)" : "var(--space-16)",
+            "&.Mui-selected": {
+              backgroundColor: "var(--colors-theme-vl-yl)",
+              color: "var(--colors-theme-w-b)",
+              "&:hover, .has-focus &:focus": {
+                backgroundColor: "var(--colors-theme-vl-yl)",
+                color: "var(--colors-theme-w-b)",
+              },
+            },
           },
           pin: {
-            backgroundColor: "var(--colors-system-black)",
+            backgroundColor: "var(--colors-theme-vl-yl)",
           },
           clock: {
             scale: isSmallAndAbove ? "1" : "1.3",
             marginTop: isSmallAndAbove ? 0 : "var(--space-20)",
-          },
-          amButton: {
-            width: "var(--sizes-40)",
-            height: 27,
-            padding: 0,
-            top: -72,
-            right: 71,
-            left: "auto",
-            bottom: "auto",
-            color: ampm === "AM" ? "var(--colors-system-white)" : "var(--colors-system-black)",
-            backgroundColor:
-              ampm === "AM" ? "var(--colors-system-black)" : "var(--colors-system-white)",
-            border: "1px solid var(--colors-neutrals-5)",
-            borderRadius: "var(--radii-8) var(--radii-8) 0 0",
-            boxSizing: "content-box",
-            ":hover": {
-              backgroundColor: "var(--colors-system-black)",
-              color: "var(--colors-system-white)",
+            backgroundColor: "var(--colors-theme-n2-n7)",
+            border: "1px solid transparent",
+            "&:focus, &:focus-within": {
+              backgroundColor: "var(--colors-theme-vlr-ydr)",
+              borderColor: "var(--colors-theme-vl-n3)",
+              color: "var(--colors-theme-vl-yl)",
             },
           },
-          pmButton: {
-            width: "var(--sizes-40)",
-            height: 27,
+          amButton: {
+            "> span": {
+              fontFamily: "var(--fonts-sans)",
+              fontWeight: "700",
+            },
+            width: `calc((var(--space-40) + var(--space-2)))`,
+            height: `calc((var(--space-40) + var(--space-2)))`,
             padding: 0,
-            top: -44,
-            right: 71,
+            top: -104,
+            right: "var(--space-24)",
             left: "auto",
             bottom: "auto",
-            color: ampm === "PM" ? "var(--colors-system-white)" : "var(--colors-system-black)",
+            color: ampm === "AM" ? "var(--colors-theme-w-b)" : "var(--colors-theme-b-w)",
             backgroundColor:
-              ampm === "PM" ? "var(--colors-system-black)" : "var(--colors-system-white)",
-            border: "1px solid var(--colors-neutrals-5)",
-            borderRadius: "0 0 var(--radii-8) var(--radii-8)",
+              ampm === "AM" ? "var(--colors-theme-vl-yl)" : "var(--colors-theme-w-n8)",
+            border: "1px solid var(--colors-theme-n3-n7)",
+            borderRadius: "0",
             boxSizing: "content-box",
-            ":hover": {
-              backgroundColor: "var(--colors-system-black)",
-              color: "var(--colors-system-white)",
+            "&:hover": {
+              backgroundColor:
+                ampm === "AM" ? "var(--colors-theme-vlt-ydr)" : "var(--colors-theme-w-n8)",
+              color: "var(--colors-theme-vl-yl)",
+              border: "1px solid var(--colors-theme-vl-n3)",
+            },
+            ".has-focus &:focus": {
+              backgroundColor: "var(--colors-theme-vlr-ydr)",
+              border: "1px solid var(--colors-theme-vl-n3)",
+              color: "var(--colors-theme-vl-yl)",
+            },
+          },
+
+          pmButton: {
+            "> span": {
+              fontFamily: "var(--fonts-sans)",
+              fontWeight: "700",
+            },
+            disableRipple: {
+              backgroundColor: "transparent",
+            },
+            width: `calc((var(--space-40) + var(--space-2)))`,
+            height: `calc((var(--space-40) + var(--space-2)))`,
+            padding: 0,
+            top: -59,
+            right: "var(--space-24)",
+            left: "auto",
+            bottom: "auto",
+            color: ampm === "PM" ? "var(--colors-theme-w-b)" : "var(--colors-theme-b-w)",
+            backgroundColor:
+              ampm === "PM" ? "var(--colors-theme-vl-yl)" : "var(--colors-theme-w-n8)",
+            border: "1px solid var(--colors-theme-n3-n7)",
+            borderRadius: "0",
+            boxSizing: "content-box",
+            "&:hover": {
+              backgroundColor:
+                ampm === "AM" ? "var(--colors-theme-vlt-ydr)" : "var(--colors-theme-w-n8)",
+              color: "var(--colors-theme-vl-yl)",
+              border: "1px solid var(--colors-theme-vl-n3)",
+            },
+            ".has-focus &:focus": {
+              backgroundColor: "var(--colors-theme-vlr-ydr)",
+              border: "1px solid var(--colors-theme-vl-n3)",
+              color: "var(--colors-theme-vl-yl)",
+              disableRipple: {
+                backgroundColor: "transparent",
+              },
             },
           },
         },
@@ -133,32 +257,21 @@ export const CalendarDates = () => {
       MuiClockPointer: {
         styleOverrides: {
           root: {
-            backgroundColor: "var(--colors-system-black)",
+            backgroundColor: "var(--colors-theme-vl-yl)",
           },
           thumb: {
-            backgroundColor: "var(--colors-system-black)",
-            borderColor: "var(--colors-system-black)",
+            backgroundColor: "var(--colors-theme-vl-yl)",
+            borderColor: "var(--colors-theme-vl-yl)",
           },
         },
       },
       MuiClockNumber: {
         styleOverrides: {
           root: {
+            color: "var(--colors-theme-b-w)",
             "&.Mui-selected": {
-              backgroundColor: "var(--colors-system-black)",
-            },
-          },
-        },
-      },
-      MuiDialogActions: {
-        styleOverrides: {
-          root: {
-            justifyContent: "space-between",
-            ">:first-of-type": {
-              backgroundColor: "blue",
-            },
-            ">:not(:first-of-type)": {
-              backgroundColor: "red",
+              backgroundColor: "var(--colors-theme-vl-yl)",
+              color: "var(--colors-theme-w-b)",
             },
           },
         },
@@ -166,6 +279,8 @@ export const CalendarDates = () => {
       MuiCalendarOrClockPicker: {
         styleOverrides: {
           root: {
+            height: "100%",
+            backgroundColor: "var(--colors-theme-w-n8)",
             ">:last-of-type": {
               order: 3,
               overflow: "visible",
@@ -176,9 +291,15 @@ export const CalendarDates = () => {
       MuiPickersToolbar: {
         styleOverrides: {
           root: {
+            backgroundColor: "var(--colors-theme-w-n8)",
             order: 2,
             "> span": {
-              display: "none",
+              color: "var(--colors-theme-b-n3)",
+              textTransform: "initial",
+              fontSize: "16px",
+              lineHeight: 2.5,
+              letterSpacing: "0.5px",
+              fontFamily: "var(--fonts-sans)",
             },
           },
           penIconButton: {
@@ -199,22 +320,33 @@ export const CalendarDates = () => {
             "&:after": {
               content: "''",
               display: "block",
-              width: "var(--sizes-40)",
-              height: "var(--sizes-56)",
+              width: "var(--space-40)",
+              height: "var(--space-56)",
               marginLeft: "var(--space-12)",
               borderRadius: "var(--radii-8)",
             },
           },
+          separator: {
+            border: "none",
+            backgroundColor: "transparent",
+            width: "var(--space-20)",
+            padding: "var(--space-4)",
+            paddingTop: "var(--space-12)",
+            color: "var(--colors-theme-b-n3)",
+          },
         },
       },
+
       MuiPickerStaticWrapper: {
         styleOverrides: {
           root: {
+            fontFamily: "var(--fonts-sans)",
             justifyContent: "space-between",
-            // (var(--sizes-72) + var(--sizes-4)) - header height with full date
-            height: `calc(100% - (var(--sizes-72) + var(--sizes-4)))`,
+            // (var(--space-72) + var(--space-4)) - header height with full date
+            height: `calc(100% - var(--space-72))`,
           },
           content: {
+            height: "100%",
             overflow: "visible",
           },
         },
@@ -231,8 +363,38 @@ export const CalendarDates = () => {
       MuiPickersCalendarHeader: {
         styleOverrides: {
           root: {
+            color: "var(--colors-theme-b-n3)",
             paddingLeft: "var(--space-32)",
             paddingRight: "var(--space-24)",
+          },
+        },
+      },
+      PrivatePickersToolbarText: {
+        styleOverrides: {
+          root: {
+            height: "var(--space-88)",
+            width: "var(--space-88)",
+            color: "var(--colors-theme-b-n3)",
+            border: "1px solid var(--colors-theme-n2-n7)",
+            backgroundColor: "transparent",
+            padding: "var(--space-16)",
+            "&:hover, .has-focus &:focus": {
+              backgroundColor: "var(--colors-theme-n2-n7)",
+            },
+            "&.Mui-selected": {
+              color: "var(--colors-theme-b-yl)",
+              border: "1px solid var(--colors-theme-vl-n3)",
+              backgroundColor: "var(--colors-theme-vlt-ydt)",
+            },
+          },
+        },
+      },
+      MuiPickersToolbarButton: {
+        styleOverrides: {
+          root: {
+            "&:hover, .has-focus &:focus": {
+              backgroundColor: "var(--colors-theme-n2-n7)",
+            },
           },
         },
       },
@@ -244,11 +406,11 @@ export const CalendarDates = () => {
       <ThemeProvider theme={theme}>
         <Hidden above="sm">
           {date ? (
-            <Box css={{ padding: "$12 $24" }}>
-              <Copy scale={6} color="system-black" bold>
+            <Box css={{ padding: "$12 $24", backgroundColor: "$theme-vlt-n9" }}>
+              <Copy scale={3} color="theme-b-n3" fontWeight="bold">
                 {format(date, "EEE, MMM d")}
               </Copy>
-              <Copy scale={8} color="system-black">
+              <Copy color="theme-n5-n3">
                 {`${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
                   date,
                   timeZone,
@@ -270,8 +432,6 @@ export const CalendarDates = () => {
           }}
           minDate={today}
           maxDate={end}
-          // minTime={}
-          // maxTime={}
           ampmInClock={true}
           minutesStep={5}
           showDaysOutsideCurrentMonth
@@ -292,24 +452,30 @@ const CustomActionBar = (props: PickersActionBarProps) => {
     close("dateInput")
   }
 
+  const handleCancel = () => {
+    props.onCancel()
+    close("dateInput")
+  }
+
   return (
     <Grid
       gap={{ "@initial": 8, "@sm": 16 }}
       columns="1fr 1fr"
-      css={{ paddingX: "$16", paddingBottom: "$20", "@sm": { display: "none" } }}
+      css={{
+        paddingX: "$16",
+        paddingBottom: "$20",
+        backgroundColor: "$theme-w-n8",
+        "@sm": { display: "none" },
+      }}
     >
       <GridItem>
         <Button type="button" full onClick={handleAccept}>
-          <Copy as="span" scale={8} color="system-white" bold>
-            Done
-          </Copy>
+          Done
         </Button>
       </GridItem>
       <GridItem>
-        <Button type="button" action="secondary" full onClick={props.onCancel}>
-          <Copy as="span" scale={8} color="system-black" bold>
-            Cancel
-          </Copy>
+        <Button type="button" action="secondary" full onClick={handleCancel}>
+          Cancel
         </Button>
       </GridItem>
     </Grid>

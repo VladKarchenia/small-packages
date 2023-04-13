@@ -2,24 +2,39 @@ import { isAxiosError } from "axios"
 import { useNavigate } from "react-router-dom"
 import { useMutation } from "react-query"
 import { shallow } from "zustand/shallow"
+import { useTheme } from "next-themes"
 
-import { useAuthStore } from "@/store"
+import {
+  initialOrganizationData,
+  initialSettingsData,
+  initialUserData,
+  useAuthStore,
+} from "@/store"
 import { logoutUserFn } from "@/api/authApi"
 import { LOGIN } from "@/constants"
 import { showToast } from "@/shared/utils"
 
 export const useLogout = () => {
   const navigate = useNavigate()
-  const [refreshToken, setTokens, setUser, setOrganization] = useAuthStore(
-    (state) => [state.refreshToken, state.setTokens, state.setUser, state.setOrganization],
+  const [refreshToken, setTokens, setUser, setSettings, setOrganization] = useAuthStore(
+    (state) => [
+      state.refreshToken,
+      state.setTokens,
+      state.setUser,
+      state.setSettings,
+      state.setOrganization,
+    ],
     shallow,
   )
+  const { setTheme } = useTheme()
 
   return useMutation(() => logoutUserFn(refreshToken), {
     onSuccess: () => {
       setTokens({ accessToken: "", refreshToken: "" })
-      setUser(null)
-      setOrganization(null)
+      setUser(initialUserData)
+      setOrganization(initialOrganizationData)
+      setSettings(initialSettingsData)
+      setTheme("light")
 
       navigate(LOGIN)
     },

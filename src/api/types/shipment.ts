@@ -1,4 +1,10 @@
-import { PackageType, PackagingType, ResidentialType, ShipmentStatus } from "@/shared/types"
+import {
+  PackageType,
+  PackagingType,
+  PickupType,
+  ResidentialType,
+  ShipmentStatus,
+} from "@/shared/types"
 
 export interface ShipmentPackageInput {
   DECLARED_VALUE_AMOUNT?: string
@@ -58,7 +64,9 @@ export interface ShipmentInput {
   RETURN_ADDRESS_STATE: string
 
   PACKAGE: ShipmentPackageInput[]
+  PICKUP_TYPE: keyof typeof PickupType
   PACKAGING_TYPE: PackagingType
+  CONTENT_DESCRIPTION: string
 
   PICKUP_READY_DATE: string
   PICKUP_READY_TIME: string

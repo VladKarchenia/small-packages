@@ -1,4 +1,4 @@
-import { IPerson, IRate } from "@/shared/types"
+import { IGeolocation, IPerson, IRate } from "@/shared/types"
 
 import {
   AddressInfoShort,
@@ -8,9 +8,7 @@ import {
   Hidden,
   Map,
   ShortInfoLine,
-  Spacer,
   Stack,
-  Title,
 } from "@/shared/components"
 import { IconTruck } from "@/shared/icons"
 import { ShipmentRoute, TrackingDetailsItem, SHIPMENT_DETAILS } from "@/tracking/components"
@@ -23,13 +21,17 @@ import {
 interface IShipmentDetailsUnauthorizedProps {
   sender: IPerson
   recipient: IPerson
+  currentLocation: IGeolocation
   rate: IRate
+  theme?: string
 }
 
 export const ShipmentDetailsUnauthorized = ({
   sender,
   recipient,
+  currentLocation,
   rate,
+  theme,
 }: IShipmentDetailsUnauthorizedProps) => {
   return (
     <STrackingGrid
@@ -49,33 +51,25 @@ export const ShipmentDetailsUnauthorized = ({
     >
       <Hidden below="md" css={{ gridArea: "main" }}>
         <STrackingGridItem>
-          <Title as="h3" scale={7} color="system-black">
-            Main Info
-          </Title>
-
-          <Spacer size={24} />
-
-          <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-            <Stack space={32}>
-              <TrackingDetailsItem title="From where to where">
-                <AddressInfoShort
-                  fromAddress={sender.fullAddress}
-                  toAddress={recipient.fullAddress}
-                />
-              </TrackingDetailsItem>
-              <TrackingDetailsItem title="Date and delivery service">
-                <Stack space={12}>
-                  <ShortInfoLine
-                    icon={<IconTruck css={{ color: "$neutrals-7" }} />}
-                    text={rate.name}
+          <TrackingDetailsItem title="Main Info" main>
+            <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
+              <Stack space={32}>
+                <TrackingDetailsItem title="From where to where">
+                  <AddressInfoShort
+                    fromAddress={sender.fullAddress}
+                    toAddress={recipient.fullAddress}
                   />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
-                  </Copy>
-                </Stack>
-              </TrackingDetailsItem>
-            </Stack>
-          </GridContainer>
+                </TrackingDetailsItem>
+                <TrackingDetailsItem title="Date and delivery service">
+                  <Stack space={12} css={{ color: "$theme-b-n5" }}>
+                    <ShortInfoLine icon={<IconTruck />} text={rate.name} />
+                    {/* TODO: change to the delivery date */}
+                    <Copy>Delivery date: {SHIPMENT_DETAILS.arrivalDate}</Copy>
+                  </Stack>
+                </TrackingDetailsItem>
+              </Stack>
+            </GridContainer>
+          </TrackingDetailsItem>
         </STrackingGridItem>
       </Hidden>
 
@@ -83,26 +77,22 @@ export const ShipmentDetailsUnauthorized = ({
         <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
           <STrackingGridItem css={{ gridArea: "main" }}>
             <Stack space={24} dividers>
-              <TrackingDetailsItem title="From where to where" titleScale={11}>
+              <TrackingDetailsItem title="From where to where">
                 <AddressInfoShort
                   fromAddress={sender.fullAddress}
                   toAddress={recipient.fullAddress}
                 />
               </TrackingDetailsItem>
 
-              <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
-                <Stack space={12}>
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                    Arrival date: {SHIPMENT_DETAILS.arrivalDate}
-                  </Copy>
-                  <ShortInfoLine
-                    icon={<IconTruck css={{ color: "$neutrals-7" }} />}
-                    text={rate.name}
-                  />
+              <TrackingDetailsItem title="Date and delivery service">
+                <Stack space={12} css={{ color: "$theme-b-n5" }}>
+                  {/* TODO: change to the delivery date */}
+                  <Copy>Delivery date: {SHIPMENT_DETAILS.arrivalDate}</Copy>
+                  <ShortInfoLine icon={<IconTruck />} text={rate.name} />
                 </Stack>
               </TrackingDetailsItem>
 
-              <TrackingDetailsItem title="Route" titleScale={11}>
+              <TrackingDetailsItem title="Route">
                 {/* TODO: Fix Route block after BE data and final design */}
                 <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
               </TrackingDetailsItem>
@@ -112,17 +102,17 @@ export const ShipmentDetailsUnauthorized = ({
       </Hidden>
 
       <GridItem column={{ "@md": "span 3" }} css={{ gridArea: "map" }}>
-        <Map sender={sender} recipient={recipient} />
+        <Map
+          sender={sender}
+          recipient={recipient}
+          currentLocation={currentLocation}
+          theme={theme}
+        />
       </GridItem>
 
       <Hidden below="md">
         <STrackingGridItem css={{ gridArea: "route" }}>
-          <TrackingDetailsItem
-            title="Route"
-            titleScale={7}
-            titleColor="system-black"
-            titleIndent={24}
-          >
+          <TrackingDetailsItem title="Route" main>
             {/* TODO: Fix Route block after BE data and final design */}
             <ShipmentRoute routes={SHIPMENT_DETAILS.routes} />
           </TrackingDetailsItem>

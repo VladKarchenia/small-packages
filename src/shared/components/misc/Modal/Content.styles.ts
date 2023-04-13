@@ -1,5 +1,5 @@
 import { styled } from "@/stitches/config"
-import { rgba } from "@/stitches/utils"
+import { boxShadows } from "@/stitches/utils"
 
 import { SModalCloseButton } from "./CloseButton.styles"
 
@@ -8,11 +8,11 @@ export const SModalContent = styled("div", {
   $$modalContentYPadding: 0,
 
   position: "relative",
-  boxShadow: `0 $space$2 $space$16 0 ${rgba("neutrals-9", 0.15)}`,
+  boxShadow: boxShadows.modal,
   maxHeight: "100%",
   maxWidth: "100%",
   overflow: "hidden",
-  backgroundColor: "$system-white",
+  backgroundColor: "$neutrals-0",
   padding: "$$modalContentYPadding $$modalContentXPadding",
 
   variants: {
@@ -76,8 +76,7 @@ export const SModalContent = styled("div", {
     },
 
     theme: {
-      white: { backgroundColor: "$system-white" },
-      cream: { backgroundColor: "$brand-cream-primary" },
+      white: { backgroundColor: "$neutrals-0" },
     },
   },
 

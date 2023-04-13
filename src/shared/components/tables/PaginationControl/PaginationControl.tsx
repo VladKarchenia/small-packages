@@ -68,7 +68,6 @@ export const PaginationControl = ({
       <Box css={{ "@md": { minWidth: 224, textAlign: "end" } }}>
         <Copy
           color="neutrals-9"
-          scale={{ "@initial": 9, "@md": 8 }}
           dataTestid="pagination"
           data-start={start}
           data-end={end}
@@ -83,15 +82,7 @@ export const PaginationControl = ({
                 end: end,
                 total: total,
               }}
-              components={[
-                <Copy
-                  key={1}
-                  as="span"
-                  color="neutrals-9"
-                  scale={{ "@initial": 9, "@md": 8 }}
-                  bold
-                />,
-              ]}
+              components={[<Copy key={1} as="span" color="neutrals-9" />]}
             />
           ) : (
             copies.noResults

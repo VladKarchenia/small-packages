@@ -73,7 +73,12 @@ export const Column: React.FC<IColumn> = ({ children, ...props }) => {
   return (
     <STabularHead scope="col" {...props}>
       <Box css={{ display: "inline-flex", alignItems: "center" }}>
-        <Copy as="span" scale={{ "@initial": 10, "@lg": 8 }} color="system-black" bold>
+        <Copy
+          as="span"
+          scale={{ "@initial": 10, "@lg": 6 }}
+          fontWeight="bold"
+          uppercase={{ "@initial": false, "@lg": true }}
+        >
           {children}
         </Copy>
       </Box>

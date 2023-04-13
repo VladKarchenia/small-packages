@@ -5,10 +5,9 @@ import { useBoundStore } from "@/store"
 import { useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
 import { IShipmentResponse } from "@/api/types"
 import { RouteParams, ShippingType, ShipmentState } from "@/shared/types"
-import { StepName } from "@/shipment/types"
 import { HOME, TRACKING } from "@/constants"
 
-import { Button, Copy, Flex, Hidden, Link, Spacer, useStepperContext } from "@/shared/components"
+import { Button, Flex, Hidden, Link, Spacer } from "@/shared/components"
 import { StepActionsBar } from "@/shipment/components"
 
 export const StepperFooter = () => {
@@ -17,30 +16,20 @@ export const StepperFooter = () => {
   const navigate = useNavigate()
   const { watch, getValues } = useFormContext<ShipmentState>()
   const { date } = watch()
-  const { selected } = useStepperContext("StepperFooter")
   const location = useLocation()
   const isEditMode = location.pathname.includes("edit")
-
-  const isLastStep =
-    shippingType === ShippingType.Quote
-      ? selected[0] === StepName.RATES
-      : selected[0] === StepName.RECEIPT
 
   const { mutate: createShipment } = useCreateShipment()
   const { mutate: updateShipment } = useUpdateShipment()
 
-  if (!isLastStep) return null
-
   return (
-    <Flex direction="column" css={{ paddingX: "$16" }}>
+    <Flex direction="column">
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
       <StepActionsBar>
         <Flex css={{ gap: "$16" }}>
           {shippingType === ShippingType.Quote ? (
             <Button type="submit" full disabled={!date}>
-              <Copy as="span" scale={8} color="system-white" bold>
-                Create a shipment
-              </Copy>
+              Create shipment
             </Button>
           ) : (
             <Button
@@ -48,9 +37,7 @@ export const StepperFooter = () => {
               full
               onClick={() => navigate(`${TRACKING}/${shippingType}/${shipmentId}`)}
             >
-              <Copy as="span" scale={8} color="system-white" bold>
-                Continue
-              </Copy>
+              Continue
             </Button>
           )}
 
@@ -88,9 +75,7 @@ export const StepperFooter = () => {
               }
               css={{ "@sm": { display: "none" } }}
             >
-              <Copy as="span" scale={8} color="system-black" bold>
-                Save
-              </Copy>
+              Save
             </Button>
           ) : null}
         </Flex>
@@ -100,10 +85,14 @@ export const StepperFooter = () => {
 
       <Hidden above="sm">
         <Spacer size={20} />
-        <Link onClick={() => navigate(HOME)} css={{ width: "100%" }}>
-          <Copy scale={8} color="system-black" bold>
-            Back to Home page
-          </Copy>
+        <Link
+          as="button"
+          type="button"
+          onClick={() => navigate(HOME)}
+          fontWeight="bold"
+          css={{ width: "100%" }}
+        >
+          Back to Home page
         </Link>
         <Spacer size={24} />
       </Hidden>

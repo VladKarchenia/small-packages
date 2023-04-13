@@ -14,7 +14,7 @@ export const SortFilterBarPreview = React.forwardRef<HTMLInputElement, ISortFilt
   ({ isFilterApplied, onClick }, ref) => {
     return (
       <SFilterIconBox type="button" selected={isFilterApplied} onClick={onClick}>
-        <IconFilter css={{ color: "$neutrals-7" }} />
+        <IconFilter css={{ color: "$theme-b-n3" }} />
       </SFilterIconBox>
     )
   },

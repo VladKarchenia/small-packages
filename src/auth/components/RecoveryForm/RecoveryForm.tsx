@@ -20,11 +20,13 @@ export const RecoveryForm = ({
 
   return (
     <Flex align="start" justify="center" direction="column">
-      <Title as="h1" scale={4}>
+      <Title as="h1" color="neutrals-12">
         Password recovery
       </Title>
       <Spacer size={4} />
-      <Copy scale={9}>Please, enter your e-mail address</Copy>
+      <Copy scale={5} color="neutrals-6">
+        Please enter your email address
+      </Copy>
       <Spacer size={32} />
       <Stack space={32}>
         <Controller
@@ -56,10 +58,8 @@ export const RecoveryForm = ({
             )
           }}
         />
-        <Button type="submit" full loading={isLoading} disabled={!email}>
-          <Copy as="span" scale={8} color="system-white" bold>
-            Confirm
-          </Copy>
+        <Button type="submit" full loading={isLoading} disabled={!email || !!errors.email?.message}>
+          Confirm
         </Button>
       </Stack>
     </Flex>

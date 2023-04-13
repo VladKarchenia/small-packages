@@ -1,4 +1,5 @@
 import { ShippingType } from "@/shared/types"
+import { spaceAndEnterKeyDown } from "@/shared/utils"
 
 import { Copy, Flex, Grid, GridItem, Redacted } from "@/shared/components"
 import { IconDropArrowDown, IconDropArrowTop } from "@/shared/icons"
@@ -6,7 +7,7 @@ import { IconDropArrowDown, IconDropArrowTop } from "@/shared/icons"
 import { usePackagesContext } from "../PackagesInfo"
 
 interface IPackagesInfoTableRowProps {
-  packageNumber?: string
+  packageNumber?: string | number
   packageTrackingNumber?: string
   dimensions?: string
   weight?: string
@@ -30,9 +31,10 @@ export const PackagesInfoTableRow = ({
     <Grid
       columns={24}
       columnGap={{ "@sm": 16, "@lg": 32 }}
+      align="center"
       css={{
         padding: "$16",
-        borderBottom: isTableHead ? "1px solid $neutrals-4" : "none",
+        borderBottom: isTableHead ? "1px solid $theme-n4-n7" : "none",
       }}
     >
       <GridItem column={shippingType === ShippingType.Quote ? "1 / span 4" : "1 / span 4"}>
@@ -41,9 +43,7 @@ export const PackagesInfoTableRow = ({
         ) : isPlaceholder ? (
           <Redacted height="$24" width="$80" text animated />
         ) : (
-          <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black">
-            {packageNumber}
-          </Copy>
+          <Copy color="theme-b-n3">{packageNumber}</Copy>
         )}
       </GridItem>
       {shippingType === ShippingType.Shipment ? (
@@ -51,7 +51,11 @@ export const PackagesInfoTableRow = ({
           {isPlaceholder && !isTableHead ? (
             <Redacted height="$24" width="100px" text animated />
           ) : (
-            <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold={isTableHead}>
+            <Copy
+              color="theme-b-n3"
+              fontWeight={isTableHead ? "bold" : "regular"}
+              uppercase={{ "@initial": false, "@lg": isTableHead ? true : false }}
+            >
               {packageTrackingNumber}
             </Copy>
           )}
@@ -61,7 +65,11 @@ export const PackagesInfoTableRow = ({
         {isPlaceholder && !isTableHead ? (
           <Redacted height="$24" width="140px" text animated />
         ) : (
-          <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold={isTableHead}>
+          <Copy
+            color="theme-b-n3"
+            fontWeight={isTableHead ? "bold" : "regular"}
+            uppercase={{ "@initial": false, "@lg": isTableHead ? true : false }}
+          >
             {dimensions}
           </Copy>
         )}
@@ -70,7 +78,11 @@ export const PackagesInfoTableRow = ({
         {isPlaceholder && !isTableHead ? (
           <Redacted height="$24" width="100px" text animated />
         ) : (
-          <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold={isTableHead}>
+          <Copy
+            color="theme-b-n3"
+            fontWeight={isTableHead ? "bold" : "regular"}
+            uppercase={{ "@initial": false, "@lg": isTableHead ? true : false }}
+          >
             {weight}
           </Copy>
         )}
@@ -80,7 +92,11 @@ export const PackagesInfoTableRow = ({
           {isPlaceholder && !isTableHead ? (
             <Redacted height="$24" width="100px" text animated />
           ) : (
-            <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold={isTableHead}>
+            <Copy
+              color="theme-b-n3"
+              fontWeight={isTableHead ? "bold" : "regular"}
+              uppercase={{ "@initial": false, "@lg": isTableHead ? true : false }}
+            >
               {declaredValue}
             </Copy>
           )}
@@ -94,7 +110,7 @@ const SortablePackageNumber = ({
   packageNumber,
   isPlaceholder,
 }: {
-  packageNumber?: string
+  packageNumber?: string | number
   isPlaceholder?: boolean
 }) => {
   const { ascSortDirection, setAscSortDirection } = usePackagesContext("SortablePackageNumber")
@@ -102,20 +118,41 @@ const SortablePackageNumber = ({
   return (
     <>
       {isPlaceholder ? (
-        <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold>
+        <Copy color="theme-b-n3" fontWeight="bold">
           {packageNumber}
         </Copy>
       ) : (
         <Flex
           align="center"
           justify="between"
-          css={{ cursor: "pointer" }}
           onClick={() => setAscSortDirection(!ascSortDirection)}
+          tabIndex={0}
+          onKeyDown={(e: { key: string }) =>
+            spaceAndEnterKeyDown(e.key) && setAscSortDirection(!ascSortDirection)
+          }
+          css={{
+            height: "$40",
+            paddingX: "$12",
+            backgroundColor: "$theme-vlt-ydt",
+            border: "1px solid $theme-vl-yl",
+            color: "$theme-b-n3",
+            transition: "150ms ease-out",
+            cursor: "pointer",
+
+            hover: {
+              backgroundColor: "$theme-vlr-ydr",
+              borderColor: "$theme-vl-yl",
+            },
+
+            keyboardFocus: {
+              outline: "1px solid $theme-vl-n3",
+            },
+          }}
         >
-          <Copy scale={{ "@sm": 9, "@lg": 8 }} color="system-black" bold>
+          <Copy fontWeight="bold" uppercase={{ "@initial": false, "@lg": true }}>
             {packageNumber}
           </Copy>
-          <Flex css={{ paddingTop: "$2" }}>
+          <Flex css={{ color: "inherit" }}>
             {ascSortDirection ? <IconDropArrowDown size="xs" /> : <IconDropArrowTop size="xs" />}
           </Flex>
         </Flex>

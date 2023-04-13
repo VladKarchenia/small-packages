@@ -5,10 +5,13 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import { BrowserRouter } from "react-router-dom"
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
+import { ThemeProvider } from "next-themes"
 
 import commonTranslations from "@/locales/en/common.json"
 
 import { AxiosInterceptor } from "@/axios"
+import { darkTheme } from "@/stitches/config"
+
 import App from "./App"
 
 const queryClient = new QueryClient({
@@ -48,7 +51,17 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AxiosInterceptor>
-          <App />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableColorScheme={false}
+            value={{
+              light: "light",
+              dark: darkTheme.className,
+            }}
+          >
+            <App />
+          </ThemeProvider>
         </AxiosInterceptor>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />

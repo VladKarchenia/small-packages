@@ -7,7 +7,7 @@ import { shallow } from "zustand/shallow"
 import { useBoundStore } from "@/store"
 import { CSS, styled } from "@/stitches/config"
 import { ShipmentStatus, ShippingType } from "@/shared/types"
-import { createFilterString, createSortString } from "@/shared/utils"
+import { createFilterString, createSortString, spaceAndEnterKeyDown } from "@/shared/utils"
 import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
 import { useAllShipments } from "@/dashboard/hooks"
 import { TRACKING } from "@/constants"
@@ -22,6 +22,7 @@ import {
   Spacer,
   Copy,
   CreateButton,
+  Button,
 } from "@/shared/components"
 import {
   ActionDetailsButton,
@@ -38,6 +39,7 @@ export const DashboardTable = () => {
   const [shippingType, tab] = useBoundStore((state) => [state.shippingType, state.tab], shallow)
   const { status, recipientName, originalAddress, destinationAddress, sortOrder, direction } =
     useDashboardStateContext()
+  const navigate = useNavigate()
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
@@ -71,35 +73,30 @@ export const DashboardTable = () => {
     <>
       <CreateButton />
       <Flex align="center" justify="between">
-        <Flex align="center" wrap css={{ gap: "$12" }}>
-          {tab === ShippingType.Shipment ? (
-            <>
-              <DashboardTableStatusFilter />
-              <DashboardTableNameFilter />
-            </>
-          ) : (
-            <>
-              <DashboardTableOriginAddressFilter />
-            </>
-          )}
+        <Flex align="center" wrap css={{ gap: "$24" }}>
+          <Flex align="center" wrap css={{ gap: "$12" }}>
+            {tab === ShippingType.Shipment ? (
+              <>
+                <DashboardTableStatusFilter />
+                <DashboardTableNameFilter />
+              </>
+            ) : (
+              <>
+                <DashboardTableOriginAddressFilter />
+              </>
+            )}
 
-          <DashboardTableDestinationAddressFilter />
-
+            <DashboardTableDestinationAddressFilter />
+          </Flex>
           {isFilterApplied ? (
-            <Copy
-              scale={8}
-              color="system-black"
-              bold
-              onClick={handleResetClick}
-              css={{ cursor: "pointer" }}
-            >
+            <Button action="text" type="button" onClick={handleResetClick}>
               Clear all filters
-            </Copy>
+            </Button>
           ) : null}
         </Flex>
-        <Copy scale={9}>
-          Found:
-          <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$4" }}>
+        <Copy color="theme-n6-n5">
+          Results:
+          <Copy as="span" color="theme-b-n3" css={{ paddingLeft: "$4" }}>
             {shipments.length}
           </Copy>
         </Copy>
@@ -117,7 +114,19 @@ export const DashboardTable = () => {
               )
 
               return (
-                <TableRow key={shipment.id}>
+                <TableRow
+                  key={shipment.id}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    spaceAndEnterKeyDown(e.key) && navigate(href)
+                  }}
+                  css={{
+                    outline: "none",
+                    keyboardFocus: {
+                      backgroundColor: "$theme-n2-n7",
+                    },
+                  }}
+                >
                   <TabularDataLink
                     href={href}
                     tdCss={{ maxWidth: 120, "@lg": { maxWidth: 200 } }}
@@ -144,7 +153,7 @@ export const DashboardTable = () => {
                       href={href}
                       tdCss={{ maxWidth: 160, "@lg": { maxWidth: 200 } }}
                       linkCss={{ "@lg": { paddingRight: "$80" } }}
-                      text={shipment.data.ORIGIN_ADDRESS1 || "-"}
+                      text={shipment.data?.ORIGIN_GEOLOC?.DISPLAY_NAME || "-"}
                       showTitle
                     />
                   )}
@@ -152,7 +161,7 @@ export const DashboardTable = () => {
                     href={href}
                     tdCss={{ maxWidth: 160, "@lg": { maxWidth: 200 } }}
                     linkCss={{ "@lg": { paddingRight: "$80" } }}
-                    text={shipment.data.CONSIGNEE_ADDRESS1 || "-"}
+                    text={shipment.data?.CONSIGNEE_GEOLOC?.DISPLAY_NAME || "-"}
                     showTitle
                   />
                   <TabularDataLink
@@ -166,7 +175,7 @@ export const DashboardTable = () => {
                   />
                   <TabularDataLink
                     href={href}
-                    linkCss={{ paddingRight: 0 }}
+                    linkCss={{ paddingRight: "$2" }}
                     tdCss={{ maxWidth: 120, "@lg": { maxWidth: 250 } }}
                   >
                     <Flex align="center" justify="between" css={{ width: "100%", height: "100%" }}>
@@ -187,7 +196,7 @@ export const DashboardTable = () => {
               }}
             >
               <TabularData colSpan={6} css={{ textAlign: "center", cursor: "default" }}>
-                <Copy as="span" scale={8} color="system-black">
+                <Copy as="span" color="theme-b-n3">
                   {isFilterApplied
                     ? "There are no issues that match your filter"
                     : "There is no data yet"}
@@ -233,8 +242,8 @@ const TabularDataLink: React.FC<
         {text ? (
           <Copy
             as="span"
-            scale={{ "@initial": 10, "@lg": 8 }}
-            color="system-black"
+            scale={{ "@initial": 10, "@lg": 6 }}
+            color="theme-b-n3"
             truncate
             title={showTitle ? text : ""}
           >

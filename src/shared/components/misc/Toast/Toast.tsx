@@ -12,11 +12,11 @@ function getToastIcon(type: ToastType) {
     case "error":
       return <IconCrossCircle css={{ color: "$special-error" }} />
     case "info":
-      return <IconInfoCircle css={{ color: "$brand-blue-dark" }} />
+      return <IconInfoCircle css={{ color: "$special-info" }} />
     case "warning":
-      return <IconWarning css={{ color: "$brand-yellow-primary" }} />
+      return <IconWarning css={{ color: "$special-warning" }} />
     case "success":
-      return <IconTickCircle css={{ color: "$brand-green-primary" }} />
+      return <IconTickCircle css={{ color: "$special-success" }} />
     case "default":
       return null
   }
@@ -35,9 +35,7 @@ export const Toast = ({ data }: ToastContentProps<IToastProps>) => {
       <SToastIcon align="center" justify="center" type={data.type}>
         {getToastIcon(data.type)}
       </SToastIcon>
-      <Copy scale={10} color="system-black">
-        {data.text}
-      </Copy>
+      <Copy color="neutrals-12">{data.text}</Copy>
     </Grid>
   )
 }

@@ -29,10 +29,10 @@ export const ShippingCard = ({ shipment, tab, shippingType }: IShippingCardProps
       <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
         <Stack space={8}>
           <StatusLabel status={ShipmentStatus[shipment.data.SHIPMENT_STATUS]} />
-          <Copy scale={9} color="system-black" bold>
+          <Copy scale={3} color="theme-b-n3" fontWeight="bold">
             #{shipment.id}
           </Copy>
-          <Copy scale={9}>
+          <Copy scale={10} color="theme-n6-n5">
             {formatInTimeZone(Date.parse(shipment.createdAt), timeZone, "MMM d, yyyy (zzz)")}
           </Copy>
         </Stack>
@@ -80,10 +80,10 @@ const ShippingCardInfo = ({
 
 const ShippingCardInfoLine = ({ title, value }: { title: string; value: string }) => (
   <Flex align="center" justify="between">
-    <Copy scale={9} css={{ paddingRight: "$32", minWidth: "max-content" }}>
+    <Copy scale={10} color="theme-n6-n5" css={{ paddingRight: "$32", minWidth: "max-content" }}>
       {title}
     </Copy>
-    <Copy scale={9} color="system-black" truncate>
+    <Copy scale={10} color="theme-b-n3" truncate>
       {value}
     </Copy>
   </Flex>

@@ -42,8 +42,11 @@ const colorVariant = generateColorVariant("color")
 export const atomicClassNames = css({
   variants: {
     fontWeight: {
-      bold: { fontWeight: 500 },
-      normal: { fontWeight: 400 },
+      regular: { fontWeight: 400 },
+      medium: { fontWeight: 500 },
+      semiBold: { fontWeight: 600 },
+      bold: { fontWeight: 700 },
+      black: { fontWeight: 900 },
     },
 
     textAlign: {

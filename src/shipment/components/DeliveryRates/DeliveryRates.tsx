@@ -11,31 +11,32 @@ import {
   FormRadioGroup,
   RateRadioInput,
   GridContainer,
-  Stack,
   Spacer,
   Button,
   useStepperContext,
+  Hidden,
+  Title,
 } from "@/shared/components"
-import { StepActionsBar } from "@/shipment/components"
+import { StepActionsBar, StepperFooter } from "@/shipment/components"
 
 const rates = [
   {
     rateType: "UPS (Priority)",
-    name: "Express Delivery",
+    name: "Delivery date: Oct 8, 2023 by 6:00 PM (CST)",
     price: 430,
     currency: "$",
     id: "23",
   },
   {
     rateType: "UPS (Economy)",
-    name: "Economy Delivery",
+    name: "Delivery date: May 22, 2023 by 1:00 PM (CST)",
     price: 200,
     currency: "$",
     id: "24",
   },
   {
     rateType: "FedEx (Economy)",
-    name: "Economy Delivery",
+    name: "Delivery date: Dec 25, 2023 by 11:50 AM (CST)",
     price: 250,
     currency: "$",
     id: "25",
@@ -89,45 +90,51 @@ export const DeliveryRates = ({
 
   return (
     <GridContainer fullBleed>
-      <Stack space={12}>
-        <Copy scale={9}>
-          Rates shown here may be different than the actual charges for your shipment
-        </Copy>
-        <FormRadioGroup
-          value={checkedOption}
-          onChange={handleChange}
-          id="rates-radio-id"
-          name="rates-radio-group"
-          disabled={shippingType === ShippingType.Quote}
-          withCells
-        >
-          {rates.map((rate) => (
-            <RateRadioInput
-              key={rate.id}
-              value={rate.id}
-              rateType={rate.rateType}
-              rateName={rate.name}
-              price={rate.price}
-              currency={rate.currency}
-              disabled={shippingType === ShippingType.Quote}
-            />
-          ))}
-        </FormRadioGroup>
-        );
-      </Stack>
+      <Hidden below="sm">
+        <Title as="h3" scale={3}>
+          Delivery rates & Transit times
+        </Title>
+        <Spacer size={40} />
+      </Hidden>
+      <Copy scale={9} color="theme-n6-n5">
+        {shippingType === ShippingType.Quote
+          ? "Rates shown here may be different than the actual charges for your shipment"
+          : "Please select a rate"}
+      </Copy>
+      <Spacer size={24} />
+      <FormRadioGroup
+        value={checkedOption}
+        onChange={handleChange}
+        id="rates-radio-id"
+        name="rates-radio-group"
+        disabled={shippingType === ShippingType.Quote}
+        withCells
+      >
+        {rates.map((rate) => (
+          <RateRadioInput
+            key={rate.id}
+            value={rate.id}
+            rateType={rate.rateType}
+            rateName={rate.name}
+            price={rate.price}
+            currency={rate.currency}
+            disabled={shippingType === ShippingType.Quote}
+          />
+        ))}
+      </FormRadioGroup>
 
       {shippingType === ShippingType.Shipment ? (
         <>
           <Spacer size={{ "@initial": 24, "@sm": 32 }} />
           <StepActionsBar>
-            <Button onClick={onContinueHandler} full disabled={!rate.name}>
-              <Copy as="span" scale={8} color="system-white" bold>
-                Continue
-              </Copy>
+            <Button full disabled={!rate.name} onClick={onContinueHandler}>
+              Continue
             </Button>
           </StepActionsBar>
         </>
-      ) : null}
+      ) : (
+        <StepperFooter />
+      )}
     </GridContainer>
   )
 }

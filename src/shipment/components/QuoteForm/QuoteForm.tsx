@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useLocation } from "react-router-dom"
 
-import { StepName, QuoteStep, StepperState } from "@/shipment/types"
+import { StepName, QuoteStep, StepperState, IStepsDataItem } from "@/shipment/types"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/stitches/theme"
 
 import {
   PackageDetails,
@@ -40,8 +42,8 @@ const initialState: Omit<StepperState, "from" | "to" | "summary" | "receipt"> = 
 
 export const QuoteForm = () => {
   const [stepperState, setStepperState] = useState(initialState as StepperState)
-  const [defaultStep, setDefaultStep] = useState<StepName | null>(null)
   const location = useLocation()
+  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
   const isEditMode = location.pathname.includes("edit")
 
   const handleContinueClick = (step: QuoteStep, nextStep: QuoteStep) => {
@@ -62,86 +64,39 @@ export const QuoteForm = () => {
     })
   }
 
-  const stepsData = [
+  const stepsData: IStepsDataItem[] = [
     {
-      title: "Address Information",
+      title: isSmallAndAbove ? "Where" : "Address Information",
       data: stepperState.info,
-      mainContent: (
-        <AddressInfo handleContinueClick={handleContinueClick} setStepperState={setStepperState} />
-      ),
+      mainContent: <AddressInfo handleContinueClick={handleContinueClick} />,
       // shortContent: <AddressInfoCollapsed />,
     },
     {
-      title: "Shipment Details",
+      title: isSmallAndAbove ? "Details" : "Shipment Details",
       data: stepperState.shipment,
-      mainContent: (
-        <PackageDetails
-          handleContinueClick={handleContinueClick}
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <PackageDetails handleContinueClick={handleContinueClick} />,
       // shortContent: <PackageDetailsShort />,
     },
     {
-      title: "Ready Date",
+      title: isSmallAndAbove ? "Ready Date" : "Ready Date & Time",
       data: stepperState.date,
-      mainContent: (
-        <ShipmentDateDetails
-          handleContinueClick={handleContinueClick}
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
       // shortContent: <ShipmentDateDetailsShort />,
     },
     {
-      title: "Delivery Rates",
+      title: isSmallAndAbove ? "Rates" : "Delivery rates & Transit times",
       data: stepperState.rates,
       mainContent: <DeliveryRates />,
       // shortContent: <DeliveryRatesShort />,
     },
   ]
 
-  useEffect(() => {
-    setDefaultStep(StepName.INFO)
-    // check expired date and time ->
-    // set stepper state
-    if (isEditMode) {
-      setStepperState((prevState) => {
-        return {
-          ...prevState,
-          info: {
-            ...prevState.info,
-            completed: true,
-            disabled: false,
-          },
-          shipment: {
-            ...prevState.shipment,
-            completed: true,
-            disabled: false,
-          },
-          date: {
-            ...prevState.date,
-            completed: true,
-            disabled: false,
-          },
-          rates: {
-            ...prevState.rates,
-            completed: true,
-            disabled: false,
-          },
-        }
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  if (!defaultStep) return null
-
   return (
     <StepperForm
       title={isEditMode ? "Edit a quote" : "Create a quote"}
-      defaultStep={defaultStep}
+      defaultStep={StepName.INFO}
       stepsData={stepsData}
+      setStepperState={setStepperState}
     />
   )
 }

@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { styled } from "@/stitches/config"
 
 export const SAccordionPanel = styled(motion.div, {
-  backgroundColor: "$system-white",
+  backgroundColor: "$neutrals-0",
   overflow: "hidden",
 })
 

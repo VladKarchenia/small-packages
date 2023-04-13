@@ -15,7 +15,7 @@ export const EditActionsButton = ({ shippingType }: IEditActionsButtonProps) => 
   const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
   const { open } = useModalActions()
   const user = useAuthStore((state) => state.user)
-  const role = user?.authorities?.[0]?.authority
+  const role = user.authorities?.[0]?.authority
 
   const handleCancelClick = () => {
     // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
@@ -32,25 +32,20 @@ export const EditActionsButton = ({ shippingType }: IEditActionsButtonProps) => 
       asChild
       trigger={
         <ButtonIcon
-          type="button"
-          ariaLabel="Edit actions button"
           icon={<IconMoreHorizontal />}
-          css={{ height: "100%", cursor: "pointer" }}
+          ariaLabel="Edit actions button"
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()
           }}
+          inputIcon
         />
       }
       open={isActionDropdownOpen}
       onOpenChange={() => setActionDropdownOpen(!isActionDropdownOpen)}
-      contentCss={{
-        paddingY: 0,
-        borderRadius: "$8",
-      }}
       // disabled={disabled}
     >
-      <Stack space={0} dividers>
+      <Stack space={0}>
         {/* TODO: add more conditions */}
         {role === Role.Admin || role === Role.Ops ? (
           <DropdownItem

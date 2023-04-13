@@ -18,12 +18,12 @@ export const useAllShipments = ({
   const organization = useAuthStore((state) => state.organization)
 
   return useQuery(
-    ["allShipments", type, filter, sort],
+    ["allShipments", organization.id, type, filter, sort],
     () => getAllShipmentsFn({ filter, sort, organization }),
     {
       staleTime: 5 * 60 * 1000,
       cacheTime: 5 * 60 * 1000,
-      enabled: true,
+      enabled: !!organization.id,
       keepPreviousData: true,
       onError: (error) => {
         if (isAxiosError(error)) {

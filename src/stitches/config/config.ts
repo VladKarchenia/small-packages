@@ -1,7 +1,7 @@
 import type * as Stitches from "@stitches/react"
 import { createStitches, defaultThemeMap } from "@stitches/react"
 
-import { theme, mediaQueries, MediaQuery } from "@/stitches/theme"
+import { theme, mediaQueries, MediaQuery, darkColorsMap } from "@/stitches/theme"
 
 export const stitchesConfig = createStitches({
   theme,
@@ -175,7 +175,12 @@ export const stitchesConfig = createStitches({
   ),
 })
 
-export const { styled, css, globalCss, keyframes, getCssText } = stitchesConfig
+export const { styled, css, globalCss, keyframes, getCssText, createTheme } = stitchesConfig
+
+export const darkTheme = createTheme({
+  ...theme,
+  colors: darkColorsMap,
+})
 
 export type StitchesConfig = typeof stitchesConfig
 

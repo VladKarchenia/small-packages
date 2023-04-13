@@ -13,10 +13,10 @@ export const useShipmentsFieldValues = ({
   status: "QUOTE" | "SHIPMENT"
 }) => {
   const organization = useAuthStore((state) => state.organization)
-  const isEnabled = keyword.length === 0 || keyword.length > 3
+  const isEnabled = !!organization.id && (keyword.length === 0 || keyword.length > 3)
 
   return useQuery(
-    ["shipmentsFieldValues", field, keyword, status],
+    ["shipmentsFieldValues", organization.id, field, keyword, status],
     () => getShipmentsFieldValuesFn({ field, keyword, status, organization }),
     {
       staleTime: Infinity,

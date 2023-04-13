@@ -6,15 +6,20 @@ import { SPackagesInfoCard } from "./PackagesInfoCard.styles"
 
 interface IPackagesInfoCardProps {
   parcel: IParcel
+  packageNumber?: number
   shippingType: ShippingType
 }
 
-export const PackagesInfoCard = ({ parcel, shippingType }: IPackagesInfoCardProps) => {
+export const PackagesInfoCard = ({
+  parcel,
+  packageNumber,
+  shippingType,
+}: IPackagesInfoCardProps) => {
   return (
-    <SPackagesInfoCard key={parcel.packageId}>
+    <SPackagesInfoCard>
       <Flex align="start" css={{ width: "100%", paddingBottom: "$16" }}>
-        <Copy scale={8} color="system-black" bold>
-          Package {parcel.packageId}
+        <Copy scale={8} color="theme-b-n3" fontWeight="bold">
+          Package {packageNumber}
         </Copy>
       </Flex>
       <Divider />
@@ -50,10 +55,10 @@ const PackagesInfoCardDetails = ({ parcel, shippingType }: IPackagesInfoCardProp
 
 const PackagesInfoCardDetailsLine = ({ title, value }: { title: string; value: string }) => (
   <Flex align="center" justify="between">
-    <Copy scale={9} css={{ paddingRight: "$32", minWidth: "max-content" }}>
+    <Copy scale={9} color="theme-b-n3" css={{ paddingRight: "$32", minWidth: "max-content" }}>
       {title}
     </Copy>
-    <Copy scale={9} color="system-black" truncate>
+    <Copy scale={9} color="theme-b-n3" truncate>
       {value}
     </Copy>
   </Flex>

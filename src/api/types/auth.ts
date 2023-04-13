@@ -1,3 +1,5 @@
+import { PackagingType, PickupType } from "@/shared/types"
+
 export interface ILoginResponse {
   accessToken: string
   refreshToken: string
@@ -24,8 +26,28 @@ export interface ResetInput {
   confirmNewPassword: string
 }
 
-export interface ChangeInput {
+export interface ChangePersonInfoInput {
+  fullName: string
+  phone: string
+  username: string
   oldPassword: string
   newPassword: string
   confirmPassword: string
+  darkTheme: boolean
+}
+
+export interface ChangePersonPreferencesInput {
+  readyTime: Date | null
+  quoteExpirationDays: number
+  packagingType: PackagingType
+  declaredValue: number
+  currency: string
+
+  unitOfMeasure: string
+  dimensionUnit: string
+  weightUnit: string
+
+  pickupType: PickupType
+
+  organizationId: number | null
 }

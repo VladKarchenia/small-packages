@@ -59,12 +59,12 @@ export const getAllShipmentsFn = async ({
 }: {
   filter: string
   sort: string
-  organization: IUserOrganization | null
+  organization: IUserOrganization
   page?: number
   size?: number
 }) => {
   const { data } = await shipmentApi.get<IShipmentsResponse>(
-    `shipments/all?organizationId=${organization?.id}&filter=${filter}&sort=${sort}&page=${page}&size=${size}`,
+    `shipments/all?organizationId=${organization.id}&filter=${filter}&sort=${sort}&page=${page}&size=${size}`,
   )
 
   return data.content
@@ -79,12 +79,12 @@ export const searchShipmentsFn = async ({
 }: {
   keyword: string
   sort?: string
-  organization: IUserOrganization | null
+  organization: IUserOrganization
   page?: number
   size?: number
 }) => {
   const { data } = await shipmentApi.get<IFoundShipmentsResponse>(
-    `shipments/search?keyword=${keyword}&organizationId=${organization?.id}&sort=${sort}&page=${page}&size=${size}`,
+    `shipments/search?keyword=${keyword}&organizationId=${organization.id}&sort=${sort}&page=${page}&size=${size}`,
   )
 
   return data.content
@@ -101,12 +101,12 @@ export const getShipmentsFieldValuesFn = async ({
   field: string
   keyword: string
   status: "QUOTE" | "SHIPMENT"
-  organization: IUserOrganization | null
+  organization: IUserOrganization
   page?: number
   size?: number
 }) => {
   const { data } = await shipmentApi.get<IShipmentsFieldValuesResponse>(
-    `shipments/filter?organizationId=${organization?.id}&field=${field}&keyword=${keyword}&status=${status}&page=${page}&size=${size}`,
+    `shipments/filter?organizationId=${organization.id}&field=${field}&keyword=${keyword}&status=${status}&page=${page}&size=${size}`,
   )
 
   return data.content

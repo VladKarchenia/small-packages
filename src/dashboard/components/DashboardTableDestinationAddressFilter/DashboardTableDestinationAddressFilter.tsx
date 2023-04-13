@@ -144,7 +144,7 @@ const MobileView: React.FC<React.PropsWithChildren<IMobileViewProps>> = ({
       placeholder="Search for destination address"
       inputValue={inputValue}
       prefix={<IconSearch />}
-      clearDestinationFn={() => resetFilterField("destinationAddress")}
+      clearValueFn={() => resetFilterField("destinationAddress")}
     >
       {children}
     </MobileCombobox>

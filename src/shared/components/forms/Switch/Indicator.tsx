@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 
-import { SSwitchIndicator } from "./Indicator.styles"
+import { SSwitchIndicator } from "./Switch.styles"
 
 export interface SwitchIndicatorProps {
   //   selected: HTMLLabelElement | null

@@ -1,6 +1,7 @@
 import React from "react"
 
 import { ComponentProps } from "@/stitches/types"
+import { enterKeyDown } from "@/shared/utils"
 
 import { ErrorLabel, IFormRadioInputProps } from "@/shared/components"
 
@@ -20,7 +21,7 @@ export interface IFormRadioGroupProps
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   disabled?: boolean
   error?: string
-  view?: "circle" | "tick"
+  view?: "circle"
   withCells?: boolean
   horizontal?: boolean
 }
@@ -54,6 +55,9 @@ export const FormRadioGroup = React.forwardRef<HTMLDivElement, IFormRadioGroupPr
         role="radiogroup"
         withCells={withCells}
         horizontal={horizontal}
+        onKeyDown={(e: { key: string; preventDefault: () => void }) => {
+          enterKeyDown(e.key) && e.preventDefault()
+        }}
         {...radioGroupProps}
       >
         {clonedChildren}

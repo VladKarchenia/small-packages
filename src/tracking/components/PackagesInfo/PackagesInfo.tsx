@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 
 import { createContext } from "@/shared/utils"
 import { mediaQueries } from "@/stitches/theme"
-import { IPackaging, IParcels, ShippingType } from "@/shared/types"
+import { IPackaging, IParcel, IParcels, ShippingType } from "@/shared/types"
 import { useMedia } from "@/shared/hooks"
 
 import { Copy, Flex, GridContainer, Hidden, Spacer, Stack } from "@/shared/components"
@@ -37,6 +37,18 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
     [parcels, ascSortDirection],
   )
 
+  const devidedParcels = useMemo(
+    () =>
+      sortedParcels.reduce(
+        (res: IParcel[], parcel) => [
+          ...res,
+          ...Array.from({ length: parcel.quantity }, () => ({ ...parcel, quantity: 1 })),
+        ],
+        [],
+      ),
+    [sortedParcels],
+  )
+
   return (
     <PackagesProvider ascSortDirection={ascSortDirection} setAscSortDirection={setAscSortDirection}>
       <GridContainer
@@ -55,9 +67,9 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
           <Flex
             align="center"
             onClick={() => setAscSortDirection(!ascSortDirection)}
-            css={{ gap: "$4" }}
+            css={{ gap: "$4", color: "$theme-b-n3" }}
           >
-            <Copy scale={8} color="system-black" bold>
+            <Copy scale={3} fontWeight="bold">
               All packages
             </Copy>
             {ascSortDirection ? <IconLongArrowDown /> : <IconLongArrowTop />}
@@ -67,18 +79,18 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
 
         <Flex css={{ gap: "$16", "@md": { gap: "$32" } }}>
           <Flex css={{ gap: "$4" }}>
-            <Copy scale={{ "@initial": 9, "@md": 8 }}>
+            <Copy scale={9} color="theme-n6-n5">
               {isMediumAndAbove ? "Quantity" : "QTY"}:
             </Copy>
-            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+            <Copy scale={9} color="theme-b-n3">
               {packaging.totalPackagesNumber}
             </Copy>
           </Flex>
           <Flex css={{ gap: "$4" }}>
-            <Copy scale={{ "@initial": 9, "@md": 8 }}>
+            <Copy scale={9} color="theme-n6-n5">
               {isMediumAndAbove ? "Total weight" : "TW"}:
             </Copy>
-            <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+            <Copy scale={9} color="theme-b-n3">
               {Object.values(parcels)
                 .reduce((sum, i) => (sum += parseFloat(i.weight) * i.quantity), 0)
                 .toFixed(1)}
@@ -86,10 +98,10 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
           </Flex>
           {shippingType === ShippingType.Shipment ? (
             <Flex css={{ gap: "$4" }}>
-              <Copy scale={{ "@initial": 9, "@md": 8 }}>
+              <Copy scale={9} color="theme-n6-n5">
                 {isMediumAndAbove ? "Declared value" : "DV"}:
               </Copy>
-              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+              <Copy scale={9} color="theme-b-n3">
                 {Object.values(parcels)
                   .reduce((sum, i) => (sum += parseInt(i.totalPrice) * i.quantity), 0)
                   .toFixed(0)}
@@ -102,10 +114,11 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
 
         <Hidden above="md">
           <Stack space={16}>
-            {sortedParcels.map((parcel) => (
+            {devidedParcels.map((parcel, index) => (
               <PackagesInfoCard
-                key={parcel.packageId}
+                key={index}
                 parcel={parcel}
+                packageNumber={index + 1}
                 shippingType={shippingType}
               />
             ))}
@@ -113,7 +126,7 @@ export const PackagesInfo = ({ packaging, parcels, shippingType }: IPackagesInfo
         </Hidden>
 
         <Hidden below="md">
-          <PackagesInfoTable parcels={sortedParcels} shippingType={shippingType} />
+          <PackagesInfoTable parcels={devidedParcels} shippingType={shippingType} />
         </Hidden>
       </GridContainer>
     </PackagesProvider>

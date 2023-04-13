@@ -5,10 +5,17 @@ import { Controller, useFormContext } from "react-hook-form"
 import { ResetInput } from "@/api/types"
 import { LOGIN } from "@/constants"
 
-import { Button, Copy, Flex, FormInput, Spacer, Stack, Title } from "@/shared/components"
+import {
+  Button,
+  ButtonIcon,
+  Copy,
+  Flex,
+  FormInput,
+  Spacer,
+  Stack,
+  Title,
+} from "@/shared/components"
 import { IconClarityEye, IconClarityEyeCrossed } from "@/shared/icons"
-
-import { SShowPasswordButton } from "./ResetForm.styles"
 
 export const ResetForm = ({
   defaultValues,
@@ -36,16 +43,16 @@ export const ResetForm = ({
   if (isPasswordChanged) {
     return (
       <Flex justify="center" direction="column">
-        <Title as="h1" scale={4}>
+        <Title as="h1" color="neutrals-12">
           Create a new password
         </Title>
         <Spacer size={4} />
-        <Copy scale={9}>Your password has been successfully changed</Copy>
+        <Copy scale={5} color="neutrals-6">
+          Your password has been successfully changed
+        </Copy>
         <Spacer size={32} />
         <Button type="button" full onClick={() => navigate(LOGIN)}>
-          <Copy as="span" scale={8} color="system-white" bold>
-            OK
-          </Copy>
+          OK
         </Button>
       </Flex>
     )
@@ -53,9 +60,13 @@ export const ResetForm = ({
 
   return (
     <Flex justify="center" direction="column">
-      <Title as="h1" scale={4}>
+      <Title as="h1" color="neutrals-12">
         Create a new password
       </Title>
+      <Spacer size={4} />
+      <Copy scale={5} color="neutrals-6">
+        Please create a new password
+      </Copy>
       <Spacer size={32} />
       <Stack space={24}>
         <Controller
@@ -100,9 +111,13 @@ export const ResetForm = ({
                 error={errors[field.name]?.message}
                 placeholder="Enter new password"
                 suffix={
-                  <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
-                    {passwordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
-                  </SShowPasswordButton>
+                  <ButtonIcon
+                    ariaLabel="Show new password"
+                    type="button"
+                    icon={passwordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
+                    onClick={togglePasswordVisibility}
+                    inputIcon
+                  />
                 }
               />
             )
@@ -145,12 +160,13 @@ export const ResetForm = ({
                 error={errors[field.name]?.message}
                 placeholder="Re-enter new password"
                 suffix={
-                  <SShowPasswordButton
+                  <ButtonIcon
+                    ariaLabel="Show confirm password"
                     type="button"
-                    onClick={() => toggleConfirmPasswordVisibility()}
-                  >
-                    {confirmPasswordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
-                  </SShowPasswordButton>
+                    icon={confirmPasswordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
+                    onClick={toggleConfirmPasswordVisibility}
+                    inputIcon
+                  />
                 }
               />
             )
@@ -164,9 +180,7 @@ export const ResetForm = ({
         loading={isLoading}
         disabled={!!errors.confirmNewPassword?.message}
       >
-        <Copy as="span" scale={8} color="system-white" bold>
-          OK
-        </Copy>
+        OK
       </Button>
     </Flex>
   )

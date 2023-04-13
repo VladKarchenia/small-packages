@@ -16,7 +16,7 @@ export const SFilterIconBox = styled("button", {
     selected: {
       true: {
         after: {
-          backgroundColor: "$system-black",
+          backgroundColor: "$theme-vl-yl",
           content: "''",
           width: "$8",
           height: "$8",

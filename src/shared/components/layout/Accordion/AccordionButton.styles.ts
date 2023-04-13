@@ -2,7 +2,7 @@ import { styled } from "@/stitches/config"
 
 export const SAccordionButton = styled("button", {
   reset: true,
-  backgroundColor: "$system-white",
+  backgroundColor: "$neutrals-0",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",

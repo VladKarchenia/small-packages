@@ -4,17 +4,16 @@ import { IUserOrganization, ShipmentInput, ShipmentPackageInput } from "@/api/ty
 import {
   IParcel,
   PackageType,
-  ParcelContentType,
-  PickupType,
   ShipmentStatus,
   ShippingType,
   ShipmentState,
   IParcels,
   IdenticalPackagesType,
+  PickupType,
 } from "@/shared/types"
 import { PACKAGE_CURRENCY_DEFAULT, PACKAGE_QUANTITY_DEFAULT } from "@/constants"
 
-const replaceFalsyProps = (_: string, value: unknown) => {
+export const replaceFalsyProps = (_: string, value: unknown) => {
   // TODO: Should we remove empty string as well?
   // should create and patch use different helpers?
   if (value === "" || value === null || value === undefined) {
@@ -28,7 +27,7 @@ const replaceFalsyProps = (_: string, value: unknown) => {
 export const formatShipmentRequestData = (
   data: ShipmentState,
   shippingType: ShippingType,
-  organization: IUserOrganization | null,
+  organization: IUserOrganization,
   status?: ShipmentStatus,
 ) => {
   const packages = Object.values(data.parcels).reduce(
@@ -97,12 +96,15 @@ export const formatShipmentRequestData = (
     RETURN_ADDRESS_STATE: data.senderReturn.fullAddress.state,
 
     PACKAGE: packages,
+    PICKUP_TYPE:
+      Object.keys(PickupType)[Object.values(PickupType).indexOf(data.packaging.pickupType)],
     PACKAGING_TYPE: data.packaging.packagingType,
+    CONTENT_DESCRIPTION: data.packaging.packageContent,
 
     PICKUP_READY_DATE: format(data.date, "MM/dd/yyyy"),
     PICKUP_READY_TIME: format(data.date, "HH:mm"),
 
-    ORGANIZATION_ID: organization?.id,
+    ORGANIZATION_ID: organization.id,
     SHIPMENT_STATUS: status
       ? Object.keys(ShipmentStatus)[Object.values(ShipmentStatus).indexOf(status)]
       : // TODO: fix this statuses
@@ -205,11 +207,10 @@ export const formatShipmentResponseData = (data: ShipmentInput): ShipmentState =
       },
     },
     packaging: {
-      // TODO: there are no BE pickupType and packageContent data
-      pickupType: PickupType.Schedule,
+      pickupType: PickupType[data.PICKUP_TYPE],
       packagingType: data.PACKAGING_TYPE,
       totalPackagesNumber: data.PACKAGE.length,
-      packageContent: ParcelContentType.Gift,
+      packageContent: data.CONTENT_DESCRIPTION,
       identicalPackages:
         Object.keys(parcels).length > 1
           ? IdenticalPackagesType.Different
