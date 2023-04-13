@@ -12,18 +12,16 @@ export const PackageDetailsShort = () => {
   return (
     <Stack space={8}>
       {Object.values(parcels).map((parcel) => (
-        <Flex align="center" key={parcel.packageId}>
-          <Flex align="center" justify="center" css={{ color: "$system-black" }}>
+        <Flex align="center" key={parcel.packageId} css={{ color: "$theme-b-n3" }}>
+          <Flex align="center" justify="center">
             <IconClock />
           </Flex>
           <Spacer size={12} horizontal />
-          <Copy scale={9} color="system-black">
+          <Copy>
             {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height} in;
           </Copy>
           <Spacer size={8} horizontal />
-          <Copy scale={9} color="system-black">
-            {parcel.weight} lb
-          </Copy>
+          <Copy>{parcel.weight} lb</Copy>
         </Flex>
       ))}
     </Stack>

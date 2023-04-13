@@ -3,7 +3,9 @@ import tzlookup from "tz-lookup"
 import format from "date-fns/format"
 import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
-import { IPerson } from "@/shared/types"
+import { useBoundStore } from "@/store"
+import { IPerson, ShippingType } from "@/shared/types"
+import { INITIAL_READY_DATE_DEFAULT } from "@/constants"
 
 import {
   Hidden,
@@ -27,10 +29,11 @@ export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const isTriggerClick = (event: Event) =>
     event.composedPath().includes(triggerRef.current as EventTarget)
-
+  const shippingType = useBoundStore((state) => state.shippingType)
+  const isDateExpired = date < new Date(INITIAL_READY_DATE_DEFAULT)
   const timeZone = tzlookup(
-    parseFloat(sender.fullAddress.latitude),
-    parseFloat(sender.fullAddress.longitude),
+    parseFloat(sender.fullAddress.latitude) || 0,
+    parseFloat(sender.fullAddress.longitude) || 0,
   )
 
   return (
@@ -38,7 +41,6 @@ export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
       <Hidden above="sm">
         <SearchFilterDrawer
           drawerName="dateInput"
-          drawerTitle="Date and Time"
           value={
             date
               ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
@@ -53,6 +55,15 @@ export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
           closeIcon={<IconChevronLeft />}
           suffix={<IconCalendar />}
           drawerForm={<DateInputForm />}
+          contentCss={{
+            height: "100%",
+          }}
+          error={
+            // TODO: add a condition when it's a Shipment and a status is Draft
+            shippingType === ShippingType.Quote && isDateExpired
+              ? "Ready time min value not met"
+              : null
+          }
           dataTestid="date-button-filter"
         />
       </Hidden>
@@ -74,8 +85,7 @@ export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
               suffix={<IconCalendar />}
               placeholder="Select date and time"
               hidePlaceholder
-              dataTestid="date-button-filter"
-              css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
+              close={() => setIsOpen(false)}
               onClick={() => {
                 if (!isOpen) {
                   return setIsOpen(true)
@@ -86,17 +96,23 @@ export const DateInput: React.FC<IDateInputProps> = ({ date, sender }) => {
                   return setIsOpen(true)
                 }
               }}
+              error={
+                // TODO: add a condition when it's a Shipment and a status is Draft
+                shippingType === ShippingType.Quote && isDateExpired
+                  ? "Ready time min value not met"
+                  : null
+              }
+              dataTestid="date-button-filter"
             />
           </PopoverAnchor>
           <PopoverContent
+            close={() => setIsOpen(false)}
             align="start"
-            css={{ padding: 0, border: "none", borderRadius: "$8", zIndex: "$2" }}
             alignOffset={-1}
             onInteractOutside={(event) => {
               if (isTriggerClick(event)) {
                 return
               }
-
               return setIsOpen(false)
             }}
             onOpenAutoFocus={(event) => {

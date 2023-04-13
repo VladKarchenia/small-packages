@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 
-import { Copy, Flex, Hidden, Spacer } from "@/shared/components"
+import { Copy, Flex, Spacer } from "@/shared/components"
 import { IconCopy } from "@/shared/icons"
 
 import { SShipmentURLButton, SShipmentURLMessage } from "./ShipmentURL.styles"
@@ -24,29 +24,33 @@ export const ShipmentURL = ({ url, value }: ShipmentURLProps) => {
 
   return (
     <>
-      <Hidden below="md">
-        <Copy scale={11} bold>
-          Tracking number link
-        </Copy>
-        <Spacer size={4} />
-      </Hidden>
+      <Copy scale={10} color="neutrals-5" fontWeight="bold">
+        Tracking number link
+      </Copy>
+      <Spacer size={4} />
       <CopyToClipboard text={url}>
-        <SShipmentURLButton type="button" onClick={handleButtonClick}>
-          <Flex align="center" justify="between" css={{ width: "100%" }}>
-            <Copy scale={9} color="system-black" bold truncate>
-              {value}
-            </Copy>
+        <SShipmentURLButton
+          type="button"
+          onClick={handleButtonClick}
+          css={{
+            borderColor: `${copiedToClipboard ? "$brand-green-primary !important" : ""}`,
+            keyboardFocus: {
+              outlineColor: `${copiedToClipboard ? "$brand-green-primary !important" : ""}`,
+            },
+          }}
+        >
+          <Flex align="center" justify="between" css={{ width: "100%", color: "$theme-b-n3" }}>
+            <Copy truncate>{value}</Copy>
             <Spacer size={8} horizontal />
-            <Flex align="center" justify="center" css={{ color: "$system-black" }}>
+            <Flex align="center" justify="center">
               <IconCopy />
             </Flex>
           </Flex>
         </SShipmentURLButton>
       </CopyToClipboard>
-      {/* TODO: maybe move it to toast? */}
       {copiedToClipboard ? (
-        <SShipmentURLMessage>
-          <Copy scale={10} color="neutrals-7">
+        <SShipmentURLMessage css={{ position: "absolute" }}>
+          <Copy scale={10} color="brand-green-primary">
             URL was copied
           </Copy>
         </SShipmentURLMessage>

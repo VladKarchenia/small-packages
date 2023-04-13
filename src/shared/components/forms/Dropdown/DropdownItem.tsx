@@ -15,8 +15,7 @@ export const DropdownItem = memo(function ({ label, onSelect, dataTestid }: IDro
     <SDropdownMenuItem onSelect={onSelect} data-testid={dataTestid}>
       <Copy
         as="span"
-        color="neutrals-9"
-        scale={8}
+        color="theme-b-n3"
         css={{
           display: "inline-flex",
           alignItems: "center",
@@ -25,7 +24,6 @@ export const DropdownItem = memo(function ({ label, onSelect, dataTestid }: IDro
           minWidth: "$128",
           height: "inherit",
           paddingX: "$20",
-          cursor: "pointer",
         }}
       >
         {label}

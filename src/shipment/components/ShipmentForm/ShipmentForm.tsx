@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useLocation } from "react-router-dom"
 
 import { StepName, ShipmentStep, IStepsDataItem, StepperState } from "@/shipment/types"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/stitches/theme"
 
 import {
   PackageDetails,
@@ -60,8 +62,8 @@ const initialState: Omit<StepperState, "info"> = {
 
 export const ShipmentForm = () => {
   const [stepperState, setStepperState] = useState(initialState as StepperState)
-  const [defaultStep, setDefaultStep] = useState<StepName | null>(null)
   const location = useLocation()
+  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
   const isEditMode = location.pathname.includes("edit")
 
   const handleContinueClick = (step: ShipmentStep, nextStep: ShipmentStep) => {
@@ -86,41 +88,31 @@ export const ShipmentForm = () => {
 
   const stepsData: IStepsDataItem[] = [
     {
-      title: "Ship From",
+      title: isSmallAndAbove ? "From" : "Ship From",
       data: stepperState.from,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="sender" />,
       // shortContent: <PersonInfoCollapsed person="sender" />,
     },
     {
-      title: "Ship To",
+      title: isSmallAndAbove ? "To" : "Ship To",
       data: stepperState.to,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="recipient" />,
       // shortContent: <PersonInfoCollapsed person="recipient" />,
     },
     {
-      title: "Shipment Details",
+      title: isSmallAndAbove ? "Details" : "Shipment ",
       data: stepperState.shipment,
-      mainContent: (
-        <PackageDetails
-          handleContinueClick={handleContinueClick}
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <PackageDetails handleContinueClick={handleContinueClick} />,
       // shortContent: <PackageDetailsShort />,
     },
     {
-      title: "Ready Date",
+      title: isSmallAndAbove ? "Ready Date" : "Ready Date & Time",
       data: stepperState.date,
-      mainContent: (
-        <ShipmentDateDetails
-          handleContinueClick={handleContinueClick}
-          setStepperState={setStepperState}
-        />
-      ),
+      mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
       // shortContent: <ShipmentDateDetailsShort />,
     },
     {
-      title: "Delivery Rates",
+      title: isSmallAndAbove ? "Rates" : "Delivery rates & Transit times",
       data: stepperState.rates,
       mainContent: <DeliveryRates handleContinueClick={handleContinueClick} />,
       // shortContent: <DeliveryRatesShort />,
@@ -137,65 +129,12 @@ export const ShipmentForm = () => {
     },
   ]
 
-  useEffect(() => {
-    setDefaultStep(StepName.FROM)
-    // check expired date and time ->
-    // set stepper state
-    if (isEditMode) {
-      setStepperState((prevState) => {
-        return {
-          ...prevState,
-          from: {
-            ...prevState.from,
-            completed: true,
-            disabled: false,
-          },
-          to: {
-            ...prevState.to,
-            completed: true,
-            disabled: false,
-          },
-          shipment: {
-            ...prevState.shipment,
-            completed: true,
-            disabled: false,
-          },
-          date: {
-            ...prevState.date,
-            completed: true,
-            disabled: false,
-          },
-          rates: {
-            ...prevState.rates,
-            completed: true,
-            disabled: false,
-          },
-          summary: {
-            ...prevState.summary,
-            completed: true,
-            disabled: false,
-          },
-          // TODO: depends on if it was created in Proship
-          receipt: {
-            ...prevState.receipt,
-            // completed: false,
-            completed: true,
-            // disabled: true,
-            disabled: false,
-          },
-        }
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  if (!defaultStep) return null
-
   return (
     <StepperForm
       title={isEditMode ? "Edit a shipment" : "Create a shipment"}
-      defaultStep={defaultStep}
+      defaultStep={StepName.FROM}
       stepsData={stepsData}
+      setStepperState={setStepperState}
     />
   )
 }

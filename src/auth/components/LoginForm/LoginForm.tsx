@@ -5,10 +5,18 @@ import { Controller, useFormContext } from "react-hook-form"
 import { LoginInput } from "@/api/types"
 import { RECOVERY } from "@/constants"
 
-import { Button, Copy, Flex, FormInput, Link, Spacer, Stack, Title } from "@/shared/components"
+import {
+  Button,
+  ButtonIcon,
+  Copy,
+  Flex,
+  FormInput,
+  Link,
+  Spacer,
+  Stack,
+  Title,
+} from "@/shared/components"
 import { IconClarityEye, IconClarityEyeCrossed } from "@/shared/icons"
-
-import { SShowPasswordButton } from "./LoginForm.styles"
 
 export const LoginForm = ({
   defaultValues,
@@ -29,11 +37,13 @@ export const LoginForm = ({
 
   return (
     <Flex align="start" justify="center" direction="column">
-      <Title as="h1" scale={4}>
+      <Title as="h1" color="neutrals-12">
         Welcome!
       </Title>
       <Spacer size={4} />
-      <Copy scale={9}>Please, log in to continue</Copy>
+      <Copy scale={5} color="neutrals-6">
+        Please log in to continue
+      </Copy>
       <Spacer size={32} />
       <Stack space={24}>
         <Controller
@@ -87,9 +97,13 @@ export const LoginForm = ({
                 error={errors[field.name]?.message}
                 placeholder="Enter your password"
                 suffix={
-                  <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
-                    {passwordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
-                  </SShowPasswordButton>
+                  <ButtonIcon
+                    ariaLabel="Show password"
+                    type="button"
+                    icon={passwordShown ? <IconClarityEyeCrossed /> : <IconClarityEye />}
+                    onClick={togglePasswordVisibility}
+                    inputIcon
+                  />
                 }
               />
             )
@@ -98,17 +112,12 @@ export const LoginForm = ({
       </Stack>
 
       <Spacer size={16} />
-      <Link onClick={() => navigate(RECOVERY)}>
-        {/* TODO: fix default link copy */}
-        <Copy scale={9} color="system-black">
-          Forgot a password?
-        </Copy>
+      <Link as="button" type="button" onClick={() => navigate(RECOVERY)} fontWeight="bold">
+        Forgot password?
       </Link>
       <Spacer size={24} />
-      <Button type="submit" full noWrap loading={isLoading}>
-        <Copy as="span" scale={8} color="system-white" bold>
-          Login
-        </Copy>
+      <Button type="submit" full loading={isLoading}>
+        Login
       </Button>
     </Flex>
   )

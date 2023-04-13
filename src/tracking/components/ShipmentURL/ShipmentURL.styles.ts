@@ -9,16 +9,30 @@ export const SShipmentURLButton = styled("button", {
   width: "100%",
   cursor: "pointer",
   textAlign: "left",
-  transition: "150ms background",
-
-  border: "1px solid $neutrals-4",
-  borderRadius: "$8",
+  border: "1px solid $theme-n4-n8",
   padding: "$4 $12",
-
   position: "relative",
+  backgroundColor: "transparent",
+  color: "$theme-b-yl",
+  outline: "1px solid transparent",
+  transition: "150ms ease-out",
 
   disabled: {
+    color: "$theme-n4-ydr",
     pointerEvents: "none",
+  },
+
+  hover: {
+    backgroundColor: "$theme-vlt-ydt",
+    color: "$theme-vl-ylr",
+    borderColor: "$theme-vl-ylr",
+  },
+
+  keyboardFocus: {
+    backgroundColor: "$theme-vlr-ydr",
+    color: "$theme-vl-yl",
+    borderColor: "$theme-vl-n3",
+    outline: "1px solid $theme-vl-n3",
   },
 
   variants: {

@@ -12,13 +12,3 @@ export const SComboboxMenu = styled(ComboboxMenu, {
   marginTop: "$20",
   overflow: "auto",
 })
-
-export const SComboboxClearButton = styled("button", {
-  reset: true,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "$24",
-  width: "$24",
-  cursor: "pointer",
-})

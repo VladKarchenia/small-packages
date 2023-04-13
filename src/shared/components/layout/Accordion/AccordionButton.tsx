@@ -34,7 +34,7 @@ interface IAccordionTextToggleProps {
 }
 
 const AccordionTextToggle = ({ open = false, hideLabel, showLabel }: IAccordionTextToggleProps) => (
-  <Copy as="span" scale={8} color="brand-yellow-darker" css={{ textDecoration: "underline" }}>
+  <Copy as="span" color="brand-yellow-darker" css={{ textDecoration: "underline" }}>
     <span>&#32;</span>
     {open ? hideLabel : showLabel}
   </Copy>

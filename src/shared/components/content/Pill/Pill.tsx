@@ -33,7 +33,7 @@ export const Pill = forwardRef<HTMLButtonElement, IPillProps>(
           </>
         )}
 
-        <Copy as="span" color="system-white" scale={copyScale} bold>
+        <Copy as="span" scale={copyScale}>
           {children}
         </Copy>
 
@@ -57,7 +57,7 @@ function getCopyScaleFromPillSize(size: IPillProps["size"]) {
     switch (value) {
       case "small":
       default:
-        return { "@initial": 9, "@lg": 8 }
+        return 10
       case "medium":
         return 8
       case "large":

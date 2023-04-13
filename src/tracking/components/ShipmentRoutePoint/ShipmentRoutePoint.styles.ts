@@ -23,29 +23,53 @@ export const SRoutePointWrapper = styled(Flex, {
           margin: "auto",
           // $40 - offset at the top and bottom of the line
           height: `calc(100% - $40)`,
-          borderRight: "1px dashed $neutrals-7",
+          borderRight: "1px dashed $theme-b-n3",
           position: "absolute",
           top: "$32",
-          left: "$12",
+          left: 10,
+        },
+      },
+    },
+
+    active: {
+      false: {
+        before: {
+          borderRightColor: "$neutrals-5",
         },
       },
     },
   },
+
+  compoundVariants: [
+    {
+      last: "false",
+      active: "false",
+      css: {
+        before: {
+          borderRightColor: "$neutrals-5",
+        },
+      },
+    },
+  ],
 })
 
 export const SRoutePointIcon = styled(Flex, {
-  width: "$24",
-  minWidth: "$24",
-  height: "$24",
-  backgroundColor: "$neutrals-5",
-  borderRadius: "$rounded",
-  marginRight: "$8",
-  color: "$system-white",
+  width: "$20",
+  minWidth: "$20",
+  height: "$20",
+  marginTop: "$2",
+  marginRight: "$12",
+  backgroundColor: "$theme-n4-n9",
 
   variants: {
     active: {
       true: {
-        backgroundColor: "$neutrals-7",
+        backgroundColor: "$theme-vl-yl",
+        color: "$theme-w-n11",
+      },
+      false: {
+        backgroundColor: "$theme-vlr-ydr",
+        color: "$theme-w-n9",
       },
     },
   },
@@ -54,6 +78,15 @@ export const SRoutePointIcon = styled(Flex, {
 export const SDot = styled(Box, {
   height: "$4",
   width: "$4",
-  backgroundColor: "$system-white",
-  borderRadius: "$rounded",
+
+  variants: {
+    active: {
+      true: {
+        backgroundColor: "$theme-w-n11",
+      },
+      false: {
+        backgroundColor: "$theme-w-n9",
+      },
+    },
+  },
 })

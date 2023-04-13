@@ -6,15 +6,7 @@ import { useMedia } from "@/shared/hooks"
 import { Role } from "@/shared/types"
 import { HOME } from "@/constants"
 
-import {
-  GridContainer,
-  HeaderBar,
-  Hidden,
-  Redacted,
-  Spacer,
-  Stack,
-  Title,
-} from "@/shared/components"
+import { GridContainer, HeaderBar, Hidden, Redacted, Spacer, Stack } from "@/shared/components"
 import { TrackingDetailsItem } from "@/tracking/components"
 
 import { STrackingSection } from "@/tracking/components/TrackingContainer/TrackingContainer.styles"
@@ -23,7 +15,7 @@ export const TrackingPlaceholderQuote = () => {
   const navigate = useNavigate()
   const isMediumAndAbove = useMedia([mediaQueries.md], [true], false)
   const user = useAuthStore((state) => state.user)
-  const role = user?.authorities?.[0]?.authority
+  const role = user.authorities?.[0]?.authority
 
   return (
     <>
@@ -68,24 +60,18 @@ export const TrackingPlaceholderQuote = () => {
       >
         <STrackingSection>
           <Hidden below="md">
-            <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-              Main Info
-            </Title>
-            <Spacer size={24} />
+            <TrackingDetailsItem title="Main Info" main />
           </Hidden>
           <Stack space={24} dividers={isMediumAndAbove ? false : true} css={{ width: "$144" }}>
-            <TrackingDetailsItem
-              title="From where to where"
-              titleScale={{ "@initial": 11, "@md": 9 }}
-            >
+            <TrackingDetailsItem title="From where to where">
               <Redacted height="$24" width="320px" text animated />
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
+            <TrackingDetailsItem title="Pickup Date">
               <Redacted height="$20" width="200px" text animated />
             </TrackingDetailsItem>
 
-            <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
+            <TrackingDetailsItem title="Shipment Details">
               <Stack space={12}>
                 <Redacted height="$20" width="260px" text animated />
                 <Redacted height="$20" width="140px" text animated />

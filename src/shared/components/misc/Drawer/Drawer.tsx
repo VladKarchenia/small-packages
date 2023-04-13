@@ -64,9 +64,11 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             scrollable={scrollable}
             direction={direction}
           >
-            <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
-              {header}
-            </DrawerHeader>
+            {header ? (
+              <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
+                {header}
+              </DrawerHeader>
+            ) : null}
 
             <DrawerContent css={contentCss} {...props}>
               {children}

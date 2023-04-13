@@ -13,28 +13,67 @@ export const SStepper = styled("div", {
 export const SStepperHeader = styled("div", {
   paddingX: "$16",
   position: "relative",
-  // TODO: do we need this zIndex?
-  // zIndex: 1,
+
+  "@sm": {
+    justifySelf: "center",
+    paddingX: 0,
+  },
+
+  variants: {
+    last: {
+      true: {},
+      false: {
+        "@sm": {
+          before: {
+            content: "''",
+            height: "100%",
+            borderRight: "1px dashed $theme-b-n3",
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            zIndex: "$-1",
+          },
+        },
+      },
+    },
+  },
 })
 
 export const SStepperPanel = styled(motion.div, {
-  // TODO: Why do we need this overflow here? I'll comment it because we need to show cost tooltips
-  // overflow: "hidden",
-  position: "relative",
+  height: "100%",
 
-  before: {
-    content: "''",
-    width: 1,
-    height: "100%",
-    backgroundColor: "$system-black",
-    position: "absolute",
-    // ($24 + $2) - absolute position of the line relative to the parent
-    left: `calc($24 + $2)`,
+  "@max-sm": {
+    position: "relative",
+  },
+
+  variants: {
+    last: {
+      true: {},
+      false: {
+        "@max-sm": {
+          before: {
+            content: "''",
+            height: "100%",
+            borderRight: "1px dashed $theme-b-n3",
+            position: "absolute",
+            // ($24 + $2) - absolute position of the line relative to the parent
+            left: `calc($24 + $2)`,
+            zIndex: "$-1",
+          },
+        },
+      },
+    },
   },
 })
 
 export const SStepperContent = styled("div", {
   padding: "$12 $16 $48 $48",
+
+  "@sm": {
+    position: "absolute",
+    width: "calc(100% - $88)",
+    padding: "$8 0 0 $64",
+  },
 })
 
 export const SStepperButton = styled("button", {
@@ -42,17 +81,36 @@ export const SStepperButton = styled("button", {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  paddingY: "$16",
   width: "100%",
+  paddingY: "$8",
+  backgroundColor: "$theme-w-n11",
+  color: "$theme-b-n3",
   cursor: "pointer",
   textAlign: "left",
-  transition: "150ms background",
+  transition: "150ms ease-out",
+  outline: "none",
+
+  "@sm": {
+    width: "auto",
+    paddingY: "$8",
+  },
 
   hover: {
-    backgroundColor: "$neutrals-1",
+    color: "$theme-vl-ylr",
+  },
+
+  keyboardFocus: {
+    color: "$theme-vl-yl",
+    textDecoration: "underline",
+    textUnderlineOffset: "$space$4",
+  },
+
+  active: {
+    color: "$theme-vp-yp",
   },
 
   disabled: {
+    color: "$neutrals-5",
     pointerEvents: "none",
   },
 
@@ -74,12 +132,34 @@ export const SStepperButton = styled("button", {
   },
 })
 
+export const SStepperIcon = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "$20",
+  minWidth: "$20",
+  height: "$20",
+  backgroundColor: "$theme-vl-yl",
+  color: "$theme-w-n11",
+})
+
 export const SStepperItem = styled("div", {
+  "@sm": {
+    display: "grid",
+    gridTemplateColumns: "$88 1fr",
+  },
+
   variants: {
     inactive: {
       true: {
-        [`${SStepperButton}`]: {
-          opacity: 0.3,
+        [`${SStepperPanel}`]: {
+          before: {
+            borderRightColor: "$neutrals-5",
+          },
+        },
+        [`${SStepperIcon}`]: {
+          backgroundColor: "$theme-vlr-ydr",
+          color: "$theme-w-n5",
         },
       },
     },

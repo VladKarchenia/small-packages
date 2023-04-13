@@ -7,19 +7,20 @@ import { mediaQueries } from "@/stitches/theme"
 import { IPackaging, IPerson, ShipmentStatus, ShippingType } from "@/shared/types"
 import { useMedia } from "@/shared/hooks"
 import { useUpdateShipmentStatus } from "@/tracking/hooks"
-import { TRACKING } from "@/constants"
+import { INITIAL_READY_DATE_DEFAULT, TRACKING } from "@/constants"
 
 import {
   AddressInfoShort,
+  Box,
   Button,
   Copy,
+  ErrorLabel,
   Flex,
   GridContainer,
   Hidden,
   Link,
   Spacer,
   Stack,
-  Title,
 } from "@/shared/components"
 import { IconBox, IconChevronRight, IconClock } from "@/shared/icons"
 import { TrackingDetailsItem } from "@/tracking/components"
@@ -51,6 +52,7 @@ export const QuoteDetails = ({
     parseFloat(sender.fullAddress.latitude),
     parseFloat(sender.fullAddress.longitude),
   )
+  const isDateExpired = date < new Date(INITIAL_READY_DATE_DEFAULT)
 
   const { mutate: updateShipmentStatus } = useUpdateShipmentStatus()
 
@@ -70,23 +72,17 @@ export const QuoteDetails = ({
     >
       <STrackingSection>
         <Hidden below="md">
-          <Title as="h3" scale={{ "@initial": 8, "@md": 7 }}>
-            Main Info
-          </Title>
-          <Spacer size={24} />
+          <TrackingDetailsItem title="Main Info" main />
         </Hidden>
         <Stack space={24} dividers={isMediumAndAbove ? false : true}>
-          <TrackingDetailsItem
-            title="From where to where"
-            titleScale={{ "@initial": 11, "@md": 9 }}
-          >
+          <TrackingDetailsItem title="From where to where">
             <AddressInfoShort fromAddress={sender.fullAddress} toAddress={recipient.fullAddress} />
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Pickup Date" titleScale={{ "@initial": 11, "@md": 9 }}>
-            <Flex align="center">
-              <IconClock css={{ color: "$neutrals-7", paddingRight: "$8" }} />
-              <Copy scale={9} color="system-black">
+          <TrackingDetailsItem title="Pickup Date">
+            <Flex align="center" css={{ color: "$theme-b-n5" }}>
+              <IconClock css={{ paddingRight: "$8" }} />
+              <Copy>
                 {date
                   ? `${format(date, "MMM d, yyyy hh:mm aa")} ${formatInTimeZone(
                       date,
@@ -96,39 +92,36 @@ export const QuoteDetails = ({
                   : ""}
               </Copy>
             </Flex>
+            {isDateExpired ? (
+              <Box css={{ position: "absolute" }}>
+                <ErrorLabel id="pickupDateError">Ready time min value not met</ErrorLabel>
+              </Box>
+            ) : null}
           </TrackingDetailsItem>
 
-          <TrackingDetailsItem title="Shipment Details" titleScale={{ "@initial": 11, "@md": 9 }}>
-            <Stack space={8}>
-              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                {`Pickup type: ${packaging.pickupType}`}
-              </Copy>
-              <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
-                {`Package type: ${packaging.packagingType}`}
-              </Copy>
+          <TrackingDetailsItem title="Shipment Details">
+            <Stack space={8} css={{ color: "$theme-b-n5" }}>
+              <Copy>{`Pickup type: ${packaging.pickupType}`}</Copy>
+              <Copy>{`Package type: ${packaging.packagingType}`}</Copy>
               <Flex align="center" justify="between">
                 <Flex align="center" justify="center" css={{ gap: "$8" }}>
-                  <IconBox css={{ color: "$neutrals-7" }} />
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+                  <IconBox />
+                  <Copy>
                     {`${packaging.totalPackagesNumber} ${
-                      packaging.totalPackagesNumber === 1 ? "parcel" : "parcels"
+                      packaging.totalPackagesNumber === 1 ? "package" : "packages"
                     }`}
                   </Copy>
                 </Flex>
                 <Link
+                  as="button"
+                  type="button"
                   onClick={() => navigate(`${TRACKING}/${shippingType}/${shipmentId}/packages`)}
+                  fontWeight="bold"
+                  css={{ "& > span": { display: "flex", alignItems: "center" } }}
                 >
-                  <Copy
-                    as="span"
-                    scale={{ "@initial": 9, "@md": 8 }}
-                    color="system-black"
-                    bold
-                    css={{ display: "flex", alignItems: "center" }}
-                  >
-                    View all
-                    <Spacer size={4} horizontal />
-                    <IconChevronRight size="xs" css={{ paddingTop: "$2" }} />
-                  </Copy>
+                  View all
+                  <Spacer size={4} horizontal />
+                  <IconChevronRight size="xs" css={{ paddingTop: "$2" }} />
                 </Link>
               </Flex>
             </Stack>
@@ -141,17 +134,10 @@ export const QuoteDetails = ({
           <Button
             type="button"
             full
-            // TODO: disabled conditions?
-            // disabled={
-            //   (shippingType === ShippingType.Quote && !date) ||
-            //   (shippingType === ShippingType.Shipment && !rate.name)
-            // }
-
+            disabled={isDateExpired}
             onClick={() => updateShipmentStatus()}
           >
-            <Copy as="span" scale={8} color="system-white" bold>
-              Create a shipment
-            </Copy>
+            Create shipment
           </Button>
         </>
       ) : null}

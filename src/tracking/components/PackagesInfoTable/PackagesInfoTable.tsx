@@ -22,10 +22,10 @@ export const PackagesInfoTable = ({ parcels, shippingType }: IPackagesInfoCardPr
       />
 
       <Stack space={0}>
-        {parcels.map((parcel) => (
+        {parcels.map((parcel, index) => (
           <PackagesInfoTableRow
-            key={parcel.packageId}
-            packageNumber={parcel.packageId}
+            key={index}
+            packageNumber={index + 1}
             packageTrackingNumber="-"
             dimensions={
               parcel.dimensions.length && parcel.dimensions.width && parcel.dimensions.height

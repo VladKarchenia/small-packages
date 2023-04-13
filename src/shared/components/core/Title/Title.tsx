@@ -10,7 +10,7 @@ export interface ITitleProps extends Omit<ComponentProps<typeof STitle>, "color"
   dataTestid?: string
 }
 
-export const Title = ({ as, className, color, scale = 5, dataTestid, ...props }: ITitleProps) => {
+export const Title = ({ as, className, color, scale = 1, dataTestid, ...props }: ITitleProps) => {
   return (
     <STitle
       as={as}

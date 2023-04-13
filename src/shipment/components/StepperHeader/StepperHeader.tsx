@@ -10,7 +10,7 @@ import { Role, ShippingType, ShipmentState } from "@/shared/types"
 import { StepName } from "@/shipment/types"
 import { HOME, TRACKING } from "@/constants"
 
-import { Box, Button, Copy, Flex, HeaderBar, Hidden, useStepperContext } from "@/shared/components"
+import { Box, Button, Flex, HeaderBar, Hidden, useStepperContext } from "@/shared/components"
 import { EditActionsButton } from "@/shipment/components"
 
 export const StepperHeader = ({ title }: { title: string }) => {
@@ -18,7 +18,7 @@ export const StepperHeader = ({ title }: { title: string }) => {
   const { selected, setSelected } = useStepperContext("StepperHeader")
   const shippingType = useBoundStore((state) => state.shippingType)
   const user = useAuthStore((state) => state.user)
-  const role = user?.authorities?.[0]?.authority
+  const role = user.authorities?.[0]?.authority
   const isFirstStep = selected[0] === StepName.INFO || selected[0] === StepName.FROM
   // TODO: add on the shipment page
   // const isLastStep =
@@ -48,7 +48,7 @@ export const StepperHeader = ({ title }: { title: string }) => {
       <HeaderBar title={title} onClick={onBackHandler} />
 
       <Hidden below="sm">
-        <Flex css={{ "@sm": { gap: "$16", paddingRight: "$16" } }}>
+        <Flex css={{ "@sm": { gap: "$16" } }}>
           {/* TODO: add moew conditions */}
           {isEditMode ? (
             <>
@@ -72,9 +72,7 @@ export const StepperHeader = ({ title }: { title: string }) => {
                     },
                   }}
                 >
-                  <Copy as="span" scale={8} color="system-black" bold>
-                    {shippingType === ShippingType.Quote ? "Delete a quote" : "Delete a shipment"}
-                  </Copy>
+                  {shippingType === ShippingType.Quote ? "Delete a quote" : "Delete a shipment"}
                 </Button>
               ) : null}
 
@@ -95,9 +93,7 @@ export const StepperHeader = ({ title }: { title: string }) => {
                   },
                 }}
               >
-                <Copy as="span" scale={8} color="system-black" bold>
-                  {shippingType === ShippingType.Quote ? "Cancel a quote" : "Cancel a shipment"}
-                </Copy>
+                {shippingType === ShippingType.Quote ? "Cancel a quote" : "Cancel a shipment"}
               </Button>
             </>
           ) : null}
@@ -142,9 +138,7 @@ export const StepperHeader = ({ title }: { title: string }) => {
                 },
               }}
             >
-              <Copy as="span" scale={8} color="system-black" bold>
-                Save
-              </Copy>
+              Save
             </Button>
           ) : null}
         </Flex>

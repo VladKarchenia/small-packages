@@ -8,8 +8,9 @@ import { SLink } from "./Link.styles"
 
 export interface ILinkProps extends Omit<ComponentProps<typeof SLink>, "onClick"> {
   as?: "a" | "button"
-  intent?: ICopyProps["intent"]
   scale?: ICopyProps["scale"]
+  fontWeight?: ICopyProps["fontWeight"]
+  noWrap?: boolean
   onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
   shouldPreventDefault?: boolean
 }
@@ -19,8 +20,9 @@ export const Link = ({
   as = "a",
   shouldPreventDefault = false,
   onClick,
-  intent = "copy",
-  scale = 8,
+  scale = 6,
+  fontWeight,
+  noWrap,
   ...props
 }: ILinkProps): React.ReactElement => {
   const handleOnClick = useCallback(
@@ -40,7 +42,6 @@ export const Link = ({
       ...rest,
       as,
       target,
-      intent,
       className,
     }
 
@@ -52,13 +53,17 @@ export const Link = ({
     }
 
     return commonLinkProps
-  }, [props, as, intent])
+  }, [props, as])
 
   return (
-    <SLink data-ui="link" isCtaIntent={intent === "cta"} onClick={handleOnClick} {...linkProps}>
-      <Copy as="span" color="system-inherit" intent={intent} scale={scale}>
-        {children}
-      </Copy>
+    <SLink data-ui="link" onClick={handleOnClick} {...linkProps}>
+      {!noWrap ? (
+        <Copy as="span" scale={scale} fontWeight={fontWeight}>
+          {children}
+        </Copy>
+      ) : (
+        children
+      )}
     </SLink>
   )
 }

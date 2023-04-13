@@ -11,16 +11,12 @@ export const AddressInfoShort = ({
   toAddress: IAddress
 }) => {
   return (
-    <Flex align="center">
-      <Copy scale={8} color="system-black">
-        {`${fromAddress.country}, ${fromAddress.state}, ${fromAddress.city}`}
-      </Copy>
+    <Flex align="center" css={{ color: "$theme-b-n5" }}>
+      <Copy>{`${fromAddress.country}, ${fromAddress.state}, ${fromAddress.city}`}</Copy>
       <Flex css={{ paddingX: "$8" }}>
         <IconArrowRight />
       </Flex>
-      <Copy scale={8} color="system-black">
-        {`${toAddress.country}, ${toAddress.state}, ${toAddress.city}`}
-      </Copy>
+      <Copy>{`${toAddress.country}, ${toAddress.state}, ${toAddress.city}`}</Copy>
     </Flex>
   )
 }

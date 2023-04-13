@@ -7,7 +7,6 @@ export const getFormFieldProps = ({
   description,
   error,
   hasError,
-  isFocused,
   labelProps,
   borderless,
   prefix,
@@ -20,8 +19,6 @@ export const getFormFieldProps = ({
 
     error,
     hasError,
-
-    isFocused,
 
     labelProps: {
       ...labelProps,

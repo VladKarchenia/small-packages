@@ -1,6 +1,6 @@
 export * from "./auth"
 export * from "./home"
-export * from "./profile"
+export * from "./settings"
 export * from "./shipment"
 export * from "./tracking"
 export * from "./error"

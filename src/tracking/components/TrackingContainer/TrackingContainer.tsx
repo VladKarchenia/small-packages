@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import { shallow } from "zustand/shallow"
+import { useTheme } from "next-themes"
 
 import { useBoundStore } from "@/store"
 import { ICost, RouteParams, ShippingType } from "@/shared/types"
@@ -12,6 +13,8 @@ import {
   TrackingMain,
   TrackingPlaceholderShipment,
   TrackingPlaceholderQuote,
+  // ShipmentDetailsUnauthorized,
+  // TrackingPlaceholderShipmentUnauthorized,
 } from "@/tracking/components"
 
 export const costs: ICost[] = [
@@ -90,6 +93,7 @@ export const TrackingContainer = () => {
     shallow,
   )
   // const role = user?.authorities?.[0]?.authority
+  const { theme } = useTheme()
 
   const { isLoading, data } = useShipmentById(shipmentId)
 
@@ -109,14 +113,13 @@ export const TrackingContainer = () => {
     }
 
     // TODO: need to add condition to show this component
-    // if (shippingType === ShippingType.Shipment) {
-    //   return <TrackingPlaceholderShipmentUnauthorized />
-    // }
+    // return <TrackingPlaceholderShipmentUnauthorized />
 
     return <TrackingPlaceholderShipment />
   }
 
-  const { sender, recipient, date, rate, shipmentStatus, createdAt, packaging } = data
+  const { sender, recipient, currentLocation, date, rate, shipmentStatus, createdAt, packaging } =
+    data
 
   if (shippingType === ShippingType.Quote) {
     return (
@@ -141,8 +144,19 @@ export const TrackingContainer = () => {
 
   // TODO: need to add condition to show this component
   // return (
-  //   <TrackingMain headerTitle="Shipment details" createdAt={createdAt}>
-  //     <ShipmentDetailsUnauthorized sender={sender} recipient={recipient} rate={rate} />
+  //   <TrackingMain
+  //     headerTitle="Shipment details"
+  //     sender={sender}
+  //     createdAt={createdAt}
+  //     shipmentStatus={shipmentStatus}
+  //   >
+  //     <ShipmentDetailsUnauthorized
+  //       sender={sender}
+  //       recipient={recipient}
+  //       currentLocation={currentLocation}
+  //       rate={rate}
+  //       theme={theme}
+  //     />
   //   </TrackingMain>
   // )
 
@@ -156,11 +170,13 @@ export const TrackingContainer = () => {
       <ShipmentDetails
         sender={sender}
         recipient={recipient}
+        currentLocation={currentLocation}
         packaging={packaging}
         date={date}
         rate={rate}
         shipmentId={shipmentId}
         shippingType={shippingType}
+        theme={theme}
       />
     </TrackingMain>
   )

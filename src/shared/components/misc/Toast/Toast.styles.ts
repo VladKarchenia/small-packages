@@ -15,13 +15,13 @@ export const SToastIcon = styled(Flex, {
         $$backgroundColor: rgba("special-error", 0.2),
       },
       info: {
-        $$backgroundColor: rgba("brand-blue-dark", 0.2),
+        $$backgroundColor: rgba("special-info", 0.2),
       },
       warning: {
-        $$backgroundColor: rgba("brand-yellow-primary", 0.2),
+        $$backgroundColor: rgba("special-warning", 0.2),
       },
       success: {
-        $$backgroundColor: rgba("brand-green-primary", 0.2),
+        $$backgroundColor: rgba("special-success", 0.2),
       },
       default: {
         $$backgroundColor: "transparent",

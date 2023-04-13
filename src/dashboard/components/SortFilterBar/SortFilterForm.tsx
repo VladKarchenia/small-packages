@@ -15,7 +15,6 @@ import {
   SearchFilterDrawer,
   GridItem,
   Button,
-  Copy,
   useDrawerActions,
   FormSelect,
 } from "@/shared/components"
@@ -127,20 +126,16 @@ export const SortFiltertForm = () => {
       <Grid
         gap={{ "@initial": 8, "@sm": 16 }}
         columns="1fr 1fr"
-        css={{ paddingX: "$16", paddingTop: "$16", backgroundColor: "$system-white" }}
+        css={{ paddingX: "$16", paddingTop: "$16", backgroundColor: "$theme-w-n11" }}
       >
         <GridItem>
           <Button full onClick={handleResetClick}>
-            <Copy as="span" scale={8} color="system-white" bold>
-              Reset
-            </Copy>
+            Reset
           </Button>
         </GridItem>
         <GridItem>
           <Button action="secondary" full onClick={() => close("sortFilterBar")}>
-            <Copy as="span" scale={8} color="system-black" bold>
-              Apply
-            </Copy>
+            Apply
           </Button>
         </GridItem>
       </Grid>

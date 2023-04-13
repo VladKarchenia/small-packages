@@ -48,9 +48,7 @@ export const SearchTermCombobox = () => {
     if (isAxiosError(error)) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            {error.response?.data.errorMessage || error.message}
-          </Copy>
+          <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
         </Flex>
       )
     }
@@ -58,9 +56,7 @@ export const SearchTermCombobox = () => {
     if (results.length === 0) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            Not found
-          </Copy>
+          <Copy color="theme-b-n3">Not found</Copy>
         </Flex>
       )
     }
@@ -86,9 +82,9 @@ export const SearchTermCombobox = () => {
               css={{
                 "> div": {
                   paddingY: "$12",
-                  cursor: "pointer",
-                  hover: {
-                    backgroundColor: "$neutrals-3",
+
+                  keyboardFocus: {
+                    backgroundColor: "$theme-n2-n7",
                   },
                 },
                 firstChild: {
@@ -100,6 +96,7 @@ export const SearchTermCombobox = () => {
             >
               <Box
                 css={{
+                  color: "$theme-b-n3",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   overflow: "hidden",
@@ -107,12 +104,8 @@ export const SearchTermCombobox = () => {
                 onClick={() => navigate(`${TRACKING}/${shippingType}/${shipment.ID}`)}
               >
                 <Flex direction="column">
-                  <Copy scale={9} color="system-black" bold>
-                    #{shipment.ID}
-                  </Copy>
-                  <Copy scale={10} color="system-black">
-                    {shipment.ORIGIN_ADDRESS}
-                  </Copy>
+                  <Copy fontWeight="bold">#{shipment.ID}</Copy>
+                  <Copy scale={12}>{shipment.CONSIGNEE_ADDRESS}</Copy>
                 </Flex>
               </Box>
             </Box>
@@ -130,7 +123,7 @@ export const SearchTermCombobox = () => {
       placeholder="Search"
       inputValue={inputValue}
       prefix={<IconSearch />}
-      clearDestinationFn={() => resetFilterField("searchTerm")}
+      clearValueFn={() => resetFilterField("searchTerm")}
     >
       <Content />
     </MobileCombobox>

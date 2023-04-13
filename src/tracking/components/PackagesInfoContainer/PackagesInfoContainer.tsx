@@ -7,7 +7,7 @@ import { RouteParams, ShippingType } from "@/shared/types"
 import { useShipmentById } from "@/shared/data"
 import { TRACKING } from "@/constants"
 
-import { Copy, GridContainer, HeaderBar, Hidden, Spacer } from "@/shared/components"
+import { Title, GridContainer, HeaderBar, Hidden, Spacer } from "@/shared/components"
 import {
   PackagesInfo,
   PackagesInfoListPlaceholder,
@@ -47,14 +47,9 @@ export const PackagesInfoContainer = () => {
         </Hidden>
         <Hidden below="sm">
           <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-            <Copy
-              scale={{ "@initial": 8, "@md": 5 }}
-              color="system-black"
-              bold
-              css={{ paddingRight: "$12" }}
-            >
+            <Title scale={2} color="theme-b-n3" css={{ paddingRight: "$12" }}>
               All packages
-            </Copy>
+            </Title>
           </GridContainer>
         </Hidden>
         <Spacer size={{ "@initial": 16, "@sm": 32 }} />
@@ -82,14 +77,9 @@ export const PackagesInfoContainer = () => {
       </Hidden>
       <Hidden below="sm">
         <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-          <Copy
-            scale={{ "@initial": 8, "@md": 5 }}
-            color="system-black"
-            bold
-            css={{ paddingRight: "$12" }}
-          >
+          <Title scale={2} color="theme-b-n3" css={{ paddingRight: "$12" }}>
             All packages
-          </Copy>
+          </Title>
         </GridContainer>
       </Hidden>
       <Spacer size={{ "@initial": 16, "@sm": 32 }} />

@@ -26,23 +26,45 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
   const country = getValues(`${person}.fullAddress.country`)
   const zipCode = getValues(`${person}.fullAddress.zipCode`)
   const state = getValues(`${person}.fullAddress.state`)
+  const city = getValues(`${person}.fullAddress.city`)
+  const address1 = getValues(`${person}.fullAddress.address1`)
+  const address2 = getValues(`${person}.fullAddress.address2`)
+  const latitude = getValues(`${person}.fullAddress.latitude`)
+  const longitude = getValues(`${person}.fullAddress.longitude`)
 
   const { data, status, error } = useCitiesByZipCode({ country, zipCode })
 
-  const statesList = useMemo(() => data || [], [data])
+  const statesList = useMemo(() => data?.data || [], [data])
   const citiesList = useMemo(
     () => statesList.find((item) => item.state === state)?.cities || [],
     [statesList, state],
   )
+  const zipLatitude = useMemo(() => data?.latitude || "", [data?.latitude])
+  const zipLongitude = useMemo(() => data?.longitude || "", [data?.longitude])
 
   useEffect(() => {
     if (status === "success" && statesList.length !== 0) {
-      const states = statesList.map((item) => item.state)
+      setValue(`${person}.fullAddress.state`, state ? state : statesList[0].state)
+      setValue(`${person}.fullAddress.city`, city ? city : citiesList[0])
+      setValue(`${person}.fullAddress.latitude`, latitude ? latitude : zipLatitude)
+      setValue(`${person}.fullAddress.longitude`, longitude ? longitude : zipLongitude)
 
-      setValue(`${person}.fullAddress.state`, state ? state : states[0])
       trigger(`${person}.fullAddress.zipCode`)
     }
-  }, [status, statesList, person, state, setValue, trigger])
+  }, [
+    status,
+    statesList,
+    citiesList,
+    person,
+    state,
+    city,
+    setValue,
+    trigger,
+    latitude,
+    zipLatitude,
+    longitude,
+    zipLongitude,
+  ])
 
   useEffect(() => {
     if (isAxiosError(error)) {
@@ -119,7 +141,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
           />
         }
         end={
-          <Grid columns="1fr $96" columnGap={8}>
+          <Grid columns="1fr $96" columnGap={16}>
             <GridItem>
               <Controller
                 name={`${person}.phone`}
@@ -358,7 +380,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       setValue(`${person}.fullAddress.latitude`, "")
                       setValue(`${person}.fullAddress.longitude`, "")
 
-                      clearErrors([`${person}.fullAddress.city`, `${person}.fullAddress.address1`])
+                      clearErrors([`${person}.fullAddress.address1`])
                     }
                   }}
                   id={`${person}.fullAddress.zipCode`}
@@ -395,8 +417,6 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                       setValue(`${person}.fullAddress.address1`, "")
                       setValue(`${person}.fullAddress.address2`, "")
                       setValue(`${person}.fullAddress.displayName`, "")
-                      setValue(`${person}.fullAddress.latitude`, "")
-                      setValue(`${person}.fullAddress.longitude`, "")
                     }
 
                     return field.onChange(value)
@@ -421,31 +441,27 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                 value: true,
                 message: "Required field",
               },
-              maxLength: {
-                value: 40,
-                message: "City max length exceeded",
-              },
             }}
-            render={({ field: { onChange, onBlur, value, name } }) => {
+            render={({ field }) => {
               return (
-                <AddressFieldPopover
-                  name={name}
-                  value={value}
-                  onChange={onChange}
-                  fieldName="city"
-                  id={`${person}.fullAddress.city`}
+                <FormSelect
+                  {...register(field.name, { shouldUnregister: true })}
+                  {...field}
+                  onValueChange={(value) => {
+                    if (value !== field.value) {
+                      setValue(`${person}.fullAddress.address1`, "")
+                      setValue(`${person}.fullAddress.address2`, "")
+                      setValue(`${person}.fullAddress.displayName`, "")
+                    }
+
+                    return field.onChange(value)
+                  }}
                   label="City"
                   labelProps={{ hidden: true, required: true }}
                   description="City"
+                  options={citiesList}
                   disabled={citiesList.length === 0}
-                  errorMessage={errors[person]?.fullAddress?.city?.message}
-                  onBlur={(event) => {
-                    onBlur()
-                    onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
-                    trigger(`${person}.fullAddress.city`)
-                  }}
-                  defaultSuggestions={citiesList}
-                  person={person}
+                  error={errors[person]?.fullAddress?.city?.message}
                 />
               )
             }}
@@ -464,7 +480,7 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                 message: "Required field",
               },
               maxLength: {
-                value: 40,
+                value: 100,
                 message: "Address max length exceeded",
               },
             }}
@@ -474,13 +490,12 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                   name={name}
                   value={value}
                   onChange={onChange}
-                  fieldName="address1"
                   id={`${person}.fullAddress.address1`}
                   label="Address line 1"
                   labelProps={{ hidden: true, required: true }}
                   description="Address line 1"
-                  placeholder="Street, apartment"
-                  disabled={statesList.length === 0 || citiesList.length === 0}
+                  placeholder=""
+                  disabled={citiesList.length === 0}
                   errorMessage={errors[person]?.fullAddress?.address1?.message}
                   onBlur={(event) => {
                     onBlur()
@@ -488,6 +503,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                     trigger(`${person}.fullAddress.address1`)
                   }}
                   person={person}
+                  zipLatitude={zipLatitude}
+                  zipLongitude={zipLongitude}
                 />
               )
             }}
@@ -508,6 +525,19 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                     },
                   })}
                   {...field}
+                  onChange={(event) => {
+                    const formattedValue = event?.target?.value.replaceAll(" ", "").toUpperCase()
+
+                    if (formattedValue !== address2) {
+                      field.onChange(formattedValue)
+                      setValue(
+                        `${person}.fullAddress.displayName`,
+                        formattedValue !== ""
+                          ? `${formattedValue}, ${address1}, ${city}, ${state}, ${zipCode}, ${country}`
+                          : `${address1}, ${city}, ${state}, ${zipCode}, ${country}`,
+                      )
+                    }
+                  }}
                   onBlur={(event) => {
                     field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
                     trigger(`${person}.fullAddress.address2`)
@@ -516,7 +546,8 @@ export const ReturnAddressSection = ({ switchValue }: { switchValue: "similar" |
                   label="Address line 2"
                   labelProps={{ hidden: true }}
                   description="Address line 2"
-                  placeholder="House, suite, etc."
+                  placeholder="Apt, suite, etc."
+                  disabled={address1.length === 0}
                   type="text"
                   error={errors[person]?.fullAddress?.address2?.message}
                 />

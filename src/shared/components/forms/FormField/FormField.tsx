@@ -34,10 +34,6 @@ export interface IFormFieldCommonProps {
 
   prefix?: React.ReactNode
   suffix?: React.ReactNode
-
-  afterField?: React.ReactNode
-
-  isFocused?: boolean
 }
 
 export interface IFormFieldProps
@@ -62,29 +58,18 @@ export const FormField = ({
   prefix,
   suffix,
 
-  afterField,
-
-  isFocused,
-
   ...props
 }: IFormFieldProps) => {
   return (
     <SFormField {...props} id={props.id ? `${props.id}-form-field` : undefined}>
       <Flex justify="between">
-        <FormLabel {...labelProps}>
-          {label}
-          {labelProps?.required ? (
-            <Copy as="span" scale={9} css={{ paddingLeft: "$2" }}>
-              *
-            </Copy>
-          ) : null}
-        </FormLabel>
+        <FormLabel {...labelProps}>{label}</FormLabel>
 
         {description && (
-          <Copy scale={10}>
+          <Copy scale={10} color="neutrals-5" fontWeight="semiBold">
             {description}
             {labelProps?.required ? (
-              <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
+              <Copy as="span" scale={10} fontWeight="semiBold" css={{ paddingLeft: "$2" }}>
                 *
               </Copy>
             ) : null}
@@ -99,15 +84,9 @@ export const FormField = ({
         )}
       </Flex>
 
-      {(!labelProps?.hidden || description) && <Spacer size={8} />}
+      {(!labelProps?.hidden || description) && <Spacer size={4} />}
 
-      <SFormFieldContainer
-        hasError={!!error || hasError}
-        isFocused={isFocused}
-        borderless={borderless}
-        // TODO: fix this
-        // isDisabled={true}
-      >
+      <SFormFieldContainer hasError={!!error || hasError} borderless={borderless}>
         {prefix && <SFormFieldPrefix>{prefix}</SFormFieldPrefix>}
 
         {children}
@@ -115,12 +94,9 @@ export const FormField = ({
         {suffix && <SFormFieldSuffix>{suffix}</SFormFieldSuffix>}
       </SFormFieldContainer>
 
-      {(error || afterField) && (
+      {error && (
         <Box css={{ position: "absolute" }}>
-          <Flex justify="between">
-            {error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}
-            {afterField}
-          </Flex>
+          <ErrorLabel id={props?.id}>{error}</ErrorLabel>
         </Box>
       )}
     </SFormField>

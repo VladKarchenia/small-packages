@@ -37,9 +37,7 @@ export const ResponseContent: React.FC<React.PropsWithChildren<IResponseContentP
   if (isAxiosError(error)) {
     return (
       <Flex css={{ padding: "$16" }}>
-        <Copy scale={8} color="system-black">
-          {error.response?.data.errorMessage || error.message}
-        </Copy>
+        <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
       </Flex>
     )
   }
@@ -47,9 +45,7 @@ export const ResponseContent: React.FC<React.PropsWithChildren<IResponseContentP
   if (results.length === 0) {
     return (
       <Flex css={{ padding: "$16" }}>
-        <Copy scale={8} color="system-black">
-          Not found
-        </Copy>
+        <Copy color="theme-b-n3">Not found</Copy>
       </Flex>
     )
   }
@@ -71,6 +67,7 @@ export const ResponseContent: React.FC<React.PropsWithChildren<IResponseContentP
               id="Select all"
               label="Select all"
               checked={isCheckAll}
+              iconType="hyphen"
             />
           </ResponseContentItem>
 
@@ -89,20 +86,16 @@ export const ResponseContent: React.FC<React.PropsWithChildren<IResponseContentP
           {/* <Grid
             gap={{ "@initial": 8, "@sm": 16 }}
             columns="1fr 1fr"
-            css={{ paddingX: "$16", paddingTop: "$16", backgroundColor: "$system-white" }}
+            css={{ paddingX: "$16", paddingTop: "$16", backgroundColor: "$neutrals-0" }}
           >
             <GridItem>
               <Button full onClick={() => setStatusFilter([])}>
-                <Copy as="span" scale={8} color="system-white" bold>
                   Reset
-                </Copy>
               </Button>
             </GridItem>
             <GridItem>
               <Button action="secondary" full onClick={() => close("statusDrawer")}>
-                <Copy as="span" scale={8} color="system-black" bold>
                   Apply
-                </Copy>
               </Button>
             </GridItem>
           </Grid> */}
@@ -124,8 +117,13 @@ export const ResponseContentItem: React.FC<React.PropsWithChildren> = ({ childre
           "@md": {
             padding: "$12 $16",
             cursor: "pointer",
+
             hover: {
-              backgroundColor: "$neutrals-3",
+              backgroundColor: "$theme-n2-n7",
+            },
+
+            keyboardFocus: {
+              backgroundColor: "$theme-n2-n7",
             },
 
             "> p": {

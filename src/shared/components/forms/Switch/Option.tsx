@@ -1,6 +1,6 @@
 import { forwardRef, InputHTMLAttributes, memo } from "react"
 
-import { SSwitchOption, SSwitchOptionInput } from "./Option.styles"
+import { SSwitchOption, SSwitchOptionInput, SSwitchOptionBox } from "./Switch.styles"
 
 export interface SwitchOptionProps extends InputHTMLAttributes<HTMLInputElement> {}
 
@@ -9,6 +9,7 @@ export const SwitchOption = memo(
     return (
       <SSwitchOption ref={ref} data-switch-option={props.value}>
         <SSwitchOptionInput type="radio" {...props} />
+        <SSwitchOptionBox />
       </SSwitchOption>
     )
   }),

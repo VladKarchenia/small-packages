@@ -1,91 +1,38 @@
-import { useCallback, useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
 import { useFormContext } from "react-hook-form"
 
-import { useShipmentById } from "@/shared/data"
-import { RouteParams, ShipmentState } from "@/shared/types"
-import { StepName, StepperState } from "@/shipment/types"
+import { ShipmentState } from "@/shared/types"
+import { StepName } from "@/shipment/types"
 
 import {
   Button,
-  Copy,
   GridContainer,
   Hidden,
   Spacer,
   Stack,
+  Title,
   useStepperContext,
 } from "@/shared/components"
 import { LocationInput, StepActionsBar, LocationPopover } from "@/shipment/components"
 
 export const AddressInfo = ({
   handleContinueClick,
-  setStepperState,
 }: {
   handleContinueClick: (step: StepName.INFO, nextStep: StepName.SHIPMENT) => void
-  setStepperState: React.Dispatch<React.SetStateAction<StepperState>>
 }) => {
-  const [isStepChanged, setIsStepChanged] = useState(false)
   const { setValue, watch } = useFormContext<ShipmentState>()
   const { sender, recipient } = watch()
-  const stringifiedSenderAddress = JSON.stringify(sender.fullAddress)
-  const stringifiedRecipientAddress = JSON.stringify(recipient.fullAddress)
   const { setSelected } = useStepperContext("AddressInfo")
-  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
-  const { data } = useShipmentById(shipmentId)
-  const location = useLocation()
-  const isEditMode = location.pathname.includes("edit")
 
   const onContinueHandler = () => {
     setSelected([StepName.SHIPMENT])
     handleContinueClick(StepName.INFO, StepName.SHIPMENT)
   }
 
-  // sets the value of the isStepChanged variable according to whether the sender or
-  // recipient fullAddress from the form has changed compared to the currently stored
-  const stepChangesChecker = useCallback(() => {
-    if (data?.sender.fullAddress && data?.recipient.fullAddress) {
-      setIsStepChanged(
-        JSON.stringify(sender.fullAddress) !== JSON.stringify(data.sender.fullAddress) ||
-          JSON.stringify(recipient.fullAddress) !== JSON.stringify(data.recipient.fullAddress),
-      )
-    }
-  }, [
-    sender.fullAddress,
-    recipient.fullAddress,
-    data?.sender.fullAddress,
-    data?.recipient.fullAddress,
-  ])
-
-  // checks if edit mode is now and triggers the stepChangesChecker function
-  // if the stringifiedSenderAddress or stringifiedRecipientAddress variables have changed
-  useEffect(() => {
-    if (isEditMode) {
-      stepChangesChecker()
-    }
-  }, [stringifiedSenderAddress, stringifiedRecipientAddress, isEditMode, stepChangesChecker])
-
-  // checks if edit mode is now and triggers the setStepperState function
-  // if the isStepChanged variable has changed setting completed and disabled fields to the stepper steps
-  useEffect(() => {
-    if (isEditMode) {
-      setStepperState((prevState: StepperState) => {
-        return {
-          ...prevState,
-          rates: {
-            ...prevState.rates,
-            // if the address hasn't been changed, set to true
-            completed: !isStepChanged,
-            // if the address has been changed, set to false
-            disabled: isStepChanged,
-          },
-        }
-      })
-    }
-  }, [isStepChanged, setStepperState, isEditMode])
-
   return (
     <GridContainer fullBleed>
       <Hidden below="sm">
+        <Title as="h3" scale={3}>Address Information</Title>
+        <Spacer size={40} />
         <Stack space={24}>
           <LocationPopover
             value={sender.fullAddress}
@@ -146,18 +93,15 @@ export const AddressInfo = ({
       <Spacer size={{ "@initial": 24, "@sm": 32 }} />
       <StepActionsBar>
         <Button
-          onClick={onContinueHandler}
           full
           disabled={
             !sender.fullAddress.displayName ||
             !recipient.fullAddress.displayName ||
             sender.fullAddress.displayName === recipient.fullAddress.displayName
           }
+          onClick={onContinueHandler}
         >
-          {/* TODO: fix default button copy */}
-          <Copy as="span" scale={8} color="system-white" bold>
-            Continue
-          </Copy>
+          Continue
         </Button>
       </StepActionsBar>
     </GridContainer>

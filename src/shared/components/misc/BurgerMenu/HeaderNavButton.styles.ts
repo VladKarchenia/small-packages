@@ -13,17 +13,13 @@ export const SHeaderNavButton = styled("button", {
   variants: {
     rounded: {
       true: {
-        backgroundColor: rgba("system-white", 0.8),
-        borderRadius: "$pill",
+        backgroundColor: rgba("neutrals-0", 0.8),
+        borderRadius: "$rounded",
         height: "$40",
 
         ...multipleSelectors(["hover", "keyboardFocus"], {
-          backgroundColor: rgba("system-white", 1),
+          backgroundColor: rgba("neutrals-0", 1),
         }),
-
-        active: {
-          backgroundColor: "$neutrals-3",
-        },
       },
       false: {
         height: "100%",

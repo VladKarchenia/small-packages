@@ -17,12 +17,16 @@ export interface IPlaceResponse {
   address1: string
   address2: string
   city: string
+  contactName: string
   country: string
   displayName: string
+  email: string
   id: string
   latitude: string
+  locationType: string
   longitude: string
-  organizationId: string
+  phone: string
+  phoneExtension: string
   state: string
   zipCode: string
 }
@@ -42,16 +46,22 @@ export interface IPlacesResponse {
   totalPages: number
 }
 
-export interface ISearchPlacesResponse {
-  first: IPlacesResponse
-  second: IPlacesResponse
-}
-
 export interface ICitiesByZipResponse {
   state: string
   cities: string[]
+  country: string
+}
+
+export enum ZipType {
+  STANDARD = "STANDARD",
+  UNIQUE = "UNIQUE",
+  POBOX = "PO BOX",
+  MILITARY = "MILITARY",
 }
 
 export interface ISearchCitiesByZipResponse {
   data: ICitiesByZipResponse[]
+  latitude?: string
+  longitude?: string
+  zipType: ZipType
 }

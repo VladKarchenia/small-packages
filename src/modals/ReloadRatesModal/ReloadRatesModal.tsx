@@ -20,7 +20,7 @@ export const ReloadRatesModal = () => {
     <GeneralModal {...reloadRates}>
       <Stack space={16} css={{ paddingX: "$16" }}>
         <Stack space={8} css={{ textAlign: "center" }}>
-          <Title as="h3" scale={6}>
+          <Title as="h3" scale={3}>
             Rates have expired, please reload this page
           </Title>
           <Copy scale={9} css={{ paddingBottom: "$8" }}>
@@ -31,16 +31,12 @@ export const ReloadRatesModal = () => {
         <Grid gap={{ "@initial": 8, "@sm": 16 }} columns="1fr 1fr">
           <GridItem>
             <Button full onClick={handleContinueClick}>
-              <Copy as="span" scale={8} color="system-white" bold>
-                Reload
-              </Copy>
+              Reload
             </Button>
           </GridItem>
           <GridItem>
             <Button action="secondary" full onClick={handleCancelClick}>
-              <Copy as="span" scale={8} color="system-black" bold>
-                Cancel
-              </Copy>
+              Cancel
             </Button>
           </GridItem>
         </Grid>

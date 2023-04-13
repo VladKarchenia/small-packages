@@ -10,13 +10,13 @@ export const SDatesInputContent = styled("div", {
   /* Change default DayPicker styles */
   ".rdp-day_selected:not([disabled])": {
     border: "2px solid currentColor",
-    backgroundColor: "$system-black",
-    color: "$system-white",
+    backgroundColor: "var(--colors-neutrals-12)",
+    color: "var(--colors-neutrals-0)",
   },
 
   ".rdp-button:hover:not([disabled])": {
     borderColor: "currentColor",
-    color: "$system-white",
+    color: "var(--colors-neutrals-0)",
     "--rdp-background-color": "var(--colors-neutrals-6)",
   },
 

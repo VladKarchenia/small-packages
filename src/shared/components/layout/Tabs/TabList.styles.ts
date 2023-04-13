@@ -3,14 +3,10 @@ import { styled } from "@/stitches/config"
 import { Flex } from "../Flex"
 
 export const STabList = styled(Flex, {
-  alignItems: "start",
   marginBottom: "$20",
-  whiteSpace: "nowrap",
-  overflowX: "auto",
+  borderBottom: "1px solid $theme-n4-n7",
 
   "@md": {
-    marginBottom: "$24",
-    borderBottom: "1px solid $neutrals-4",
-    overflow: "visible",
+    marginBottom: "$32",
   },
 })

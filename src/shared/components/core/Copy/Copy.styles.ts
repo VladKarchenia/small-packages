@@ -6,9 +6,12 @@ export const SCopy = styled("p", Text, {
   fontSmoothing: true,
 
   variants: {
-    bold: {
-      true: { fontWeight: 500 },
-      false: { fontWeight: 400 },
+    fontWeight: {
+      regular: { fontWeight: 400 },
+      medium: { fontWeight: 500 },
+      semiBold: { fontWeight: 600 },
+      bold: { fontWeight: 700 },
+      black: { fontWeight: 900 },
     },
 
     uppercase: {
@@ -26,7 +29,7 @@ export const SCopy = styled("p", Text, {
   },
 
   defaultVariants: {
-    bold: "false",
+    fontWeight: "regular",
     uppercase: "false",
   },
 })

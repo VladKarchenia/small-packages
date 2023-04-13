@@ -1,15 +1,6 @@
 import { colorsMap } from "./colors"
 
 export const theme = {
-  radii: {
-    0: "0px",
-    2: "2px",
-    4: "4px",
-    8: "8px",
-    16: "16px",
-    pill: "9999px",
-    rounded: "50%",
-  },
   colors: colorsMap,
   space: {
     0: "0px",
@@ -33,6 +24,9 @@ export const theme = {
     192: "192px",
     256: "256px",
   },
+  fonts: {
+    sans: "Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+  },
   sizes: {
     0: "0px",
     2: "2px",
@@ -55,8 +49,14 @@ export const theme = {
     192: "192px",
     256: "256px",
   },
-  fonts: {
-    sans: "'HalyardDisplay', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+  radii: {
+    0: "0px",
+    2: "2px",
+    4: "4px",
+    8: "8px",
+    16: "16px",
+    pill: "9999px",
+    rounded: "50%",
   },
   zIndices: {
     "-1": -1,

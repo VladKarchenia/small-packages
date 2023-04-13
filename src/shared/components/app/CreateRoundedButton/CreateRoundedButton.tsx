@@ -28,7 +28,7 @@ export const CreateRoundedButton = ({
     <SCreateRoundedButton onClick={onClick} css={buttonCss}>
       {label ? (
         <>
-          <Copy scale={8} color="system-white" bold>
+          <Copy color="neutrals-0" fontWeight="bold">
             {label}
           </Copy>
           <Spacer size={12} horizontal />

@@ -1,10 +1,9 @@
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { HOME, PROFILE } from "@/constants"
+import { HOME, SETTINGS } from "@/constants"
 
 import {
-  ButtonIcon,
   Flex,
   GlobalSearch,
   Grid,
@@ -15,16 +14,17 @@ import {
   Spacer,
   Stack,
   Hidden,
+  NavButton,
 } from "@/shared/components"
-import { IconHome, IconManagement } from "@/shared/icons"
+import { IconHome, IconHomeSolid, IconSettings, IconSettingsSolid } from "@/shared/icons"
+import { IllustrationSquareLogo } from "@/shared/illustrations"
+import { ThemeSwitcher } from "@/settings/components"
 
 interface IMainLayoutProps {
-  withGlobalSearch?: boolean
   mobileFullBleed?: boolean
 }
 
 export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = ({
-  withGlobalSearch = false,
   mobileFullBleed = true,
   children,
 }) => {
@@ -34,101 +34,82 @@ export const MainLayout: React.FC<React.PropsWithChildren<IMainLayoutProps>> = (
 
   return (
     <GridContainer fullBleed={{ "@initial": mobileFullBleed, "@sm": true }}>
-      <Grid rows={{ "@initial": "1fr", "@sm": "$72 1fr" }}>
+      <Grid columns={{ "@initial": "1fr", "@sm": "$96 1fr" }}>
         <GridItem
           css={{
             display: "none",
+
             "@sm": {
               display: "block",
-              padding: "$16 $32",
-              borderBottom: "1px solid $neutrals-4",
+              minHeight: "calc(var(--vh) * 100)",
+              backgroundColor: "$theme-b-n9",
+              textAlign: "center",
             },
           }}
         >
-          <Flex align="center" justify="between">
-            <Flex>
-              <a
-                aria-haspopup="false"
-                aria-label="Logo name"
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate(HOME)}
-                style={{ textDecoration: "none", cursor: "pointer" }}
-              >
-                <Flex css={{ height: "$40" }}>
-                  <img
-                    alt="logo"
-                    src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                  />
-                </Flex>
-              </a>
-              <Spacer size={32} horizontal />
-              {withGlobalSearch ? (
-                <Hidden below="md">
-                  <GlobalSearch />
-                  <Spacer size={24} horizontal />
-                </Hidden>
-              ) : null}
-            </Flex>
-
-            <Flex align="center">
-              <ProfileButton />
-              <Spacer size={20} horizontal />
-              <LogoutButton />
-            </Flex>
+          <Flex align="center" justify="center" direction="column" css={{ padding: "$20 0 $48" }}>
+            <IllustrationSquareLogo />
           </Flex>
+          <Stack space={20}>
+            <NavButton
+              icon={isActive(location.pathname, HOME) ? <IconHomeSolid /> : <IconHome />}
+              selected={isActive(location.pathname, HOME)}
+              onClick={() => navigate(HOME)}
+              ariaLabel="Home button"
+            />
+            <NavButton
+              icon={
+                isActive(location.pathname, SETTINGS) ? <IconSettingsSolid /> : <IconSettings />
+              }
+              selected={isActive(location.pathname, SETTINGS)}
+              onClick={() => navigate(SETTINGS)}
+              ariaLabel="User management"
+            />
+          </Stack>
         </GridItem>
-        <Grid columns={{ "@initial": "1fr", "@sm": "$88 1fr" }}>
-          <GridItem
-            css={{
-              display: "none",
-              "@sm": {
-                display: "block",
-                // $72 - desktop header height
-                minHeight: `calc((var(--vh) * 100) - $72)`,
-                paddingY: "$32",
-                borderRight: "1px solid $neutrals-4",
-                textAlign: "center",
-              },
-            }}
-          >
-            <Stack space={32}>
-              <ButtonIcon
-                type="button"
-                ariaLabel="Home button"
-                icon={
-                  <IconHome
-                    css={{
-                      color: isActive(location.pathname, HOME) ? "$system-black" : "$neutrals-4",
-                    }}
-                  />
-                }
-                onClick={() => navigate(HOME)}
-              />
-              <ButtonIcon
-                type="button"
-                ariaLabel="User Management"
-                icon={
-                  <IconManagement
-                    css={{
-                      color: isActive(location.pathname, PROFILE) ? "$system-black" : "$neutrals-4",
-                    }}
-                  />
-                }
-                onClick={() => navigate(PROFILE)}
-              />
-            </Stack>
-          </GridItem>
-          <GridItem>
-            <Grid
-              columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
-              columnGap={32}
-              css={{ "@sm": { height: "100%", padding: "$32" } }}
+
+        <GridItem>
+          <Grid rows={{ "@initial": "1fr", "@sm": "$72 1fr" }}>
+            <GridItem
+              css={{
+                display: "none",
+                "@sm": {
+                  display: "block",
+                  padding: "$16 $32",
+                },
+              }}
             >
-              {children}
-            </Grid>
-          </GridItem>
-        </Grid>
+              <Flex align="center" justify="between">
+                <Flex>
+                  <Hidden below="md">
+                    <GlobalSearch />
+                    <Spacer size={24} horizontal />
+                  </Hidden>
+                  {/* TODO: remove it later */}
+                  <>
+                    <Spacer size={24} horizontal />
+                    <ThemeSwitcher />
+                  </>
+                </Flex>
+
+                <Flex align="center">
+                  <ProfileButton />
+                  <Spacer size={20} horizontal />
+                  <LogoutButton />
+                </Flex>
+              </Flex>
+            </GridItem>
+            <GridItem>
+              <Grid
+                columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
+                columnGap={32}
+                css={{ "@sm": { height: "100%", padding: "$32" } }}
+              >
+                {children}
+              </Grid>
+            </GridItem>
+          </Grid>
+        </GridItem>
       </Grid>
     </GridContainer>
   )

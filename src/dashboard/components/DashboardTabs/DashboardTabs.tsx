@@ -25,11 +25,7 @@ export const DashboardTabs = () => {
   }, [])
 
   return (
-    <Tabs
-      selectedTab={tab}
-      animate={false}
-      css={{ paddingBottom: "$40", "@sm": { paddingBottom: 0 } }}
-    >
+    <Tabs selectedTab={tab} animate={false}>
       <TabList label="dashboard-tabs">
         <TabListItem
           id={ShippingType.Shipment}

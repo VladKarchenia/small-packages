@@ -22,7 +22,7 @@ export const ShipmentDateDetailsShort = () => {
           <Flex css={{ paddingRight: "$8" }}>
             <IconLocationPin />
           </Flex>
-          <Copy scale={8} color="system-black">
+          <Copy color="theme-b-n3">
             {formatInTimeZone(date, timeZone, "MMM d, yyyy hh:mm aa (zzz)")}
           </Copy>
         </Flex>

@@ -19,6 +19,10 @@ export const SFormRadioGroup = styled("div", {
         display: "grid",
         columnGap: "$16",
         gridTemplateColumns: "1fr 1fr",
+
+        "@sm": {
+          columnGap: "$24",
+        },
       },
     },
   },

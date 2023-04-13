@@ -1,9 +1,15 @@
 import { useCallback, useRef } from "react"
 
-import { Box, ComboboxContextValue, ComboboxInput, FormInput } from "@/shared/components"
+import {
+  Box,
+  ButtonIcon,
+  ComboboxContextValue,
+  ComboboxInput,
+  FormInput,
+} from "@/shared/components"
 import { IconCross } from "@/shared/icons"
 
-import { SCombobox, SComboboxMenu, SComboboxClearButton } from "./MobileCombobox.styles"
+import { SCombobox, SComboboxMenu } from "./MobileCombobox.styles"
 
 interface IMobileComboboxProps {
   comboboxProps: ComboboxContextValue
@@ -12,7 +18,7 @@ interface IMobileComboboxProps {
   placeholder?: string
   inputValue: string
   prefix?: React.ReactNode
-  clearDestinationFn?: () => void
+  clearValueFn?: () => void
 }
 
 export const MobileCombobox: React.FC<React.PropsWithChildren<IMobileComboboxProps>> = ({
@@ -23,15 +29,15 @@ export const MobileCombobox: React.FC<React.PropsWithChildren<IMobileComboboxPro
   placeholder,
   inputValue,
   prefix,
-  clearDestinationFn,
+  clearValueFn,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const clearDestination = useCallback(() => {
+  const clearValue = useCallback(() => {
     comboboxProps.selectItem(null)
     inputRef.current?.focus()
-    clearDestinationFn && clearDestinationFn()
-  }, [comboboxProps, clearDestinationFn])
+    clearValueFn && clearValueFn()
+  }, [comboboxProps, clearValueFn])
 
   return (
     <SCombobox {...comboboxProps}>
@@ -47,13 +53,12 @@ export const MobileCombobox: React.FC<React.PropsWithChildren<IMobileComboboxPro
             prefix={prefix}
             suffix={
               inputValue && (
-                <SComboboxClearButton
-                  type="button"
-                  aria-label="Clear button"
-                  onClick={clearDestination}
-                >
-                  <IconCross />
-                </SComboboxClearButton>
+                <ButtonIcon
+                  icon={<IconCross />}
+                  ariaLabel="Clear button"
+                  onClick={clearValue}
+                  inputIcon
+                />
               )
             }
           />

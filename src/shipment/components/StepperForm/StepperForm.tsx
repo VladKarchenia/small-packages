@@ -4,11 +4,10 @@ import { FormProvider, useForm } from "react-hook-form"
 import { shallow } from "zustand/shallow"
 
 import { useBoundStore } from "@/store"
-import { useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
+import { useCheckUpdates, useCreateShipment, useUpdateShipment } from "@/shipment/hooks"
 import { useShipmentById } from "@/shared/data"
 import { scrollTo } from "@/shared/utils"
 import {
-  DATE_CEIL_INTERVAL,
   DIMENSION_DEFAULT,
   EDIT,
   PACKAGE_COST_DEFAULT,
@@ -16,13 +15,13 @@ import {
   PACKAGE_ID_DEFAULT,
   PACKAGE_QUANTITY_DEFAULT,
   PACKAGE_WEIGHT_DEFAULT,
+  READY_DATE_DEFAULT,
   TOTAL_PACKAGES_NUMBER_DEFAULT,
   TRACKING,
 } from "@/constants"
 import { IShipmentResponse } from "@/api/types"
 import {
   PackageType,
-  ParcelContentType,
   PickupType,
   RouteParams,
   ShippingType,
@@ -31,10 +30,10 @@ import {
   IdenticalPackagesType,
   ResidentialType,
 } from "@/shared/types"
-import { StepName, IStepsDataItem } from "@/shipment/types"
+import { StepName, IStepsDataItem, StepperState } from "@/shipment/types"
 
-import { Stepper } from "@/shared/components"
-import { StepperFooter, StepItem, StepperHeader } from "@/shipment/components"
+import { Box, Stepper, useStepperContext } from "@/shared/components"
+import { StepItem, StepperHeader } from "@/shipment/components"
 
 const initialShipmentState: ShipmentState = {
   sender: {
@@ -93,10 +92,10 @@ const initialShipmentState: ShipmentState = {
     },
   },
   packaging: {
-    pickupType: PickupType.Schedule,
-    packagingType: PackagingType.OWN,
+    pickupType: PickupType.DEFAULT,
+    packagingType: PackagingType.Own,
     totalPackagesNumber: TOTAL_PACKAGES_NUMBER_DEFAULT,
-    packageContent: ParcelContentType.Gift,
+    packageContent: "",
     identicalPackages: IdenticalPackagesType.Identical,
   },
   parcels: {
@@ -114,7 +113,7 @@ const initialShipmentState: ShipmentState = {
       quantity: PACKAGE_QUANTITY_DEFAULT,
     },
   },
-  date: new Date(Math.ceil(new Date().getTime() / DATE_CEIL_INTERVAL) * DATE_CEIL_INTERVAL),
+  date: READY_DATE_DEFAULT,
   rate: {
     rateType: "",
     name: "",
@@ -135,9 +134,15 @@ interface IStepperFormProps {
   title: string
   defaultStep: StepName
   stepsData: IStepsDataItem[]
+  setStepperState: React.Dispatch<React.SetStateAction<StepperState>>
 }
 
-export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps) => {
+export const StepperForm = ({
+  title,
+  defaultStep,
+  stepsData,
+  setStepperState,
+}: IStepperFormProps) => {
   const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const navigate = useNavigate()
   const [shippingType, setShippingType] = useBoundStore(
@@ -145,8 +150,8 @@ export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps
     shallow,
   )
   const location = useLocation()
-  const { data } = useShipmentById(shipmentId)
   const isEditMode = location.pathname.includes("edit")
+  const { data } = useShipmentById(shipmentId)
 
   const methods = useForm<ShipmentState>({
     mode: "onChange",
@@ -162,6 +167,8 @@ export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps
       hasReturnAddress: data?.hasReturnAddress || initialShipmentState.hasReturnAddress,
     },
   })
+
+  useCheckUpdates({ formState: methods.getValues(), setStepperState })
 
   const { mutate: createShipment } = useCreateShipment()
   const { mutate: updateShipment } = useUpdateShipment()
@@ -198,20 +205,42 @@ export const StepperForm = ({ title, defaultStep, stepsData }: IStepperFormProps
       <form onSubmit={methods.handleSubmit(onSubmitHandler)} noValidate autoComplete="off">
         <Stepper defaultSelected={[defaultStep]}>
           <StepperHeader title={title} />
-
-          {stepsData.map((step) => (
-            <StepItem
-              key={step.title}
-              title={step.title}
-              data={step.data}
-              mainContent={step.mainContent}
-              totalSteps={stepsData.length}
-            />
-          ))}
-
-          <StepperFooter />
+          <StepperFormContainer stepsData={stepsData} shippingType={shippingType} />
+          {/* <StepperFooter /> */}
         </Stepper>
       </form>
     </FormProvider>
+  )
+}
+
+const StepperFormContainer = ({
+  stepsData,
+  shippingType,
+}: {
+  stepsData: IStepsDataItem[]
+  shippingType: ShippingType
+}) => {
+  const { stepHeight } = useStepperContext("StepperForm")
+
+  return (
+    <Box
+      css={{
+        "@sm": {
+          position: "relative",
+          height: stepHeight,
+          minHeight: shippingType === ShippingType.Quote ? 400 : 700,
+        },
+      }}
+    >
+      {stepsData.map((step) => (
+        <StepItem
+          key={step.title}
+          title={step.title}
+          data={step.data}
+          mainContent={step.mainContent}
+          totalSteps={stepsData.length}
+        />
+      ))}
+    </Box>
   )
 }

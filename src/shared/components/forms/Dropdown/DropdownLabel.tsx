@@ -12,9 +12,7 @@ export const DropdownLabel = memo(function ({ children }: IDropdownLabelProps) {
   return (
     <SDropdownMenuLabel>
       <Box css={{ paddingX: "$24" }}>
-        <Copy as="span" scale={8}>
-          {children}
-        </Copy>
+        <Copy as="span">{children}</Copy>
         <Spacer size={16} />
         <Divider />
         <Spacer size={8} />

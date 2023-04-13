@@ -1,58 +1,43 @@
 import { styled } from "@/stitches/config"
-import { multipleSelectors, rgba } from "@/stitches/utils"
 
 export const SFormRadioInputLabel = styled("label", {
   display: "flex",
-  alignItems: "flex-start",
+  alignItems: "center",
+  cursor: "pointer",
+
+  variants: {
+    disabled: {
+      true: {
+        pointerEvents: "none",
+        cursor: "default",
+      },
+    },
+  },
 })
 
 export const SFormRadioInputBox = styled("span", {
-  backgroundColor: "$system-white",
-  border: "1px solid $neutrals-9",
-  width: "$24",
-  height: "$24",
   flex: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  width: "$20",
+  height: "$20",
+  backgroundColor: "transparent",
+  border: "2px solid $neutrals-5",
+  borderRadius: "$rounded",
   transition: "150ms ease-out",
-  cursor: "pointer",
-  borderRadius: "50%",
-})
-
-export const SFormRadioTickInputBox = styled("span", {
-  width: "$24",
-  height: "$24",
-  flex: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  cursor: "pointer",
-  opacity: 0,
-  transition: "150ms ease-out",
+  outline: "2px solid transparent",
+  outlineOffset: "$space$4",
 })
 
 export const SFormRadioInputCircle = styled("span", {
-  height: "$16",
-  width: "$16",
-  backgroundColor: "$system-black",
-  border: "1px solid $system-black",
-  borderRadius: "50%",
+  height: "$12",
+  width: "$12",
+  backgroundColor: "$theme-vl-yl",
+  borderRadius: "$rounded",
   opacity: 0,
   transform: "scale(0.5)",
   transition: "150ms ease-out",
-})
-
-export const SFormRadioTickCopyBox = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-  paddingY: "$16",
-
-  "@md": {
-    paddingX: "$24",
-  },
 })
 
 export const SFormRadioInput = styled("input", {
@@ -60,49 +45,29 @@ export const SFormRadioInput = styled("input", {
 
   variants: {
     view: {
-      tick: {
-        disabled: {
-          [`+ ${SFormRadioTickCopyBox}`]: {
-            opacity: 0.5,
-          },
-        },
-
-        checked: {
-          [`+ ${SFormRadioTickCopyBox}`]: {
-            p: {
-              fontWeight: 500,
-            },
-            [`${SFormRadioTickInputBox}`]: {
-              opacity: 1,
-            },
-          },
-        },
-      },
       circle: {
         hover: {
           [`+ ${SFormRadioInputBox}`]: {
-            boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.2)}`,
+            borderColor: "$theme-n6-n5",
+            boxShadow: "0 0 0 5px $colors$theme-n2-n7",
           },
         },
 
         keyboardFocus: {
           [`+ ${SFormRadioInputBox}`]: {
-            borderColor: "$system-black",
-            boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.15)}`,
+            outline: "2px solid $theme-vl-n3",
           },
         },
 
         disabled: {
           [`+ ${SFormRadioInputBox}`]: {
-            backgroundColor: "$neutrals-3",
-            borderColor: "$neutrals-5",
-            opacity: 0.5,
+            borderColor: "$theme-n4-n7",
           },
         },
 
         checked: {
           [`+ ${SFormRadioInputBox}`]: {
-            borderColor: "$system-black",
+            borderColor: "$theme-vl-yl",
 
             [`${SFormRadioInputCircle}`]: {
               opacity: 1,
@@ -110,15 +75,19 @@ export const SFormRadioInput = styled("input", {
             },
           },
 
-          ...multipleSelectors(["hover", "keyboardFocus"], {
-            [`+ ${SFormRadioInputBox} ${SFormRadioInputCircle}`]: {
-              backgroundColor: "$system-black",
+          hover: {
+            [`+ ${SFormRadioInputBox}`]: {
+              boxShadow: "0 0 0 5px $colors$theme-vlr-ydr",
             },
-          }),
+          },
 
           disabled: {
             [`+ ${SFormRadioInputBox}`]: {
-              opacity: 0.5,
+              borderColor: "$theme-vlr-ydr",
+
+              [`${SFormRadioInputCircle}`]: {
+                backgroundColor: "$theme-vlr-ydr",
+              },
             },
           },
         },

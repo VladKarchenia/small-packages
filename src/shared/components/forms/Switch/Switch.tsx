@@ -1,5 +1,7 @@
 import React, { ChangeEventHandler, useCallback, useRef } from "react"
 
+import { enterKeyDown } from "@/shared/utils"
+
 import type { SwitchOptionProps } from "./Option"
 import { SwitchIndicator } from "./Indicator"
 
@@ -42,7 +44,13 @@ export const Switch = <T extends string>({
   // }, [value])
 
   return (
-    <SSwitch ref={ref} checked={checked}>
+    <SSwitch
+      ref={ref}
+      checked={checked}
+      onKeyDown={(e) => {
+        enterKeyDown(e.key) && e.preventDefault()
+      }}
+    >
       {React.Children.map(
         children,
         (child) =>

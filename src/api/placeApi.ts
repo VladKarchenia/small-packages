@@ -1,7 +1,7 @@
 import axios from "axios"
 
 import { PLACE_BASE_URI } from "@/constants"
-import { ISearchCitiesByZipResponse, ISearchPlacesResponse, IUserOrganization } from "./types"
+import { ISearchCitiesByZipResponse, IPlacesResponse } from "./types"
 
 export const placeApi = axios.create({
   baseURL: PLACE_BASE_URI,
@@ -11,21 +11,41 @@ placeApi.defaults.headers.common["Content-Type"] = "application/json"
 
 export const searchPlacesFn = async ({
   country,
-  field = "displayName",
   keyword,
-  organization,
   page = 0,
   size = 100,
 }: {
   country: string
-  field?: string
   keyword: string
-  organization: IUserOrganization | null
   page?: number
   size?: number
 }) => {
-  const { data } = await placeApi.get<ISearchPlacesResponse>(
-    `places/search?country=${country}&field=${field}&keyword=${keyword}&organizationId=${organization?.id}&page=${page}&size=${size}`,
+  const { data } = await placeApi.get<IPlacesResponse>(
+    `places/search?country=${country}&keyword=${keyword}&page=${page}&size=${size}`,
+  )
+
+  return data
+}
+
+export const searchAddressesFn = async ({
+  country,
+  zipCode,
+  state,
+  city,
+  address,
+  page = 0,
+  size = 100,
+}: {
+  country: string
+  zipCode: string
+  state: string
+  city: string
+  address: string
+  page?: number
+  size?: number
+}) => {
+  const { data } = await placeApi.get<IPlacesResponse>(
+    `places/search?country=${country}&zipcode=${zipCode}&state=${state}&city=${city}&address=${address}&page=${page}&size=${size}`,
   )
 
   return data
@@ -42,5 +62,5 @@ export const searchCitiesByZipFn = async ({
     `places/citiesByZip?country=${country}&zipCode=${zipCode}`,
   )
 
-  return data.data
+  return data
 }

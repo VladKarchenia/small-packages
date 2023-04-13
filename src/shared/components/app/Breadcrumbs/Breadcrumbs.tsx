@@ -9,7 +9,7 @@ interface IRouteMap {
 }
 
 const RoutesMap: IRouteMap = {
-  "/profile": "User Profile",
+  "/settings": "Settings",
   "/create/quote": "Create a quote",
   "/create/shipment": "Create a shipment",
   "/edit/quote": "Edit a quote #",
@@ -39,33 +39,39 @@ export const Breadcrumbs = () => {
 
   return (
     <Flex css={{ width: "max-content", marginBottom: "$16", gap: "$4" }}>
-      <Link onClick={() => navigate(HOME)}>
-        <Copy scale={9} color="neutrals-7" css={{ hover: { color: "$system-black" } }}>
-          Home
-        </Copy>
+      <Link
+        as="button"
+        type="button"
+        onClick={() => navigate(HOME)}
+        css={{ color: "$neutrals-6", hover: { color: "$theme-b-n3" } }}
+      >
+        Home
       </Link>
 
-      <Copy scale={9} color="neutrals-7" css={{ cursor: "default" }}>
+      <Copy color="neutrals-6" css={{ cursor: "default" }}>
         /
       </Copy>
 
       {!location.pathname.includes("packages") ? (
-        <Copy scale={9} color="system-black" css={{ cursor: "default" }}>
+        <Copy fontWeight="semiBold" color="theme-b-n3" css={{ cursor: "default" }}>
           {getRouteString(location.pathname)}
         </Copy>
       ) : (
         <>
-          <Link onClick={() => navigate(`${location.pathname.replace("/packages", "")}`)}>
-            <Copy scale={9} color="neutrals-7" css={{ hover: { color: "$system-black" } }}>
-              {getRouteString(location.pathname)}
-            </Copy>
+          <Link
+            as="button"
+            type="button"
+            onClick={() => navigate(`${location.pathname.replace("/packages", "")}`)}
+            css={{ color: "$neutrals-6", hover: { color: "$theme-b-n3" } }}
+          >
+            {getRouteString(location.pathname)}
           </Link>
 
-          <Copy scale={9} color="neutrals-7" css={{ cursor: "default" }}>
+          <Copy color="neutrals-6" css={{ cursor: "default" }}>
             /
           </Copy>
 
-          <Copy scale={9} color="system-black" css={{ cursor: "default" }}>
+          <Copy fontWeight="semiBold" css={{ color: "$theme-b-n3", cursor: "default" }}>
             All packages
           </Copy>
         </>

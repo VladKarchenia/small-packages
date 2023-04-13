@@ -1,5 +1,4 @@
 import { styled } from "@/stitches/config"
-import { rgba } from "@/stitches/utils"
 
 import { Flex } from "@/shared/components"
 
@@ -11,8 +10,8 @@ export const SRateRadioInputLabel = styled("label", {
 export const SRateRadioInputBox = styled(Flex, {
   width: "100%",
   padding: "$12",
-  borderRadius: "$8",
-  border: "1px solid $neutrals-4",
+  backgroundColor: "$theme-w-n9",
+  border: "1px solid $theme-n4-tr",
   transition: "150ms ease-out",
   cursor: "pointer",
 })
@@ -28,14 +27,13 @@ export const SRateRadioInput = styled("input", {
 
   checked: {
     [`+ ${SRateRadioInputBox}`]: {
-      borderColor: "$system-black",
+      borderColor: "$theme-b-n3",
     },
   },
 
   keyboardFocus: {
     [`+ ${SRateRadioInputBox}`]: {
       borderColor: "$brand-yellow-dark",
-      boxShadow: `0 $space$2 $space$4 0 ${rgba("neutrals-9", 0.15)}`,
     },
   },
 })

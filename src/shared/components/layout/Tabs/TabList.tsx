@@ -56,7 +56,7 @@ export const TabList = ({ children, label, ...props }: ITabListProps) => {
   })
 
   return (
-    <STabList role="tablist" aria-label={label} ref={ref} align="center" {...props}>
+    <STabList role="tablist" aria-label={label} ref={ref} {...props}>
       {children}
     </STabList>
   )

@@ -6,26 +6,38 @@ export const STable = styled("table", {
 })
 
 export const STableRow = styled("tr", {
+  backgroundColor: "transparent",
+  color: "$theme-b-n3",
+  transition: "150ms ease-out",
   cursor: "pointer",
+  display: "table",
+  width: "100%",
+  tableLayout: "fixed",
 
   hover: {
-    backgroundColor: "$neutrals-2",
+    backgroundColor: "$theme-n2-n7",
   },
 })
 
 export const STableHead = styled("thead", {
-  backgroundColor: "$neutrals-1",
+  backgroundColor: "transparent",
+  borderBottom: "1px solid $theme-n4-n7",
 
   [`${STableRow}`]: {
     cursor: "initial",
 
     hover: {
-      backgroundColor: "$neutrals-1",
+      backgroundColor: "transparent",
     },
   },
 })
 
-export const STableBody = styled("tbody", {})
+export const STableBody = styled("tbody", {
+  display: "block",
+  //this is the sum of all components except this one
+  maxHeight: "calc((var(--vh) * 100) - $256 - $72 - $2)",
+  overflowY: "auto",
+})
 
 export const STabularData = styled("td", {
   borderCollapse: "collapse",
@@ -66,6 +78,5 @@ export const STabularHead = styled(STabularData, {
 })
 
 export const STableCaption = styled("caption", {
-  backgroundColor: "$system-white",
   visibility: "hidden",
 })

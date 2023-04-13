@@ -10,46 +10,34 @@ interface IParcelInfoProps {
 
 export const ParcelInfo = ({ packaging, parcel }: IParcelInfoProps) => {
   return (
-    <Stack space={12}>
+    <Stack space={12} css={{ color: "$theme-b-n3" }}>
       <Flex>
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="neutrals-7">
-          Contents:
-        </Copy>
+        <Copy>Contents:</Copy>
         <Spacer size={4} horizontal />
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          {packaging.packageContent}
-        </Copy>
+        <Copy>{packaging.packageContent}</Copy>
       </Flex>
       <Flex>
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="neutrals-7">
-          Declared value:
-        </Copy>
+        <Copy>Declared value:</Copy>
         <Spacer size={4} horizontal />
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          ${parcel.totalPrice}
-        </Copy>
+        <Copy>${parcel.totalPrice}</Copy>
       </Flex>
       <Flex align="center">
         <Flex align="center" justify="center">
           <IconCalendar />
         </Flex>
         <Spacer size={8} horizontal />
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
+        <Copy>
           {parcel.dimensions.length}x{parcel.dimensions.width}x{parcel.dimensions.height} in;
         </Copy>
         <Spacer size={8} horizontal />
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          {parcel.weight} lb
-        </Copy>
+        <Copy>{parcel.weight} lb</Copy>
       </Flex>
       <Flex align="center">
         <Flex align="center" justify="center">
           <IconCalendar />
         </Flex>
         <Spacer size={8} horizontal />
-        <Copy scale={{ "@initial": 9, "@sm": 8 }} color="system-black">
-          #shipmentID
-        </Copy>
+        <Copy>#shipmentID</Copy>
       </Flex>
     </Stack>
   )

@@ -43,19 +43,10 @@ export const DestinationCombobox = ({
   const results = useMemo(() => {
     const result: IAddress[] = []
 
-    if (data) {
-      if (data.first.content.length > 0) {
-        // TODO: need to filter results?
-        data.first.content.map((item: IPlaceResponse) =>
-          result.push(transformLocation({ ...item, person })),
-        )
-      }
-
-      if (data.second.content.length > 0) {
-        data.second.content
-          .filter((item: IPlaceResponse) => !!item.city && !!item.zipCode)
-          .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
-      }
+    if (data && data.content.length > 0) {
+      data.content
+        .filter((item: IPlaceResponse) => !!item.city && !!item.zipCode)
+        .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
     }
 
     return result
@@ -89,9 +80,7 @@ export const DestinationCombobox = ({
     if (isAxiosError(error)) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            {error.response?.data.errorMessage || error.message}
-          </Copy>
+          <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
         </Flex>
       )
     }
@@ -99,9 +88,7 @@ export const DestinationCombobox = ({
     if (results.length === 0) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            Not found
-          </Copy>
+          <Copy color="theme-b-n3">Not found</Copy>
         </Flex>
       )
     }
@@ -110,7 +97,6 @@ export const DestinationCombobox = ({
       <Box
         css={{
           height: "100%",
-          paddingX: "$16",
           "@md": { marginTop: 0 },
         }}
       >
@@ -156,6 +142,6 @@ function DestinationSection({ items }: IDestinationSectionProps) {
 
 const DestinationBox = ({ item, index }: { item: IAddress; index: number }) => (
   <SDestinationComboboxItem key={`${item.displayName}-${index}`} index={index} item={item}>
-    <Copy color="neutrals-9">{item.displayName}</Copy>
+    <Copy>{item.displayName}</Copy>
   </SDestinationComboboxItem>
 )

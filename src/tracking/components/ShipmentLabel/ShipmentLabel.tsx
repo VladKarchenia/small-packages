@@ -12,8 +12,20 @@ export const ShipmentLabel = ({ title, link }: IShipmentLabelProps) => {
 
   return (
     <>
-      <Copy scale={{ "@initial": 10, "@sm": 9 }}>{title}</Copy>
-      <Link scale={{ "@initial": 10, "@sm": 8 }} onClick={() => navigate(link)} underline blue>
+      <Copy scale={10} color="neutrals-5">
+        {title}
+      </Copy>
+      <Link
+        as="button"
+        type="button"
+        onClick={() => navigate(link)}
+        css={{
+          color: "$brand-blue-primary",
+          hover: { color: "$brand-violet-light" },
+          keyboardFocus: { color: "$brand-violet-light" },
+          active: { color: "$brand-violet-primary" },
+        }}
+      >
         {link}
       </Link>
     </>

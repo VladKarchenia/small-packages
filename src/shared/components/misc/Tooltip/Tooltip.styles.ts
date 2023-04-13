@@ -1,5 +1,5 @@
 import { styled } from "@/stitches/config"
-import { easing, animations, rgba } from "@/stitches/utils"
+import { animations, boxShadows } from "@/stitches/utils"
 
 export const STooltipWrapper = styled("div", {
   animation: `${animations.fadeIn} 150ms ease-out`,
@@ -29,27 +29,33 @@ export const STooltip = styled("div", {
 export const STooltipTrigger = styled("button", {
   reset: true,
   display: "inline-flex",
-  color: "inherit",
+  color: "$neutrals-5",
+  borderRadius: "$rounded",
   cursor: "pointer",
-  transition: easing.smooth({ duration: 150, property: "opacity" }),
+  transition: "150ms ease-out",
+  outline: "2px solid transparent",
 
   hover: {
-    opacity: 0.75,
+    outline: "2px solid $theme-n2-n7",
+    boxShadow: "inset 0 0 0 4px $colors$theme-n2-n7",
   },
 
   keyboardFocus: {
-    "& > *": {
-      outline: "2px solid $neutrals-9",
-    },
+    outline: "2px solid $theme-vl-n3",
+  },
+
+  disabled: {
+    pointerEvents: "none",
   },
 })
 
 export const STooltipContent = styled("div", {
   width: 260,
-  backgroundColor: "$system-white",
+  backgroundColor: "$theme-w-n8",
   padding: "$24",
-  borderRadius: "$8",
-  boxShadow: `0 $space$4 $space$8 ${rgba("system-black", 0.22)}`,
+  borderRadius: 0,
+  color: "$theme-b-n3",
+  boxShadow: boxShadows.tooltip,
   textAlign: "start",
 })
 
@@ -66,7 +72,7 @@ export const STooltipArrow = styled("div", {
     left: 0,
     borderWidth: "$8",
     borderBottomWidth: 0,
-    borderTopColor: "$system-white",
+    borderTopColor: "$theme-w-n8",
   },
 
   '&[data-placement*="right"]': {
@@ -74,14 +80,14 @@ export const STooltipArrow = styled("div", {
     left: 0,
     borderWidth: "$8",
     borderLeft: "none",
-    borderRightColor: "$system-white",
+    borderRightColor: "$theme-w-n8",
   },
 
   '&[data-placement*="bottom"]': {
     top: 0,
     borderWidth: "$8",
     borderTop: "none",
-    borderBottomColor: "$system-white",
+    borderBottomColor: "$theme-w-n8",
   },
 
   '&[data-placement*="left"]': {
@@ -89,7 +95,7 @@ export const STooltipArrow = styled("div", {
     right: 0,
     borderWidth: "$8",
     borderRight: "none",
-    borderLeftColor: "$system-white",
+    borderLeftColor: "$theme-w-n8",
   },
 
   variants: {

@@ -12,7 +12,6 @@ export const LogoutButton = () => {
       ariaLabel="Logout button"
       icon={<IconLogout />}
       onClick={() => logoutUser()}
-      css={{ cursor: "pointer" }}
     />
   )
 }

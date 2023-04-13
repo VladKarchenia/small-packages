@@ -1,20 +1,21 @@
-import { useNavigate } from "react-router-dom"
+import { Box, Grid, GridContainer, GridItem, Hidden, Spacer } from "@/shared/components"
+import { IllustrationLetterLogo, IllustrationLogo } from "@/shared/illustrations"
 
-import { HOME } from "@/constants"
-
-import { Box, Flex, Grid, GridContainer, GridItem, Spacer } from "@/shared/components"
 import { CommonLayout } from "@/shared/layouts/common"
 
 export const AuthWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const navigate = useNavigate()
-
   return (
     <CommonLayout>
       <GridContainer css={{ height: "100%" }} fullBleed={{ "@initial": false, "@sm": true }}>
         <Grid
           columns={{ "@initial": 6, "@sm": 12, "@lg": 24 }}
           columnGap={32}
-          css={{ height: `calc(var(--vh) * 100)` }}
+          css={{
+            height: `calc(var(--vh) * 100)`,
+            backgroundColor: "$neutrals-0",
+
+            "@md": { backgroundColor: "$neutrals-11" },
+          }}
         >
           <GridItem
             column={{
@@ -29,36 +30,56 @@ export const AuthWrapper: React.FC<React.PropsWithChildren> = ({ children }) => 
               justifyContent: "center",
             }}
           >
-            <Flex justify={{ "@sm": "center" }}>
-              <a
-                aria-haspopup="false"
-                aria-label="Logo name"
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate(HOME)}
-                style={{ textDecoration: "none" }}
-              >
-                <Flex css={{ height: "$40", "@sm": { height: "$64" } }}>
-                  <img
-                    alt="logo"
-                    src="https://gulfrelay.com/wp-content/uploads/2020/02/Gulf-Relay-horizontal-2-1-768x136.png"
-                  />
-                </Flex>
-              </a>
-            </Flex>
-            <Spacer size={{ "@initial": 32, "@sm": 48 }} />
             <Box
               css={{
-                "@sm": {
+                position: "relative",
+
+                "@md": {
                   padding: "$40",
-                  border: "1px solid $neutrals-4",
-                  borderRadius: "$8",
+                  backgroundColor: "$neutrals-0",
+
+                  after: {
+                    content: "''",
+                    display: "block",
+                    backgroundColor: "$brand-yellow-light",
+                    position: "absolute",
+                    left: 0,
+                    bottom: "-$32",
+                    width: "100%",
+                    height: "$32",
+                  },
                 },
               }}
             >
+              <Hidden
+                above="md"
+                css={{ position: "absolute", top: "-$64", left: 0, "@sm": { top: "-$32" } }}
+              >
+                <IllustrationLogo theme="dark" />
+              </Hidden>
               {children}
+              <Hidden
+                below="md"
+                css={{
+                  position: "absolute",
+                  bottom: -100,
+                  left: -134,
+                }}
+              >
+                <IllustrationLetterLogo />
+              </Hidden>
             </Box>
-            <Spacer size={96} />
+            <Spacer size={32} />
+            <Hidden
+              below="md"
+              css={{
+                position: "absolute",
+                top: "$56",
+                left: "$56",
+              }}
+            >
+              <IllustrationLogo />
+            </Hidden>
           </GridItem>
         </Grid>
       </GridContainer>

@@ -8,9 +8,11 @@ import { IFoundShipmentResponse } from "@/api/types"
 import { ShippingType } from "@/shared/types"
 import { useElementDimensions } from "@/shared/hooks"
 import { TRACKING } from "@/constants"
+import { spaceAndEnterKeyDown } from "@/shared/utils"
 
 import {
   Box,
+  ButtonIcon,
   Copy,
   Flex,
   FormInput,
@@ -21,8 +23,6 @@ import {
 } from "@/shared/components"
 import { IconCross, IconSearch } from "@/shared/icons"
 
-import { SComboboxClearButton } from "./GlobalSearch.styles"
-
 export const GlobalSearch = () => {
   const navigate = useNavigate()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -31,8 +31,6 @@ export const GlobalSearch = () => {
   const isTriggerClick = (event: Event) =>
     event.composedPath().includes(triggerRef.current as EventTarget)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
-  const isClearButtonClick = (event: Event) =>
-    event.composedPath().includes(clearButtonRef.current as EventTarget)
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>("")
 
@@ -63,9 +61,7 @@ export const GlobalSearch = () => {
     if (isAxiosError(error)) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            {error.response?.data.errorMessage || error.message}
-          </Copy>
+          <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
         </Flex>
       )
     }
@@ -73,9 +69,7 @@ export const GlobalSearch = () => {
     if (results.length === 0) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            Not found
-          </Copy>
+          <Copy color="theme-b-n3">Not found</Copy>
         </Flex>
       )
     }
@@ -91,23 +85,29 @@ export const GlobalSearch = () => {
             <Box
               key={`${shipment.ID}`}
               onClick={() => navigate(`${TRACKING}/${shippingType}/${shipment.ID}`)}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                spaceAndEnterKeyDown(e.key) &&
+                  navigate(`${TRACKING}/${shippingType}/${shipment.ID}`)
+              }}
               css={{
                 padding: "$12 $16",
+                color: "$theme-b-n3",
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 cursor: "pointer",
                 hover: {
-                  backgroundColor: "$neutrals-3",
+                  backgroundColor: "$theme-n2-n7",
+                },
+
+                keyboardFocus: {
+                  backgroundColor: "$theme-n2-n7",
                 },
               }}
             >
-              <Copy scale={9} color="system-black" bold>
-                #{shipment.ID}
-              </Copy>
-              <Copy scale={10} color="system-black">
-                {shipment.ORIGIN_ADDRESS}
-              </Copy>
+              <Copy fontWeight="bold">#{shipment.ID}</Copy>
+              <Copy scale={11}>{shipment.CONSIGNEE_ADDRESS}</Copy>
             </Box>
           )
         })}
@@ -117,7 +117,7 @@ export const GlobalSearch = () => {
 
   return (
     <Popover open={isOpen}>
-      <PopoverAnchor asChild={true}>
+      <PopoverAnchor asChild>
         <Flex align="center" css={{ position: "relative" }} ref={containerRef}>
           <FormInput
             ref={triggerRef}
@@ -145,40 +145,33 @@ export const GlobalSearch = () => {
               }
             }}
             prefix={<IconSearch />}
-            css={{ width: 410, height: "$40", minHeight: "$40" }}
+            suffix={
+              inputValue && (
+                <ButtonIcon
+                  ref={clearButtonRef}
+                  icon={<IconCross />}
+                  ariaLabel="Clear button"
+                  onClick={handleClearButton}
+                  inputIcon
+                />
+              )
+            }
+            css={{ width: 500, height: "$40", minHeight: "$40" }}
           />
-          {inputValue?.length > 0 && (
-            <SComboboxClearButton
-              ref={clearButtonRef}
-              type="button"
-              aria-label="clearDestination"
-              css={{ position: "absolute", right: "$12", zIndex: "$1" }}
-              onClick={handleClearButton}
-            >
-              <IconCross />
-            </SComboboxClearButton>
-          )}
         </Flex>
       </PopoverAnchor>
       <PopoverContent
+        close={() => setIsOpen(false)}
         align="start"
         css={{
           width: dimensions.clientWidth,
-          height: "max-content",
           maxHeight: 330,
           overflow: "auto",
-          padding: 0,
-          border: "none",
-          borderRadius: 0,
+          keyboardFocus: {
+            outline: "1px solid $theme-vl-n3",
+          },
         }}
-        onInteractOutside={(event) => {
-          if (isClearButtonClick(event)) {
-            if (event.detail.originalEvent.isTrusted) {
-              handleClearButton()
-            }
-            return
-          }
-
+        onPointerDownOutside={(event) => {
           if (isTriggerClick(event)) {
             return
           }

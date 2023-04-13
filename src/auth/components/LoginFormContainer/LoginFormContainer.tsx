@@ -51,7 +51,7 @@ export const LoginFormContainer = () => {
     }
   }, [error, setError])
 
-  if (user) {
+  if (user.id) {
     return <Navigate to={HOME} replace />
   }
 

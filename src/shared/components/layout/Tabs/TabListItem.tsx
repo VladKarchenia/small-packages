@@ -5,7 +5,6 @@ import { ComponentProps } from "@/stitches/types"
 import { Copy } from "@/shared/components"
 
 import { useTabsContext } from "./Tabs"
-
 import { STabListItem } from "./TabListItem.styles"
 
 export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
@@ -44,13 +43,7 @@ export const TabListItem = ({ children, id, onChange, ...props }: ITabListItemPr
       ref={ref}
       {...props}
     >
-      <Copy
-        scale={{ "@initial": 9, "@md": 8 }}
-        color={isSelected ? "neutrals-9" : "neutrals-7"}
-        css={{ textShadow: isSelected ? "0 0 0.75px black" : "" }}
-      >
-        {children}
-      </Copy>
+      <Copy scale={5}>{children}</Copy>
     </STabListItem>
   )
 }

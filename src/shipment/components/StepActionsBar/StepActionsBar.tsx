@@ -5,7 +5,7 @@ import { getPrevStep } from "@/shipment/utils"
 import { StepName } from "@/shipment/types"
 import { HOME } from "@/constants"
 
-import { Button, Copy, Grid, GridItem, Hidden, useStepperContext } from "@/shared/components"
+import { Button, Grid, GridItem, Hidden, useStepperContext } from "@/shared/components"
 
 interface IStepActionsBarProps {
   backDisabled?: boolean
@@ -38,10 +38,8 @@ export const StepActionsBar: React.FC<React.PropsWithChildren<IStepActionsBarPro
       {!isFirstStep ? (
         <GridItem>
           <Hidden below="sm">
-            <Button action="secondary" onClick={onBackHandler} full disabled={backDisabled}>
-              <Copy as="span" scale={8} color="system-black" bold>
-                Previous
-              </Copy>
+            <Button action="secondary" full disabled={backDisabled} onClick={onBackHandler}>
+              Previous
             </Button>
           </Hidden>
         </GridItem>

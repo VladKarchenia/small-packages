@@ -7,9 +7,11 @@ import { IAddress } from "@/shared/types"
 import { useElementDimensions } from "@/shared/hooks"
 import { useSearchPlaces } from "@/shipment/hooks"
 import { transformLocation } from "@/shipment/utils"
+import { spaceAndEnterKeyDown } from "@/shared/utils"
 
 import {
   Box,
+  ButtonIcon,
   Copy,
   Flex,
   FormInput,
@@ -20,8 +22,6 @@ import {
   Spinner,
 } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
-
-import { SComboboxClearButton } from "./LocationPopover.styles"
 
 interface ILocationPopoverProps {
   value: IAddress
@@ -50,8 +50,6 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
   const isTriggerClick = (event: Event) =>
     event.composedPath().includes(triggerRef.current as EventTarget)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
-  const isClearButtonClick = (event: Event) =>
-    event.composedPath().includes(clearButtonRef.current as EventTarget)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>("")
 
@@ -67,19 +65,10 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
   const results = useMemo(() => {
     const result: IAddress[] = []
 
-    if (data) {
-      if (data.first.content.length > 0) {
-        // TODO: need to filter results?
-        data.first.content.map((item: IPlaceResponse) =>
-          result.push(transformLocation({ ...item, person })),
-        )
-      }
-
-      if (data.second.content.length > 0) {
-        data.second.content
-          .filter((item: IPlaceResponse) => !!item.city && !!item.zipCode)
-          .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
-      }
+    if (data && data.content.length > 0) {
+      data.content
+        .filter((item: IPlaceResponse) => !!item.city && !!item.zipCode)
+        .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
     }
 
     return result
@@ -124,9 +113,7 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
     if (isAxiosError(error)) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            {error.response?.data.errorMessage || error.message}
-          </Copy>
+          <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
         </Flex>
       )
     }
@@ -134,9 +121,7 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
     if (results.length === 0) {
       return (
         <Flex css={{ padding: "$16" }}>
-          <Copy scale={8} color="system-black">
-            Not found
-          </Copy>
+          <Copy color="theme-b-n3">Not found</Copy>
         </Flex>
       )
     }
@@ -147,14 +132,24 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
           <Box
             key={`${label} ${location.displayName}`}
             onClick={() => handleClick(location)}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              spaceAndEnterKeyDown(e.key) && handleClick(location)
+            }}
             css={{
               padding: "$12 $16",
+              color: "$theme-b-n3",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
               overflow: "hidden",
               cursor: "pointer",
+
               hover: {
-                backgroundColor: "$neutrals-3",
+                backgroundColor: "$theme-n2-n7",
+              },
+
+              keyboardFocus: {
+                backgroundColor: "$theme-n2-n7",
               },
             }}
           >
@@ -171,7 +166,7 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
 
   return (
     <Popover open={isOpen}>
-      <PopoverAnchor asChild={true}>
+      <PopoverAnchor asChild>
         <Flex align="center" css={{ position: "relative" }} ref={containerRef}>
           <FormInput
             ref={triggerRef}
@@ -180,12 +175,18 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
             labelProps={labelProps}
             description={description}
             placeholder={placeholder}
+            suffix={
+              inputValue && (
+                <ButtonIcon
+                  ref={clearButtonRef}
+                  icon={<IconCross />}
+                  ariaLabel="Clear destination"
+                  onClick={handleClearButton}
+                  inputIcon
+                />
+              )
+            }
             onClick={() => {
-              if (!isOpen && inputValue.trim().length > 3) {
-                setIsOpen(true)
-              }
-            }}
-            onFocus={() => {
               if (!isOpen && inputValue.trim().length > 3) {
                 setIsOpen(true)
               }
@@ -206,43 +207,23 @@ export const LocationPopover: React.FC<ILocationPopoverProps> = ({
               overflow: "hidden",
             }}
           />
-          {inputValue?.length > 0 && (
-            <SComboboxClearButton
-              ref={clearButtonRef}
-              type="button"
-              aria-label="clearDestination"
-              css={{ position: "absolute", right: "$12", bottom: "$12", zIndex: "$1" }}
-              onClick={handleClearButton}
-            >
-              <IconCross />
-            </SComboboxClearButton>
-          )}
         </Flex>
       </PopoverAnchor>
       <PopoverContent
+        close={() => setIsOpen(false)}
         align="start"
         css={{
           width: dimensions.clientWidth,
-          height: "max-content",
           maxHeight: 240,
-          overflow: "auto",
-          padding: 0,
-          border: "none",
-          borderRadius: 0,
-          zIndex: "$2",
+          overflowY: "auto",
+          keyboardFocus: {
+            backgroundColor: "$theme-n2-n7",
+          },
         }}
-        onInteractOutside={(event) => {
-          if (isClearButtonClick(event)) {
-            if (event.detail.originalEvent.isTrusted) {
-              handleClearButton()
-            }
-            return
-          }
-
+        onPointerDownOutside={(event) => {
           if (isTriggerClick(event)) {
             return
           }
-
           return setIsOpen(false)
         }}
         onOpenAutoFocus={(event) => {

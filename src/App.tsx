@@ -9,7 +9,7 @@ import {
   Home,
   Login,
   PageNotFound,
-  Profile,
+  Settings,
   Tracking,
   Reset,
   Recovery,
@@ -41,9 +41,9 @@ const App: React.FC = (): JSX.Element => {
         children: [{ path: "", element: <Home /> }],
       },
       {
-        path: "profile",
+        path: "settings",
         element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
-        children: [{ path: "", element: <Profile /> }],
+        children: [{ path: "", element: <Settings /> }],
       },
       {
         path: "create",

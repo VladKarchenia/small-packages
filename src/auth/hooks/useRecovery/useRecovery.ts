@@ -12,7 +12,7 @@ export const useRecovery = () => {
   return useMutation((data: RecoveryInput) => forgotPasswordFn(data), {
     onSuccess: () => {
       navigate(LOGIN)
-      showToast({ type: "info", text: "Please check your e-mail for further instructions" })
+      showToast({ type: "info", text: "Please check your email for further instructions" })
     },
   })
 }

@@ -6,35 +6,34 @@ import { atomicClassNames } from "@/stitches/utils"
 
 import { SCopy } from "./Copy.styles"
 
-type CopyIntent = "cta" | "detail" | "copy"
+// type CopyIntent = "cta" | "detail" | "copy"
 
 export interface ICopyProps extends Omit<ComponentProps<typeof SCopy>, "color"> {
   color?: Colors | ResponsiveProp<Colors>
-  intent?: CopyIntent
-  uppercase?: boolean
+  uppercase?: boolean | ResponsiveProp<boolean>
   dataTestid?: string
 }
 
-function getCopyProps(intent?: CopyIntent) {
-  switch (intent) {
-    case "cta":
-      return {
-        tracking: "wider",
-        scale: 10,
-        bold: true,
-        uppercase: true,
-      }
-    case "detail":
-      return {
-        tracking: "normal",
-        scale: 8,
-      }
+// function getCopyProps(intent?: CopyIntent) {
+//   switch (intent) {
+//     case "cta":
+//       return {
+//         tracking: "wider",
+//         scale: 10,
+//         bold: true,
+//         uppercase: true,
+//       }
+//     case "detail":
+//       return {
+//         tracking: "normal",
+//         scale: 8,
+//       }
 
-    case "copy":
-    default:
-      return {}
-  }
-}
+//     case "copy":
+//     default:
+//       return {}
+//   }
+// }
 
 /**
  * Use for paragraphs and spans of text with options including scale and tracking.
@@ -42,14 +41,11 @@ function getCopyProps(intent?: CopyIntent) {
 export const Copy = ({
   as,
   className,
-  color = "neutrals-7",
-  intent,
+  color = "system-inherit",
   scale = 6,
   dataTestid,
   ...props
 }: ICopyProps) => {
-  const copyProps = getCopyProps(intent)
-
   return (
     <SCopy
       as={as}
@@ -65,7 +61,7 @@ export const Copy = ({
           ...props,
           scale,
         },
-        copyProps,
+        {},
       )}
     />
   )

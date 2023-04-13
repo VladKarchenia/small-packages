@@ -13,7 +13,6 @@ import {
   Redacted,
   Spacer,
   Stack,
-  Title,
 } from "@/shared/components"
 import { TrackingDetailsItem } from "@/tracking/components"
 
@@ -30,7 +29,7 @@ export const TrackingPlaceholderShipmentUnauthorized = () => {
   const routes = [1, 2, 3]
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
-  const role = user?.authorities?.[0]?.authority
+  const role = user.authorities?.[0]?.authority
 
   return (
     <>
@@ -77,25 +76,21 @@ export const TrackingPlaceholderShipmentUnauthorized = () => {
       >
         <Hidden below="md" css={{ gridArea: "main" }}>
           <STrackingGridItem>
-            <Title as="h3" scale={7} color="system-black">
-              Main Info
-            </Title>
-
-            <Spacer size={24} />
-
-            <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
-              <Stack space={32}>
-                <TrackingDetailsItem title="From where to where">
-                  <Redacted height="$20" text animated />
-                </TrackingDetailsItem>
-                <TrackingDetailsItem title="Date and delivery service">
-                  <Stack space={12}>
+            <TrackingDetailsItem title="Main Info" main>
+              <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
+                <Stack space={32}>
+                  <TrackingDetailsItem title="From where to where">
                     <Redacted height="$20" text animated />
-                    <Redacted height="$20" text animated />
-                  </Stack>
-                </TrackingDetailsItem>
-              </Stack>
-            </GridContainer>
+                  </TrackingDetailsItem>
+                  <TrackingDetailsItem title="Date and delivery service">
+                    <Stack space={12}>
+                      <Redacted height="$20" text animated />
+                      <Redacted height="$20" text animated />
+                    </Stack>
+                  </TrackingDetailsItem>
+                </Stack>
+              </GridContainer>
+            </TrackingDetailsItem>
           </STrackingGridItem>
         </Hidden>
 
@@ -103,18 +98,18 @@ export const TrackingPlaceholderShipmentUnauthorized = () => {
           <GridContainer fullBleed={{ "@initial": false, "@sm": true }}>
             <STrackingGridItem css={{ gridArea: "main" }}>
               <Stack space={24} dividers>
-                <TrackingDetailsItem title="From where to where" titleScale={11}>
+                <TrackingDetailsItem title="From where to where">
                   <Redacted height="$20" text animated />
                 </TrackingDetailsItem>
 
-                <TrackingDetailsItem title="Date and delivery service" titleScale={11}>
+                <TrackingDetailsItem title="Date and delivery service">
                   <Stack space={12}>
                     <Redacted height="$20" text animated />
                     <Redacted height="$20" text animated />
                   </Stack>
                 </TrackingDetailsItem>
 
-                <TrackingDetailsItem title="Route" titleScale={11}>
+                <TrackingDetailsItem title="Route">
                   {routes.map((route, index) => {
                     return (
                       <SRoutePointWrapper
@@ -139,22 +134,17 @@ export const TrackingPlaceholderShipmentUnauthorized = () => {
         <GridItem column={{ "@md": "span 3" }} css={{ gridArea: "map" }}>
           <Box
             css={{
-              backgroundColor: "$neutrals-3",
+              backgroundColor: "$theme-n2-n9",
               minHeight: 260,
 
-              "@md": { borderRadius: "$8", minHeight: "100%" },
+              "@md": { border: "1px solid tranparent", minHeight: "100%" },
             }}
           />
         </GridItem>
 
         <Hidden below="md">
           <STrackingGridItem css={{ gridArea: "route" }}>
-            <TrackingDetailsItem
-              title="Route"
-              titleScale={7}
-              titleColor="system-black"
-              titleIndent={24}
-            >
+            <TrackingDetailsItem title="Route" main>
               {routes.map((route, index) => {
                 return (
                   <SRoutePointWrapper align="start" last={routes.length - 1 === index} key={route}>

@@ -19,7 +19,7 @@ export const ActionDetailsButton = ({ tab, shipmentId, horizontal }: IActionDeta
   const { open } = useModalActions()
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
-  const role = user?.authorities?.[0]?.authority
+  const role = user.authorities?.[0]?.authority
 
   const handleEditClick = () => {
     tab === ShippingType.Quote
@@ -42,25 +42,21 @@ export const ActionDetailsButton = ({ tab, shipmentId, horizontal }: IActionDeta
       asChild
       trigger={
         <ButtonIcon
-          type="button"
-          ariaLabel="Show more button"
           icon={horizontal ? <IconMoreHorizontal /> : <IconMoreVertical />}
-          css={{ height: "100%", cursor: "pointer" }}
+          ariaLabel="Show more button"
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()
           }}
+          inputIcon
+          css={{ color: "$theme-n5-n6" }}
         />
       }
       open={isActionDropdownOpen}
       onOpenChange={() => setActionDropdownOpen(!isActionDropdownOpen)}
-      contentCss={{
-        paddingY: 0,
-        borderRadius: "$8",
-      }}
       // disabled={disabled}
     >
-      <Stack space={0} dividers>
+      <Stack space={0}>
         <DropdownItem key="Edit" label="Edit" onSelect={handleEditClick} />
         <DropdownItem key="Cancel" label="Cancel" onSelect={handleCancelClick} />
         {role === Role.Admin || role === Role.Ops ? (

@@ -1,7 +1,0 @@
-export * from "./ProfileContainer"
-export * from "./ProfileDrawer"
-export * from "./ProfileDrawerPreview"
-export * from "./SwitchOrganization"
-export * from "./ChangePassword"
-export * from "./ProfileMobile"
-export * from "./ProfileDesktop"

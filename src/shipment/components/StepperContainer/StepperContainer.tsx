@@ -42,7 +42,7 @@ export const StepperContainer = () => {
             "@sm": { height: "100%" },
           }}
         >
-          <IllustrationSpinner css={{ display: "block", height: "$32", width: "$32" }} />
+          <IllustrationSpinner css={{ height: "$32", width: "$32" }} />
         </Flex>
       </GridItem>
     )
@@ -53,8 +53,9 @@ export const StepperContainer = () => {
       column={{
         "@initial": "1 / span 6",
         "@sm": "1 / span 12",
-        "@lg": "1 / span 16",
+        "@lg": "1 / span 24",
       }}
+      css={{ maxWidth: 1000 }}
     >
       <Hidden below="md">
         <Breadcrumbs />

@@ -21,8 +21,7 @@ export const DropdownRadioItem = memo(function ({
       <Copy
         as="span"
         color="neutrals-9"
-        scale={8}
-        bold={selected}
+        fontWeight={selected ? "bold" : "regular"}
         css={{
           display: "flex",
           alignItems: "center",

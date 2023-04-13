@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { useMemo } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 
 import { useBoundStore } from "@/store"
@@ -7,6 +6,8 @@ import {
   DIMENSION_DEFAULT,
   DIMENSION_MAX,
   DIMENSION_MIN,
+  ENVELOPE_HEIGHT_DEFAULT,
+  ENVELOPE_LENGTH_DEFAULT,
   PACKAGE_COST_DEFAULT,
   PACKAGE_COST_MAX,
   PACKAGE_COST_MIN,
@@ -19,21 +20,18 @@ import {
   PARCEL_LIMIT,
   TOTAL_PACKAGES_NUMBER_DEFAULT,
 } from "@/constants"
-import { useShipmentById } from "@/shared/data"
 import { useMedia } from "@/shared/hooks"
 import { CSS } from "@/stitches/config"
 import { mediaQueries } from "@/stitches/theme"
 import {
   PickupType,
-  ParcelContentType,
   ShippingType,
-  RouteParams,
   ShipmentState,
   PackagingType,
   PackageType,
   IdenticalPackagesType,
 } from "@/shared/types"
-import { StepName, StepperState } from "@/shipment/types"
+import { StepName } from "@/shipment/types"
 
 import {
   Box,
@@ -54,9 +52,9 @@ import {
   GridItem,
   Hidden,
   IconTooltip,
-  Link,
   Spacer,
   Stack,
+  Title,
   useStepperContext,
 } from "@/shared/components"
 import { IconBin, IconPlus, IconWarning } from "@/shared/icons"
@@ -64,30 +62,21 @@ import { StepActionsBar, StepInputGroup } from "@/shipment/components"
 
 const pickupTypeList: PickupType[] = Object.values(PickupType)
 const packagingTypeList: PackagingType[] = Object.values(PackagingType)
-const parcelContentTypeList: ParcelContentType[] = Object.values(ParcelContentType)
 const packagesAmountList: number[] = Array.from(new Array(PARCEL_LIMIT), (_, index) => index + 1)
 
 export const PackageDetails = ({
   handleContinueClick,
-  setStepperState,
 }: {
   handleContinueClick: (step: StepName.SHIPMENT, nextStep: StepName.DATE) => void
-  setStepperState: React.Dispatch<React.SetStateAction<StepperState>>
 }) => {
-  const [isStepChanged, setIsStepChanged] = useState(false)
-  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
   const shippingType = useBoundStore((state) => state.shippingType)
-  const { data } = useShipmentById(shipmentId)
   const { setSelected } = useStepperContext("ShipmentDetails")
-  const location = useLocation()
-  const isEditMode = location.pathname.includes("edit")
 
   const {
     watch,
     formState: { errors },
   } = useFormContext<ShipmentState>()
   const { packaging, parcels } = watch()
-  const stringifiedParcels = JSON.stringify(parcels)
   const currentParcelsQuantity = Object.values(parcels).reduce((sum, i) => (sum += i.quantity), 0)
 
   const onContinueHandler = () => {
@@ -95,45 +84,14 @@ export const PackageDetails = ({
     handleContinueClick(StepName.SHIPMENT, StepName.DATE)
   }
 
-  // sets the value of the isStepChanged variable according to whether the array
-  // with parcels from the form has changed compared to the currently stored
-  const stepChangesChecker = useCallback(() => {
-    if (data?.parcels) {
-      setIsStepChanged(JSON.stringify(parcels) !== JSON.stringify(data.parcels))
-    }
-  }, [parcels, data?.parcels])
-
-  // TODO: shippingType was added to avoid shipment edit mode - remove it later
-  // checks if edit mode is now and triggers the stepChangesChecker function
-  // if the stringifiedParcels variable has changed
-  useEffect(() => {
-    if (isEditMode && shippingType === ShippingType.Quote) {
-      stepChangesChecker()
-    }
-  }, [stringifiedParcels, isEditMode, stepChangesChecker, shippingType])
-
-  // TODO: shippingType was added to avoid shipment edit mode - remove it later
-  // checks if edit mode is now and triggers the setStepperState function
-  // if the isStepChanged variable has changed setting completed and disabled fields to the stepper steps
-  useEffect(() => {
-    if (isEditMode && shippingType === ShippingType.Quote) {
-      setStepperState((prevState: StepperState) => {
-        return {
-          ...prevState,
-          rates: {
-            ...prevState.rates,
-            // if the parcels haven't been changed, set to true
-            completed: !isStepChanged,
-            // if the parcels have been changed, set to false
-            disabled: isStepChanged,
-          },
-        }
-      })
-    }
-  }, [isStepChanged, setStepperState, isEditMode, shippingType])
-
   return (
     <GridContainer fullBleed>
+      <Hidden below="sm">
+        <Title as="h3" scale={3}>
+          Shipment Details
+        </Title>
+        <Spacer size={40} />
+      </Hidden>
       <StepInputGroup
         start={<PickupTypeField />}
         end={
@@ -173,8 +131,9 @@ export const PackageDetails = ({
 
       {packaging.totalPackagesNumber > 1 ? (
         <>
+          <Spacer size={{ "@initial": 16, "@md": 24 }} />
           <IdenticalPackagesField />
-          <Spacer size={24} />
+          <Spacer size={{ "@initial": 32, "@md": 40 }} />
         </>
       ) : null}
 
@@ -253,8 +212,7 @@ export const PackageDetails = ({
                   <GridItem>
                     <WeightField
                       packageId={parcel.packageId}
-                      description="Weight, lb"
-                      withTooltip
+                      description="Weight per package, lb"
                       error={errors?.parcels?.[parcel.packageId]?.weight?.message}
                     />
                   </GridItem>
@@ -279,22 +237,26 @@ export const PackageDetails = ({
               <Spacer size={{ "@initial": 24, "@md": 40 }} />
               <Flex css={{ gap: "$24" }}>
                 <Box>
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                  <Copy color="theme-b-n3" fontWeight="bold">
                     {Object.values(parcels)
                       .reduce((sum, i) => (sum += parseFloat(i.weight) * i.quantity), 0)
                       .toFixed(1)}
                   </Copy>
-                  <Copy scale={{ "@initial": 10, "@md": 9 }}>Total weight</Copy>
+                  <Copy scale={10} color="theme-n6-n5">
+                    Total weight
+                  </Copy>
                 </Box>
 
                 {shippingType === ShippingType.Shipment ? (
                   <Box>
-                    <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                    <Copy color="theme-b-n3" fontWeight="bold">
                       {Object.values(parcels)
                         .reduce((sum, i) => (sum += parseInt(i.totalPrice) * i.quantity), 0)
                         .toFixed(0)}
                     </Copy>
-                    <Copy scale={{ "@initial": 10, "@md": 9 }}>Declared value</Copy>
+                    <Copy scale={10} color="theme-n6-n5">
+                      Declared value
+                    </Copy>
                   </Box>
                 ) : null}
               </Flex>
@@ -311,10 +273,14 @@ export const PackageDetails = ({
                 return (
                   <Box
                     key={parcel.packageId}
-                    css={{ backgroundColor: "$neutrals-1", padding: "$24 $12", borderRadius: "$8" }}
+                    css={{
+                      backgroundColor: "$theme-n2-n7",
+                      padding: "$24 $12",
+                      borderRadius: "$8",
+                    }}
                   >
                     <Flex align="center" justify="between">
-                      <Copy scale={7} color="system-black" bold>
+                      <Copy color="theme-b-n3" fontWeight="bold">
                         Parcel {parcel.packageId}
                       </Copy>
                       <RemovePackageButton packageId={parcel.packageId} />
@@ -418,27 +384,33 @@ export const PackageDetails = ({
 
             <Flex css={{ gap: "$24", paddingBottom: "$24", position: "relative" }}>
               <Box>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                <Copy color="theme-b-n3" fontWeight="bold">
                   {currentParcelsQuantity}
                 </Copy>
-                <Copy scale={{ "@initial": 10, "@md": 9 }}>Quantity</Copy>
+                <Copy scale={10} color="theme-n6-n5">
+                  Quantity
+                </Copy>
               </Box>
               <Box>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                <Copy color="theme-b-n3" fontWeight="bold">
                   {Object.values(parcels)
                     .reduce((sum, i) => (sum += parseFloat(i.weight) * i.quantity), 0)
                     .toFixed(1)}
                 </Copy>
-                <Copy scale={{ "@initial": 10, "@md": 9 }}>Total weight</Copy>
+                <Copy scale={10} color="theme-n6-n5">
+                  Total weight
+                </Copy>
               </Box>
               {shippingType === ShippingType.Shipment ? (
                 <Box>
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                  <Copy color="theme-b-n3" fontWeight="bold">
                     {Object.values(parcels)
                       .reduce((sum, i) => (sum += parseInt(i.totalPrice) * i.quantity), 0)
                       .toFixed(0)}
                   </Copy>
-                  <Copy scale={{ "@initial": 10, "@md": 9 }}>Declared value</Copy>
+                  <Copy scale={10} color="theme-n6-n5">
+                    Declared value
+                  </Copy>
                 </Box>
               ) : null}
 
@@ -462,60 +434,84 @@ export const PackageDetails = ({
               columnGap={16}
               css={{
                 padding: "$16",
-                backgroundColor: "$neutrals-1",
-                borderBottom: "1px solid $neutrals-3",
+                backgroundColor: "$theme-n2-n7",
               }}
             >
               <GridItem column={shippingType === ShippingType.Quote ? "1 / span 3" : "1 / span 2"}>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                <Copy color="theme-b-n3" fontWeight="semiBold">
                   Quantity
-                  <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$2" }}>
+                  <Copy
+                    as="span"
+                    color="theme-b-n3"
+                    fontWeight="semiBold"
+                    css={{ paddingLeft: "$2" }}
+                  >
                     *
                   </Copy>
                 </Copy>
-                <Copy scale={{ "@initial": 10, "@md": 9 }}>
+                <Copy scale={10} color="theme-n6-n5">
                   Max: {packaging.totalPackagesNumber}
                 </Copy>
               </GridItem>
 
               <GridItem column={shippingType === ShippingType.Quote ? "4 / span 5" : "3 / span 4"}>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                <Copy color="theme-b-n3" fontWeight="semiBold">
                   Dimensions per package, in
                   {shippingType === ShippingType.Shipment ? (
-                    <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$2" }}>
+                    <Copy
+                      as="span"
+                      color="theme-b-n3"
+                      fontWeight="semiBold"
+                      css={{ paddingLeft: "$2" }}
+                    >
                       *
                     </Copy>
                   ) : null}
                 </Copy>
                 <Grid columns="1fr 1fr 1fr">
                   <GridItem>
-                    <Copy scale={{ "@initial": 10, "@md": 9 }}>Length</Copy>
+                    <Copy scale={10} color="theme-n6-n5">
+                      Length
+                    </Copy>
                   </GridItem>
                   <GridItem>
-                    <Copy scale={{ "@initial": 10, "@md": 9 }}>Height</Copy>
+                    <Copy scale={10} color="theme-n6-n5">
+                      Height
+                    </Copy>
                   </GridItem>
                   <GridItem>
-                    <Copy scale={{ "@initial": 10, "@md": 9 }}>Width</Copy>
+                    <Copy scale={10} color="theme-n6-n5">
+                      Width
+                    </Copy>
                   </GridItem>
                 </Grid>
               </GridItem>
 
               <GridItem column={shippingType === ShippingType.Quote ? "9 / span 4" : "7 / span 3"}>
-                <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                <Copy color="theme-b-n3" fontWeight="semiBold">
                   Weight per package, lb
-                  <Copy as="span" scale={9} color="system-black" bold css={{ paddingLeft: "$2" }}>
+                  <Copy
+                    as="span"
+                    color="theme-b-n3"
+                    fontWeight="semiBold"
+                    css={{ paddingLeft: "$2" }}
+                  >
                     *
                   </Copy>
                 </Copy>
-                <Copy scale={{ "@initial": 10, "@md": 9 }}>Max: {PACKAGE_WEIGHT_MAX}</Copy>
+                <Copy scale={10} color="theme-n6-n5">
+                  Max: {PACKAGE_WEIGHT_MAX}
+                </Copy>
               </GridItem>
 
               {shippingType === ShippingType.Shipment ? (
                 <GridItem column="10 / span 3">
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                  <Copy color="theme-b-n3" fontWeight="semiBold">
                     Declared value, USD
                   </Copy>
-                  <Copy scale={{ "@initial": 10, "@md": 9 }}>Max: {PACKAGE_COST_MAX}</Copy>
+                  <Copy scale={10} color="theme-n6-n5">
+                    Max: {PACKAGE_COST_MAX}
+                  </Copy>
                 </GridItem>
               ) : null}
             </Grid>
@@ -528,7 +524,7 @@ export const PackageDetails = ({
                   key={parcel.packageId}
                   css={{
                     paddingX: "$16",
-                    borderBottom: "1px solid $neutrals-3",
+                    borderBottom: "1px solid $theme-n4-n7",
                     position: "relative",
                     "& > div": { paddingY: "$12" },
                   }}
@@ -616,7 +612,13 @@ export const PackageDetails = ({
 
                   <RemovePackageButton
                     packageId={parcel.packageId}
-                    buttonCss={{ position: "absolute", top: 0, bottom: 0, right: "-$32" }}
+                    buttonCss={{
+                      padding: 0,
+                      position: "absolute",
+                      right: "-$24",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                    }}
                   />
                 </Grid>
               )
@@ -633,7 +635,7 @@ export const PackageDetails = ({
                 <GridItem
                   column={shippingType === ShippingType.Quote ? "1 / span 3" : "1 / span 2"}
                 >
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                  <Copy color="theme-b-n3" fontWeight="bold">
                     {currentParcelsQuantity}
                   </Copy>
                 </GridItem>
@@ -645,7 +647,7 @@ export const PackageDetails = ({
                 <GridItem
                   column={shippingType === ShippingType.Quote ? "9 / span 4" : "7 / span 3"}
                 >
-                  <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                  <Copy color="theme-b-n3" fontWeight="bold">
                     {Object.values(parcels)
                       .reduce((sum, i) => (sum += parseFloat(i.weight) * i.quantity), 0)
                       .toFixed(1)}
@@ -654,7 +656,7 @@ export const PackageDetails = ({
 
                 {shippingType === ShippingType.Shipment ? (
                   <GridItem column="10 / span 3">
-                    <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black" bold>
+                    <Copy color="theme-b-n3" fontWeight="bold">
                       {Object.values(parcels)
                         .reduce((sum, i) => (sum += parseInt(i.totalPrice) * i.quantity), 0)
                         .toFixed(0)}
@@ -683,13 +685,15 @@ export const PackageDetails = ({
 
       <StepActionsBar>
         <Button
-          onClick={onContinueHandler}
           full
-          disabled={!!errors.parcels || currentParcelsQuantity !== packaging.totalPackagesNumber}
+          disabled={
+            !!errors.parcels ||
+            currentParcelsQuantity !== packaging.totalPackagesNumber ||
+            (shippingType === ShippingType.Shipment && !packaging.packageContent)
+          }
+          onClick={onContinueHandler}
         >
-          <Copy as="span" scale={8} color="system-white" bold>
-            Continue
-          </Copy>
+          Continue
         </Button>
       </StepActionsBar>
     </GridContainer>
@@ -723,7 +727,33 @@ const PickupTypeField = () => {
 }
 
 const PackagingTypeField = () => {
-  const { control, register } = useFormContext<ShipmentState>()
+  const { control, register, watch, trigger, setValue } = useFormContext<ShipmentState>()
+  const { parcels } = watch()
+
+  const handlePackagingTypeChange = (packagingType: string) => {
+    const newParcels = Object.keys(parcels).reduce(
+      (acc, packageId) => ({
+        ...acc,
+        [packageId]: {
+          ...parcels[packageId],
+          weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
+          dimensions: {
+            length: `${
+              packagingType === PackagingType.Envelope ? ENVELOPE_LENGTH_DEFAULT : DIMENSION_DEFAULT
+            }`,
+            width: `${DIMENSION_DEFAULT}`,
+            height: `${
+              packagingType === PackagingType.Envelope ? ENVELOPE_HEIGHT_DEFAULT : DIMENSION_DEFAULT
+            }`,
+          },
+        },
+      }),
+      {},
+    )
+
+    setValue("parcels", newParcels)
+    trigger("parcels")
+  }
 
   return (
     <Controller
@@ -734,6 +764,7 @@ const PackagingTypeField = () => {
           <FormSelect
             {...register(field.name, {
               shouldUnregister: true,
+              onChange: (event) => handlePackagingTypeChange(event.target.value),
             })}
             {...field}
             onValueChange={field.onChange}
@@ -749,7 +780,12 @@ const PackagingTypeField = () => {
 }
 
 const PackageContentField = () => {
-  const { control, register } = useFormContext<ShipmentState>()
+  const {
+    control,
+    register,
+    trigger,
+    formState: { errors },
+  } = useFormContext<ShipmentState>()
 
   return (
     <Controller
@@ -757,16 +793,34 @@ const PackageContentField = () => {
       control={control}
       render={({ field }) => {
         return (
-          <FormSelect
+          <FormInput
             {...register(field.name, {
               shouldUnregister: true,
+              required: {
+                value: true,
+                message: "Required field",
+              },
+              pattern: {
+                value: /^[a-zA-Z\s]*$/,
+                message: "Only alphabetic characters and spaces allowed",
+              },
+              maxLength: {
+                value: 20,
+                message: "Content max length exceeded",
+              },
             })}
             {...field}
-            onValueChange={field.onChange}
+            onBlur={(event) => {
+              field.onChange(event?.target?.value !== "" ? event?.target?.value.trim() : "")
+              trigger("packaging.packageContent")
+            }}
+            id="packaging.packageContent"
             label="Package contents"
             labelProps={{ hidden: true, required: true }}
             description="Package contents"
-            options={parcelContentTypeList}
+            type="text"
+            autoComplete="new-password"
+            error={errors?.packaging?.packageContent?.message}
           />
         )
       }}
@@ -1030,14 +1084,12 @@ const HeightField = ({
 const WeightField = ({
   packageId,
   description,
-  withTooltip,
   borderless,
   hasError,
   error,
 }: {
   packageId: string
   description?: string
-  withTooltip?: boolean
   borderless?: boolean
   hasError?: boolean
   error?: string
@@ -1082,12 +1134,11 @@ const WeightField = ({
               }
             }}
             id={`parcels.${packageId}.weight`}
-            label="Weight, lb"
+            label="Weight per package, lb"
             description={description}
             labelProps={{ hidden: true, required: true }}
             borderless={borderless}
             type="number"
-            postLabel={withTooltip ? <PackageFieldTooltip /> : null}
             hasError={hasError}
             error={error}
           />
@@ -1174,9 +1225,17 @@ const TotalPackagesNumberField = () => {
         [PACKAGE_ID_DEFAULT]: {
           weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
           dimensions: {
-            length: `${DIMENSION_DEFAULT}`,
+            length: `${
+              packaging.packagingType === PackagingType.Envelope
+                ? ENVELOPE_LENGTH_DEFAULT
+                : DIMENSION_DEFAULT
+            }`,
             width: `${DIMENSION_DEFAULT}`,
-            height: `${DIMENSION_DEFAULT}`,
+            height: `${
+              packaging.packagingType === PackagingType.Envelope
+                ? ENVELOPE_HEIGHT_DEFAULT
+                : DIMENSION_DEFAULT
+            }`,
           },
           totalPrice: `${PACKAGE_COST_DEFAULT}`,
           totalCurrency: PACKAGE_CURRENCY_DEFAULT,
@@ -1194,9 +1253,17 @@ const TotalPackagesNumberField = () => {
           [packageId]: {
             weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
             dimensions: {
-              length: `${DIMENSION_DEFAULT}`,
+              length: `${
+                packaging.packagingType === PackagingType.Envelope
+                  ? ENVELOPE_LENGTH_DEFAULT
+                  : DIMENSION_DEFAULT
+              }`,
               width: `${DIMENSION_DEFAULT}`,
-              height: `${DIMENSION_DEFAULT}`,
+              height: `${
+                packaging.packagingType === PackagingType.Envelope
+                  ? ENVELOPE_HEIGHT_DEFAULT
+                  : DIMENSION_DEFAULT
+              }`,
             },
             totalPrice: `${PACKAGE_COST_DEFAULT}`,
             totalCurrency: PACKAGE_CURRENCY_DEFAULT,
@@ -1252,9 +1319,17 @@ const IdenticalPackagesField = () => {
         [PACKAGE_ID_DEFAULT]: {
           weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
           dimensions: {
-            length: `${DIMENSION_DEFAULT}`,
+            length: `${
+              packaging.packagingType === PackagingType.Envelope
+                ? ENVELOPE_LENGTH_DEFAULT
+                : DIMENSION_DEFAULT
+            }`,
             width: `${DIMENSION_DEFAULT}`,
-            height: `${DIMENSION_DEFAULT}`,
+            height: `${
+              packaging.packagingType === PackagingType.Envelope
+                ? ENVELOPE_HEIGHT_DEFAULT
+                : DIMENSION_DEFAULT
+            }`,
           },
           totalPrice: `${PACKAGE_COST_DEFAULT}`,
           totalCurrency: PACKAGE_CURRENCY_DEFAULT,
@@ -1275,9 +1350,17 @@ const IdenticalPackagesField = () => {
           [packageId]: {
             weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
             dimensions: {
-              length: `${DIMENSION_DEFAULT}`,
+              length: `${
+                packaging.packagingType === PackagingType.Envelope
+                  ? ENVELOPE_LENGTH_DEFAULT
+                  : DIMENSION_DEFAULT
+              }`,
               width: `${DIMENSION_DEFAULT}`,
-              height: `${DIMENSION_DEFAULT}`,
+              height: `${
+                packaging.packagingType === PackagingType.Envelope
+                  ? ENVELOPE_HEIGHT_DEFAULT
+                  : DIMENSION_DEFAULT
+              }`,
             },
             totalPrice: `${PACKAGE_COST_DEFAULT}`,
             totalCurrency: PACKAGE_CURRENCY_DEFAULT,
@@ -1296,12 +1379,8 @@ const IdenticalPackagesField = () => {
   }
 
   return (
-    <Flex
-      align="center"
-      justify={{ "@initial": "between", "@md": "start" }}
-      css={{ "@md": { gap: "$24" } }}
-    >
-      <Copy scale={{ "@initial": 9, "@md": 8 }} color="system-black">
+    <Flex align="center" justify="start" css={{ gap: "$24", "@md": { gap: "$32" } }}>
+      <Copy scale={5} color="theme-b-n3">
         Are packages identical?
       </Copy>
       <Controller
@@ -1350,7 +1429,6 @@ const ErrorLineWithMessage = ({
         bottom: 0,
         height: "$2",
         width: "100%",
-        zIndex: "$2",
         backgroundColor: errorMessage ? "$special-error" : "inherit",
       }}
     >
@@ -1361,7 +1439,7 @@ const ErrorLineWithMessage = ({
 
 const AddPackageButton = () => {
   const { setValue, watch } = useFormContext<ShipmentState>()
-  const { parcels } = watch()
+  const { parcels, packaging } = watch()
 
   const onAddPackageClick = () => {
     const nextParcelId = `${Object.keys(parcels).length + 1}`
@@ -1370,9 +1448,17 @@ const AddPackageButton = () => {
       [nextParcelId]: {
         weight: PACKAGE_WEIGHT_DEFAULT.toFixed(1),
         dimensions: {
-          length: `${DIMENSION_DEFAULT}`,
+          length: `${
+            packaging.packagingType === PackagingType.Envelope
+              ? ENVELOPE_LENGTH_DEFAULT
+              : DIMENSION_DEFAULT
+          }`,
           width: `${DIMENSION_DEFAULT}`,
-          height: `${DIMENSION_DEFAULT}`,
+          height: `${
+            packaging.packagingType === PackagingType.Envelope
+              ? ENVELOPE_HEIGHT_DEFAULT
+              : DIMENSION_DEFAULT
+          }`,
         },
         totalPrice: `${PACKAGE_COST_DEFAULT}`,
         totalCurrency: PACKAGE_CURRENCY_DEFAULT,
@@ -1386,19 +1472,9 @@ const AddPackageButton = () => {
   }
 
   return (
-    <Link as="button" type="button" onClick={onAddPackageClick}>
-      <Copy
-        as="span"
-        scale={8}
-        color="system-black"
-        bold
-        css={{ display: "flex", alignItems: "center" }}
-      >
-        <IconPlus />
-        <Spacer size={4} horizontal />
-        Add a package
-      </Copy>
-    </Link>
+    <Button action="text" type="button" onClick={onAddPackageClick} icon={<IconPlus />}>
+      Add a package
+    </Button>
   )
 }
 
@@ -1445,9 +1521,10 @@ const RemovePackageButton = ({ packageId, buttonCss }: { packageId: string; butt
   return (
     <ButtonIcon
       type="button"
-      ariaLabel={`remove parcel ${packageId}`}
+      ariaLabel={`Remove parcel ${packageId}`}
       icon={<IconBin />}
       onClick={() => onDeletePackageClick(packageId)}
+      inputIcon
       css={{ ...buttonCss }}
     />
   )
@@ -1458,11 +1535,7 @@ const PackageFieldTooltip = () => {
 
   return (
     <IconTooltip
-      tooltip={
-        <Copy scale={10} color="system-black">
-          Per package
-        </Copy>
-      }
+      tooltip={<Copy scale={10}>Per package</Copy>}
       ariaLabel="Per package tooltip"
       withTitle={false}
       contentWidth="max-content"
@@ -1471,14 +1544,12 @@ const PackageFieldTooltip = () => {
       delayShow={150}
       delayHide={150}
       contentCss={{
-        padding: "$8 $12",
+        padding: "$12",
       }}
       triggerCss={{
-        "& > span": {
-          borderRadius: "$rounded",
-        },
+        height: "$20",
       }}
-      icon={<IconWarning fixedSize width={20} height={20} css={{ color: "$neutrals-7" }} />}
+      icon={<IconWarning fixedSize width={20} height={20} />}
     />
   )
 }

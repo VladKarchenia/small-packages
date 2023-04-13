@@ -10,18 +10,18 @@ export const SMapContainer = styled(MapContainer, {
   zIndex: "$2",
 
   "@md": {
-    borderRadius: "$8",
+    border: "1px solid $theme-vl-n11",
   },
 })
 
 export const SEmptyMapContainer = styled(Flex, {
   height: "100%",
   minHeight: 260,
-  backgroundColor: "$neutrals-3",
+  backgroundColor: "$theme-n2-n9",
   padding: "$20",
   zIndex: "$2",
 
   "@md": {
-    borderRadius: "$8",
+    border: "1px solid $theme-vl-n11",
   },
 })

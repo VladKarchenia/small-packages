@@ -1,24 +1,18 @@
 import { styled, CSS } from "@/stitches/config"
 
-const fontSizeLineHeightMap: { [key: string]: string | number } = {
-  6: "16px",
+const fontSizeLineHeightMap: { [key: string]: string } = {
   11: "16px",
   12: "18px",
   13: "20px",
   14: "22px",
-  16: 1.5,
+  15: "22px",
+  16: "24px",
+  17: "26px",
   18: "28px",
-  20: "28px",
-  24: "32px",
-  28: "32px",
-  32: "40px",
-  40: "48px",
+  20: "30px",
+  25: "34px",
+  35: "42px",
   48: "56px",
-  56: "64px",
-  64: "72px",
-  72: "80px",
-  80: "88px",
-  104: "112px",
 }
 
 const getScaleVariantStyles = (fontSize: number) => {
@@ -34,63 +28,54 @@ const getScaleVariantStyles = (fontSize: number) => {
 const scaleVariantMap: any = {
   0: {
     ...getScaleVariantStyles(48),
-
-    "@sm": getScaleVariantStyles(56),
-    "@lg": getScaleVariantStyles(72),
-    "@xxl": getScaleVariantStyles(80),
   },
   1: {
-    ...getScaleVariantStyles(40),
+    ...getScaleVariantStyles(25),
 
-    "@sm": getScaleVariantStyles(48),
-    "@lg": getScaleVariantStyles(56),
-    "@xxl": getScaleVariantStyles(72),
+    "@sm": getScaleVariantStyles(35),
   },
   2: {
-    ...getScaleVariantStyles(32),
-
-    "@sm": getScaleVariantStyles(40),
-    "@lg": getScaleVariantStyles(48),
+    ...getScaleVariantStyles(25),
   },
   3: {
-    ...getScaleVariantStyles(24),
+    ...getScaleVariantStyles(17),
 
-    "@sm": getScaleVariantStyles(32),
-    "@lg": getScaleVariantStyles(40),
+    "@sm": getScaleVariantStyles(20),
   },
   4: {
-    ...getScaleVariantStyles(24),
-
-    "@sm": getScaleVariantStyles(32),
-  },
-  5: {
-    ...getScaleVariantStyles(20),
-
-    "@sm": getScaleVariantStyles(24),
-  },
-  6: {
-    ...getScaleVariantStyles(20),
-  },
-  7: {
-    ...getScaleVariantStyles(18),
-  },
-  8: {
     ...getScaleVariantStyles(16),
   },
-  9: {
+  5: {
+    ...getScaleVariantStyles(15),
+
+    "@sm": getScaleVariantStyles(18),
+  },
+  6: {
+    ...getScaleVariantStyles(15),
+
+    "@sm": getScaleVariantStyles(16),
+  },
+  7: {
+    ...getScaleVariantStyles(15),
+  },
+  8: {
     ...getScaleVariantStyles(14),
+  },
+  9: {
+    ...getScaleVariantStyles(13),
+
+    "@sm": getScaleVariantStyles(16),
   },
   10: {
     ...getScaleVariantStyles(13),
+
+    "@sm": getScaleVariantStyles(14),
   },
   11: {
     ...getScaleVariantStyles(12),
   },
   12: {
     ...getScaleVariantStyles(11),
-  },
-  13: {
-    ...getScaleVariantStyles(6),
   },
 }
 
@@ -116,7 +101,6 @@ export const commonVariants = {
     10: {},
     11: {},
     12: {},
-    13: {},
   },
   tracking: trackingVariant,
 }

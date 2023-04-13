@@ -10,12 +10,12 @@ export const DeliveryRatesShort = () => {
   const { rate } = watch()
 
   return (
-    <Stack space={8}>
+    <Stack space={8} css={{ color: "$theme-b-n3" }}>
       <Flex align="center">
         <Flex css={{ paddingRight: "$8" }}>
           <IconCross />
         </Flex>
-        <Copy scale={8} color="system-black">
+        <Copy>
           {rate.rateType} {rate.name}
         </Copy>
       </Flex>
@@ -23,7 +23,7 @@ export const DeliveryRatesShort = () => {
         <Flex css={{ paddingRight: "$8" }}>
           <IconPencil />
         </Flex>
-        <Copy scale={8} color="system-black">
+        <Copy>
           {rate.currency} {rate.price.toFixed(2)}
         </Copy>
       </Flex>
