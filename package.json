@@ -61,7 +61,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .tsx,.ts ./",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc"
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc",
+    "cypress:open": "env-cmd -f .env.e2e cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -87,6 +88,9 @@
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
+    "cypress": "^11.2.0",
+    "cypress-localstorage-commands": "^2.2.2",
+    "cypress-xpath": "^2.0.1",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.1",

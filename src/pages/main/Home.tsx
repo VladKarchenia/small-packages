@@ -23,6 +23,7 @@ export const Home = () => {
             ariaLabel="Create button"
             buttonCss={{ zIndex: "$9", position: "fixed", bottom: "$56", right: "$16" }}
             onClick={() => open("createShipment")}
+            dataTestid="create-button"
           />
         </GridContainer>
       </CommonLayout>

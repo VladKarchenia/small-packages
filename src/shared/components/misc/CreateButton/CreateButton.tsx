@@ -11,6 +11,7 @@ interface ICreateButtonProps {
   ariaLabel: string
   buttonCss?: CSS
   onClick: () => void
+  dataTestid?: string
 }
 
 export const CreateButton = ({
@@ -21,6 +22,7 @@ export const CreateButton = ({
   ariaLabel,
   onClick,
   buttonCss,
+  dataTestid,
 }: ICreateButtonProps) => {
   return (
     <SCreateButton onClick={onClick} css={buttonCss}>
@@ -38,6 +40,7 @@ export const CreateButton = ({
         size={size}
         color={color}
         css={{ borderRadius: "$rounded" }}
+        dataTestid={dataTestid}
       />
     </SCreateButton>
   )

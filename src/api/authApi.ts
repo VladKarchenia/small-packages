@@ -5,7 +5,7 @@ import { LoginInput } from "@/pages"
 import { Role } from "@/shared/types"
 
 // move to .env file
-const BASE_URL = "http://localhost:8000/"
+const BASE_URL = "http://localhost:3000/"
 
 export const authApi = axios.create({
   baseURL: urljoin(BASE_URL, "api"),

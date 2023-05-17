@@ -21,6 +21,8 @@ export const LoginForm = ({
   const [passwordShown, setPasswordShown] = useState(false)
   const togglePasswordVisibility = () => setPasswordShown(!passwordShown)
 
+  const aa = []
+
   return (
     <Flex align="start" justify="center" direction="column">
       <Title as="h1" scale={4}>
@@ -61,7 +63,11 @@ export const LoginForm = ({
                 error={errors[field.name]?.message}
                 placeholder="Enter your password"
                 suffix={
-                  <SShowPasswordButton type="button" onClick={() => togglePasswordVisibility()}>
+                  <SShowPasswordButton
+                    type="button"
+                    onClick={() => togglePasswordVisibility()}
+                    data-testid="show-password"
+                  >
                     <IconClarityEye height={20} width={20} fixedSize />
                   </SShowPasswordButton>
                 }
@@ -78,7 +84,7 @@ export const LoginForm = ({
         </Copy>
       </Link>
       <Spacer size={24} />
-      <Button type="submit" full loading={isLoading}>
+      <Button type="submit" full loading={isLoading} dataTestid="login-button">
         <Copy as="span" scale={8} color="system-white" bold>
           Login
         </Copy>

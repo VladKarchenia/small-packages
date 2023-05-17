@@ -19,6 +19,6 @@
     "jsx": "react-jsx",
     "incremental": true
   },
-  "include": ["src"],
+  "include": ["src", "./cypress.d.ts"],
   "exclude": ["build", "node_modules"]
 }
