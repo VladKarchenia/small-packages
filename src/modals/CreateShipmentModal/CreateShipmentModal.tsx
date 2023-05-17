@@ -52,11 +52,13 @@ export const CreateShipmentModal = () => {
           label="Create a quote"
           ariaLabel="Create a quote"
           onClick={() => handleClick(ShippingType.Quote)}
+          dataTestid="create-quote"
         />
         <CreateRoundedButton
           label="Create a shipment"
           ariaLabel="Create a shipment"
           onClick={() => handleClick(ShippingType.Shipment)}
+          dataTestid="create-shipment"
         />
       </Stack>
     </Modal>

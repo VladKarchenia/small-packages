@@ -13,6 +13,7 @@ interface ICreateRoundedButtonProps {
   ariaLabel: string
   buttonCss?: CSS
   onClick: () => void
+  dataTestid?: string
 }
 
 export const CreateRoundedButton = ({
@@ -23,6 +24,7 @@ export const CreateRoundedButton = ({
   ariaLabel,
   onClick,
   buttonCss,
+  dataTestid,
 }: ICreateRoundedButtonProps) => {
   return (
     <SCreateRoundedButton onClick={onClick} css={buttonCss}>
@@ -40,6 +42,7 @@ export const CreateRoundedButton = ({
         size={size}
         color={color}
         css={{ borderRadius: "$rounded" }}
+        dataTestid={dataTestid}
       />
     </SCreateRoundedButton>
   )
