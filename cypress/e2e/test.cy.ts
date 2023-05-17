@@ -9,4 +9,11 @@ describe("Dashboard Page", () => {
 
     cy.url().should("eq", "http://localhost:3000/create/shipment")
   })
+
+  it("test 2", () => {
+    cy.get('[data-testid="create-button"]').click()
+    cy.get('[data-testid="create-shipment"]').click()
+
+    cy.url().should("eq", "http://localhost:3000/create/shipment")
+  })
 })
