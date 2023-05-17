@@ -1,6 +1,8 @@
 import { useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { scrollTo } from "@/utils"
+
+import { scrollTo } from "@/shared/utils"
+
 import { PaginationControl } from "@/shared/components"
 
 interface IPaginationProps {
@@ -24,7 +26,7 @@ export const Pagination = ({
   getPrevious,
   scroll = false,
 }: IPaginationProps) => {
-  // TODO: see if we can refactor this mobile scroll behavior
+  // TODO: see if we can refactor the mobile scroll behavior
   const scrollTop = () => {
     window.setTimeout(() => {
       scrollTo({ position: { top: 0, left: 0 } })
@@ -36,6 +38,7 @@ export const Pagination = ({
     if (scroll) {
       scrollTop()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getNext])
 
   const handlePreviousAndScroll = useCallback(() => {
@@ -43,6 +46,7 @@ export const Pagination = ({
     if (scroll) {
       scrollTop()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPrevious])
 
   const { t } = useTranslation()

@@ -1,6 +1,7 @@
 import React from "react"
-import { CSS } from "@/config"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+
+import { CSS } from "@/stitches/config"
 
 import { ModalPortal, ModalPortalProps } from "./Portal"
 import { ModalOverlay } from "./Overlay"

@@ -1,6 +1,8 @@
 import React, { memo } from "react"
+
 import { Copy } from "@/shared/components"
 import { IconTick } from "@/shared/icons"
+
 import { SDropdownMenuItemIndicator, SDropdownMenuRadioItem } from "./Dropdown.styles"
 
 export interface IDropdownRadioItemProps {
@@ -19,8 +21,7 @@ export const DropdownRadioItem = memo(function ({
       <Copy
         as="span"
         color="neutrals-9"
-        scale={8}
-        bold={selected}
+        fontWeight={selected ? "bold" : "regular"}
         css={{
           display: "flex",
           alignItems: "center",

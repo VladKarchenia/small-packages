@@ -1,3 +1,4 @@
+export * from "./GeneralModal"
 export * from "./ModalsContainer"
 export * from "./CreateShipmentModal"
 export * from "./CancelShipmentModal"

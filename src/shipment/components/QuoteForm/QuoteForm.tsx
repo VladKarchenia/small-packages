@@ -1,28 +1,19 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
+
+import { StepName, QuoteStep, StepperState, IStepsDataItem } from "@/shipment/types"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/stitches/theme"
+
 import {
-  IStep,
-  StepName,
-  ShipmentDetails,
-  ShipmentDetailsShort,
+  PackageDetails,
   AddressInfo,
-  AddressInfoCollapsed,
   DeliveryRates,
-  DeliveryRatesShort,
-  QuoteStep,
-  ShippingType,
   StepperForm,
   ShipmentDateDetails,
-  ShipmentDateDetailsShort,
-} from "@/shipment"
+} from "@/shipment/components"
 
-type StepperState = {
-  info: IStep
-  shipment: IStep
-  date: IStep
-  rates: IStep
-}
-
-const initialState: StepperState = {
+const initialState: Omit<StepperState, "from" | "to" | "summary" | "receipt"> = {
   info: {
     name: "info",
     completed: false,
@@ -50,7 +41,10 @@ const initialState: StepperState = {
 }
 
 export const QuoteForm = () => {
-  const [stepperState, setStepperState] = useState(initialState)
+  const [stepperState, setStepperState] = useState(initialState as StepperState)
+  const location = useLocation()
+  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
+  const isEditMode = location.pathname.includes("edit")
 
   const handleContinueClick = (step: QuoteStep, nextStep: QuoteStep) => {
     setStepperState((prevState) => {
@@ -58,13 +52,11 @@ export const QuoteForm = () => {
         ...prevState,
         [step]: {
           ...prevState[step],
-          name: step,
           completed: true,
           disabled: false,
         },
         [nextStep]: {
           ...prevState[nextStep],
-          name: nextStep,
           completed: false,
           disabled: false,
         },
@@ -72,44 +64,39 @@ export const QuoteForm = () => {
     })
   }
 
-  const stepsData = [
+  const stepsData: IStepsDataItem[] = [
     {
-      title: "Address Information",
+      title: isSmallAndAbove ? "Where" : "Address Information",
       data: stepperState.info,
       mainContent: <AddressInfo handleContinueClick={handleContinueClick} />,
-      shortContent: <AddressInfoCollapsed />,
+      // shortContent: <AddressInfoCollapsed />,
     },
     {
-      title: "Shipment Details",
+      title: isSmallAndAbove ? "Details" : "Shipment Details",
       data: stepperState.shipment,
-      mainContent: (
-        <ShipmentDetails
-          handleContinueClick={handleContinueClick}
-          shippingType={ShippingType.Quote}
-        />
-      ),
-      shortContent: <ShipmentDetailsShort shippingType={ShippingType.Quote} />,
+      mainContent: <PackageDetails handleContinueClick={handleContinueClick} />,
+      // shortContent: <PackageDetailsShort />,
     },
     {
-      title: "Ready Date",
+      title: isSmallAndAbove ? "Ready Date" : "Ready Date & Time",
       data: stepperState.date,
       mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
-      shortContent: <ShipmentDateDetailsShort />,
+      // shortContent: <ShipmentDateDetailsShort />,
     },
     {
-      title: "Delivery Rates",
+      title: isSmallAndAbove ? "Rates" : "Delivery rates & Transit times",
       data: stepperState.rates,
-      mainContent: <DeliveryRates shippingType={ShippingType.Quote} />,
-      shortContent: <DeliveryRatesShort />,
+      mainContent: <DeliveryRates />,
+      // shortContent: <DeliveryRatesShort />,
     },
   ]
 
   return (
     <StepperForm
-      shippingType={ShippingType.Quote}
-      title="Create a quote"
+      title={isEditMode ? "Edit a quote" : "Create a quote"}
       defaultStep={StepName.INFO}
       stepsData={stepsData}
+      setStepperState={setStepperState}
     />
   )
 }

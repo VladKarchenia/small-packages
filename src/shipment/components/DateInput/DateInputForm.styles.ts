@@ -1,8 +1,8 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SDatesInputContent = styled("div", {
   width: "100%",
-  maxWidth: "480px",
+  maxWidth: 480,
   overflow: "hidden auto",
   paddingY: 0,
   margin: "0 auto",
@@ -10,13 +10,13 @@ export const SDatesInputContent = styled("div", {
   /* Change default DayPicker styles */
   ".rdp-day_selected:not([disabled])": {
     border: "2px solid currentColor",
-    backgroundColor: "$system-black",
-    color: "$system-white",
+    backgroundColor: "var(--colors-neutrals-12)",
+    color: "var(--colors-neutrals-0)",
   },
 
   ".rdp-button:hover:not([disabled])": {
     borderColor: "currentColor",
-    color: "$system-white",
+    color: "var(--colors-neutrals-0)",
     "--rdp-background-color": "var(--colors-neutrals-6)",
   },
 

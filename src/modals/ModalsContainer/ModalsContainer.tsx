@@ -1,10 +1,12 @@
 import { useModalsClose } from "@/shared/hooks"
-import { CreateShipmentModal } from "../CreateShipmentModal"
-import { CancelShipmentModal } from "../CancelShipmentModal"
-import { DeleteShipmentModal } from "../DeleteShipmentModal"
-import { CancelQuoteModal } from "../CancelQuoteModal"
-import { DeleteQuoteModal } from "../DeleteQuoteModal"
-import { ReloadRatesModal } from "../ReloadRatesModal"
+import {
+  CreateShipmentModal,
+  CancelShipmentModal,
+  DeleteShipmentModal,
+  CancelQuoteModal,
+  DeleteQuoteModal,
+  ReloadRatesModal,
+} from "@/modals"
 
 // lazy?
 // const TimePeriodModal = dynamic(() =>

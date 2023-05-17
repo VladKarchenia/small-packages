@@ -1,17 +1,14 @@
 import React from "react"
-import {
-  ComponentProps,
-  ResponsiveProp,
-  mergeCSSObjects,
-  getStyleFromResponsiveProp,
-} from "@/utils"
+
+import { ComponentProps, ResponsiveProp } from "@/stitches/types"
+import { mergeCSSObjects, getStyleFromResponsiveProp } from "@/stitches/utils"
 import { getGridCoords } from "../utils"
 
 import { SGridItem } from "./GridItem.styles"
 
-export type GridItemTrack = string | undefined
+type GridItemTrack = string | undefined
 
-export type GridItemCoord = GridItemTrack | ResponsiveProp<GridItemTrack>
+type GridItemCoord = GridItemTrack | ResponsiveProp<GridItemTrack>
 
 export interface IGridItemProps extends ComponentProps<typeof SGridItem> {
   column?: GridItemCoord

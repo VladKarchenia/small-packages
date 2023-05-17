@@ -1,20 +1,24 @@
 import React, { createContext, useContext, useMemo, useState } from "react"
+
 import { PAGED_LIMIT } from "@/constants"
 import { ShipmentStatus } from "@/shared/types"
-import { IAddress } from "@/shared/state"
 
 export enum ShipmentsPagedOrderBy {
   CreationDateAsc = "Creation date (ASC)",
   CreationDateDesc = "Creation date (DESC)",
+  SenderNameAsc = "Sender name (A-Z)",
+  SenderNameDesc = "Sender name (Z-A)",
   RecipientNameAsc = "Recipient name (A-Z)",
   RecipientNameDesc = "Recipient name (Z-A)",
   IdAsc = "ID (ASC)",
   IdDesc = "ID (DESC)",
+  StatusAsc = "Status (A-Z)",
+  StatusDesc = "Status (Z-A)",
 }
 
 export enum SortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
+  ASC = "asc",
+  DESC = "desc",
 }
 
 export interface DashboardState {
@@ -22,11 +26,11 @@ export interface DashboardState {
   offset: number
   searchTerm: string
   sortOrder: ShipmentsPagedOrderBy
-  direction?: SortDirection
-  status?: ShipmentStatus[] | null
-  recipientName?: string | null
-  originalAddress?: IAddress | null
-  destinationAddress?: IAddress | null
+  direction: SortDirection
+  status: ShipmentStatus[]
+  recipientName: string[]
+  originalAddress: string[]
+  destinationAddress: string[]
 }
 
 const initialDashboardState: DashboardState = {
@@ -35,31 +39,10 @@ const initialDashboardState: DashboardState = {
   searchTerm: "",
   sortOrder: ShipmentsPagedOrderBy.CreationDateAsc,
   direction: SortDirection.ASC,
-  // status: null,
-  status: [ShipmentStatus.Eliminated, ShipmentStatus.Draft],
-  // recipientName: null,
-  recipientName: "James Bond",
-  // originalAddress: null,
-  originalAddress: {
-    location: "USA, New York",
-    country: "",
-    zipCode: "",
-    state: "",
-    city: "",
-    address1: "",
-    address2: "",
-  },
-  // destinationAddress: null,
-  destinationAddress: {
-    location: "USA, New York",
-    country: "",
-    zipCode: "",
-    state: "",
-    city: "",
-    address1: "",
-    address2: "",
-    isResidential: false,
-  },
+  status: [],
+  recipientName: [],
+  originalAddress: [],
+  destinationAddress: [],
 }
 
 type DashboardActions = {
@@ -67,10 +50,10 @@ type DashboardActions = {
   setSearchTerm: (value: string) => void
   setSortOrder: (value: ShipmentsPagedOrderBy) => void
   setSortDirection: (value: SortDirection) => void
-  setStatusFilter: (array: ShipmentStatus[] | null) => void
-  setRecipientNameFilter: (value: string) => void
-  setOriginalAddressFilter: (value: IAddress) => void
-  setDestinationAddressFilter: (value: IAddress) => void
+  setStatusFilter: (array: ShipmentStatus[]) => void
+  setRecipientNameFilter: (value: string[]) => void
+  setOriginalAddressFilter: (value: string[]) => void
+  setDestinationAddressFilter: (value: string[]) => void
 }
 
 export const DashboardStateContext = createContext<DashboardState>({} as DashboardState)
@@ -93,7 +76,7 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
       resetFilterField: (field) => {
         setState((prevState) => ({
           ...prevState,
-          [field]: null,
+          [field]: [],
         }))
       },
       setSearchTerm: (value) => {
@@ -120,27 +103,29 @@ export const DashboardProvider = ({ children }: StateContextProviderProps) => {
           status: array,
         }))
       },
-      setRecipientNameFilter: (value) => {
+      setRecipientNameFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          recipientName: value,
+          recipientName: array,
         }))
       },
-      setOriginalAddressFilter: (value) => {
+      setOriginalAddressFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          originalAddress: value,
+          originalAddress: array,
         }))
       },
-      setDestinationAddressFilter: (value) => {
+      setDestinationAddressFilter: (array) => {
         setState((prevState) => ({
           ...prevState,
-          destinationAddress: value,
+          destinationAddress: array,
         }))
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state],
   )
+
   return (
     <DashboardStateContext.Provider value={state}>
       <DashboardActionContext.Provider value={actions}>{children}</DashboardActionContext.Provider>

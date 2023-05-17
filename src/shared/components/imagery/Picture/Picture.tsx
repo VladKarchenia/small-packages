@@ -1,11 +1,13 @@
 import * as React from "react"
 import cx from "classnames"
-import { CSS } from "@/config"
-import { ComponentProps, generateImageSource, generateImageSourceSet } from "@/utils"
+
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
+import { generateImageSource, generateImageSourceSet } from "@/shared/utils"
 
 import { SPicture, SPictureImg } from "./Picture.styles"
 
-export type PictureExtraParams = {
+type PictureExtraParams = {
   [key: string]: string | number
 
   h: number
@@ -17,7 +19,7 @@ export type PictureExtraParams = {
   "max-w": number
 }
 
-export type IPictureDimensions = {
+type IPictureDimensions = {
   width?: number
 
   /**
@@ -155,10 +157,10 @@ export const Picture: React.FC<IPictureProps> = ({
     addDprToSrc,
   )
 
-  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setLazyload(false)
 
-    onLoad && onLoad(e)
+    onLoad && onLoad(event)
   }
 
   // Detect if the src has changed and trigger a lazysizes lazyload
@@ -170,7 +172,7 @@ export const Picture: React.FC<IPictureProps> = ({
         setLazyload(true)
       }
 
-      // Save the new src
+      // Store the new src
       srcRef.current = src
     }
   }, [src, lazyload])

@@ -1,75 +1,68 @@
 import axios from "axios"
-import urljoin from "url-join"
-import { GenericResponse, ILoginResponse, IUserResponse } from "./types"
-import { LoginInput } from "@/pages"
-import { Role } from "@/shared/types"
-
-// move to .env file
-const BASE_URL = "http://localhost:3000/"
+import { ILoginResponse, IRefreshResponse, LoginInput, RecoveryInput } from "./types"
+import { AUTH_BASE_URI } from "@/constants"
+import { userApi, getMeFn } from "./userApi"
+import { shipmentApi } from "./shipmentApi"
+import { placeApi } from "./placeApi"
+import { organizationApi } from "./organizationApi"
 
 export const authApi = axios.create({
-  baseURL: urljoin(BASE_URL, "api"),
-  // withCredentials is to send cookies in the requests all the time (our JWT)
-  withCredentials: true,
+  baseURL: AUTH_BASE_URI,
 })
 
 authApi.defaults.headers.common["Content-Type"] = "application/json"
 
-// // we can also set JWT in axios headers
-// const token = localStorage.getItem("token") // inside App
-// // or
-// const token = response.data.token // inside login func
-// authApi.defaults.headers.common["Authorization"] = `Bearer ${token}`
+export const loginUserFn = async ({ username, password }: LoginInput) => {
+  const { data } = await authApi.post<ILoginResponse>("auth/login", { username, password })
+  const { accessToken } = data
 
-export const refreshAccessToken = async () => {
-  const response = await authApi.get<ILoginResponse>("auth/refresh")
-  return response.data
+  userApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+
+  const { user, organizations, settings } = await getMeFn(username)
+
+  return { ...data, user, organizations, settings }
 }
 
-authApi.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  async (error) => {
-    const originalRequest = error.config
-    const errMessage = error.response.data.message as string
+export const logoutUserFn = async (token: string) => {
+  const { data } = await authApi.post<string>("auth/logout", { token })
 
-    if (errMessage.includes("not logged in") && !originalRequest._retry) {
-      originalRequest._retry = true
-      await refreshAccessToken()
-      return authApi(originalRequest)
-    }
+  delete userApi.defaults.headers.common["Authorization"]
+  delete shipmentApi.defaults.headers.common["Authorization"]
+  delete placeApi.defaults.headers.common["Authorization"]
+  delete organizationApi.defaults.headers.common["Authorization"]
 
-    return Promise.reject(error)
-  },
-)
-
-export const loginUserFn = async (user: LoginInput) => {
-  const response = await authApi.post<ILoginResponse>("auth/login", user)
-  return response.data
+  return data
 }
 
-export const logoutUserFn = async () => {
-  const response = await authApi.get<GenericResponse>("auth/logout")
-  return response.data
+export const refreshTokenFn = async (token: string) => {
+  const { data } = await authApi.post<IRefreshResponse>("auth/refresh", { token })
+  const { accessToken } = data
+
+  userApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  shipmentApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  placeApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+  organizationApi.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+
+  return data
 }
 
-export const getMeFn = async () => {
-  // const response = await authApi.get<IUserResponse>("users/me")
-  // return response.data
-  return {
-    data: {
-      user: {
-        name: "Vlad",
-        email: "vlad@mail.com",
-        // role: Role.User,
-        role: Role.Admin,
-        _id: "aaa",
-        id: "aaa",
-        createdAt: "15-01-2020",
-        updatedAt: "16-01-2020",
-        __v: 123,
-      },
-    },
-  }
+export const forgotPasswordFn = async ({ email }: RecoveryInput) => {
+  const { data } = await authApi.post<string>("auth/forgot_password", { email })
+
+  return data
+}
+
+export const resetPasswordFn = async ({
+  newPassword,
+  token,
+}: {
+  newPassword: string
+  token: string
+}) => {
+  const { data } = await authApi.post<string>("auth/reset_password", { newPassword, token })
+
+  return data
 }

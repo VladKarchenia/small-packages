@@ -1,5 +1,4 @@
-import { styled } from "@/config"
-import { multipleSelectors } from "@/utils"
+import { styled } from "@/stitches/config"
 
 export const SLink = styled("a", {
   reset: true,
@@ -8,38 +7,26 @@ export const SLink = styled("a", {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "blue",
+  color: "$theme-b-yl",
   transition: "150ms color ease-out",
-
-  focus: {
-    color: "$brand-blue-primary",
-    textDecoration: "underline",
-  },
+  position: "relative",
 
   hover: {
-    color: "$brand-blue-primary",
-    textDecoration: "underline",
+    color: "$theme-vl-ylr",
   },
 
-  variants: {
-    isCtaIntent: {
-      true: {
-        color: "$neutrals-7",
-        transition: "150ms color ease-out, 200ms transform ease-out",
+  keyboardFocus: {
+    color: "$theme-vl-yl",
+    textDecoration: "underline",
+    textUnderlineOffset: "$space$4",
+  },
 
-        ...multipleSelectors(["focus", "hover"], {
-          color: "$neutrals-9",
-          transform: "translateX($4)",
-        }),
-      },
-    },
+  active: {
+    color: "$theme-vp-yp",
+  },
 
-    underline: {
-      true: {
-        textDecoration: "underline",
-        textUnderlineOffset: "$space$4",
-      },
-    },
+  disabled: {
+    color: "$theme-n4-ydr",
   },
 })
 

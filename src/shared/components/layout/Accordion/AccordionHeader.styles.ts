@@ -1,6 +1,6 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SAccordionHeader = styled("div", {
   position: "relative",
-  zIndex: 1,
+  zIndex: "$1",
 })

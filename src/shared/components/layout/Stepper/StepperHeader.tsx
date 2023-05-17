@@ -1,24 +1,15 @@
-import { ComponentProps } from "@/utils"
-import { Title, TypographyScale } from "@/shared/components"
+import { ComponentProps } from "@/stitches/types"
 
 import { SStepperHeader } from "./Stepper.styles"
 
 export interface IStepperHeaderProps extends ComponentProps<typeof SStepperHeader> {
-  scale?: TypographyScale
-  thin?: boolean
+  isStepLast: boolean
 }
 
-export const StepperHeader = ({
-  children,
-  scale = 6,
-  thin = false,
-  ...props
-}: IStepperHeaderProps) => {
+export const StepperHeader = ({ children, isStepLast }: IStepperHeaderProps) => {
   return (
-    <SStepperHeader data-ui="stepper-header" data-testid="stepper-header" {...props}>
-      <Title as="h4" scale={scale} thin={thin} css={{ width: "100%" }}>
-        {children}
-      </Title>
+    <SStepperHeader data-ui="stepper-header" data-testid="stepper-header" last={isStepLast}>
+      {children}
     </SStepperHeader>
   )
 }

@@ -1,87 +1,111 @@
-import { styled } from "@/config"
-import { multipleSelectors, rgba } from "@/utils"
+import { styled } from "@/stitches/config"
 
-import { IconTick } from "@/shared/icons"
+import { IconTick, IconMinus } from "@/shared/icons"
 
 export const SFormCheckboxLabel = styled("label", {
   display: "flex",
   alignItems: "flex-start",
+  cursor: "pointer",
+
+  variants: {
+    disabled: {
+      true: {
+        pointerEvents: "none",
+        cursor: "default",
+      },
+    },
+  },
 })
 
-export const SFormCheckboxBox = styled(
-  "span",
-  {
-    backgroundColor: "$neutrals-0",
-    border: "1px solid $neutrals-9",
-    width: "$24",
-    height: "$24",
-    flex: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "150ms ease-out",
-    cursor: "pointer",
-  },
-  {
-    borderRadius: "$4",
-    color: "$neutrals-9",
-  },
-)
+export const SFormCheckboxBox = styled("span", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flex: "none",
+  width: "$24",
+  height: "$24",
+  backgroundColor: "transparent",
+  border: "1px solid $neutrals-5",
+  transition: "150ms ease-out",
+  cursor: "pointer",
+  outline: "2px solid transparent",
+  outlineOffset: "$space$4",
+})
 
 export const SFormCheckboxTick = styled(IconTick, {
   opacity: 0,
-  color: "$system-white",
+  color: "$theme-w-n9",
   transform: "rotate(90deg)",
   transition: "150ms ease-out",
+})
 
-  svg: {
-    display: "block",
-  },
+export const SFormCheckboxHyphen = styled(IconMinus, {
+  opacity: 0,
+  color: "$theme-w-n9",
+  transform: "rotate(0deg)",
+  transition: "150ms ease-out",
 })
 
 export const SFormCheckboxInput = styled("input", {
   hiddenInput: true,
+  position: "relative",
+  width: 0,
+  height: 0,
+  margin: 0,
 
   hover: {
     [`+ ${SFormCheckboxBox}`]: {
-      boxShadow: `0 2px 4px 0 ${rgba("neutrals-9", 0.2)}`,
+      borderColor: "$theme-n6-n5",
+      boxShadow: "0 0 0 3px $colors$theme-n2-n7",
     },
   },
 
   keyboardFocus: {
     [`+ ${SFormCheckboxBox}`]: {
-      borderColor: "$brand-yellow-dark",
-      boxShadow: `0 2px 4px 0 ${rgba("neutrals-9", 0.15)}`,
+      outline: "2px solid $theme-vl-n3",
     },
   },
 
   disabled: {
     [`+ ${SFormCheckboxBox}`]: {
-      backgroundColor: "$neutrals-3",
-      borderColor: "$neutrals-5",
-      opacity: 0.5,
+      backgroundColor: "$theme-n1-n10",
+      borderColor: "$theme-n4-n7",
     },
   },
 
   checked: {
     [`+ ${SFormCheckboxBox}`]: {
-      backgroundColor: "$system-black",
+      backgroundColor: "$theme-vl-yl",
+      borderColor: "transparent",
 
       [`${SFormCheckboxTick}`]: {
         opacity: 1,
         transform: "rotate(0deg)",
       },
+
+      [`${SFormCheckboxHyphen}`]: {
+        opacity: 1,
+        transform: "rotate(0deg)",
+      },
     },
 
-    ...multipleSelectors(["hover", "keyboardFocus"], {
+    hover: {
       [`+ ${SFormCheckboxBox}`]: {
-        backgroundColor: "$system-black",
+        boxShadow: "0 0 0 3px $colors$theme-vlr-ydr",
       },
-    }),
+    },
 
     disabled: {
       [`+ ${SFormCheckboxBox}`]: {
-        opacity: 0.5,
+        backgroundColor: "$theme-vlr-ydr",
+
+        [`${SFormCheckboxTick}`]: {
+          color: "$theme-w-yd",
+        },
+
+        [`${SFormCheckboxHyphen}`]: {
+          color: "$theme-w-yd",
+        },
       },
     },
   },

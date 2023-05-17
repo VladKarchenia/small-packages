@@ -1,5 +1,4 @@
-import { Spaces } from "@/config/theme/spacing"
-import { ResponsiveProp } from "@/utils"
+import { ResponsiveProp, Spaces } from "@/stitches/types"
 
 import { applySpacerClassName } from "./Spacer.styles"
 

@@ -1,9 +1,17 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
-import { Box, Copy, Flex, Spacer } from "@/shared/components"
 
-import { ErrorLabel } from "../ErrorLabel"
-import { FormLabel, IFormLabelProps } from "../FormLabel"
+import { ComponentProps } from "@/stitches/types"
+
+import {
+  Box,
+  Copy,
+  Flex,
+  Spacer,
+  ErrorLabel,
+  FormLabel,
+  IFormLabelProps,
+} from "@/shared/components"
+
 import {
   SFormField,
   SFormFieldContainer,
@@ -22,12 +30,10 @@ export interface IFormFieldCommonProps {
 
   labelProps?: IFormLabelProps
 
+  borderless?: boolean
+
   prefix?: React.ReactNode
   suffix?: React.ReactNode
-
-  afterField?: React.ReactNode
-
-  isFocused?: boolean
 }
 
 export interface IFormFieldProps
@@ -47,26 +53,28 @@ export const FormField = ({
 
   labelProps,
 
+  borderless,
+
   prefix,
   suffix,
-
-  afterField,
-
-  isFocused,
 
   ...props
 }: IFormFieldProps) => {
   return (
     <SFormField {...props} id={props.id ? `${props.id}-form-field` : undefined}>
       <Flex justify="between">
-        <FormLabel {...labelProps}>
-          {label}
-          {labelProps?.required ? (
-            <Copy as="span" scale={9} css={{ paddingLeft: "$2" }}>
-              *
-            </Copy>
-          ) : null}
-        </FormLabel>
+        <FormLabel {...labelProps}>{label}</FormLabel>
+
+        {description && (
+          <Copy scale={10} color="neutrals-5" fontWeight="semiBold">
+            {description}
+            {labelProps?.required ? (
+              <Copy as="span" scale={10} fontWeight="semiBold" css={{ paddingLeft: "$2" }}>
+                *
+              </Copy>
+            ) : null}
+          </Copy>
+        )}
 
         {postLabel && (
           <>
@@ -76,20 +84,9 @@ export const FormField = ({
         )}
       </Flex>
 
-      {description && (
-        <Copy scale={10}>
-          {description}
-          {labelProps?.required ? (
-            <Copy as="span" scale={10} css={{ paddingLeft: "$2" }}>
-              *
-            </Copy>
-          ) : null}
-        </Copy>
-      )}
+      {(!labelProps?.hidden || description) && <Spacer size={4} />}
 
-      {(!labelProps?.hidden || description) && <Spacer size={8} />}
-
-      <SFormFieldContainer hasError={!!error || hasError} isFocused={isFocused}>
+      <SFormFieldContainer hasError={!!error || hasError} borderless={borderless}>
         {prefix && <SFormFieldPrefix>{prefix}</SFormFieldPrefix>}
 
         {children}
@@ -97,12 +94,9 @@ export const FormField = ({
         {suffix && <SFormFieldSuffix>{suffix}</SFormFieldSuffix>}
       </SFormFieldContainer>
 
-      {(error || afterField) && (
+      {error && (
         <Box css={{ position: "absolute" }}>
-          <Flex justify="between">
-            <div>{error && <ErrorLabel id={props?.id}>{error}</ErrorLabel>}</div>
-            <div>{afterField}</div>
-          </Flex>
+          <ErrorLabel id={props?.id}>{error}</ErrorLabel>
         </Box>
       )}
     </SFormField>

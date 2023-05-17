@@ -1,9 +1,11 @@
 import React from "react"
 import { DialogClose } from "@radix-ui/react-dialog"
+
 import { IconCross } from "@/shared/icons"
+
 import { SDrawerHeader, SDrawerCloseButton } from "./Header.styles"
 
-export type DrawerHeaderProps = {
+type DrawerHeaderProps = {
   children?: React.ReactNode
   closeIcon?: React.ReactNode
 

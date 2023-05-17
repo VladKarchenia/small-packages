@@ -1,17 +1,14 @@
 import React from "react"
-import {
-  ComponentProps,
-  ResponsiveProp,
-  mergeCSSObjects,
-  getStyleFromResponsiveProp,
-} from "@/utils"
+
+import { ComponentProps, ResponsiveProp } from "@/stitches/types"
+import { mergeCSSObjects, getStyleFromResponsiveProp } from "@/stitches/utils"
 import { getGridCoords } from "../utils"
 
 import { SGrid } from "./Grid.styles"
 
-export type GridTrack = number | string | undefined
+type GridTrack = number | string | undefined
 
-export type GridCoord = GridTrack | ResponsiveProp<GridTrack>
+type GridCoord = GridTrack | ResponsiveProp<GridTrack>
 
 /**
  * If needed we can expose an API to easily create "grid areas"

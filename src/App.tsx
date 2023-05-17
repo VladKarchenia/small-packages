@@ -1,24 +1,26 @@
 import { Navigate, useRoutes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-import { AuthGuard, Box } from "@/shared/components"
+
 import { ModalsContainer } from "@/modals"
+import { Role } from "@/shared/types"
+
 import {
-  CreateShipment,
+  Shipment,
   Home,
   Login,
   PageNotFound,
-  Profile,
-  Unauthorize,
+  Settings,
   Tracking,
   Reset,
   Recovery,
+  Packages,
 } from "@/pages"
-import { Role } from "@/shared/types"
-import { ShippingType } from "@/shipment"
+
+import { AuthGuard, Box } from "@/shared/components"
 
 import "react-toastify/dist/ReactToastify.css"
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
-import "@/styles/fonts.css"
+import "@/stitches/fonts/fonts.css"
 
 const App: React.FC = (): JSX.Element => {
   const authRoutes = {
@@ -31,27 +33,53 @@ const App: React.FC = (): JSX.Element => {
   }
 
   const mainRoutes = {
-    path: "*",
+    path: "/",
     children: [
-      { index: true, element: <Home /> },
       {
-        path: "profile",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
-        children: [{ path: "", element: <Profile /> }],
+        path: "/",
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
+        children: [{ path: "", element: <Home /> }],
+      },
+      {
+        path: "settings",
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
+        children: [{ path: "", element: <Settings /> }],
       },
       {
         path: "create",
-        element: <AuthGuard allowedRoles={[Role.User, Role.Admin]} />,
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
         children: [
-          { path: "quote", element: <CreateShipment shippingType={ShippingType.Quote} /> },
-          { path: "shipment", element: <CreateShipment shippingType={ShippingType.Shipment} /> },
+          { path: "quote", element: <Shipment /> },
+          { path: "shipment", element: <Shipment /> },
+        ],
+      },
+      {
+        path: "edit",
+        element: <AuthGuard allowedRoles={[Role.User, Role.Admin, Role.Ops]} />,
+        children: [
+          { path: "quote/:shipmentId", element: <Shipment /> },
+          { path: "shipment/:shipmentId", element: <Shipment /> },
         ],
       },
       {
         path: "tracking",
-        element: <Tracking />,
+        children: [
+          {
+            path: "quote/:shipmentId",
+            children: [
+              { path: "", element: <Tracking /> },
+              { path: "packages", element: <Packages /> },
+            ],
+          },
+          {
+            path: "shipment/:shipmentId",
+            children: [
+              { path: "", element: <Tracking /> },
+              { path: "packages", element: <Packages /> },
+            ],
+          },
+        ],
       },
-      { path: "unauthorized", element: <Unauthorize /> },
       { path: "*", element: <Navigate to="/404" /> },
       { path: "404", element: <PageNotFound /> },
     ],
@@ -60,7 +88,7 @@ const App: React.FC = (): JSX.Element => {
   const routing = useRoutes([mainRoutes, authRoutes])
 
   return (
-    <Box css={{ height: "100vh" }}>
+    <Box>
       <ToastContainer />
       <ModalsContainer />
       {routing}

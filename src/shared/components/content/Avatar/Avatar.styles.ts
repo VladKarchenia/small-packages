@@ -1,9 +1,8 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SAvatar = styled("div", {
   overflow: "hidden",
-  borderRadius: "9999px",
-  fontFamily: "$serif",
+  borderRadius: "$rounded",
   display: "inline-flex",
   flexShrink: 0,
   justifyContent: "center",
@@ -18,7 +17,7 @@ export const SAvatar = styled("div", {
     },
     highlight: {
       true: {
-        boxShadow: "0 0 0 2px $colors$neutrals-0, 0 0 0 4px $colors$brand-yellow-primary",
+        boxShadow: "0 0 0 $space$2 $colors$neutrals-0, 0 0 0 $space$4 $colors$brand-yellow-primary",
       },
     },
     initial: {

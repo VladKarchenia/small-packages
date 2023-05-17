@@ -1,9 +1,10 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const STabPanel = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
+  overflow: "hidden",
   transition: "150ms ease-out",
   transitionProperty: "transform, opacity",
 

@@ -1,4 +1,4 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SShippingCard = styled("a", {
   reset: true,
@@ -6,7 +6,7 @@ export const SShippingCard = styled("a", {
   flexDirection: "column",
   width: "100%",
   padding: "$16",
-  borderRadius: "$8",
-  border: "1px solid $neutrals-4",
+  backgroundColor: "$theme-w-n9",
+  border: "1px solid $theme-n4-tr",
   textAlign: "left",
 })

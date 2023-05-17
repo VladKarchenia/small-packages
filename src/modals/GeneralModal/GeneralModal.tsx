@@ -12,7 +12,7 @@ const modalProps: ModalProps = {
   contentCss: {
     paddingTop: "$48",
     paddingBottom: "$16",
-    paddingX: "$0",
+    paddingX: 0,
     borderRadius: "$16",
 
     "@max-sm": {

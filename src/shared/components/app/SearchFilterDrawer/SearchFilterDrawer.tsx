@@ -1,5 +1,7 @@
+import { CSS } from "@/stitches/config"
 import {
   Drawer,
+  IFormLabelProps,
   SearchFilterDrawerPreview,
   SortFilterBarPreview,
   Title,
@@ -8,7 +10,7 @@ import {
 
 interface ISearchFilterDrawerProps {
   drawerName: string
-  drawerTitle: string
+  drawerTitle?: string
   closeIcon: React.ReactNode
   triggerIcon?: boolean
   isFilterApplied?: boolean
@@ -18,8 +20,13 @@ interface ISearchFilterDrawerProps {
   description?: string
   placeholder?: string
   hidePlaceholder?: boolean
+  labelProps?: IFormLabelProps
   dataTestid?: string
   drawerForm: React.ReactNode
+  contentCss?: CSS
+  error?: React.ReactNode
+  hasError?: boolean
+  disabled?: boolean
 }
 
 export const SearchFilterDrawer = ({
@@ -34,8 +41,13 @@ export const SearchFilterDrawer = ({
   description,
   placeholder,
   hidePlaceholder = false,
+  labelProps,
   dataTestid,
   drawerForm,
+  contentCss,
+  error,
+  hasError,
+  disabled,
 }: ISearchFilterDrawerProps) => {
   const [drawerProps] = useDrawer(drawerName)
 
@@ -45,10 +57,13 @@ export const SearchFilterDrawer = ({
       closeIcon={closeIcon}
       fullWidth={{ "@max-sm": true }}
       noPadding
+      contentCss={contentCss}
       header={
-        <Title as="h3" scale={7}>
-          {drawerTitle}
-        </Title>
+        drawerName !== "dateInput" && drawerName !== "timeInput" ? (
+          <Title as="h3" scale={3} color="theme-b-n3">
+            {triggerIcon ? drawerTitle : "Search"}
+          </Title>
+        ) : null
       }
       trigger={
         triggerIcon ? (
@@ -61,8 +76,11 @@ export const SearchFilterDrawer = ({
             description={description}
             placeholder={placeholder}
             hidePlaceholder={hidePlaceholder}
+            labelProps={labelProps}
             dataTestid={dataTestid}
-            css={{ cursor: "pointer", hover: { backgroundColor: "$neutrals-1" } }}
+            disabled={disabled}
+            error={error}
+            hasError={hasError}
           />
         )
       }

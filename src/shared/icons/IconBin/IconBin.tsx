@@ -1,5 +1,5 @@
-import { withIcon } from "../Icon/Icon"
+import { withIcon } from "../Icon"
 
 export const IconBin = withIcon(
-  '<path fill="none" d="M6.567 20.5l-1.99-14h14.847l-1.991 14H6.567z" stroke="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 17V9h1v8h-1zM8.508 17.062l-1-8 .992-.124 1 8-.992.124zM14.508 17l1-8 .992.124-1 8-.992-.124z" fill="currentColor"/><path d="M4 5h16M14 5a2 2 0 10-4 0" stroke="currentColor"/>',
+  '<path fill="currentColor" d="M8.833 5.44h-.166a.164.164 0 0 0 .166-.16v.16h6.334v-.16c0 .088.075.16.166.16h-.166v1.44h1.5v-1.6c0-.706-.598-1.28-1.334-1.28H8.667c-.736 0-1.334.574-1.334 1.28v1.6h1.5V5.44Zm10.5 1.44H4.667A.653.653 0 0 0 4 7.52v.64c0 .088.075.16.167.16h1.258l.515 10.46c.033.682.62 1.22 1.33 1.22h9.46c.712 0 1.297-.536 1.33-1.22l.515-10.46h1.258A.164.164 0 0 0 20 8.16v-.64a.653.653 0 0 0-.667-.64ZM16.57 18.56H7.43L6.927 8.32h10.146l-.504 10.24Z"/>',
 )

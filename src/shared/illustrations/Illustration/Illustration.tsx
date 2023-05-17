@@ -1,12 +1,13 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
 
 import { SBaseIllustration } from "./Illustration.styles"
 
 export interface IIllustrationProps extends ComponentProps<typeof SBaseIllustration> {
   dataTestId?: string
 
-  scribble?: boolean
+  theme?: "light" | "dark"
 }
 
 export const BaseIllustration: React.FC<IIllustrationProps> = ({

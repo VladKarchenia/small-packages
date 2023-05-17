@@ -1,6 +1,4 @@
-import { styled } from "@/config"
-
-import { rgba } from "@/utils"
+import { styled } from "@/stitches/config"
 
 export const SButton = styled("button", {
   reset: true,
@@ -13,77 +11,105 @@ export const SButton = styled("button", {
   justifyContent: "center",
   transition: "150ms ease-out",
   cursor: "pointer",
-  borderRadius: "$8",
-
-  focus: {
-    boxShadow: `0 4px 12px 0 ${rgba("neutrals-5", 0.5)}`,
-  },
+  borderRadius: 0,
+  outline: "2px solid transparent",
 
   disabled: {
-    backgroundColor: "$neutrals-6",
-    borderColor: "transparent",
-    color: "$system-white",
     boxShadow: "none",
     pointerEvents: "none",
   },
 
   variants: {
-    action: {
-      primary: {
-        backgroundColor: "$system-black",
-        borderColor: "transparent",
-        color: "$neutrals-0",
-
-        hover: {
-          backgroundColor: "$neutrals-7",
-          borderColor: "transparent",
-        },
-
-        active: {
-          backgroundColor: "$neutrals-5",
-          borderColor: "transparent",
-        },
-      },
-      secondary: {
-        backgroundColor: "$neutrals-0",
-        borderColor: "$system-black",
-        color: "$neutrals-9",
-
-        hover: {
-          backgroundColor: "$neutrals-0",
-          borderColor: "$neutrals-9",
-        },
-
-        active: {
-          backgroundColor: "$neutrals-3",
-          borderColor: "$neutrals-9",
-        },
-      },
-    },
-
     size: {
       small: { height: "$48" },
       medium: { height: "$56" },
-      large: { height: "$80" },
-    },
-
-    rounded: {
-      true: {
-        paddingX: "$20",
-        height: "$48",
-        borderRadius: "9999px",
-      },
-    },
-
-    loading: {
-      true: {
-        pointerEvents: "none",
-      },
+      large: { height: "$64" },
     },
 
     full: {
       false: { width: "auto" },
       true: { width: "100%" },
+    },
+
+    action: {
+      primary: {
+        backgroundColor: "$theme-b-yl",
+        color: "$theme-w-n11",
+
+        hover: {
+          backgroundColor: "$theme-b-ylr",
+          color: "$theme-vl-n11",
+        },
+
+        keyboardFocus: {
+          backgroundColor: "$theme-b-yl",
+          color: "$theme-vl-n11",
+          borderColor: "$theme-vl-n3",
+          outline: "2px solid $theme-vl-n3",
+        },
+
+        active: {
+          backgroundColor: "$theme-b-yp",
+          color: "$theme-vp-n11",
+        },
+
+        disabled: {
+          backgroundColor: "$theme-n4-ydr",
+        },
+      },
+      secondary: {
+        backgroundColor: "transparent",
+        color: "$theme-b-yl",
+        borderColor: "$theme-b-yl",
+
+        hover: {
+          backgroundColor: "$theme-vlt-ydt",
+          color: "$theme-vl-ylr",
+          borderColor: "$theme-vl-ylr",
+        },
+
+        keyboardFocus: {
+          backgroundColor: "$theme-vlr-ydr",
+          color: "$theme-vl-yl",
+          borderColor: "$theme-vl-n3",
+          outline: "2px solid $theme-vl-n3",
+        },
+
+        active: {
+          backgroundColor: "$theme-vlt-ydt",
+          color: "$theme-vp-yp",
+          borderColor: "$theme-vp-yp",
+        },
+
+        disabled: {
+          color: "$theme-n4-ydr",
+          borderColor: "$theme-n4-ydr",
+        },
+      },
+      text: {
+        height: "auto",
+        padding: "$0",
+        color: "$theme-b-yl",
+        outline: "none",
+
+        hover: {
+          color: "$theme-vl-ylr",
+        },
+
+        keyboardFocus: {
+          color: "$theme-vl-yl",
+          textDecoration: "underline",
+          textUnderlineOffset: "$space$4",
+        },
+
+        active: {
+          color: "$theme-vp-yp",
+        },
+
+        disabled: {
+          color: "$theme-n4-ydr",
+        },
+      },
     },
   },
 
@@ -98,44 +124,15 @@ export const SButtonSpinner = styled("div", {
   alignItems: "center",
   justifyContent: "center",
   position: "absolute",
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-
-  "& ~ *": {
-    transition: "150ms opacity ease-out",
-    opacity: 0,
-  },
+  right: "-$32",
+  top: "50%",
+  transform: "translateY(-50%)",
 })
 
 export const SButtonIcon = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  marginLeft: "$4",
-  marginRight: "-$4",
   height: "$24",
   width: "$24",
-
-  "@sm": {
-    marginLeft: "$8",
-    marginRight: "-$8",
-  },
-
-  svg: {
-    display: "block",
-  },
-
-  variants: {
-    float: {
-      true: {
-        position: "absolute",
-        top: "50%",
-        right: "$16",
-        transform: "translateY(-50%)",
-        margin: 0,
-      },
-    },
-  },
 })

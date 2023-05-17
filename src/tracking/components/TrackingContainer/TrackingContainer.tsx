@@ -1,34 +1,23 @@
-import { useNavigate } from "react-router-dom"
-import { format } from "date-fns"
-import {
-  GridContainer,
-  Spacer,
-  Title,
-  Copy,
-  Flex,
-  Stack,
-  AddressInfoShort,
-  Map,
-  PersonInfoShort,
-  ShortInfoLine,
-  HeaderBar,
-  Button,
-} from "@/shared/components"
-import { IconCalendar, IconClock } from "@/shared/icons"
-import { useShipmentStateContext, useStateContext } from "@/shared/state"
-import { ICost, Role, ShipmentStatus } from "@/shared/types"
-import {
-  TrackingHeader,
-  TrackingDetailsItem,
-  ShipmentURL,
-  ShipmentRoute,
-  ShipmentLabelContainer,
-  ShipmentCosts,
-} from "@/tracking"
-import { STrackingSection } from "./TrackingContainer.styles"
-import { ShippingType } from "@/shipment"
+import { useEffect } from "react"
+import { useLocation, useParams } from "react-router-dom"
+import { shallow } from "zustand/shallow"
+import { useTheme } from "next-themes"
 
-const costs: ICost[] = [
+import { useBoundStore } from "@/store"
+import { ICost, RouteParams, ShippingType } from "@/shared/types"
+import { useShipmentById } from "@/shared/data"
+
+import {
+  ShipmentDetails,
+  QuoteDetails,
+  TrackingMain,
+  TrackingPlaceholderShipment,
+  TrackingPlaceholderQuote,
+  // ShipmentDetailsUnauthorized,
+  // TrackingPlaceholderShipmentUnauthorized,
+} from "@/tracking/components"
+
+export const costs: ICost[] = [
   {
     name: "Base rate",
     value: 1300,
@@ -55,9 +44,7 @@ const costs: ICost[] = [
   },
 ]
 
-const SHIPMENT_DETAILS = {
-  shipmentID: "20214-5Z",
-  shipmentDate: "Oct 30, 2022, 7:29 PM",
+export const SHIPMENT_DETAILS = {
   trackingNumber: "204-5Z87",
   shipmentURL: "https//www.gulfrelay/shipment/204-5Z87",
   arrivalDate: "18.10.2022",
@@ -83,245 +70,114 @@ const SHIPMENT_DETAILS = {
     //   date: "22.10.2022 by 7:19 PM",
     // },
     // {
-    //   status: "Delivered",
+    //   status: "DELIVERED",
     //   date: "23.10.2022 by 3:59 AM",
     // },
     // {
-    //   status: "Eliminated",
+    //   status: "CANCELLED",
     //   date: "18.10.2022 by 6:46 PM",
     // },
   ],
   shipmentLabelPDFLink: "https//www.google.ru/PDFLink",
   shipmentLabelZPLLink: "https//www.google.ru/ZPLLink",
-  // shippingType: "quote",
-  shippingType: "shipment",
-  status: ShipmentStatus.Confirmed,
-  // status: ShipmentStatus.Eliminated,
+  shipmentReturnLabelPDFLink: "https//www.google.ru/PDFReturnLink",
+  shipmentReturnLabelZPLLink: "https//www.google.ru/ZPLReturnLink",
 }
 
-//TODO: add routing, "edit shipment" functionality, show content according user role
 export const TrackingContainer = () => {
-  const data = SHIPMENT_DETAILS
-  // TODO: replace shippingType with the context later
-  // TODO: replace status with the context later
-  const { shippingType, status } = data
+  const { shipmentId } = useParams<keyof RouteParams>() as RouteParams
+  const location = useLocation()
+  // const [user] = useAuthStore((state) => [state.user])
+  const [shippingType, setShippingType] = useBoundStore(
+    (state) => [state.shippingType, state.setShippingType],
+    shallow,
+  )
+  // const role = user?.authorities?.[0]?.authority
+  const { theme } = useTheme()
 
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
-  const navigate = useNavigate()
-  const { date, parcels, rate, recipient, sender } = useShipmentStateContext()
+  const { isLoading, data } = useShipmentById(shipmentId)
+
+  // we need this shippingType definition when we go directly to the tracking link
+  useEffect(() => {
+    if (location.pathname.includes("quote")) {
+      setShippingType(ShippingType.Quote)
+    } else {
+      setShippingType(ShippingType.Shipment)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (isLoading || !data) {
+    if (shippingType === ShippingType.Quote) {
+      return <TrackingPlaceholderQuote />
+    }
+
+    // TODO: need to add condition to show this component
+    // return <TrackingPlaceholderShipmentUnauthorized />
+
+    return <TrackingPlaceholderShipment />
+  }
+
+  const { sender, recipient, currentLocation, date, rate, shipmentStatus, createdAt, packaging } =
+    data
 
   if (shippingType === ShippingType.Quote) {
     return (
-      <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
-        <HeaderBar title="Quote details" onClick={() => navigate("/")} />
-        <Stack space={16}>
-          <TrackingHeader
-            shipmentID={data.shipmentID}
-            shipmentDate={new Date(data.shipmentDate)}
-            role={role}
-            shippingType={shippingType as ShippingType}
-            status={status}
-          />
-          <GridContainer>
-            <STrackingSection>
-              <Stack space={24} dividers>
-                <TrackingDetailsItem title="From where to where">
-                  <AddressInfoShort
-                    fromAddress={sender.fullAddress.location}
-                    toAddress={recipient.fullAddress.location}
-                  />
-                </TrackingDetailsItem>
-
-                <TrackingDetailsItem title="Pickup Date">
-                  <Flex align="center">
-                    <IconClock size="xs" css={{ paddingRight: "$8" }} />
-                    <Copy scale={9} color="system-black">
-                      {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
-                    </Copy>
-                  </Flex>
-                </TrackingDetailsItem>
-
-                <TrackingDetailsItem title="Shipment Details">
-                  <Stack space={12}>
-                    {parcels.map((parcel, index) => (
-                      <Stack space={8} key={index}>
-                        {parcels.length > 1 ? (
-                          <Copy scale={9} color="system-black" bold>
-                            Parcel {index + 1}
-                          </Copy>
-                        ) : null}
-                        <Copy scale={9} color="system-black">
-                          {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                          {parcel.pickupType}
-                        </Copy>
-                        <Flex align="center">
-                          <Flex align="center" justify="center">
-                            <IconCalendar size="xs" />
-                          </Flex>
-                          <Spacer size={8} horizontal />
-                          <Copy scale={9} color="system-black">
-                            {parcel.dimensions.length}x{parcel.dimensions.width}x
-                            {parcel.dimensions.height} in;
-                          </Copy>
-                          <Spacer size={8} horizontal />
-                          <Copy scale={9} color="system-black">
-                            {parcel.weight} lb
-                          </Copy>
-                        </Flex>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </TrackingDetailsItem>
-              </Stack>
-            </STrackingSection>
-            {status !== ShipmentStatus.Eliminated ? (
-              <>
-                <Spacer size={24} />
-                <Button
-                  type="button"
-                  full
-                  // TODO: disabled conditions?
-                  // disabled={
-                  //   (shippingType === ShippingType.Quote && !date) ||
-                  //   (shippingType === ShippingType.Shipment && !rate.name)
-                  // }
-
-                  // TODO: add click handler
-                  onClick={() => console.log("Create a shipment click")}
-                >
-                  <Copy as="span" scale={8} color="system-white" bold>
-                    Create a shipment
-                  </Copy>
-                </Button>
-              </>
-            ) : null}
-          </GridContainer>
-        </Stack>
-      </GridContainer>
+      <TrackingMain
+        headerTitle="Quote details"
+        sender={sender}
+        createdAt={createdAt}
+        shipmentStatus={shipmentStatus}
+      >
+        <QuoteDetails
+          sender={sender}
+          recipient={recipient}
+          packaging={packaging}
+          date={date}
+          shipmentStatus={shipmentStatus}
+          shipmentId={shipmentId}
+          shippingType={shippingType}
+        />
+      </TrackingMain>
     )
   }
+
+  // TODO: need to add condition to show this component
+  // return (
+  //   <TrackingMain
+  //     headerTitle="Shipment details"
+  //     sender={sender}
+  //     createdAt={createdAt}
+  //     shipmentStatus={shipmentStatus}
+  //   >
+  //     <ShipmentDetailsUnauthorized
+  //       sender={sender}
+  //       recipient={recipient}
+  //       currentLocation={currentLocation}
+  //       rate={rate}
+  //       theme={theme}
+  //     />
+  //   </TrackingMain>
+  // )
+
   return (
-    <GridContainer fullBleed css={{ paddingBottom: "$48" }}>
-      <HeaderBar title="Shipment details" onClick={() => navigate("/")} />
-      <Stack space={16}>
-        <TrackingHeader
-          shipmentID={data.shipmentID}
-          shipmentDate={new Date(data.shipmentDate)}
-          role={role}
-          shippingType={shippingType as ShippingType}
-          status={status}
-        />
-        <Map />
-        <GridContainer>
-          <STrackingSection>
-            <Stack space={24} dividers>
-              <>
-                <TrackingDetailsItem title="Tracking number" titleIndent={4}>
-                  <ShipmentURL url={data.shipmentURL} value={data.trackingNumber} />
-                </TrackingDetailsItem>
-                <Spacer size={24} />
-                <TrackingDetailsItem title="From where to where">
-                  <AddressInfoShort
-                    fromAddress={sender.fullAddress.location}
-                    toAddress={recipient.fullAddress.location}
-                  />
-                </TrackingDetailsItem>
-              </>
-
-              <TrackingDetailsItem title="Date and delivery service">
-                <Stack space={12}>
-                  {role === Role.Admin ? (
-                    <Copy scale={9} color="system-black">
-                      Pickup date: {date ? format(date, "dd.MM.yyyy hh:mm aa") : ""}
-                    </Copy>
-                  ) : null}
-                  <Copy scale={9} color="system-black">
-                    Arrival date: {data.arrivalDate}
-                  </Copy>
-                  <ShortInfoLine icon={<IconCalendar size="xs" />} text={rate.name} />
-                </Stack>
-              </TrackingDetailsItem>
-              {role === Role.Admin ? (
-                <TrackingDetailsItem title="Shipment Details">
-                  <Stack space={12}>
-                    {parcels.map((parcel, index) => (
-                      <Stack space={8} key={index}>
-                        {parcels.length > 1 ? (
-                          <Copy scale={9} color="system-black" bold>
-                            Parcel {index + 1}
-                          </Copy>
-                        ) : null}
-                        <Copy scale={9} color="system-black">
-                          {parcel.content}, ${parcel.totalPrice}, {parcel.packageType},{" "}
-                          {parcel.pickupType}
-                        </Copy>
-                        <Flex align="center">
-                          <Flex align="center" justify="center">
-                            <IconCalendar size="xs" />
-                          </Flex>
-                          <Spacer size={8} horizontal />
-                          <Copy scale={9} color="system-black">
-                            {parcel.dimensions.length}x{parcel.dimensions.width}x
-                            {parcel.dimensions.height} in;
-                          </Copy>
-                          <Spacer size={8} horizontal />
-                          <Copy scale={9} color="system-black">
-                            {parcel.weight} lb
-                          </Copy>
-                        </Flex>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </TrackingDetailsItem>
-              ) : null}
-
-              <TrackingDetailsItem title="Route">
-                {/* TODO: Fix Route block after BE data and final design */}
-                <ShipmentRoute routes={data.routes} />
-              </TrackingDetailsItem>
-
-              {role === Role.Admin ? (
-                <TrackingDetailsItem title="Sender’s info">
-                  <PersonInfoShort person={"sender"} sender={sender} recipient={recipient} />
-                </TrackingDetailsItem>
-              ) : null}
-              {role === Role.Admin ? (
-                <TrackingDetailsItem title="Recipient’s info">
-                  <PersonInfoShort person={"recipient"} sender={sender} recipient={recipient} />
-                </TrackingDetailsItem>
-              ) : null}
-            </Stack>
-          </STrackingSection>
-        </GridContainer>
-
-        {/*TODO: check and update Costs component when back-end and design will be established*/}
-        {role === Role.Admin ? (
-          <GridContainer>
-            <STrackingSection>
-              <ShipmentCosts title="Costs" price={rate.price} costs={costs} />
-            </STrackingSection>
-          </GridContainer>
-        ) : null}
-        {role === Role.Admin ? (
-          <GridContainer>
-            <STrackingSection>
-              <Title as="h3" scale={8}>
-                Shipment label
-              </Title>
-              <Spacer size={16} />
-              <Copy scale={9}>
-                Shipment label must be printed and attached to a package before it is picked up
-              </Copy>
-              <Spacer size={24} />
-              <ShipmentLabelContainer
-                pdfLabel={data.shipmentLabelPDFLink}
-                zplLabel={data.shipmentLabelZPLLink}
-              />
-            </STrackingSection>
-          </GridContainer>
-        ) : null}
-      </Stack>
-    </GridContainer>
+    <TrackingMain
+      headerTitle="Shipment details"
+      sender={sender}
+      createdAt={createdAt}
+      shipmentStatus={shipmentStatus}
+    >
+      <ShipmentDetails
+        sender={sender}
+        recipient={recipient}
+        currentLocation={currentLocation}
+        packaging={packaging}
+        date={date}
+        rate={rate}
+        shipmentId={shipmentId}
+        shippingType={shippingType}
+        theme={theme}
+      />
+    </TrackingMain>
   )
 }

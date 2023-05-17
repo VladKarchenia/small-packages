@@ -1,41 +1,29 @@
-import { styled } from "@/config"
-import { rgba, multipleSelectors } from "@/utils"
+import { styled } from "@/stitches/config"
+
 import { HeaderNavButton } from "./HeaderNavButton"
 
 export const SBurgerMenuButton = styled(HeaderNavButton, {
-  $$backgroundColor: "transparent",
-  backgroundColor: "$$backgroundColor",
   width: "$40",
   height: "$40",
+  backgroundColor: "$theme-n2-n8",
+  color: "$theme-b-n3",
+  transition: "150ms ease-out",
+  outline: "none",
+
+  hover: {
+    backgroundColor: "$theme-n4-n7",
+    color: "$theme-n7-n3",
+  },
+
+  keyboardFocus: {
+    backgroundColor: "$theme-n4-n7",
+    color: "$theme-n7-n3",
+  },
 
   variants: {
-    theme: {
-      default: {
-        $$backgroundColor: "$colors$system-white",
-
-        ...multipleSelectors(["keyboardFocus", "hover"], {
-          $$backgroundColor: "$colors$neutrals-2",
-        }),
-      },
-
-      transparent: {
-        $$backgroundColor: rgba("system-white", 0.8),
-
-        ...multipleSelectors(["keyboardFocus", "hover"], {
-          $$backgroundColor: "$colors$system-white",
-        }),
-      },
-
-      cream: {
-        ...multipleSelectors(["keyboardFocus", "hover"], {
-          $$backgroundColor: rgba("system-black", 0.05),
-        }),
-      },
-    },
-
     rounded: {
       true: {
-        borderRadius: "$pill",
+        borderRadius: "$rounded",
       },
     },
   },

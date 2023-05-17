@@ -1,7 +1,7 @@
 import React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-import { CSS } from "@/config"
+import { CSS } from "@/stitches/config"
 
 import { DrawerPortal, DrawerPortalProps } from "./Portal"
 import { DrawerOverlay } from "./Overlay"
@@ -38,6 +38,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       offset,
       fullWidth,
       scrollable,
+      direction,
       closeIcon,
       hasSeparator,
       panelCss,
@@ -61,10 +62,13 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             nested={nested}
             offset={offset}
             scrollable={scrollable}
+            direction={direction}
           >
-            <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
-              {header}
-            </DrawerHeader>
+            {header ? (
+              <DrawerHeader closeIcon={closeIcon} hasSeparator={hasSeparator}>
+                {header}
+              </DrawerHeader>
+            ) : null}
 
             <DrawerContent css={contentCss} {...props}>
               {children}

@@ -1,6 +1,7 @@
-import { keyframes, styled } from "@/config"
-import { multipleSelectors, rgba } from "@/utils"
+import { keyframes, styled } from "@/stitches/config"
+import { boxShadows, multipleSelectors } from "@/stitches/utils"
 import {
+  CheckboxItem,
   Content,
   Item,
   ItemIndicator,
@@ -11,22 +12,22 @@ import {
 } from "@radix-ui/react-dropdown-menu"
 
 const slideUpAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(2px)" },
+  "0%": { opacity: 0, transform: "translateY($2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideRightAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(-2px)" },
+  "0%": { opacity: 0, transform: "translateX(-$2)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
 const slideDownAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(-2px)" },
+  "0%": { opacity: 0, transform: "translateY(-$2)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 })
 
 const slideLeftAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(2px)" },
+  "0%": { opacity: 0, transform: "translateX(2$)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 })
 
@@ -36,11 +37,11 @@ export const SDropdownMenuContent = styled(Content, {
   alignItems: "flex-start",
   justifyContent: "center",
   width: "max-content",
-  backgroundColor: "$neutrals-0",
-  borderRadius: "$4",
+  backgroundColor: "$theme-w-n10",
+  borderRadius: 0,
   marginY: "$12",
-  paddingY: "$16",
-  boxShadow: `0 $space$4 $space$8 0 ${rgba("system-black", 0.22)}`,
+  paddingY: 0,
+  boxShadow: boxShadows.dropdown,
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",
     animationTimingFunction: "ease-in-out",
@@ -61,13 +62,6 @@ export const SDropdownMenuTrigger = styled(Trigger, {
   display: "flex",
   alignItems: "center",
   position: "relative",
-
-  keyboardFocus: {
-    "& > span": {
-      outline: "currentcolor auto 1px",
-      outlineColor: "-webkit-focus-ring-color",
-    },
-  },
 })
 
 export const SDropdownMenuItem = styled(Item, {
@@ -76,12 +70,14 @@ export const SDropdownMenuItem = styled(Item, {
   display: "flex",
   alignItems: "center",
   width: "100%",
-  position: "relative",
   height: "$40",
+  backgroundColor: "transparent",
+  position: "relative",
+  cursor: "pointer",
   transition: "150ms background-color ease-out",
 
   ...multipleSelectors(["hover", "keyboardFocus"], {
-    backgroundColor: "$neutrals-1",
+    backgroundColor: "$theme-n2-n7",
   }),
 })
 
@@ -93,6 +89,23 @@ export const SDropdownMenuRadioGroup = styled(RadioGroup, {
 })
 
 export const SDropdownMenuRadioItem = styled(RadioItem, {
+  all: "unset",
+  userSelect: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  position: "relative",
+  height: "$40",
+  cursor: "pointer",
+  transition: "150ms background-color ease-out",
+
+  ...multipleSelectors(["hover", "keyboardFocus"], {
+    backgroundColor: "$neutrals-1",
+  }),
+})
+
+export const SDropdownMenuCheckboxItem = styled(CheckboxItem, {
   all: "unset",
   userSelect: "none",
   display: "flex",

@@ -1,22 +1,29 @@
 import { useFormContext } from "react-hook-form"
-import format from "date-fns/format"
+import tzlookup from "tz-lookup"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
+
+import { ShipmentState } from "@/shared/types"
+
 import { Copy, Flex, Stack } from "@/shared/components"
 import { IconLocationPin } from "@/shared/icons"
-import { ShipmentState } from "@/shared/state"
 
 export const ShipmentDateDetailsShort = () => {
   const { watch } = useFormContext<ShipmentState>()
-  const { date } = watch()
+  const { date, sender } = watch()
+  const timeZone = tzlookup(
+    parseFloat(sender.fullAddress.latitude),
+    parseFloat(sender.fullAddress.longitude),
+  )
 
   return (
     <Stack space={8}>
       {date ? (
         <Flex align="center">
           <Flex css={{ paddingRight: "$8" }}>
-            <IconLocationPin size="xs" />
+            <IconLocationPin />
           </Flex>
-          <Copy scale={8} color="system-black">
-            {format(date, "dd.MM.yyyy hh:mm aa")}
+          <Copy color="theme-b-n3">
+            {formatInTimeZone(date, timeZone, "MMM d, yyyy hh:mm aa (zzz)")}
           </Copy>
         </Flex>
       ) : null}

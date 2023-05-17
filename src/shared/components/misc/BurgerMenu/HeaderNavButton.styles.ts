@@ -1,13 +1,11 @@
-import { styled } from "@/config"
-import { rgba, multipleSelectors } from "@/utils"
+import { styled } from "@/stitches/config"
+import { rgba, multipleSelectors } from "@/stitches/utils"
 
 export const SHeaderNavButton = styled("button", {
   reset: true,
   alignItems: "center",
   cursor: "pointer",
   display: "inline-flex",
-  fontFamily: "$sans",
-  fontWeight: 500,
   justifyContent: "center",
   position: "relative",
   transition: "150ms background-color ease-out",
@@ -15,17 +13,13 @@ export const SHeaderNavButton = styled("button", {
   variants: {
     rounded: {
       true: {
-        backgroundColor: rgba("system-white", 0.8),
-        borderRadius: "$pill",
+        backgroundColor: rgba("neutrals-0", 0.8),
+        borderRadius: "$rounded",
         height: "$40",
 
         ...multipleSelectors(["hover", "keyboardFocus"], {
-          backgroundColor: rgba("system-white", 1),
+          backgroundColor: rgba("neutrals-0", 1),
         }),
-
-        active: {
-          backgroundColor: "$neutrals-3",
-        },
       },
       false: {
         height: "100%",
@@ -35,13 +29,13 @@ export const SHeaderNavButton = styled("button", {
           backgroundColor: "$brand-yellow-primary",
           bottom: 0,
           content: "''",
-          height: 2,
+          height: "$2",
           left: 0,
           opacity: 0,
           position: "absolute",
           transition: "150ms ease-out",
           width: "100%",
-          zIndex: -1,
+          zIndex: "$-1",
         },
 
         ...multipleSelectors(["keyboardFocus", "hover"], {

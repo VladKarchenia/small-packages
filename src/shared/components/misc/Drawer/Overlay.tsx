@@ -1,11 +1,11 @@
 import { forwardRef } from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { SDrawerOverlay } from "./Overlay.styles"
 
-export type DrawerOverlayProps = DialogPrimitive.DialogOverlayProps &
+type DrawerOverlayProps = DialogPrimitive.DialogOverlayProps &
   ComponentProps<typeof SDrawerOverlay> & {
     offset?: number
   }

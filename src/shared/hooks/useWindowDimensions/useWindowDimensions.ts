@@ -1,8 +1,7 @@
 import { useState } from "react"
+import { useDebouncedCallback } from "use-debounce"
 
-import debounce from "just-debounce-it"
-
-import { useEventListener } from "../useEventListener"
+import { useEventListener } from "@/shared/hooks"
 
 /**
  * Useful whenever we need to leverage the browser window's dimensions.
@@ -13,7 +12,7 @@ import { useEventListener } from "../useEventListener"
 export const useWindowDimensions = (ms = 50) => {
   const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
 
-  const onResize = debounce(() => {
+  const onResize = useDebouncedCallback(() => {
     setDimensions({
       height: window.innerHeight,
       width: window.innerWidth,

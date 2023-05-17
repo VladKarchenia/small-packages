@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-import { useDisableScroll } from "../useDisableScroll"
+import { useDisableScroll } from "@/shared/hooks"
 
 export const useWaitForTransition = (node: Element | null, isVisible: boolean) => {
   const [hasAnimated, setAnimated] = useState(false)
@@ -12,8 +12,8 @@ export const useWaitForTransition = (node: Element | null, isVisible: boolean) =
       setAnimated(isVisible)
     }
 
-    const waitForTransition = (e: Event) => {
-      if (node && e.target === node) {
+    const waitForTransition = (event: Event) => {
+      if (node && event.target === node) {
         setScrollable(true)
         toggleVisibility()
         node.removeEventListener("transitionend", waitForTransition)

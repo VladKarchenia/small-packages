@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import debounce from "just-debounce-it"
+import { useDebouncedCallback } from "use-debounce"
 
 import { useDialog, useDialogActions, useEventListener } from "@/shared/hooks"
 
@@ -9,7 +9,7 @@ export function useDrawer(name: string, defaultOpen?: boolean) {
   const [dialogProps, { container, setContainer }] = useDialog(name, "drawers", defaultOpen)
 
   const [offset, setOffset] = useState<number>(0)
-  const [scrollable, setScrollable] = useState<boolean>(true)
+  const [scrollable, setScrollable] = useState<boolean>(false)
 
   const drawerProps = useMemo<Omit<DrawerProps, "trigger" | "children">>(
     () => ({
@@ -21,7 +21,7 @@ export function useDrawer(name: string, defaultOpen?: boolean) {
     [dialogProps, offset, scrollable],
   )
 
-  const handleScroll = debounce(() => {
+  const handleScroll = useDebouncedCallback(() => {
     if (!container) return
 
     setOffset(container?.scrollTop)

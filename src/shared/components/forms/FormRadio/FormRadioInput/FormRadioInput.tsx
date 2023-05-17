@@ -1,17 +1,17 @@
 import React, { InputHTMLAttributes } from "react"
-import { FormComponentProps } from "@/utils/types"
+
+import { CSS } from "@/stitches/config"
+import { FormComponentProps } from "@/stitches/types"
+import { enterKeyDown } from "@/shared/utils"
+
 import { Copy, Spacer } from "@/shared/components"
-import { CSS } from "@/config"
 
 import {
   SFormRadioInputLabel,
   SFormRadioInputBox,
-  SFormRadioTickInputBox,
   SFormRadioInputCircle,
   SFormRadioInput,
-  SFormRadioTickCopyBox,
 } from "./FormRadioInput.styles"
-import { IconTick } from "@/shared/icons"
 
 export interface IFormRadioInputProps
   extends FormComponentProps<typeof SFormRadioInput, InputHTMLAttributes<HTMLInputElement>> {
@@ -21,7 +21,7 @@ export interface IFormRadioInputProps
    * ! Every field should always contain a label, so whenever this prop is used, make sure to add a label for the field manually
    */
   noLabel?: boolean
-  view?: "circle" | "tick"
+  view?: "circle"
   labelCss?: CSS
 }
 
@@ -44,31 +44,22 @@ export const FormRadioInput = React.forwardRef<HTMLInputElement, IFormRadioInput
     }, [id, disabled, view, props])
 
     return (
-      <SFormRadioInputLabel data-ui="radiobutton" {...labelProps} css={labelCss}>
-        <SFormRadioInput ref={ref} data-ui="radiobutton__input" {...radioInputProps} type="radio" />
-        {view === "tick" ? (
-          <SFormRadioTickCopyBox>
-            <Copy color="neutrals-9" intent="detail">
-              {label}
-            </Copy>
-            <Spacer size={16} horizontal />
-            <SFormRadioTickInputBox data-ui="radiobutton__box">
-              <IconTick />
-            </SFormRadioTickInputBox>
-          </SFormRadioTickCopyBox>
-        ) : (
+      <SFormRadioInputLabel
+        data-ui="radiobutton"
+        onKeyDown={(e) => {
+          enterKeyDown(e.key) && e.preventDefault()
+        }}
+        {...labelProps}
+        css={labelCss}
+      >
+        <SFormRadioInput ref={ref} data-ui="radiobutton-input" {...radioInputProps} type="radio" />
+        <SFormRadioInputBox data-ui="radiobutton-box">
+          <SFormRadioInputCircle />
+        </SFormRadioInputBox>
+        {!noLabel && (
           <>
-            <SFormRadioInputBox data-ui="radiobutton__box">
-              <SFormRadioInputCircle />
-            </SFormRadioInputBox>
-            {!noLabel && (
-              <>
-                <Spacer size={16} horizontal />
-                <Copy color="neutrals-9" intent="detail">
-                  {label}
-                </Copy>
-              </>
-            )}
+            <Spacer size={12} horizontal />
+            <Copy color={disabled ? "theme-n5-n7" : "theme-b-n3"}>{label}</Copy>
           </>
         )}
       </SFormRadioInputLabel>

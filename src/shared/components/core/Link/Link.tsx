@@ -1,19 +1,17 @@
 import React, { useCallback } from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, ICopyProps } from "@/shared/components"
 
 import { SLink } from "./Link.styles"
 
 export interface ILinkProps extends Omit<ComponentProps<typeof SLink>, "onClick"> {
   as?: "a" | "button"
-  intent?: ICopyProps["intent"]
   scale?: ICopyProps["scale"]
-
+  fontWeight?: ICopyProps["fontWeight"]
+  noWrap?: boolean
   onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
-
-  dataTrackId?: string
-  dataTrackValue?: string
-
   shouldPreventDefault?: boolean
 }
 
@@ -22,30 +20,28 @@ export const Link = ({
   as = "a",
   shouldPreventDefault = false,
   onClick,
-  intent = "copy",
-  scale = 8,
+  scale = 6,
+  fontWeight,
+  noWrap,
   ...props
 }: ILinkProps): React.ReactElement => {
   const handleOnClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => {
+    (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => {
       if (shouldPreventDefault) {
-        e.preventDefault()
+        event.preventDefault()
       }
 
-      onClick && onClick(e)
+      onClick && onClick(event)
     },
     [shouldPreventDefault, onClick],
   )
 
   const linkProps = React.useMemo(() => {
-    const { dataTrackId, dataTrackValue, className, target, ...rest } = props
+    const { className, target, ...rest } = props
     const commonLinkProps = {
       ...rest,
       as,
       target,
-      intent,
-      "data-track-id": dataTrackId,
-      "data-track-value": dataTrackValue,
       className,
     }
 
@@ -57,13 +53,17 @@ export const Link = ({
     }
 
     return commonLinkProps
-  }, [props, as, intent])
+  }, [props, as])
 
   return (
-    <SLink data-ui="link" isCtaIntent={intent === "cta"} onClick={handleOnClick} {...linkProps}>
-      <Copy as="span" color="system-inherit" intent={intent} scale={scale}>
-        {children}
-      </Copy>
+    <SLink data-ui="link" onClick={handleOnClick} {...linkProps}>
+      {!noWrap ? (
+        <Copy as="span" scale={scale} fontWeight={fontWeight}>
+          {children}
+        </Copy>
+      ) : (
+        children
+      )}
     </SLink>
   )
 }

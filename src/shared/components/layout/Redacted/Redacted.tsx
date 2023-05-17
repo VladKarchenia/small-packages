@@ -1,6 +1,7 @@
 import React from "react"
-import { CSS } from "@/config"
-import { ComponentProps } from "@/utils"
+
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
 
 import { SRedacted } from "./Redacted.styles"
 
@@ -27,7 +28,7 @@ export const Redacted: React.FC<React.PropsWithChildren<IRedactedProps>> = ({
       data-ui="redacted"
       {...props}
       css={{
-        ...((css as {}) || {}),
+        ...((css as Record<string, never>) || {}),
         height: text ? `calc(${height} - $4)` : height,
         width,
         marginTop: text ? "$4" : 0,

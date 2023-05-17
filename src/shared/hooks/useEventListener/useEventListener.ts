@@ -1,8 +1,8 @@
 import { useRef, useEffect, MutableRefObject } from "react"
 
-import { globalEventTarget } from "@/utils"
+import { globalEventTarget } from "@/shared/utils"
 
-export type EventListenerOptions = {
+type EventListenerOptions = {
   /** The element to listen on. Defaults to `global` (i.e. `window`). */
   element?: EventTarget | MutableRefObject<EventTarget | null> | null
   /** Indicates events will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree. */
@@ -47,6 +47,7 @@ export const useEventListener = <T>(
     }
 
     const eventListener = (evt: Event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const event = evt as unknown as any
 
       savedHandlerRef.current?.(event)

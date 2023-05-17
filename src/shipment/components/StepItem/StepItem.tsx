@@ -1,68 +1,43 @@
+import { IStep } from "@/shipment/types"
+
 import {
   Copy,
   Flex,
-  Spacer,
   StepperButton,
   StepperHeader,
+  StepperIcon,
   StepperItem,
   StepperPanel,
 } from "@/shared/components"
-import { IconTick } from "@/shared/icons"
-import { IStep } from "@/shipment"
 
 interface IStepperItemProps {
   title: string
   data: IStep
   mainContent: React.ReactNode
-  shortContent: React.ReactNode
   totalSteps: number
 }
 
-export const StepItem = ({ title, data, mainContent, shortContent, totalSteps }: IStepperItemProps) => {
+export const StepItem = ({ title, data, mainContent, totalSteps }: IStepperItemProps) => {
   const { name, disabled, stepNumber, completed } = data
   const isStepLast = data.stepNumber === totalSteps
 
   return (
     <StepperItem value={name} isDisabled={disabled} isCompleted={completed}>
-      <StepperHeader scale={8}>
-        <StepperButton
-          size="small"
-          compact
-          css={{
-            paddingY: "$8",
-
-            hover: {
-              backgroundColor: "$neutrals-0",
-            },
-          }}
-        >
-          <Flex align="center">
-            <Flex
-              align="center"
-              justify="center"
-              css={{
-                height: "$20",
-                width: "$20",
-                minWidth: "$20",
-                borderRadius: "$rounded",
-                backgroundColor: "$system-black",
-                color: "$neutrals-0",
-              }}
-            >
-              {completed ? (
-                <IconTick size="xs" />
-              ) : (
-                <Copy scale={10} color="neutrals-0" bold>
-                  {stepNumber}
-                </Copy>
-              )}
-            </Flex>
-            <Spacer size={12} horizontal />
-            {title}
+      <StepperHeader isStepLast={isStepLast}>
+        <StepperButton size="small" compact>
+          <Flex
+            align="center"
+            direction={{ "@initial": "row", "@sm": "column" }}
+            css={{ gap: "$12" }}
+          >
+            <StepperIcon stepNumber={stepNumber} />
+            <Copy color={"system-inherit"} fontWeight="bold">
+              {title}
+            </Copy>
           </Flex>
         </StepperButton>
       </StepperHeader>
-      <StepperPanel mainContent={mainContent} shortContent={shortContent} isStepLast={isStepLast} />
+      <StepperPanel mainContent={mainContent} isStepLast={isStepLast} />
     </StepperItem>
   )
 }

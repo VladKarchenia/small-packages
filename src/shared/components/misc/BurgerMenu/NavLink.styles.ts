@@ -1,25 +1,19 @@
-import { styled } from "@/config"
+import { styled } from "@/stitches/config"
 
 export const SNavLink = styled("a", {
-  $$color: "$colors$neutrals-7",
-  color: "$$color",
+  reset: true,
+  color: "$theme-b-n3",
   display: "inline-block",
   position: "relative",
   textDecoration: "none",
+  outline: "none",
 
-  variants: {
-    selected: {
-      true: {
-        $$color: "$color$neutrals-9",
-      },
-    },
-    role: {
-      guest: {
-        $$color: "$colors$neutrals-9",
-      },
-      host: {
-        $$color: "$colors$neutrals-9",
-      },
-    },
+  // TODO: add states
+  hover: {
+    outline: "1px solid $theme-b-n3",
+  },
+
+  keyboardFocus: {
+    outline: "1px solid $theme-b-n3",
   },
 })

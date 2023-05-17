@@ -5,19 +5,12 @@ interface IShortInfoLineProps {
   text: string
 }
 
-export const ShortInfoLine: React.FC<React.PropsWithChildren<IShortInfoLineProps>> = ({
-  children,
-  icon,
-  text,
-}) => {
+export const ShortInfoLine = ({ icon, text }: IShortInfoLineProps) => {
   return (
     <Flex align="center">
       {icon}
       <Spacer size={8} horizontal />
-      <Copy scale={9} color="system-black">
-        {text}
-      </Copy>
-      {children}
+      <Copy>{text}</Copy>
     </Flex>
   )
 }

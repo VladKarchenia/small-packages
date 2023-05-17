@@ -1,5 +1,6 @@
+import { ComponentProps } from "@/stitches/types"
+
 import { Box, Copy } from "@/shared/components"
-import { ComponentProps } from "@/utils"
 
 import {
   STable,
@@ -13,12 +14,9 @@ import {
 
 interface ITableView {
   caption: string
-  hasBookings?: boolean
 }
 
-export interface IColumn extends ComponentProps<typeof STabularHead> {
-  bold?: boolean
-}
+export interface IColumn extends ComponentProps<typeof STabularHead> {}
 
 export interface IRow extends ComponentProps<typeof STableRow> {}
 
@@ -44,28 +42,26 @@ export interface ITabularHead extends ComponentProps<typeof STabularHead> {}
  *   </TableBody>
  * </TableView>
  */
-export const Table: React.FC<React.PropsWithChildren<ITableView>> = ({
-  caption,
-  hasBookings = false,
-  children,
-}) => (
-  <STable hasBookings={hasBookings}>
+export const Table: React.FC<React.PropsWithChildren<ITableView>> = ({ caption, children }) => (
+  <STable>
     <STableCaption>{caption}</STableCaption>
     {children}
   </STable>
 )
 
-export const TableHead: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
+export const TableHead: React.FC<React.PropsWithChildren> = ({ children }) => (
   <STableHead>
     <STableRow>{children}</STableRow>
   </STableHead>
 )
 
-export const TableBody: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...props }) => (
+export const TableBody: React.FC<React.PropsWithChildren> = ({ children, ...props }) => (
   <STableBody {...props}>{children}</STableBody>
 )
 
-export const TableRow: React.FC<IRow> = ({ children }) => <STableRow>{children}</STableRow>
+export const TableRow: React.FC<React.PropsWithChildren<IRow>> = ({ children, ...props }) => (
+  <STableRow {...props}>{children}</STableRow>
+)
 
 /**
  * A tabular head element with a Copy component already configured
@@ -73,24 +69,33 @@ export const TableRow: React.FC<IRow> = ({ children }) => <STableRow>{children}<
  * @example
  * <Column>Name</Name>
  */
-export const Column: React.FC<IColumn> = ({ children, bold, ...props }) => {
+export const Column: React.FC<IColumn> = ({ children, ...props }) => {
   return (
     <STabularHead scope="col" {...props}>
       <Box css={{ display: "inline-flex", alignItems: "center" }}>
         <Copy
           as="span"
-          intent="cta"
-          uppercase
-          scale={9}
-          color="neutrals-9"
-          css={{
-            padding: 0,
-            fontWeight: bold ? 500 : "normal",
-          }}
+          scale={{ "@initial": 10, "@lg": 6 }}
+          fontWeight="bold"
+          uppercase={{ "@initial": false, "@lg": true }}
         >
           {children}
         </Copy>
       </Box>
+    </STabularHead>
+  )
+}
+
+/**
+ * A tabular head element with a Copy component already configured and sorting
+ *
+ * @example
+ * <SortableColumn>Name</SortableColumn>
+ */
+export const SortableColumn: React.FC<IColumn> = ({ children, ...props }) => {
+  return (
+    <STabularHead scope="col" {...props}>
+      {children}
     </STabularHead>
   )
 }

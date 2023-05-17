@@ -1,42 +1,29 @@
-import { useState } from "react"
-import { SearchFilterDrawer, SearchFilterDrawerForm, useDrawerActions } from "@/shared/components"
-import { IconArrowLeft, IconSearch } from "@/shared/icons"
-import { useDashboardActionContext, useDashboardStateContext } from "@/dashboard/state"
+import { useBoundStore } from "@/store"
+import { useDashboardStateContext } from "@/dashboard/state"
+import { ShippingType } from "@/shared/types"
 
-interface ISearchInputProps {
-  placeholder: string
-}
+import { SearchFilterDrawer } from "@/shared/components"
+import { IconChevronLeft, IconSearch } from "@/shared/icons"
+import { SearchFilterDrawerForm } from "@/dashboard/components"
 
-export const SearchInput: React.FC<ISearchInputProps> = ({ placeholder }) => {
+export const SearchInput = () => {
+  const tab = useBoundStore((state) => state.tab)
   const { searchTerm } = useDashboardStateContext()
-  const { setSearchTerm } = useDashboardActionContext()
-  const { close } = useDrawerActions()
-
-  const [searchValue, setSearchValue] = useState<string>(searchTerm)
-
-  const handleChange = (value: string) => {
-    setSearchTerm(value)
-    setSearchValue(value)
-
-    close("searchInput")
-  }
 
   return (
     <SearchFilterDrawer
       drawerName="searchInput"
-      drawerTitle="Find destination"
-      value={searchValue}
-      placeholder={placeholder}
-      closeIcon={<IconArrowLeft />}
-      prefix={<IconSearch fixedSize width={20} height={20} />}
-      drawerForm={
-        <SearchFilterDrawerForm
-          initialValue={searchValue}
-          onSelect={handleChange}
-          comboboxType="string"
-          placeholder={placeholder}
-        />
+      drawerTitle={tab === ShippingType.Quote ? "Find a quote" : "Find a shipment"}
+      value={searchTerm}
+      placeholder={
+        tab === ShippingType.Quote
+          ? "Search for ID, address..."
+          : "Search for ID, tracking number, address..."
       }
+      hidePlaceholder
+      closeIcon={<IconChevronLeft />}
+      prefix={<IconSearch />}
+      drawerForm={<SearchFilterDrawerForm comboboxType="searchTerm" />}
     />
   )
 }

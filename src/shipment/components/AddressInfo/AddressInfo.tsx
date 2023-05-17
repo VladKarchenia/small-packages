@@ -1,7 +1,18 @@
 import { useFormContext } from "react-hook-form"
-import { Button, Copy, GridContainer, Spacer, Stack, useStepperContext } from "@/shared/components"
-import { ShipmentState } from "@/shared/state"
-import { StepName, LocationInput } from "@/shipment"
+
+import { ShipmentState } from "@/shared/types"
+import { StepName } from "@/shipment/types"
+
+import {
+  Button,
+  GridContainer,
+  Hidden,
+  Spacer,
+  Stack,
+  Title,
+  useStepperContext,
+} from "@/shared/components"
+import { LocationInput, StepActionsBar, LocationPopover } from "@/shipment/components"
 
 export const AddressInfo = ({
   handleContinueClick,
@@ -19,38 +30,80 @@ export const AddressInfo = ({
 
   return (
     <GridContainer fullBleed>
-      <Stack space={8}>
-        <LocationInput
-          initialValue={sender.fullAddress}
-          onChange={(destination) => {
-            setValue("sender.fullAddress", destination)
-          }}
-          placeholder="From"
-        />
-        <LocationInput
-          initialValue={recipient.fullAddress}
-          onChange={(destination) => {
-            setValue("recipient.fullAddress", destination)
-          }}
-          placeholder="To"
-        />
-      </Stack>
-      <Spacer size={32} />
-      <Button
-        onClick={onContinueHandler}
-        full
-        disabled={
-          !sender.fullAddress.location ||
-          !recipient.fullAddress.location ||
-          // TODO: need to add better condition to prevent same from and to addresses using ID or some field
-          sender.fullAddress.location === recipient.fullAddress.location
-        }
-      >
-        {/* TODO: fix default button copy */}
-        <Copy as="span" scale={8} color="system-white" bold>
+      <Hidden below="sm">
+        <Title as="h3" scale={3}>Address Information</Title>
+        <Spacer size={40} />
+        <Stack space={24}>
+          <LocationPopover
+            value={sender.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("sender.fullAddress", locationDetails)
+            }}
+            label="From"
+            labelProps={{ hidden: true, required: true }}
+            description="From"
+            placeholder="From"
+            country="United States"
+            person="sender"
+          />
+          <LocationPopover
+            value={recipient.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("recipient.fullAddress", locationDetails)
+            }}
+            label="To"
+            labelProps={{ hidden: true, required: true }}
+            description="To"
+            placeholder="To"
+            country="United States,Canada"
+            person="recipient"
+          />
+        </Stack>
+      </Hidden>
+      <Hidden above="sm">
+        <Stack space={24}>
+          <LocationInput
+            initialValue={sender.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("sender.fullAddress", locationDetails)
+            }}
+            id="Address from"
+            label="From"
+            placeholder="From"
+            description="From"
+            labelProps={{ required: true }}
+            country="United States"
+            person="sender"
+          />
+          <LocationInput
+            initialValue={recipient.fullAddress}
+            onChange={(locationDetails) => {
+              setValue("recipient.fullAddress", locationDetails)
+            }}
+            id="Address to"
+            label="To"
+            placeholder="To"
+            description="To"
+            labelProps={{ required: true }}
+            country="United States,Canada"
+            person="recipient"
+          />
+        </Stack>
+      </Hidden>
+      <Spacer size={{ "@initial": 24, "@sm": 32 }} />
+      <StepActionsBar>
+        <Button
+          full
+          disabled={
+            !sender.fullAddress.displayName ||
+            !recipient.fullAddress.displayName ||
+            sender.fullAddress.displayName === recipient.fullAddress.displayName
+          }
+          onClick={onContinueHandler}
+        >
           Continue
-        </Copy>
-      </Button>
+        </Button>
+      </StepActionsBar>
     </GridContainer>
   )
 }

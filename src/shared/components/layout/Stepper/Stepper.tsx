@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
-import { ComponentProps, createContext } from "@/utils"
+
+import { createContext } from "@/shared/utils"
+import { ComponentProps } from "@/stitches/types"
 
 import { SStepper } from "./Stepper.styles"
 
@@ -13,6 +15,9 @@ type StepperContextValue = {
 
   onItemOpen: (value: string) => void
   onItemClose: (value: string) => void
+
+  stepHeight: number
+  setStepHeight: (value: number) => void
 }
 
 export const [StepperProvider, useStepperContext] = createContext<StepperContextValue>("Stepper")
@@ -46,6 +51,7 @@ export const Stepper = ({
 }: IStepperProps) => {
   const [selected, setSelected] = useState(defaultSelected)
   const selectedRef = useRef(selected)
+  const [stepHeight, setStepHeight] = useState(100)
 
   const handleItemOpen = useCallback(
     (itemValue: string) =>
@@ -79,6 +85,8 @@ export const Stepper = ({
       completed={completed}
       onItemOpen={handleItemOpen}
       onItemClose={handleItemClose}
+      stepHeight={stepHeight}
+      setStepHeight={setStepHeight}
     >
       <SStepper data-ui="stepper" data-testid="stepper" {...props} />
     </StepperProvider>

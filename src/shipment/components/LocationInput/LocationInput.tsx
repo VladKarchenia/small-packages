@@ -1,65 +1,68 @@
-import { SearchFilterDrawer, useDrawerActions } from "@/shared/components"
-import { IconArrowLeft } from "@/shared/icons"
-import { IAddress } from "@/shared/state"
 import { useState } from "react"
+
+import { IAddress } from "@/shared/types"
+
+import { IFormLabelProps, SearchFilterDrawer, useDrawerActions } from "@/shared/components"
+import { IconChevronLeft } from "@/shared/icons"
+
 import { LocationInputForm } from "./LocationInputForm"
 
 interface ILocationInputProps {
   initialValue: IAddress
   onChange: (locationDetails: IAddress) => void
+  id: string
+  label: string
   placeholder: string
+  description?: string
+  labelProps?: IFormLabelProps
+  country: string
+  person: "sender" | "recipient"
 }
 
 export const LocationInput: React.FC<ILocationInputProps> = ({
   initialValue,
   onChange,
+  id,
+  label,
   placeholder,
+  description,
+  labelProps,
+  country,
+  person,
 }) => {
   const { close } = useDrawerActions()
 
   const [locationDetails, setLocationDetails] = useState<IAddress>(initialValue)
 
-  const handleChange = (location: string) => {
-    // TODO: FIX this
-    onChange({
-      location,
-      address1: "",
-      address2: "",
-      city: "",
-      country: "",
-      isResidential: false,
-      zipCode: "",
-      state: "",
-    })
-    setLocationDetails({
-      location,
-      address1: "",
-      address2: "",
-      city: "",
-      country: "",
-      isResidential: false,
-      zipCode: "",
-      state: "",
-    })
+  const handleChange = (locationDetails: IAddress) => {
+    onChange(locationDetails)
+    setLocationDetails(locationDetails)
 
-    close("locationInput")
+    close(`location${placeholder}Input`)
   }
 
   return (
     <SearchFilterDrawer
-      drawerName="locationInput"
+      drawerName={`location${placeholder}Input`}
       drawerTitle="Find destination"
-      value={locationDetails.location}
+      value={locationDetails.displayName}
       placeholder={placeholder}
-      closeIcon={<IconArrowLeft />}
+      hidePlaceholder
+      description={description}
+      labelProps={labelProps}
+      closeIcon={<IconChevronLeft />}
       drawerForm={
         <LocationInputForm
           initialValue={locationDetails}
           onSelect={handleChange}
-          placeholder={placeholder}
+          id={id}
+          label={label}
+          placeholder={`${placeholder}: Country, state, city, zip code`}
+          country={country}
+          person={person}
         />
       }
-      dataTestid="location-button-filter"
+      dataTestid="displayName-button-filter"
     />
   )
 }

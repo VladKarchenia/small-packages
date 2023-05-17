@@ -1,7 +1,11 @@
 import { useState } from "react"
-import { ShipmentCostsHeader } from "@/tracking"
-import { Costs } from "@/shared/components"
+
+import { mediaQueries } from "@/stitches/theme"
+import { useMedia } from "@/shared/hooks"
 import { ICost } from "@/shared/types"
+
+import { Costs } from "@/shared/components"
+import { ShipmentCostsHeader } from "@/tracking/components"
 
 interface IShipmentCostsProps {
   title: string
@@ -11,6 +15,7 @@ interface IShipmentCostsProps {
 
 export const ShipmentCosts = ({ title, price, costs }: IShipmentCostsProps) => {
   const [showCostsDetails, setShowCostsDetails] = useState(false)
+  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
 
   const handleShowDetailsClick = () => {
     setShowCostsDetails(!showCostsDetails)
@@ -24,7 +29,7 @@ export const ShipmentCosts = ({ title, price, costs }: IShipmentCostsProps) => {
         showCostsDetails={showCostsDetails}
         handleShowDetailsClick={handleShowDetailsClick}
       />
-      {showCostsDetails ? <Costs costs={costs} /> : null}
+      {isSmallAndAbove || showCostsDetails ? <Costs costs={costs} /> : null}
     </>
   )
 }

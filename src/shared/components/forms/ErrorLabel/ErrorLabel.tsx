@@ -1,18 +1,12 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy } from "@/shared/components"
 
-export type IErrorLabelProps = ComponentProps<typeof Copy>
+type IErrorLabelProps = ComponentProps<typeof Copy>
 
 export const ErrorLabel = ({ children, id, ...props }: IErrorLabelProps) => {
   return (
-    <Copy
-      {...props}
-      as="label"
-      color="special-error-text"
-      id={`${id}__error`}
-      scale={9}
-      role="alert"
-    >
+    <Copy {...props} as="label" scale={10} color="special-error" id={`${id}__error`} role="alert">
       {children}
     </Copy>
   )

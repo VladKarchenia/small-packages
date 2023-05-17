@@ -54,6 +54,7 @@ export function useDialog(name: string, storageKey: StorageKey, defaultOpen?: bo
     checkIfStorageIsInitialized(storageKey, () => {
       window.dialogs[storageKey].has(name) ? close() : open()
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, storageKey])
 
   const onOpenChange = useCallback(
@@ -72,6 +73,7 @@ export function useDialog(name: string, storageKey: StorageKey, defaultOpen?: bo
       open: isOpen,
       onOpenChange: onOpenChange,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen, container],
   )
 

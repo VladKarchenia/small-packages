@@ -1,9 +1,10 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
 
 import { SGridContainer } from "./GridContainer.styles"
 
-export type IGridContainerProps = ComponentProps<typeof SGridContainer>
+type IGridContainerProps = ComponentProps<typeof SGridContainer>
 
 export const GridContainer = React.forwardRef<HTMLDivElement, IGridContainerProps>((props, ref) => {
   return <SGridContainer ref={ref} {...props} />

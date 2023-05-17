@@ -1,7 +1,7 @@
 import { DialogContent } from "@radix-ui/react-dialog"
 
-import { styled, keyframes } from "@/config"
-import { easing } from "@/utils"
+import { styled, keyframes } from "@/stitches/config"
+import { easing } from "@/stitches/utils"
 
 import { MODAL_ANIMATION_DURATION } from "@/constants"
 

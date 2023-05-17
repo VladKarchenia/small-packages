@@ -1,8 +1,7 @@
 import { objectReduce, objectFilter } from "fast-loops"
 
-import { breakpoints } from "@/config"
-
-import { ResponsiveProp } from "@/utils"
+import { breakpoints } from "@/stitches/theme"
+import { ResponsiveProp } from "@/stitches/types"
 
 function getValue<T>(value: T, key: keyof ResponsiveProp<string>) {
   return key === "@initial" && typeof value !== "object" ? value : value?.[key as keyof T]

@@ -1,38 +1,39 @@
 import React from "react"
-import { Copy, Drawer, Stack, useDrawer, useDrawerActions } from "@/shared/components"
-import { BurgerMenuButton } from "./BurgerMenuButton"
-import { ComponentProps } from "@/utils"
-import { SNavLink } from "./NavLink.styles"
+import { useNavigate } from "react-router-dom"
+
+import { HOME, SETTINGS } from "@/constants"
+import { ComponentProps } from "@/stitches/types"
+
+import { Copy, Drawer, Stack, Title, useDrawer, useDrawerActions } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
 
-export const HOME = "/"
-export const USER_MANAGEMENT = "/profile"
+import { BurgerMenuButton } from "./BurgerMenuButton"
+
+import { SNavLink } from "./NavLink.styles"
 
 export interface INavItem {
-  href: string
+  url: string
   text: string
 }
 
-interface INavLinkProps extends ComponentProps<typeof SNavLink> {
-  selected?: boolean
-}
+interface INavLinkProps extends ComponentProps<typeof SNavLink> {}
 
 const menuItems: INavItem[] = [
   {
-    href: HOME,
+    url: HOME,
     text: "Home",
   },
   {
-    href: USER_MANAGEMENT,
-    text: "User Management",
+    url: SETTINGS,
+    text: "Settings",
   },
 ]
 
 export const MenuNavItems = ({ items }: { items: INavItem[] }) => {
   return (
     <Stack as="ul" space={12} outerDividers="bottom" dividers>
-      {items.map(({ href, text }) => (
-        <NavLink key={href} href={href}>
+      {items.map(({ url, text }) => (
+        <NavLink key={url} href={url}>
           {text}
         </NavLink>
       ))}
@@ -40,13 +41,15 @@ export const MenuNavItems = ({ items }: { items: INavItem[] }) => {
   )
 }
 
-export const NavLink: React.FC<INavLinkProps> = ({ children, href, selected = false, role }) => (
-  <SNavLink href={href} selected={selected} role={role}>
-    <Copy scale={8} color="system-black" bold>
-      {children}
-    </Copy>
-  </SNavLink>
-)
+export const NavLink: React.FC<INavLinkProps> = ({ children, href = "", role }) => {
+  const navigate = useNavigate()
+
+  return (
+    <SNavLink as="button" type="button" onClick={() => navigate(href)} role={role}>
+      <Copy fontWeight="semiBold">{children}</Copy>
+    </SNavLink>
+  )
+}
 
 interface IBurgerMenuProps {
   currentPathname?: string
@@ -64,6 +67,12 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = () => {
         fullWidth={{ "@max-sm": true }}
         trigger={<BurgerMenuButton onClick={() => open("BurgerMenu")} />}
         contentCss={{ padding: "$24 $16" }}
+        direction="left"
+        header={
+          <Title as="h3" scale={3} color="theme-b-n3">
+            Menu
+          </Title>
+        }
       >
         <MenuNavItems items={menuItems} />
       </Drawer>

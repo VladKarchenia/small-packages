@@ -1,15 +1,13 @@
-import { styled } from "@/config"
-
-import { easing, animations } from "@/utils"
+import { styled } from "@/stitches/config"
+import { animations, boxShadows } from "@/stitches/utils"
 
 export const STooltipWrapper = styled("div", {
   animation: `${animations.fadeIn} 150ms ease-out`,
-  zIndex: 1,
+  zIndex: "$1",
 })
 
 export const STooltip = styled("div", {
   position: "relative",
-  // padding: "$8",
 
   '&[data-placement="bottom"], &[data-placement="bottom-start"], &[data-placement="bottom-end"]': {
     paddingTop: "$8",
@@ -31,24 +29,34 @@ export const STooltip = styled("div", {
 export const STooltipTrigger = styled("button", {
   reset: true,
   display: "inline-flex",
-  color: "inherit",
+  color: "$neutrals-5",
+  borderRadius: "$rounded",
   cursor: "pointer",
-  transition: easing.smooth({ duration: 150, property: "opacity" }),
+  transition: "150ms ease-out",
+  outline: "2px solid transparent",
 
   hover: {
-    opacity: 0.75,
+    outline: "2px solid $theme-n2-n7",
+    boxShadow: "inset 0 0 0 4px $colors$theme-n2-n7",
   },
 
   keyboardFocus: {
-    "& > *": {
-      outline: "2px solid $neutrals-9",
-    },
+    outline: "2px solid $theme-vl-n3",
+  },
+
+  disabled: {
+    pointerEvents: "none",
   },
 })
 
 export const STooltipContent = styled("div", {
-  backgroundColor: "$brand-yellow-lightest",
+  width: 260,
+  backgroundColor: "$theme-w-n8",
   padding: "$24",
+  borderRadius: 0,
+  color: "$theme-b-n3",
+  boxShadow: boxShadows.tooltip,
+  textAlign: "start",
 })
 
 export const STooltipArrow = styled("div", {
@@ -64,30 +72,30 @@ export const STooltipArrow = styled("div", {
     left: 0,
     borderWidth: "$8",
     borderBottomWidth: 0,
-    borderTopColor: "$brand-yellow-lightest",
+    borderTopColor: "$theme-w-n8",
   },
 
   '&[data-placement*="right"]': {
     top: 0,
     left: 0,
     borderWidth: "$8",
-    borderLeft: 0,
-    borderRightColor: "$brand-yellow-lightest",
+    borderLeft: "none",
+    borderRightColor: "$theme-w-n8",
   },
 
   '&[data-placement*="bottom"]': {
     top: 0,
     borderWidth: "$8",
-    borderTop: 0,
-    borderBottomColor: "$brand-yellow-lightest",
+    borderTop: "none",
+    borderBottomColor: "$theme-w-n8",
   },
 
   '&[data-placement*="left"]': {
     top: 0,
     right: 0,
     borderWidth: "$8",
-    borderRight: 0,
-    borderLeftColor: "$brand-yellow-lightest",
+    borderRight: "none",
+    borderLeftColor: "$theme-w-n8",
   },
 
   variants: {

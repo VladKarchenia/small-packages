@@ -1,29 +1,19 @@
 import React from "react"
 import { UseComboboxReturnValue } from "downshift"
 
-import { createContext } from "@/utils"
+import { createContext } from "@/shared/utils"
 
-export type ComboboxItemFormat = {
-  value: string
-  label: string
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ComboboxContextValue = UseComboboxReturnValue<any>
 
-export type ComboboxContextValue = UseComboboxReturnValue<ComboboxItemFormat> & {}
-
-export type ComboboxProps = UseComboboxReturnValue<ComboboxItemFormat> & {
-  className?: string
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ComboboxProps = UseComboboxReturnValue<any> & {
   children: React.ReactNode
 }
 
 export const [ComboboxProvider, useComboboxContext] =
   createContext<ComboboxContextValue>("Combobox")
 
-export const Combobox = ({ className, children, ...props }: ComboboxProps) => {
-  return (
-    <ComboboxProvider {...props}>
-      <div className={className} {...props}>
-        {children}
-      </div>
-    </ComboboxProvider>
-  )
+export const Combobox = ({ children, ...props }: ComboboxProps) => {
+  return <ComboboxProvider {...props}>{children}</ComboboxProvider>
 }

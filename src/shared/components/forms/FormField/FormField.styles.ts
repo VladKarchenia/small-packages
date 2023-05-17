@@ -1,80 +1,46 @@
-import { styled } from "@/config"
-import { boxShadows } from "@/utils/styles"
+import { styled } from "@/stitches/config"
+import { boxShadows } from "@/stitches/utils"
 
 export const SFormField = styled("div", {
+  width: "100%",
   variants: {
     disabled: {
-      true: { cursor: "not-allowed" },
+      true: { cursor: "not-allowed", pointerEvents: "none" },
     },
   },
 })
 
-export const SFormFieldContainer = styled("label", {
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  backgroundColor: "$neutrals-0",
-  borderRadius: "$8",
-  boxShadow: boxShadows.input.initial,
-  transition: "100ms box-shadow ease-out",
+export const SFormFieldPrefix = styled("span", {
+  display: "inline-flex",
+  zIndex: "$1",
+  position: "absolute",
+  left: "$16",
+  color: "$theme-b-n3",
+})
 
-  "&:hover, &:focus-within": {
-    zIndex: "$1",
-  },
-
-  "&:hover": {
-    boxShadow: boxShadows.input.hover,
-  },
-
-  "&:focus-within": {
-    boxShadow: boxShadows.input.focus,
-  },
-
-  variants: {
-    hasError: {
-      false: {},
-      true: {
-        backgroundColor: "$brand-orange-lightest",
-        zIndex: "$1",
-
-        "&, &:hover, &:focus-within": {
-          boxShadow: `${boxShadows.input.error} !important`,
-        },
-      },
-    },
-
-    isFocused: {
-      false: {},
-      true: {
-        boxShadow: boxShadows.input.focus,
-        zIndex: "$1",
-      },
-    },
-  },
+export const SFormFieldSuffix = styled("span", {
+  display: "inline-flex",
+  zIndex: "$1",
+  position: "absolute",
+  right: "$16",
+  color: "$theme-b-n3",
 })
 
 export const SFormFieldElement = styled("input", {
-  position: "relative",
   display: "block",
+  flex: 1,
+  width: "100%",
+  minHeight: "$48",
+  paddingX: "$16",
+  paddingY: "$12",
+  marginY: 0,
+  background: "none",
+  border: "none",
+  color: "$theme-b-n3",
+  position: "relative",
   appearance: "none",
   "-webkit-appearance": "none",
   outline: "none",
-  background: "none",
-  border: "none",
-  width: "100%",
-  paddingX: "$16",
-  paddingY: "$12",
-  color: "$neutrals-9",
-  minHeight: "$48",
-  fontFamily: "$sans",
-  fontSize: 16,
-  fontWeight: 400,
-  letterSpacing: ".5px",
-  lineHeight: 1.5,
-  flex: 1,
-  marginTop: 0,
-  marginBottom: 0,
-  borderRadius: "$8",
 
   placeholder: {
     color: "$neutrals-5",
@@ -95,46 +61,117 @@ export const SFormFieldElement = styled("input", {
     },
   },
 
+  // trick to delay Chrome background-color and text color autofill styles
+  "&:-webkit-autofill": {
+    transition: "background-color 600000s 0s, color 600000s 0s",
+  },
+
   disabled: {
     pointerEvents: "none",
-    backgroundColor: "$neutrals-1",
-    color: "$neutrals-7",
+    backgroundColor: "$theme-n1-n10",
+    color: "$theme-n4-n7",
+    boxShadow: boxShadows.input.initial,
+
+    placeholder: {
+      color: "$theme-n4-n7",
+    },
+
+    [`${SFormFieldPrefix}`]: {
+      color: "$theme-n4-n7",
+    },
+
+    [`${SFormFieldSuffix}`]: {
+      color: "$theme-n4-n7",
+    },
   },
 
   "&[readonly]:not([disabled])": {
     placeholder: {
-      color: "$neutrals-9",
+      color: "$neutrals-5",
     },
   },
 
   variants: {
-    large: {
-      true: {
-        fontSize: 20,
-      },
-    },
-
-    isPlaceholder: {
-      true: {
-        backgroundColor: "$neutrals-1",
-        pointerEvents: "none",
-      },
-    },
-
     isClickable: {
       true: { cursor: "pointer" },
+    },
+
+    hasPrefix: {
+      true: {
+        paddingLeft: "$48",
+      },
+    },
+
+    hasSuffix: {
+      true: {
+        paddingRight: "$48",
+      },
+    },
+
+    borderless: {
+      true: {
+        paddingX: 0,
+      },
     },
   },
 })
 
-export const SFormFieldPrefix = styled("span", {
-  paddingLeft: "$16",
-  marginRight: "-$8",
+export const SFormFieldContainer = styled("label", {
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: "$theme-w-n9",
+  boxShadow: boxShadows.input.initial,
+  transition: "100ms ease-out",
   zIndex: "$1",
-})
 
-export const SFormFieldSuffix = styled("span", {
-  paddingRight: "$16",
-  marginLeft: "-$8",
-  zIndex: "$1",
+  "&:hover": {
+    boxShadow: boxShadows.input.hover,
+  },
+
+  "&:focus, &:focus-within": {
+    boxShadow: boxShadows.input.focus,
+  },
+
+  disabled: {
+    pointerEvents: "none",
+    backgroundColor: "$theme-n1-n10",
+    color: "$theme-n4-n7",
+    boxShadow: boxShadows.input.initial,
+  },
+
+  variants: {
+    hasError: {
+      true: {
+        "&, &:hover, &:focus, &:focus-within": {
+          boxShadow: boxShadows.input.error,
+        },
+      },
+    },
+
+    borderless: {
+      true: {
+        backgroundColor: "initial",
+        boxShadow: "none",
+
+        "&:hover, &:focus, &:focus-within": {
+          boxShadow: "none",
+        },
+      },
+    },
+  },
+
+  compoundVariants: [
+    {
+      hasError: true,
+      borderless: true,
+      css: {
+        backgroundColor: "initial",
+
+        "&, &:hover, &:focus, &:focus-within": {
+          boxShadow: "none !important",
+        },
+      },
+    },
+  ],
 })

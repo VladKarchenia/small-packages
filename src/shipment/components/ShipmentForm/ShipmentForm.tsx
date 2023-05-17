@@ -1,30 +1,21 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
+
+import { StepName, ShipmentStep, IStepsDataItem, StepperState } from "@/shipment/types"
+import { useMedia } from "@/shared/hooks"
+import { mediaQueries } from "@/stitches/theme"
+
 import {
-  IStep,
-  StepName,
-  ShipmentDetails,
-  ShipmentDetailsShort,
+  PackageDetails,
   DeliveryRates,
-  DeliveryRatesShort,
-  ShipmentStep,
-  PersonInfoCollapsed,
   PersonInfo,
-  ShippingType,
   StepperForm,
-  IStepsDataItem,
   ShipmentDateDetails,
-  ShipmentDateDetailsShort,
-} from "@/shipment"
+  Summary,
+  Receipt,
+} from "@/shipment/components"
 
-type StepperState = {
-  from: IStep
-  to: IStep
-  shipment: IStep
-  date: IStep
-  rates: IStep
-}
-
-const initialState: StepperState = {
+const initialState: Omit<StepperState, "info"> = {
   from: {
     name: "from",
     completed: false,
@@ -55,10 +46,25 @@ const initialState: StepperState = {
     disabled: true,
     stepNumber: 5,
   },
+  summary: {
+    name: "summary",
+    completed: false,
+    disabled: true,
+    stepNumber: 6,
+  },
+  receipt: {
+    name: "receipt",
+    completed: false,
+    disabled: true,
+    stepNumber: 7,
+  },
 }
 
 export const ShipmentForm = () => {
-  const [stepperState, setStepperState] = useState(initialState)
+  const [stepperState, setStepperState] = useState(initialState as StepperState)
+  const location = useLocation()
+  const isSmallAndAbove = useMedia([mediaQueries.sm], [true], false)
+  const isEditMode = location.pathname.includes("edit")
 
   const handleContinueClick = (step: ShipmentStep, nextStep: ShipmentStep) => {
     setStepperState((prevState) => {
@@ -82,48 +88,53 @@ export const ShipmentForm = () => {
 
   const stepsData: IStepsDataItem[] = [
     {
-      title: "Ship From",
+      title: isSmallAndAbove ? "From" : "Ship From",
       data: stepperState.from,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="sender" />,
-      shortContent: <PersonInfoCollapsed person="sender" />,
+      // shortContent: <PersonInfoCollapsed person="sender" />,
     },
     {
-      title: "Ship To",
+      title: isSmallAndAbove ? "To" : "Ship To",
       data: stepperState.to,
       mainContent: <PersonInfo handleContinueClick={handleContinueClick} person="recipient" />,
-      shortContent: <PersonInfoCollapsed person="recipient" />,
+      // shortContent: <PersonInfoCollapsed person="recipient" />,
     },
     {
-      title: "Shipment Details",
+      title: isSmallAndAbove ? "Details" : "Shipment ",
       data: stepperState.shipment,
-      mainContent: (
-        <ShipmentDetails
-          handleContinueClick={handleContinueClick}
-          shippingType={ShippingType.Shipment}
-        />
-      ),
-      shortContent: <ShipmentDetailsShort shippingType={ShippingType.Shipment} />,
+      mainContent: <PackageDetails handleContinueClick={handleContinueClick} />,
+      // shortContent: <PackageDetailsShort />,
     },
     {
-      title: "Ready Date",
+      title: isSmallAndAbove ? "Ready Date" : "Ready Date & Time",
       data: stepperState.date,
       mainContent: <ShipmentDateDetails handleContinueClick={handleContinueClick} />,
-      shortContent: <ShipmentDateDetailsShort />,
+      // shortContent: <ShipmentDateDetailsShort />,
     },
     {
-      title: "Delivery Rates",
+      title: isSmallAndAbove ? "Rates" : "Delivery rates & Transit times",
       data: stepperState.rates,
-      mainContent: <DeliveryRates shippingType={ShippingType.Shipment} />,
-      shortContent: <DeliveryRatesShort />,
+      mainContent: <DeliveryRates handleContinueClick={handleContinueClick} />,
+      // shortContent: <DeliveryRatesShort />,
+    },
+    {
+      title: "Summary",
+      data: stepperState.summary,
+      mainContent: <Summary handleContinueClick={handleContinueClick} />,
+    },
+    {
+      title: "Receipt",
+      data: stepperState.receipt,
+      mainContent: <Receipt />,
     },
   ]
 
   return (
     <StepperForm
-      shippingType={ShippingType.Shipment}
-      title="Create a shipment"
+      title={isEditMode ? "Edit a shipment" : "Create a shipment"}
       defaultStep={StepName.FROM}
       stepsData={stepsData}
+      setStepperState={setStepperState}
     />
   )
 }

@@ -1,6 +1,8 @@
 import React from "react"
 import { Portal, Root } from "@radix-ui/react-dropdown-menu"
-import { CSS } from "@/config"
+
+import { CSS } from "@/stitches/config"
+
 import { SDropdownMenuContent, SDropdownMenuTrigger } from "./Dropdown.styles"
 
 export interface IDropdownProps {
@@ -10,6 +12,7 @@ export interface IDropdownProps {
   disabled?: boolean
   asChild?: boolean
   contentCss?: CSS
+  triggerCss?: CSS
 }
 
 export const Dropdown: React.FC<React.PropsWithChildren<IDropdownProps>> = ({
@@ -20,14 +23,23 @@ export const Dropdown: React.FC<React.PropsWithChildren<IDropdownProps>> = ({
   disabled,
   asChild = false,
   contentCss,
+  triggerCss,
 }) => {
   return (
     <Root open={open} onOpenChange={onOpenChange} modal={false}>
-      <SDropdownMenuTrigger asChild={asChild} disabled={disabled}>
+      <SDropdownMenuTrigger asChild={asChild} disabled={disabled} css={triggerCss}>
         {trigger}
       </SDropdownMenuTrigger>
       <Portal>
-        <SDropdownMenuContent avoidCollisions collisionPadding={16} css={contentCss}>
+        <SDropdownMenuContent
+          avoidCollisions
+          collisionPadding={16}
+          css={contentCss}
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+          }}
+        >
           {children}
         </SDropdownMenuContent>
       </Portal>

@@ -1,124 +1,66 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import {
-  Box,
-  ButtonIcon,
-  Copy,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  Flex,
-  Spacer,
-  Stack,
-  StatusLabel,
-} from "@/shared/components"
-import { IconMore } from "@/shared/icons"
-import { ShippingType } from "@/shipment"
-import { SShippingCard } from "./ShippingCard.styles"
-import { useModalActions } from "@/shared/hooks"
-import { Role, ShipmentStatus } from "@/shared/types"
-import { useStateContext } from "@/shared/state"
+import tzlookup from "tz-lookup"
+import formatInTimeZone from "date-fns-tz/formatInTimeZone"
 
-interface IShipping {
-  code: string
-}
+import { IShipmentResponse } from "@/api/types"
+import { ShipmentStatus, ShippingType } from "@/shared/types"
+import { TRACKING } from "@/constants"
+
+import { Copy, Divider, Flex, Stack, StatusLabel } from "@/shared/components"
+import { ActionDetailsButton } from "@/dashboard/components"
+
+import { SShippingCard } from "./ShippingCard.styles"
 
 interface IShippingCardProps {
-  booking: IShipping
+  shipment: IShipmentResponse
+  tab: ShippingType
   shippingType: ShippingType
 }
 
-export const ShippingCard = ({ booking, shippingType }: IShippingCardProps) => {
-  const [isActionDropdownOpen, setActionDropdownOpen] = useState<boolean>(false)
-  const { code } = booking
-  const { open } = useModalActions()
+export const ShippingCard = ({ shipment, tab, shippingType }: IShippingCardProps) => {
   const navigate = useNavigate()
-
-  const stateContext = useStateContext()
-  const role = stateContext?.state.authUser?.role
-
-  const handleEditClick = () => {
-    // TODO: navigate to edit shipment/quote stepper page
-    shippingType === ShippingType.Quote ? navigate("/tracking") : navigate("/tracking")
-  }
-
-  const handleEliminateClick = (event: Event) => {
-    event.stopPropagation()
-    // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
-    shippingType === ShippingType.Quote ? open("cancelQuote") : open("cancelShipment")
-  }
-
-  const handleDeleteClick = () => {
-    // TODO: need to set as an active shipment/quote some data to be able to use it inside cancellation modal (like ID, etc.)
-    shippingType === ShippingType.Quote ? open("deleteQuote") : open("deleteShipment")
-  }
+  const timeZone = tzlookup(
+    parseFloat(shipment.data.ORIGIN_GEOLOC.LATITUDE),
+    parseFloat(shipment.data.ORIGIN_GEOLOC.LONGITUDE),
+  )
 
   return (
-    <SShippingCard href={"/tracking"}>
+    <SShippingCard onClick={() => navigate(`${TRACKING}/${shippingType}/${shipment.id}`)}>
       <Flex align="start" justify="between" css={{ width: "100%", paddingBottom: "$16" }}>
-        <Box>
-          <Flex align="baseline">
-            <Copy scale={9} color="system-black" bold>
-              #{code}-5Z
-            </Copy>
-            {shippingType === ShippingType.Shipment ? (
-              <>
-                <Spacer size={16} horizontal />
-                <StatusLabel status={ShipmentStatus.Confirmed} />
-              </>
-            ) : null}
-          </Flex>
-          <Spacer size={4} />
-          <Copy scale={9}>18.10.2022</Copy>
-          {/* <Copy scale={9}>{booking.date}</Copy> */}
-        </Box>
-        <Dropdown
-          asChild
-          trigger={
-            <ButtonIcon
-              type="button"
-              ariaLabel="Show more button"
-              icon={<IconMore fixedSize width={4} height={20} />}
-              onClick={(e: React.SyntheticEvent) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-            />
-          }
-          open={isActionDropdownOpen}
-          onOpenChange={() => setActionDropdownOpen(!isActionDropdownOpen)}
-          contentCss={{
-            paddingY: "$0",
-            borderRadius: "$8",
-          }}
-          // disabled={disabled}
-        >
-          <Stack space={0} dividers>
-            <DropdownItem key={"Edit"} label={"Edit"} onSelect={handleEditClick} />
-            <DropdownItem key={"Eliminate"} label={"Eliminate"} onSelect={handleEliminateClick} />
-            {role === Role.Admin ? (
-              <DropdownItem key={"Delete"} label={"Delete"} onSelect={handleDeleteClick} />
-            ) : null}
-          </Stack>
-        </Dropdown>
+        <Stack space={8}>
+          <StatusLabel status={ShipmentStatus[shipment.data.SHIPMENT_STATUS]} />
+          <Copy scale={3} color="theme-b-n3" fontWeight="bold">
+            #{shipment.id}
+          </Copy>
+          <Copy scale={10} color="theme-n6-n5">
+            {formatInTimeZone(Date.parse(shipment.createdAt), timeZone, "MMM d, yyyy (zzz)")}
+          </Copy>
+        </Stack>
+        <ActionDetailsButton tab={tab} shipmentId={shipment.id} horizontal />
       </Flex>
       <Divider />
-      <ShippingCardInfo shippingType={shippingType} />
+      <ShippingCardInfo tab={tab} shipment={shipment} />
     </SShippingCard>
   )
 }
 
-const ShippingCardInfo = ({ shippingType }: { shippingType: ShippingType }) => {
-  if (shippingType === ShippingType.Quote) {
+const ShippingCardInfo = ({
+  shipment,
+  tab,
+}: {
+  shipment: IShipmentResponse
+  tab: ShippingType
+}) => {
+  if (tab === ShippingType.Quote) {
     return (
       <Stack space={12} css={{ marginTop: "$16" }}>
         <ShippingCardInfoLine
           title="Origin address"
-          value="3376 San Diego Ave. Larnor, Dallaver, USA"
+          value={shipment.data?.ORIGIN_GEOLOC?.DISPLAY_NAME || "-"}
         />
         <ShippingCardInfoLine
           title="Destination address"
-          value="4517 Washington Ave. Manor, Dallaver, USA"
+          value={shipment.data?.CONSIGNEE_GEOLOC?.DISPLAY_NAME || "-"}
         />
       </Stack>
     )
@@ -126,14 +68,11 @@ const ShippingCardInfo = ({ shippingType }: { shippingType: ShippingType }) => {
 
   return (
     <Stack space={12} css={{ marginTop: "$16" }}>
-      <ShippingCardInfoLine title="Sender's name" value="Pablo Diego José Francisco Picasso" />
-      <ShippingCardInfoLine
-        title="Recipient's name"
-        value="Juan Nepomuceno María de los Remedios"
-      />
+      <ShippingCardInfoLine title="Sender's name" value={shipment.data.ORIGIN_CONTACT} />
+      <ShippingCardInfoLine title="Recipient's name" value={shipment.data.CONSIGNEE_CONTACT} />
       <ShippingCardInfoLine
         title="Destination address"
-        value="4517 Washington Ave. Manor, Dallaver, USA"
+        value={shipment.data?.CONSIGNEE_GEOLOC?.DISPLAY_NAME || "-"}
       />
     </Stack>
   )
@@ -141,14 +80,10 @@ const ShippingCardInfo = ({ shippingType }: { shippingType: ShippingType }) => {
 
 const ShippingCardInfoLine = ({ title, value }: { title: string; value: string }) => (
   <Flex align="center" justify="between">
-    <Copy scale={9} css={{ paddingRight: "$32", minWidth: "max-content" }}>
+    <Copy scale={10} color="theme-n6-n5" css={{ paddingRight: "$32", minWidth: "max-content" }}>
       {title}
     </Copy>
-    <Copy
-      scale={9}
-      color="system-black"
-      css={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
-    >
+    <Copy scale={10} color="theme-b-n3" truncate>
       {value}
     </Copy>
   </Flex>

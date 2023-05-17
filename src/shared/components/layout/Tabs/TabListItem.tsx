@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy } from "@/shared/components"
 
 import { useTabsContext } from "./Tabs"
@@ -10,15 +12,17 @@ export interface ITabListItemProps extends ComponentProps<typeof STabListItem> {
    * ID of the Tab List Item
    */
   id: string
+  onChange: () => void
 }
 
-export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
+export const TabListItem = ({ children, id, onChange, ...props }: ITabListItemProps) => {
   const ref = useRef<HTMLButtonElement>(null)
   const { selected, setSelected } = useTabsContext("TabListItem")
 
   const handleOnClick = useCallback(() => {
     setSelected(id)
-  }, [id, setSelected])
+    onChange()
+  }, [id, setSelected, onChange])
 
   const isSelected = selected === id
 
@@ -39,13 +43,7 @@ export const TabListItem = ({ children, id, ...props }: ITabListItemProps) => {
       ref={ref}
       {...props}
     >
-      <Copy
-        scale={{ "@initial": 9, "@md": 8 }}
-        color={isSelected ? "neutrals-9" : "neutrals-7"}
-        css={{ textShadow: isSelected ? "0 0 0.75px black" : "" }}
-      >
-        {children}
-      </Copy>
+      <Copy scale={5}>{children}</Copy>
     </STabListItem>
   )
 }

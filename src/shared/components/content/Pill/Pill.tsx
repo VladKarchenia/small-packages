@@ -1,6 +1,9 @@
 import React, { forwardRef } from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, Spacer } from "@/shared/components"
+
 import { SPill, SSelectedDot } from "./Pill.styles"
 
 export interface IPillProps extends Omit<ComponentProps<typeof SPill>, "prefix"> {
@@ -30,7 +33,7 @@ export const Pill = forwardRef<HTMLButtonElement, IPillProps>(
           </>
         )}
 
-        <Copy as="span" color="system-white" scale={copyScale} bold>
+        <Copy as="span" scale={copyScale}>
           {children}
         </Copy>
 
@@ -54,7 +57,7 @@ function getCopyScaleFromPillSize(size: IPillProps["size"]) {
     switch (value) {
       case "small":
       default:
-        return 9
+        return 10
       case "medium":
         return 8
       case "large":
@@ -63,11 +66,12 @@ function getCopyScaleFromPillSize(size: IPillProps["size"]) {
   }
 
   if (typeof size === "object") {
-    return Object.keys(size).reduce((acc: any, key: string) => {
+    return Object.keys(size).reduce((acc, key) => {
       acc[key] = getValue(size[key])
 
       return acc
-    }, {})
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, {} as any)
   }
 
   return getValue(size)

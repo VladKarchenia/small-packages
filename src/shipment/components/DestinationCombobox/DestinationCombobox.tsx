@@ -1,208 +1,147 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
+import { useEffect, useMemo, useState } from "react"
+import { isAxiosError } from "axios"
 import { useCombobox } from "downshift"
+import { useDebounce } from "use-debounce"
 
-import {
-  Combobox,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItemFormat,
-  Copy,
-  FormInput,
-  HiddenVisually,
-  Spacer,
-  Stack,
-  Title,
-} from "@/shared/components"
+import { IAddress } from "@/shared/types"
+import { IPlaceResponse } from "@/api/types"
+import { useSearchPlaces } from "@/shipment/hooks"
+import { transformLocation } from "@/shipment/utils"
 
-import { IconClock, IconCross, IconLocationPin } from "@/shared/icons"
+import { Box, ComboboxGroup, Copy, Flex, MobileCombobox, Spinner } from "@/shared/components"
 
-// import { useDestinationSuggestions } from "./useDestinationSuggestions"
-import {
-  SDestinationComboboxItem,
-  SDestinationComboboxMenu,
-  SComboboxClearButton,
-} from "./DestinationCombobox.styles"
-import { useQuery } from "react-query"
-import { getSuggestionsFn } from "@/api/postApi"
-import { ISuggestionsResponse } from "@/api/types"
-import { mapDestinationToComboboxItem } from "./utils"
+import { SDestinationComboboxItem } from "./DestinationCombobox.styles"
 
 export interface DestinationComboboxProps {
-  onSelect: (location: string, placeId: string) => void
-  initialValue?: string
-  isDesktop?: boolean
-  placeholder: string
+  onSelect: (locationDetails: IAddress) => void
+  initialValue: IAddress
+  id: string
+  label: string
+  placeholder?: string
+  country: string
+  person: "sender" | "recipient"
 }
 
 export const DestinationCombobox = ({
   onSelect,
   initialValue,
-  isDesktop,
+  id,
+  label,
   placeholder,
+  country,
+  person,
 }: DestinationComboboxProps) => {
-  const { t } = useTranslation()
+  const [inputValue, setInputValue] = useState<string>("")
+  const [input] = useDebounce(inputValue.trim(), 300)
 
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { data, isLoading, isIdle, error } = useSearchPlaces({
+    input,
+    country,
+    keyword: input,
+  })
 
-  const [inputValue, setInputValue] = useState("")
+  const results = useMemo(() => {
+    const result: IAddress[] = []
 
-  // const [suggestedDestinations, getSuggestions] = useDestinationSuggestions()
-  const { data: suggestedDestinations, refetch: getSuggestions } = useQuery(
-    ["getSuggestions"],
-    async () => await getSuggestionsFn(inputValue),
-    {
-      enabled: false,
-      select: (data: ISuggestionsResponse) =>
-        data.data.suggestionsByTerm.places.map(mapDestinationToComboboxItem) || [],
-    },
-  )
+    if (data && data.content.length > 0) {
+      data.content
+        .filter((item: IPlaceResponse) => !!item.city && !!item.zipCode)
+        .map((item: IPlaceResponse) => result.push(transformLocation({ ...item, person })))
+    }
+
+    return result
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
 
   const comboboxProps = useCombobox({
     isOpen: true,
     inputValue,
-    items: suggestedDestinations || [],
-    itemToString: (item) => item?.label || "",
+    items: results,
+    itemToString: (item: IAddress | null) => item?.displayName || "",
 
-    onInputValueChange: ({ inputValue }) => {
-      setInputValue(inputValue || "")
-
-      if (!inputValue || inputValue.length < 2 || inputValue.trim().length === 0) return
-
-      getSuggestions()
-    },
+    onInputValueChange: ({ inputValue }) => setInputValue(inputValue || ""),
 
     onSelectedItemChange: ({ selectedItem }) => {
-      if (!selectedItem) return
-      onSelect(selectedItem.label, selectedItem.value)
-      setTimeout(clearDestination, 400)
+      if (selectedItem) {
+        onSelect(selectedItem)
+      }
     },
   })
 
-  const clearDestination = useCallback(() => {
-    comboboxProps.selectItem(null)
-    inputRef.current?.focus()
-  }, [comboboxProps])
+  const Content = () => {
+    if (isIdle) {
+      return null
+    }
+
+    if (isLoading) {
+      return <Spinner />
+    }
+
+    if (isAxiosError(error)) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy color="theme-b-n3">{error.response?.data.errorMessage || error.message}</Copy>
+        </Flex>
+      )
+    }
+
+    if (results.length === 0) {
+      return (
+        <Flex css={{ padding: "$16" }}>
+          <Copy color="theme-b-n3">Not found</Copy>
+        </Flex>
+      )
+    }
+
+    return (
+      <Box
+        css={{
+          height: "100%",
+          "@md": { marginTop: 0 },
+        }}
+      >
+        {results.length > 0 ? (
+          <DestinationSection items={results} />
+        ) : (
+          <Flex css={{ padding: "$16", height: "$56" }} />
+        )}
+      </Box>
+    )
+  }
 
   useEffect(() => {
-    if (!initialValue || initialValue.length < 2 || initialValue.trim().length === 0) return
-    setInputValue(initialValue)
-    getSuggestions()
-  }, [initialValue, getSuggestions])
+    setInputValue(initialValue.displayName)
+  }, [initialValue.displayName])
 
   return (
-    <Combobox {...comboboxProps}>
-      <ComboboxInput ref={inputRef}>
-        {/* TODO: Remove after activating desktopFilterExp */}
-        {isDesktop ? (
-          <div /> // Empty div for Combobox to 'forwardRef' to
-        ) : (
-          <FormInput
-            id={t("filters.destination")}
-            label={t("filters.destination")}
-            placeholder={placeholder}
-            labelProps={{ hidden: true }}
-            autoCorrect="off"
-            autoComplete="off"
-            data-testid="location-input"
-            suffix={
-              inputValue && (
-                <SComboboxClearButton
-                  type="button"
-                  aria-label={t("filters.destinationClear")}
-                  onClick={clearDestination}
-                >
-                  <IconCross size="xs" />
-                </SComboboxClearButton>
-              )
-            }
-          />
-        )}
-      </ComboboxInput>
-      <SDestinationComboboxMenu>
-        <Stack space={24}>
-          <DestinationSection
-            name="suggestions"
-            label={t("filters.destinationSuggestions")}
-            items={suggestedDestinations || []}
-            hiddenLabel
-            isDesktop={isDesktop}
-          />
-        </Stack>
-      </SDestinationComboboxMenu>
-    </Combobox>
+    <MobileCombobox
+      comboboxProps={comboboxProps}
+      id={id}
+      label={label}
+      placeholder={placeholder}
+      inputValue={inputValue}
+    >
+      <Content />
+    </MobileCombobox>
   )
 }
 
 interface IDestinationSectionProps {
-  name: "recent" | "popular" | "suggestions"
-  label: string
-  items: ComboboxItemFormat[]
-
-  indexOffset?: number
-  hiddenLabel?: boolean
-  isDesktop?: boolean
+  items: IAddress[]
 }
 
-function DestinationSection({
-  name,
-  label,
-  items,
-  hiddenLabel,
-  indexOffset = 0,
-  isDesktop,
-}: IDestinationSectionProps) {
-  if (!items.length) return null
-  const itemCount = isDesktop && name === "recent" ? 3 : items.length
-  const LabelOuter = hiddenLabel ? HiddenVisually : Fragment
-
+function DestinationSection({ items }: IDestinationSectionProps) {
   return (
-    <>
-      <LabelOuter>
-        <Title id={`destination-group-${name}`} as="h6" scale={8}>
-          {label}
-        </Title>
-      </LabelOuter>
-      {!hiddenLabel && <Spacer size={8} />}
-      <ComboboxGroup labelledBy={`destination-group-${name}`}>
-        {items.slice(0, itemCount).map((item, index) => (
-          <RecentDestinationBox
-            name={name}
-            item={item}
-            index={index}
-            indexOffset={indexOffset}
-            key={`recent-destination-${index}`}
-          />
-        ))}
-      </ComboboxGroup>
-    </>
+    <ComboboxGroup labelledBy="combobox-group">
+      {items.map((item, index) => (
+        <DestinationBox item={item} index={index} key={`combobox-${index}`} />
+      ))}
+    </ComboboxGroup>
   )
 }
 
-const RecentDestinationBox = ({
-  item,
-  index,
-  indexOffset,
-  name,
-}: {
-  item: ComboboxItemFormat
-  index: number
-  indexOffset: number
-  name: "recent" | "popular" | "suggestions"
-}) => {
-  if (!item.label || !item.value) return null
-
-  return (
-    <SDestinationComboboxItem
-      key={`${item.label}-${index}`}
-      index={index + indexOffset}
-      item={item}
-    >
-      {name === "recent" ? <IconClock /> : <IconLocationPin />}
-      <Spacer size={8} horizontal />
-      <Copy color="neutrals-9" intent="detail">
-        {item.label}
-      </Copy>
-    </SDestinationComboboxItem>
-  )
-}
+const DestinationBox = ({ item, index }: { item: IAddress; index: number }) => (
+  <SDestinationComboboxItem key={`${item.displayName}-${index}`} index={index} item={item}>
+    <Copy>{item.displayName}</Copy>
+  </SDestinationComboboxItem>
+)

@@ -1,128 +1,112 @@
 import { useMemo } from "react"
+import { shallow } from "zustand/shallow"
+
+import { useBoundStore } from "@/store"
+import { ShippingType } from "@/shared/types"
+import { createFilterString, createSortString } from "@/shared/utils"
+import { useModalActions } from "@/shared/hooks"
 import {
   SortDirection,
   useDashboardActionContext,
   useDashboardStateContext,
 } from "@/dashboard/state"
-import { Box, Copy, Flex, Pill, Redacted, Spacer, Stack } from "@/shared/components"
-import { IconArrowDown, IconArrowTop, IconCross } from "@/shared/icons"
-import { ShippingType } from "@/shipment"
+import { useAllShipments } from "@/dashboard/hooks"
 
-import { DashboardPagination } from "../DashboardPagination"
-import { SearchInput } from "../SearchInput"
-import { ShippingCard } from "../ShippingCard"
-import { ShippingCardPlaceholder } from "../ShippingCardPlaceholder"
-import { SortFilterBar } from "../SortFilterBar"
+import {
+  Box,
+  Copy,
+  CreateRoundedButton,
+  Flex,
+  Pill,
+  Redacted,
+  Spacer,
+  Stack,
+} from "@/shared/components"
+import { IconLongArrowDown, IconLongArrowTop, IconCross } from "@/shared/icons"
+import {
+  SearchInput,
+  ShippingCard,
+  ShippingCardPlaceholder,
+  SortFilterBar,
+} from "@/dashboard/components"
 
-interface IShipping {
-  code: string
-}
-
-interface IDashboardListProps {
-  isLoading: boolean
-  bookings: IShipping[]
-  shippingType: ShippingType
-}
-
-const DashboardListPlaceholder = () => (
-  <>
-    <Spacer size={8} />
-    <Redacted height="$24" width="144px" text animated />
-    <Spacer size={24} />
-    <Stack as="ul" space={24} dividers outerDividers="bottom">
-      {Array.from(new Array(20), (_, index) => index).map((v) => (
-        <ShippingCardPlaceholder key={`placeholder-row-${v}`} />
-      ))}
-    </Stack>
-  </>
-)
-
-export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashboardListProps) => {
+export const DashboardList = () => {
+  const { open } = useModalActions()
+  const [shippingType, tab] = useBoundStore((state) => [state.shippingType, state.tab], shallow)
   const { sortOrder, direction, status, recipientName, originalAddress, destinationAddress } =
     useDashboardStateContext()
+
   const { resetFilterField } = useDashboardActionContext()
   const isFilterApplied = useMemo<boolean>(() => {
     return Boolean(
-      (shippingType === ShippingType.Shipment &&
-        (!!status || !!recipientName || destinationAddress)) ||
-        (shippingType === ShippingType.Quote && (!!originalAddress || destinationAddress)),
+      (tab === ShippingType.Shipment &&
+        (status.length > 0 || recipientName.length > 0 || destinationAddress.length > 0)) ||
+        (tab === ShippingType.Quote &&
+          (originalAddress.length > 0 || destinationAddress.length > 0)),
     )
-  }, [shippingType, status, recipientName, originalAddress, destinationAddress])
+  }, [tab, status, recipientName, originalAddress, destinationAddress])
+
+  const { isLoading, data } = useAllShipments({
+    type: tab,
+    filter: createFilterString(tab, status, recipientName, originalAddress, destinationAddress),
+    sort: `${createSortString(sortOrder)},${direction}`,
+  })
+
+  const shipments = useMemo(() => (data ? data : []), [data])
 
   if (isLoading) {
-    return <DashboardListPlaceholder />
-  }
-
-  if (!isLoading && !bookings.length) {
-    return (
-      <Box css={{ height: `calc((var(--vh) * 100) - $128 - $96)`, paddingTop: "$80" }}>
-        Empty
-        {/* <ResetYourFiltersMessage /> */}
-      </Box>
-    )
+    return <DashboardListPlaceholder isFilterApplied={isFilterApplied} />
   }
 
   return (
     <>
-      <SearchInput
-        placeholder={
-          shippingType === ShippingType.Quote
-            ? "Search for ID, address..."
-            : "Search for ID, tracking number, address..."
-        }
-      />
-      <SortFilterBar isFilterApplied={isFilterApplied} shippingType={shippingType} />
+      <SearchInput />
+      <SortFilterBar isFilterApplied={isFilterApplied} />
       <Spacer size={20} />
       {isFilterApplied ? (
         <>
           <Flex align="center" wrap>
-            {status && shippingType === ShippingType.Shipment ? (
+            {status.length > 0 && tab === ShippingType.Shipment ? (
               <Pill
-                suffix={<IconCross size="xs" onClick={() => resetFilterField("status")} />}
-                size="small"
+                suffix={<IconCross onClick={() => resetFilterField("status")} />}
+                size="medium"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
-                data-testid={"Status filter"}
+                data-testid="status-filter"
               >
-                {/* TODO: add number of results or what? */}
-                Status (3)
+                Status ({status.length})
               </Pill>
             ) : null}
 
-            {recipientName && shippingType === ShippingType.Shipment ? (
+            {recipientName.length > 0 && tab === ShippingType.Shipment ? (
               <Pill
-                suffix={<IconCross size="xs" onClick={() => resetFilterField("recipientName")} />}
-                size="small"
+                suffix={<IconCross onClick={() => resetFilterField("recipientName")} />}
+                size="medium"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
-                data-testid={"Recipient name filter"}
+                data-testid="recipient-name-filter"
               >
-                {/* TODO: add number of results or what? */}
-                Recipient name (10)
+                Recipient name ({recipientName.length})
               </Pill>
             ) : null}
 
-            {originalAddress && shippingType === ShippingType.Quote ? (
+            {originalAddress.length > 0 && tab === ShippingType.Quote ? (
               <Pill
-                suffix={<IconCross size="xs" onClick={() => resetFilterField("originalAddress")} />}
-                size="small"
+                suffix={<IconCross onClick={() => resetFilterField("originalAddress")} />}
+                size="medium"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
-                data-testid={"Original address filter"}
+                data-testid="original-address-filter"
               >
-                {/* TODO: add number of results or what? */}
-                Original address (12)
+                Original address ({originalAddress.length})
               </Pill>
             ) : null}
 
-            {destinationAddress ? (
+            {destinationAddress.length > 0 ? (
               <Pill
-                suffix={
-                  <IconCross size="xs" onClick={() => resetFilterField("destinationAddress")} />
-                }
-                size="small"
+                suffix={<IconCross onClick={() => resetFilterField("destinationAddress")} />}
+                size="medium"
                 css={{ marginRight: "$8", marginBottom: "$8" }}
-                data-testid={"Destination address filter"}
+                data-testid="destination-address-filter"
               >
-                {/* TODO: add number of results or what? */}
-                Destination address (15)
+                Destination address ({destinationAddress.length})
               </Pill>
             ) : null}
           </Flex>
@@ -130,57 +114,75 @@ export const DashboardList = ({ isLoading, bookings = [], shippingType }: IDashb
         </>
       ) : null}
 
-      <Flex align="center" justify="between">
-        <Flex align="center">
-          <Copy scale={9} css={{ paddingRight: "$4" }}>
-            Found:
-          </Copy>
-          <Copy scale={9} color="system-black" bold>
-            12/{bookings.length}
-          </Copy>
-        </Flex>
-        <Flex align="center">
-          {direction === SortDirection.ASC ? (
-            <IconArrowDown size="xs" />
-          ) : (
-            <IconArrowTop size="xs" />
-          )}
-          <Copy scale={9} css={{ paddingX: "$4" }}>
-            Sort by:
-          </Copy>
-          <Copy scale={9} color="system-black" bold>
-            {sortOrder}
-          </Copy>
-        </Flex>
-      </Flex>
-      <Spacer size={12} />
-      <Stack as="ul" space={12}>
-        {bookings.map((booking) => (
-          <ShippingCard key={booking.code} booking={booking} shippingType={shippingType} />
-        ))}
-      </Stack>
-      {bookings.length > 0 ? (
-        // {loading || data?.bookings.total > 0 ? (
+      {!isLoading && shipments.length > 0 ? (
         <>
-          <Spacer size={24} />
-          <DashboardPagination
-            scroll
-            paginatedTerm={"shipping"}
-            loading={false}
-            // loading={loading}
-            total={bookings.length + 100}
-            // total={data?.bookings.total}
-            limit={20}
-            // limit={state.limit}
-            offset={0}
-            // offset={state.offset}
-            getNext={() => console.log("getNext")}
-            // getNext={getNext}
-            getPrevious={() => console.log("getPrevious")}
-            // getPrevious={getPrevious}
-          />
+          <Flex align="center" justify="between">
+            <Copy color="theme-n6-n5">
+              Results:
+              <Copy as="span" color="theme-b-n3" css={{ paddingLeft: "$4" }}>
+                {shipments.length}
+              </Copy>
+            </Copy>
+            <Flex align="center" css={{ color: "$theme-n6-n5" }}>
+              {direction === SortDirection.ASC ? <IconLongArrowDown /> : <IconLongArrowTop />}
+              <Copy css={{ paddingX: "$4" }}>Sort by:</Copy>
+              <Copy color="theme-b-n3">{sortOrder}</Copy>
+            </Flex>
+          </Flex>
+          <Spacer size={12} />
+          <Stack as="ul" space={12}>
+            {shipments.map((shipment) => (
+              <ShippingCard
+                key={shipment.id}
+                shipment={shipment}
+                tab={tab}
+                shippingType={shippingType}
+              />
+            ))}
+          </Stack>
+          <Spacer size={40} />
         </>
-      ) : null}
+      ) : (
+        <Box css={{ textAlign: "center" }}>
+          <Copy as="span" color="theme-b-n3">
+            {isFilterApplied
+              ? "There are no issues that match your filter"
+              : "There is no data yet"}
+          </Copy>
+        </Box>
+      )}
+
+      <CreateRoundedButton
+        size="lg"
+        color="black"
+        iconSize="md"
+        ariaLabel="Create button"
+        buttonCss={{ zIndex: "$9", position: "fixed", bottom: "$56", right: "$16" }}
+        onClick={() => open("createShipment")}
+      />
     </>
   )
 }
+
+const DashboardListPlaceholder = ({ isFilterApplied }: { isFilterApplied: boolean }) => (
+  <>
+    <Redacted height="$48" text animated />
+    <Spacer size={20} />
+    {isFilterApplied ? (
+      <>
+        <Redacted height="$32" text animated />
+        <Spacer size={20} />
+      </>
+    ) : null}
+    <Flex justify="between">
+      <Redacted height="$24" width="$80" text animated />
+      <Redacted height="$24" width="200px" text animated />
+    </Flex>
+    <Spacer size={12} />
+    <Stack as="ul" space={12}>
+      {Array.from(new Array(10), (_, index) => index).map((v) => (
+        <ShippingCardPlaceholder key={`placeholder-row-${v}`} />
+      ))}
+    </Stack>
+  </>
+)

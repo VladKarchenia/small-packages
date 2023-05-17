@@ -1,5 +1,7 @@
 import { DialogClose } from "@radix-ui/react-dialog"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy } from "@/shared/components"
 import { IconCross } from "@/shared/icons"
 
@@ -18,13 +20,7 @@ export const ModalCloseButton = (props: ModalCloseButtonProps) => {
         data-modals="modal-close-button"
         data-testid="modal-close-button"
       >
-        {props?.variant === "text" ? (
-          <Copy color="system-inherit" scale={8}>
-            Close
-          </Copy>
-        ) : (
-          <IconCross size="xs" />
-        )}
+        {props?.variant === "text" ? <Copy>Close</Copy> : <IconCross />}
       </SModalCloseButton>
     </DialogClose>
   )

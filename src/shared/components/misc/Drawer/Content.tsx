@@ -1,4 +1,5 @@
-import { ComponentProps } from "@/utils"
+import { ComponentProps } from "@/stitches/types"
+
 import { SDrawerContent } from "./Content.styles"
 
 export type DrawerContentProps = ComponentProps<typeof SDrawerContent>

@@ -1,4 +1,7 @@
 import { useState } from "react"
+
+import { useModal, useModalActions } from "@/shared/hooks"
+
 import {
   Button,
   Copy,
@@ -9,8 +12,7 @@ import {
   Stack,
   Title,
 } from "@/shared/components"
-import { useModal, useModalActions } from "@/shared/hooks"
-import { GeneralModal } from "../GeneralModal"
+import { GeneralModal } from "@/modals"
 
 export const CancelShipmentModal = () => {
   const [isReasonsOpen, setReasonsOpen] = useState<boolean>(false)
@@ -18,7 +20,8 @@ export const CancelShipmentModal = () => {
   const { close } = useModalActions()
 
   const [checkedOption, setCheckedOption] = useState("Duplicated")
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setCheckedOption(e.target.value)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setCheckedOption(event.target.value)
 
   const handleContinueClick = () => {
     if (!isReasonsOpen) {
@@ -42,13 +45,13 @@ export const CancelShipmentModal = () => {
     <GeneralModal {...cancelShipment}>
       <Stack space={16} css={{ paddingX: "$16" }}>
         {isReasonsOpen ? (
-          <Title as="h3" scale={6} css={{ textAlign: "center" }}>
-            Please, select the reason for elimination
+          <Title as="h3" scale={3} css={{ textAlign: "center" }}>
+            Please select the reason for elimination
           </Title>
         ) : (
           <Stack space={8} css={{ textAlign: "center" }}>
-            <Title as="h3" scale={6}>
-              Do you want to eliminate the shipment?
+            <Title as="h3" scale={3}>
+              Do you want to cancel the shipment?
             </Title>
             <Copy scale={9} css={{ paddingBottom: "$8" }}>
               In case of elimination, the shipment will be cancelled without being deleted from the
@@ -63,7 +66,7 @@ export const CancelShipmentModal = () => {
             onChange={handleChange}
             id="cancel-shipment-reason"
             name="cancel-shipment-reason"
-            css={{ paddingX: "$0" }}
+            css={{ paddingX: 0 }}
           >
             {[
               {
@@ -102,19 +105,15 @@ export const CancelShipmentModal = () => {
           </FormRadioGroup>
         ) : null}
 
-        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns={"1fr 1fr"}>
+        <Grid gap={{ "@initial": 8, "@sm": 16 }} columns="1fr 1fr">
           <GridItem>
             <Button full onClick={handleContinueClick}>
-              <Copy as="span" scale={8} color="system-white" bold>
-                OK
-              </Copy>
+              OK
             </Button>
           </GridItem>
           <GridItem>
             <Button action="secondary" full onClick={handleCancelClick}>
-              <Copy as="span" scale={8} color="system-black" bold>
-                Cancel
-              </Copy>
+              Cancel
             </Button>
           </GridItem>
         </Grid>

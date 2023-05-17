@@ -1,9 +1,11 @@
-import { CSS } from "@stitches/react"
-import { ComponentProps } from "@/utils"
+import { CSS } from "@/stitches/config"
+import { ComponentProps } from "@/stitches/types"
+
 import { Box, Divider } from "@/shared/components"
 
 import { useAccordionContext } from "./Accordion"
 import { useAccordionItemContext } from "./AccordionItem"
+
 import { SAccordionPanel, SAccordionContent } from "./AccordionPanel.styles"
 
 export interface IAccordionPanelProps extends ComponentProps<typeof SAccordionPanel> {

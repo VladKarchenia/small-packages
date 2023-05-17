@@ -1,5 +1,7 @@
 import React from "react"
-import { ComponentProps } from "@/utils"
+
+import { ComponentProps } from "@/stitches/types"
+
 import { Copy, HiddenVisually } from "@/shared/components"
 
 import { SFormLabel } from "./FormLabel.styles"
@@ -15,8 +17,13 @@ export const FormLabel = ({ children, hidden, ...props }: IFormLabelProps) => {
   return (
     <WrappingComponent>
       <SFormLabel {...props}>
-        <Copy color="neutrals-9" scale={9} bold>
+        <Copy scale={10} color="neutrals-5" fontWeight="semiBold">
           {children}
+          {props?.required ? (
+            <Copy as="span" scale={10} fontWeight="semiBold" css={{ paddingLeft: "$2" }}>
+              *
+            </Copy>
+          ) : null}
         </Copy>
       </SFormLabel>
     </WrappingComponent>
